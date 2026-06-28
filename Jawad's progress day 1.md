@@ -51,6 +51,12 @@ Shipped as functional, mock-driven wireframes (polish pass comes later):
 - **Gap-interview UI**: per-requirement open questions answerable inline in the drawer, **plus** a dedicated **`/answers`** route + nav item — an autofill summary (drafted / auto / needs-input / gaps remaining), a progress bar, and the full open-question to-do list grouped by requirement, answerable inline. All persists in-memory across navigation.
 - Context extended with `capabilityDocs`, `editAnswer()`, `answerOpenQuestion()`. Mock enriched with 3 more drafted answers (2 `needs_input` + open questions). Build + lint green.
 
+### 8. Live-backend wiring (env-driven, mock by default) — *first cross-lane integration, shipped via PR*
+- `src/lib/api.ts`: `uploadTender()`, `getTender()`, `patchRequirement()` against the FastAPI endpoints; base URL from `NEXT_PUBLIC_API_BASE_URL`.
+- **Mock by default** (env unset) so the deployed demo + local dev are zero-surprises; set the env (local `:8000` or the Render URL) to go live.
+- Upload flow now uploads the real PDF → `loadTender()` swaps the extracted tender into the shared context → matrix/graph/answers all render real data; added an error state if the API is unreachable.
+- Approve/edit/flag persist via `PATCH /requirements/{id}` (optimistic, best-effort) when the API is on. Added `.env.example`.
+
 ---
 
 ## Tech stack
@@ -76,11 +82,11 @@ npm run lint
 ---
 
 ## Next up (priority order)
-1. **Swap to the real backend** — point the provider at `GET /tenders/{id}/requirements` (Joel's pipeline is live, CORS allows `:3000`); see `frontend-integration.md`. The UI shouldn't change; keep the mock as a fallback for demo safety.
-2. **Design-system pass** — typographic + spacing polish over the wireframes (ideating separately, then implementing).
-3. **Capability-doc upload mode** — a second upload lane for the bidder's own evidence docs (`capability_docs`), so gaps can be closed by uploading evidence.
+1. **Design-system pass** — typographic + spacing polish over the wireframes (ideating separately, then implementing).
+2. **Capability-doc upload mode** — a second upload lane for the bidder's own evidence docs (`capability_docs`), so gaps can be closed by uploading evidence.
+3. **Make the *hosted* site show live data** — deploy the backend to a public URL (`backend/DEPLOY.md`, needs Pranav/Joel to stand up Render) and set `NEXT_PUBLIC_API_BASE_URL` in Vercel. Until then the live path works locally / on upload.
 
-_Done: ✅ answer + evidence panel · ✅ gap-interview UI (see changelog)._
+_Done: ✅ answer + evidence panel · ✅ gap-interview UI · ✅ live-backend wiring (see changelog)._
 
 ## Blocked on / waiting
 - Nothing hard-blocking. Real-data swap can start any time — backend API is up (heuristic extractor; Claude/OpenAI path lands when the key is in).
@@ -89,4 +95,5 @@ _Done: ✅ answer + evidence panel · ✅ gap-interview UI (see changelog)._
 
 ## Changelog
 - **2026-06-28 (Day 1)** — Initial log. Shipped items 1–6 above: compliance matrix, multi-page wireframes (navbar, drawer, gating hero, graph, upload), in-memory decision state, Bidframe rebrand, autofill schema mirror, Vercel deploy + GitHub auto-deploy.
-- **2026-06-28 (Day 1, cont.)** — Shipped item 7: **answer + evidence panel** (drawer renders each requirement's drafted answer with capability-doc evidence citations, visual confidence, inline edit) and the **gap-interview UI** (`/answers` route + nav item: open-question to-do list, answerable inline, with autofill summary + progress). Context extended (`capabilityDocs`, `editAnswer`, `answerOpenQuestion`); mock enriched with 3 more drafted answers. Build + lint green. _(append new days below)_
+- **2026-06-28 (Day 1, cont.)** — Shipped item 7: **answer + evidence panel** (drawer renders each requirement's drafted answer with capability-doc evidence citations, visual confidence, inline edit) and the **gap-interview UI** (`/answers` route + nav item: open-question to-do list, answerable inline, with autofill summary + progress). Context extended (`capabilityDocs`, `editAnswer`, `answerOpenQuestion`); mock enriched with 3 more drafted answers. Build + lint green.
+- **2026-06-28 (Day 1, cont.)** — Shipped item 8: **live-backend wiring**, shipped via **PR** (first frontend↔backend integration). `src/lib/api.ts` + env-driven swap (`NEXT_PUBLIC_API_BASE_URL`), mock by default, real upload→extract→matrix + decision PATCH. Switched our workflow to **PR + merge** from here on (Joel can review). _(append new days below)_
