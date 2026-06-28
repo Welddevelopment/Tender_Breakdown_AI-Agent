@@ -63,12 +63,13 @@ The **requirement object** schema in [AGENTS.md](AGENTS.md) §"Data contract" is
 
 - **Autofill scope (NEW, ratify at standup)** — extend to grounded bid drafting? Schema change + role impact in [autofill-scope-decision.md](autofill-scope-decision.md). J has drafted the prompts + proposal; needs backend/generalist/frontend buy-in + a schema PR. **Must not delay the extraction Day-4 gate.**
 - **LLM provider** — undecided. Cheapest-and-best; **evaluate Day 2+**. Prompts written provider-agnostic (structured output via JSON-schema/function-calling, never free text). Pick once sponsor credits are known.
-- **Sourcing sprint (Day 1, all four)** — grab 10–15 real UK public-sector tenders (Contracts Finder / Find a Tender, full-pack-attached). **Confirm one downloads + parses cleanly in hour one.** Never commit tender PDFs (`.gitignore`).
+- **Sourcing sprint (Day 1, all four)** — grab 10–15 real UK public-sector tenders. ✅ **Hour-one check DONE**: SPSO cleaning ITT sourced + parsed clean (13pp). Use direct-download ITTs (no portal approval) — see [tenders.md](tenders.md). Save PDFs to `data/tenders/` (gitignored). Still want more for the gold set + ugly-tender stress tests.
 - **Gold set (by EOD Day 2)** — each person hand-labels ONE tender end-to-end.
 - **Fetch.ai stack** — revisit Day 3; only if extraction core is solid + J has slack.
 
 ## Recently shipped (newest first)
 
+- **2026-06-28** — ✅ **Hour-one parse check PASSED on a real tender** (SPSO cleaning ITT, 13pp clean). Biggest Day-1 engine risk retired. Sourcing log started: [tenders.md](tenders.md).
 - **2026-06-28** — J (covering for backend, with their OK): `backend/scripts/parse_check.py` — hour-one tender parseability gate (PyMuPDF→pypdf fallback); added `pymupdf` to requirements. **Tested + working** (installed Python 3.12; clean→PASS, image-only→needs-OCR, no-arg→usage). Fixed a Windows cp1252 emoji crash.
 - **2026-06-28** — J: **agent comms channel** (`comms/`) — per-role boards, conflict-free; wired into AGENTS.md + STATUS startup reads. Role table refreshed to real progress.
 - **2026-06-28** — Schema extended for autofill (`answer`, `open_questions`, `capability_docs`) — team-confirmed, merged to `main`. Per-lane mirror tasks listed in "The locked contract" above.

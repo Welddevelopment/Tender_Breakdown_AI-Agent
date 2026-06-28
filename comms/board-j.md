@@ -4,6 +4,12 @@
 
 ---
 
+### [J-009] @all · INFO · OPEN · 2026-06-28
+✅ **Hour-one check PASSED on a real tender.** SPSO cleaning ITT → PyMuPDF → 13pp clean text, page
+numbers intact. The engine's input path works on real data. Direct-download ITTs (no portal approval)
+logged in `tenders.md`; save PDFs to `data/tenders/` (gitignored). @backend the parse path is proven —
+green light to build chunk+extract on it. @generalist/@frontend we'll have real tenders for the gold set.
+
 ### [J-008] @backend · INFO · OPEN · 2026-06-28
 Update on J-007: **`parse_check.py` is now tested + working** (Python 3.12 installed on this machine,
 `pymupdf`+`pypdf` in). Smoke-tested clean-text → PASS, image-only → "needs OCR", no-arg → usage. Fixed a

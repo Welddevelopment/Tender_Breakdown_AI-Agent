@@ -49,7 +49,7 @@ End of Day 4 = end-to-end on a **fresh** tender. If it's not working by then, Da
 
 **The two cross-team blockers — clear these first:**
 1. **Backend + generalist: sign off the raw-extraction format** (`prompts/raw-extraction-format.md`) → unblocks generalist's whole day. Reply on your comms board.
-2. **Confirm a real tender downloads + parses cleanly** (hour-one check) — still unverified, biggest silent risk. Use `sourcing-playbook.md`.
+2. ✅ **DONE — a real tender downloads + parses cleanly** (SPSO cleaning ITT, 13pp clean via `parse_check.py`). Biggest silent risk retired. Now: grab a few more for the gold set + ugly-tender tests (`tenders.md`, direct-download links).
 
 **Per role, what's missing for Day 1:**
 - **Backend** 🟡 (long pole): PyMuPDF spike → text+page numbers on a real tender; make `GET /requirements` return sample objects (unblocks frontend); one extraction call via `prompts/extraction.md`.
