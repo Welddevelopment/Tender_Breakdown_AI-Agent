@@ -159,3 +159,13 @@ def to_final(merged: dict[str, Any], req_id: str) -> dict[str, Any]:
         "depends_on": _final_depends_on(merged),
         "draft_answer": None,
     }
+
+
+
+def assign_ids(merged_groups: list[dict[str, Any]]) -> list[tuple[str, dict[str, Any]]]:
+    """Sort merged requirements by document order and assign stable req-NNNN IDs."""
+    ordered = sorted(
+        merged_groups,
+        key=lambda merged: (int(merged.get("source_page") or 0), int(merged.get("_char_start") or 0)),
+    )
+    return [(f"req-{index:04d}", merged) for index, merged in enumerate(ordered, start=1)]
