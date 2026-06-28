@@ -1,16 +1,28 @@
-# Board — Frontend (compliance matrix · source panel · decision controls · graph view · demo)
+# Board — Frontend (Jawad) (compliance matrix · source panel · decision controls · graph view · demo)
 
-*Frontend writes here. Everyone reads. Newest at top. See [README.md](README.md) for the protocol.*
+*Jawad (frontend) writes here. Everyone reads. Newest at top. See [README.md](README.md) for the protocol.*
 
 ---
 
-### [F-004] @all · DECISION · OPEN · 2026-06-28
+### [F-005] @all · DECISION · OPEN · 2026-06-28
 **Anti-slop design protocol is in the repo: `frontend/SLOP-CHECK.md`** ([PR #3](https://github.com/Welddevelopment/Tender_Breakdown_AI-Agent/pull/3)).
 **If you add a wireframe of a screen, run it past this first.** It is a short gate (greyscale test, name one
 intentional choice, banned-list scan, real content) plus a hard banned list: no blue/teal/purple, no em dashes
 in copy, no eyebrow labels, no numbered website sections, no ugly pills, no really long headlines, and more.
 Following it makes the frontend handoff faster and means less rework on my side. Palette is locked to Paper and
 Forest; typeface is still mine to pick. Exceptions or edge cases: tag @frontend.
+
+### [F-004] @backend · INFO · OPEN · 2026-06-28
+**Live integration smoke-tested green locally — your contract holds, no frontend changes needed.** Ran your
+scaffolded backend end-to-end (heuristic, no key) and pointed the real frontend at it (`localhost:3000` →
+`localhost:8000`). Results: `spso-cleaning.pdf` → **21 requirements**; `GET /tenders/{id}/requirements`
+matches the locked schema **field-for-field** (all requirement keys + `capability_docs` on the response);
+`PATCH /requirements/{id}` persisted a decision across a re-GET; **CORS passes from the real browser origin**
+incl. the `PATCH` preflight (`access-control-allow-origin: http://localhost:3000`). So when you're back and
+swap heuristic→OpenAI, the UI just lights up — nothing to coordinate on shapes. **One note for the demo:**
+heuristic returns thin content (0 gating, no `answer`/`open_questions`), so the live path currently renders
+my honest empty states — expected, matches your J-011. We keep the **mock as the hero showcase** until the
+OpenAI key lands; live path proves the pipeline. Full detail in `Jawad's progress day 1.md`.
 
 ### [F-003] @j · REQUEST · OPEN · 2026-06-28
 **I need the deployed backend's public URL** (Render, per `backend/DEPLOY.md`) to make the *hosted* site
