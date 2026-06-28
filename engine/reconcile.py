@@ -169,3 +169,47 @@ def assign_ids(merged_groups: list[dict[str, Any]]) -> list[tuple[str, dict[str,
         key=lambda merged: (int(merged.get("source_page") or 0), int(merged.get("_char_start") or 0)),
     )
     return [(f"req-{index:04d}", merged) for index, merged in enumerate(ordered, start=1)]
+
+
+
+def build_report(
+    tender_id: str | None,
+    raw_count: int,
+    assigned: list[tuple[str, dict[str, Any]]],
+    finals: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """Build separate reconcile provenance report in final-id order."""
+    merge_groups: list[dict[str, Any]] = []
+    for (final_id, merged), final in zip(assigned, finals, strict=True):
+        merge_groups.append({
+            "final_id": final_id,
+            "member_raw_ids": list(merged.get("_member_raw_ids", [])),
+            "canonical_raw_id": merged.get("_canonical_raw_id"),
+            "member_confidences": list(merged.get("_member_confidences", [])),
+            "merged_confidence": merged.get("confidence"),
+            "type": merged.get("type"),
+            "is_gating": merged.get("is_gating"),
+            "needs_review": final.get("needs_review"),
+        })
+    return {
+        "tender_id": tender_id,
+        "raw_count": raw_count,
+        "final_count": len(finals),
+        "merge_groups": merge_groups,
+    }
+
+
+def reconcile(raw_envelope: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Raw envelope -> (final envelope, reconcile report). Pure; no I/O."""
+    raws = list(raw_envelope.get("raw_requirements", []))
+    groups = group_candidates(raws)
+    merged_groups = [merge_group(group) for group in groups]
+    assigned = assign_ids(merged_groups)
+    final_requirements = [to_final(merged, req_id) for req_id, merged in assigned]
+    final_envelope = {
+        "tender_id": raw_envelope.get("tender_id"),
+        "title": raw_envelope.get("title"),
+        "requirements": final_requirements,
+    }
+    report = build_report(raw_envelope.get("tender_id"), len(raws), assigned, final_requirements)
+    return final_envelope, report
