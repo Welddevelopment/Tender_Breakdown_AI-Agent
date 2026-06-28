@@ -86,7 +86,7 @@ export function GapInterview() {
                   </span>
                 )}
                 {req.answer && <AnswerStateBadge state={req.answer.state} />}
-                <span className="text-xs text-ink-muted">
+                <span className="font-mono text-xs text-ink-muted">
                   {req.category} · p.{req.source_page}
                 </span>
               </div>
@@ -127,7 +127,7 @@ function StatCard({
 
   return (
     <div className="rounded-xl border border-hairline bg-paper-raised px-4 py-3 shadow-sm">
-      <div className={`text-2xl font-bold ${valueTone[tone]}`}>{value}</div>
+      <div className={`font-serif text-2xl font-semibold ${valueTone[tone]}`}>{value}</div>
       <div className="text-xs text-ink-muted">{label}</div>
     </div>
   );

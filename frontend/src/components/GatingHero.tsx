@@ -26,7 +26,7 @@ export function GatingHero() {
           />
         </svg>
         <div>
-          <h2 className="text-base font-bold leading-tight tracking-tight">
+          <h2 className="font-serif text-lg font-semibold leading-tight tracking-tight">
             {gating.length} deal-breaker{gating.length !== 1 ? "s" : ""} — miss
             any one and the bid is disqualified
           </h2>
@@ -49,7 +49,7 @@ export function GatingHero() {
             />
             <span className="leading-snug">
               {req.text}
-              <span className="ml-2 text-xs font-medium text-ink-muted">
+              <span className="ml-2 font-mono text-xs text-ink-muted">
                 p.{req.source_page} · {req.source_clause}
               </span>
             </span>

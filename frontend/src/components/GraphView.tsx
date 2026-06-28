@@ -48,6 +48,7 @@ const baseNodeStyle: React.CSSProperties = {
   lineHeight: 1.3,
   width: 240,
   boxShadow: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+  fontFamily: "var(--font-body)",
 };
 
 const criteriaNodeStyle: React.CSSProperties = {
@@ -56,7 +57,8 @@ const criteriaNodeStyle: React.CSSProperties = {
   background: "#f6f2e9",
   border: "1px solid #6b6358",
   color: "#6b6358",
-  fontWeight: 600,
+  fontFamily: "var(--font-mono-ibm)",
+  fontWeight: 500,
 };
 
 function truncate(text: string, max = 90): string {

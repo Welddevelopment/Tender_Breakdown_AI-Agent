@@ -19,7 +19,7 @@ export function AnswerPanel({ requirement }: { requirement: Requirement }) {
   return (
     <section className="mt-5">
       <div className="mb-1.5 flex items-center justify-between gap-2">
-        <h3 className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
+        <h3 className="font-mono text-xs font-medium uppercase tracking-wide text-ink-muted">
           Draft answer
         </h3>
         {answer && <AnswerStateBadge state={answer.state} />}
@@ -87,7 +87,7 @@ export function AnswerPanel({ requirement }: { requirement: Requirement }) {
           </div>
 
           <div>
-            <h4 className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-ink-muted">
+            <h4 className="mb-1.5 font-mono text-[11px] font-medium uppercase tracking-wide text-ink-muted">
               Evidence
             </h4>
             {answer.evidence_refs.length === 0 ? (
@@ -102,7 +102,7 @@ export function AnswerPanel({ requirement }: { requirement: Requirement }) {
                     key={`${ref.doc_id}-${index}`}
                     className="rounded-lg border-l-4 border-forest/40 bg-forest/5 px-3 py-2"
                   >
-                    <div className="flex items-center gap-1.5 text-xs font-medium text-forest">
+                    <div className="flex items-center gap-1.5 font-mono text-xs font-medium text-forest">
                       <svg
                         className="h-3.5 w-3.5 shrink-0"
                         fill="none"

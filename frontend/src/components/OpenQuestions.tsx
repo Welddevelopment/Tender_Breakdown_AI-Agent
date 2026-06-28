@@ -13,7 +13,7 @@ export function OpenQuestions({ requirement }: { requirement: Requirement }) {
   return (
     <section className="mt-5">
       <div className="mb-1.5 flex items-center justify-between gap-2">
-        <h3 className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
+        <h3 className="font-mono text-xs font-medium uppercase tracking-wide text-ink-muted">
           Open questions
         </h3>
         {unanswered > 0 && (

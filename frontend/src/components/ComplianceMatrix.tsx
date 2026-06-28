@@ -124,7 +124,7 @@ export function ComplianceMatrix({
       <div className="overflow-x-auto rounded-xl border border-hairline bg-paper-raised shadow-sm">
         <table className="w-full min-w-[720px] text-left text-sm">
           <thead>
-            <tr className="border-b border-hairline bg-paper text-xs font-semibold uppercase tracking-wide text-ink-muted">
+            <tr className="border-b border-hairline bg-paper font-mono text-xs font-medium uppercase tracking-wide text-ink-muted">
               <th className="px-4 py-3">Requirement</th>
               <th className="px-4 py-3 w-32">Type</th>
               <th className="px-4 py-3 w-36">Source</th>
@@ -172,10 +172,10 @@ export function ComplianceMatrix({
                   <TypeBadge type={req.type} isGating={req.is_gating} />
                 </td>
                 <td className="px-4 py-3.5 align-top">
-                  <div className="text-ink">
+                  <div className="font-mono text-ink">
                     <span className="font-medium">p.{req.source_page}</span>
                   </div>
-                  <div className="text-xs text-ink-muted">
+                  <div className="font-mono text-xs text-ink-muted">
                     {req.source_clause}
                   </div>
                 </td>
