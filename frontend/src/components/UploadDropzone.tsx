@@ -2,27 +2,40 @@
 
 import Link from "next/link";
 import { useRef, useState } from "react";
+import { isApiEnabled, uploadTender } from "@/lib/api";
+import { useRequirements } from "@/context/RequirementsContext";
 
-type UploadStage = "idle" | "extracting" | "done";
+type UploadStage = "idle" | "extracting" | "done" | "error";
 
 export function UploadDropzone() {
+  const { loadTender } = useRequirements();
   const [stage, setStage] = useState<UploadStage>("idle");
   const [isDragging, setIsDragging] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  function startFakeExtraction(name: string) {
-    setFileName(name);
-    setStage("extracting");
-    // Wireframe only — no real upload or parsing happens here.
-    window.setTimeout(() => setStage("done"), 1800);
-  }
-
-  function handleFiles(files: FileList | null) {
+  async function handleFiles(files: FileList | null) {
     if (stage === "extracting") return;
     const file = files?.[0];
     if (!file) return;
-    startFakeExtraction(file.name);
+
+    setFileName(file.name);
+    setStage("extracting");
+
+    // No API configured → wireframe path (fake extraction, mock stays in place).
+    if (!isApiEnabled()) {
+      window.setTimeout(() => setStage("done"), 1800);
+      return;
+    }
+
+    // Live path: upload the PDF, then load the extracted tender into the matrix.
+    try {
+      const tenderId = await uploadTender(file, file.name);
+      await loadTender(tenderId);
+      setStage("done");
+    } catch {
+      setStage("error");
+    }
   }
 
   function handleDrop(event: React.DragEvent<HTMLDivElement>) {
@@ -97,6 +110,45 @@ export function UploadDropzone() {
             className="rounded-md px-3 py-2 text-sm font-medium text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-800"
           >
             Upload another
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (stage === "error") {
+    return (
+      <div className="w-full max-w-xl rounded-xl border border-red-200 bg-white p-8 text-center shadow-sm">
+        <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-red-600 ring-1 ring-inset ring-red-200">
+          <svg
+            className="h-6 w-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 9v3.75m0 3.5h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"
+            />
+          </svg>
+        </span>
+        <h2 className="mt-4 text-base font-semibold tracking-tight text-slate-900">
+          Couldn&rsquo;t reach the extractor
+        </h2>
+        <p className="mt-1 text-sm text-slate-500">
+          The backend didn&rsquo;t respond. Check it&rsquo;s running and
+          reachable at <code className="text-slate-700">NEXT_PUBLIC_API_BASE_URL</code>, then try again.
+        </p>
+        <div className="mt-6 flex items-center justify-center">
+          <button
+            type="button"
+            onClick={reset}
+            className="inline-flex items-center rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-700"
+          >
+            Try again
           </button>
         </div>
       </div>

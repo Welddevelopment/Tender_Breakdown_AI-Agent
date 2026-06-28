@@ -4,8 +4,11 @@ import { createContext, useContext, useState } from "react";
 import type {
   CapabilityDoc,
   Requirement,
+  RequirementDecision,
+  RequirementStatus,
 } from "@/types/requirement";
 import { mockTender } from "@/data/mock-requirements";
+import { getTender, isApiEnabled, patchRequirement } from "@/lib/api";
 
 interface RequirementsContextValue {
   requirements: Requirement[];
@@ -20,6 +23,7 @@ interface RequirementsContextValue {
     questionId: string,
     answerText: string
   ) => void;
+  loadTender: (tenderId: string) => Promise<void>;
 }
 
 const RequirementsContext = createContext<RequirementsContextValue | null>(null);
@@ -29,12 +33,14 @@ export function RequirementsProvider({
 }: {
   children: React.ReactNode;
 }) {
+  // Seeded from the mock so the app works with no backend (demo-safe default).
+  // loadTender() swaps in a real tender when the API is wired up.
   const [requirements, setRequirements] = useState<Requirement[]>(
     () => mockTender.requirements
   );
-
-  // Static for now; comes from the tender response. Swap to API later alongside requirements.
-  const capabilityDocs = mockTender.capability_docs ?? [];
+  const [capabilityDocs, setCapabilityDocs] = useState<CapabilityDoc[]>(
+    () => mockTender.capability_docs ?? []
+  );
 
   function updateRequirement(id: string, patch: Partial<Requirement>) {
     setRequirements((prev) =>
@@ -42,41 +48,53 @@ export function RequirementsProvider({
     );
   }
 
+  // Replace the in-memory tender with one fetched from the live backend.
+  async function loadTender(tenderId: string) {
+    const tender = await getTender(tenderId);
+    setRequirements(tender.requirements);
+    setCapabilityDocs(tender.capability_docs ?? []);
+  }
+
+  // Optimistic in-memory update + best-effort persistence to the API when wired.
+  function applyDecision(
+    id: string,
+    status: RequirementStatus,
+    decision: RequirementDecision
+  ) {
+    updateRequirement(id, { status, decision });
+    if (isApiEnabled()) {
+      patchRequirement(id, { status, decision }).catch(() => {
+        // Best-effort: the optimistic update already reflects the change in the UI.
+      });
+    }
+  }
+
   function approve(id: string) {
-    updateRequirement(id, {
-      status: "accepted",
-      decision: {
-        action: "approve",
-        note: "",
-        timestamp: new Date().toISOString(),
-      },
+    applyDecision(id, "accepted", {
+      action: "approve",
+      note: "",
+      timestamp: new Date().toISOString(),
     });
   }
 
   function editRequirement(id: string, note: string) {
-    updateRequirement(id, {
-      status: "edited",
-      decision: {
-        action: "edit",
-        note,
-        timestamp: new Date().toISOString(),
-      },
+    applyDecision(id, "edited", {
+      action: "edit",
+      note,
+      timestamp: new Date().toISOString(),
     });
   }
 
   function flag(id: string, note: string) {
-    updateRequirement(id, {
-      status: "flagged",
-      decision: {
-        action: "flag",
-        note,
-        timestamp: new Date().toISOString(),
-      },
+    applyDecision(id, "flagged", {
+      action: "flag",
+      note,
+      timestamp: new Date().toISOString(),
     });
   }
 
   // Human revises the drafted answer — record it as human-edited and keep the
-  // deprecated draft_answer alias in sync.
+  // deprecated draft_answer alias in sync. (No backend endpoint yet — in-memory.)
   function editAnswer(id: string, text: string) {
     setRequirements((prev) =>
       prev.map((req) => {
@@ -90,7 +108,7 @@ export function RequirementsProvider({
     );
   }
 
-  // Human answers a gap question the tool flagged.
+  // Human answers a gap question the tool flagged. (No backend endpoint yet — in-memory.)
   function answerOpenQuestion(
     reqId: string,
     questionId: string,
@@ -126,6 +144,7 @@ export function RequirementsProvider({
         flag,
         editAnswer,
         answerOpenQuestion,
+        loadTender,
       }}
     >
       {children}
