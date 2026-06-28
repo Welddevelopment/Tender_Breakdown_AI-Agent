@@ -22,10 +22,10 @@ export function NavBar() {
       <div className="mx-auto flex max-w-6xl items-center gap-6 px-6 py-3">
         <div className="flex items-center gap-2">
           <div className="flex h-7 w-7 items-center justify-center rounded-md bg-slate-900 text-xs font-bold text-white">
-            TB
+            BF
           </div>
           <span className="text-sm font-semibold tracking-tight text-slate-900">
-            Tender Breakdown
+            Bidframe
           </span>
         </div>
         <div className="flex items-center gap-1">

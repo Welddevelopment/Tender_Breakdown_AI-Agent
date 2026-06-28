@@ -1,6 +1,6 @@
 import { UploadDropzone } from "@/components/UploadDropzone";
 
-export const metadata = { title: "Upload — Tender Breakdown" };
+export const metadata = { title: "Upload — Bidframe" };
 
 export default function UploadPage() {
   return (

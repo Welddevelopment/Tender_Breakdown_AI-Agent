@@ -1,7 +1,7 @@
 import { GraphView } from "@/components/GraphView";
 import { Header } from "@/components/Header";
 
-export const metadata = { title: "Graph — Tender Breakdown" };
+export const metadata = { title: "Graph — Bidframe" };
 
 export default function GraphPage() {
   return (

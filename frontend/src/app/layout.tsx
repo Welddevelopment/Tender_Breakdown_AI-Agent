@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Tender Breakdown — Compliance Matrix",
+  title: "Bidframe — Compliance Matrix",
   description:
     "Extract and review tender requirements. Deal-breakers flagged, uncertainty surfaced.",
 };
