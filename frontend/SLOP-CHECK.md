@@ -1,7 +1,7 @@
 # Bidframe Slop Check
 
-A subset of the Bidframe design system. Read this before you add a wireframe of any
-screen. It exists so the UI looks chosen by a person with taste, not generated. If your
+A subset of the Bidframe design system (see [DESIGN-SYSTEM.md](DESIGN-SYSTEM.md)). Read this
+before you add a wireframe of any screen. It exists so the UI looks chosen by a person with taste, not generated. If your
 screen passes this, the frontend handoff is faster and there is less for Jawad to redo.
 
 ## Why this exists
@@ -28,6 +28,8 @@ it. This protocol turns "do not look like AI" into rules you can actually check.
 
 1. **Greyscale test.** View the screen with no color. Does the layout still read and rank
    correctly? If it only works because of color, the structure is lazy. Fix the structure.
+   Status especially: every status must stay legible here through its dot fill and a word, so
+   color only speeds the glance and is never the only channel.
 2. **Name one intentional choice.** Point to a single deliberate, slightly unexpected
    decision on the screen (an off center anchor, a dense table that earns its density, a
    confident piece of whitespace). If you cannot name one, it is not done.
@@ -55,6 +57,9 @@ These are blockers. If a wireframe contains any of these, it does not ship.
 
 **Color and surface**
 - Blue, teal, purple, or indigo as a primary or accent. These are the number one tell.
+- Status colors leaking into chrome. The signal colors (the confidence red, amber, yellow,
+  green) live only on status carriers (the confidence dot, a thin answer edge, a status cell),
+  never on buttons, nav, headings, or backgrounds. See DESIGN-SYSTEM section 3.
 - Gradients used as decoration. Glassmorphism. Neon on dark.
 - Pure white (#fff) or pure black (#000).
 

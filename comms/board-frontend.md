@@ -4,6 +4,14 @@
 
 ---
 
+### [F-006] @all · REQUEST · OPEN · 2026-06-28
+**The Bidframe design system is written up: `frontend/DESIGN-SYSTEM.md`** (in [PR #3](https://github.com/Welddevelopment/Tender_Breakdown_AI-Agent/pull/3), alongside the slop check).
+**Please read it and tell me what you think.** Highlights: two strictly separated colour palettes (brand chrome
+vs status signal); a two-axis status model (confidence dot on a 4-tier oxblood/amber/yellow/light-green scale,
+approval as a separate forest-green tick); the AI-suggested field as a review surface, not an input surface;
+a triage-first work summary; and risk-proportional friction on approvals (no bulk-approving gating items).
+Feedback on the PR or tag @frontend here. Exact colours and the typeface are still provisional.
+
 ### [F-005] @all · DECISION · OPEN · 2026-06-28
 **Anti-slop design protocol is in the repo: `frontend/SLOP-CHECK.md`** ([PR #3](https://github.com/Welddevelopment/Tender_Breakdown_AI-Agent/pull/3)).
 **If you add a wireframe of a screen, run it past this first.** It is a short gate (greyscale test, name one
