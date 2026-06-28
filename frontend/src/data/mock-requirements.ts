@@ -20,7 +20,30 @@ export const mockTender: Tender = {
       decision: null,
       criteria_ref: "award-criterion-1",
       depends_on: ["req-0003"],
-      draft_answer: null,
+      draft_answer:
+        "We hold ISO 9001:2015 (UKAS-accredited). We need to confirm the certificate's validity covers the full contract term.",
+      answer: {
+        text: "We hold ISO 9001:2015 (UKAS-accredited). We need to confirm the certificate's validity covers the full contract term.",
+        state: "needs_input",
+        evidence_refs: [
+          {
+            doc_id: "cap-002",
+            excerpt:
+              "Quality accreditations: ISO 9001:2015 certified (UKAS-accredited certification body).",
+            page: 1,
+          },
+        ],
+        confidence: 0.54,
+      },
+      open_questions: [
+        {
+          id: "q-req0001-1",
+          question:
+            "What is your ISO 9001 certificate expiry date, and does it cover the full contract term?",
+          answer: null,
+          answered_at: null,
+        },
+      ],
     },
     {
       id: "req-0002",
@@ -78,7 +101,22 @@ export const mockTender: Tender = {
       },
       criteria_ref: "award-criterion-2",
       depends_on: ["req-0001"],
-      draft_answer: null,
+      draft_answer:
+        "We provide three comparable public-sector case studies from the last five years: NHS Greater Manchester (managed IT, 2023), Leeds City Council (service-desk migration, 2022), and SPSO (cloud transition, 2024).",
+      answer: {
+        text: "We provide three comparable public-sector case studies from the last five years: NHS Greater Manchester (managed IT, 2023), Leeds City Council (service-desk migration, 2022), and SPSO (cloud transition, 2024).",
+        state: "auto",
+        evidence_refs: [
+          {
+            doc_id: "cap-001",
+            excerpt:
+              "Case study — NHS Greater Manchester: fully managed IT service across 14 sites (2023), 99.9% uptime; comparable scope and scale.",
+            page: 3,
+          },
+        ],
+        confidence: 0.83,
+      },
+      open_questions: [],
     },
     {
       id: "req-0005",
@@ -192,5 +230,9 @@ export const mockTender: Tender = {
       depends_on: [],
       draft_answer: null,
     },
+  ],
+  capability_docs: [
+    { doc_id: "cap-001", filename: "case-studies-2025.pdf", page_count: 12 },
+    { doc_id: "cap-002", filename: "accreditations.pdf", page_count: 3 },
   ],
 };
