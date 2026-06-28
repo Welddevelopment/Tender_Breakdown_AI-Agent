@@ -188,13 +188,13 @@ function DrawerContent({
         )}
 
         <div className="mt-5">
-          <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-ink-muted">
+          <h3 className="mb-1.5 font-mono text-xs font-medium uppercase tracking-wide text-ink-muted">
             Source excerpt
           </h3>
           <blockquote className="rounded-lg border-l-4 border-forest/30 bg-paper px-3 py-2.5 text-sm italic leading-relaxed text-ink">
             &ldquo;{requirement.source_excerpt}&rdquo;
           </blockquote>
-          <div className="mt-2 flex items-center gap-2 text-xs text-ink-muted">
+          <div className="mt-2 flex items-center gap-2 font-mono text-xs text-ink-muted">
             <span className="font-medium text-ink">
               p.{requirement.source_page}
             </span>
@@ -209,7 +209,7 @@ function DrawerContent({
 
         {requirement.decision && (
           <div className="mt-5 rounded-lg border border-hairline bg-paper px-3 py-2.5">
-            <h3 className="mb-1 text-xs font-semibold uppercase tracking-wide text-ink-muted">
+            <h3 className="mb-1 font-mono text-xs font-medium uppercase tracking-wide text-ink-muted">
               Current decision
             </h3>
             <p className="text-sm text-ink">
@@ -259,7 +259,7 @@ function DrawerContent({
           <div className="flex flex-col gap-2.5">
             <label
               htmlFor="decision-note"
-              className="text-xs font-semibold uppercase tracking-wide text-ink-muted"
+              className="font-mono text-xs font-medium uppercase tracking-wide text-ink-muted"
             >
               {activeForm === "edit" ? "Edit note" : "Reason for flagging"}
             </label>

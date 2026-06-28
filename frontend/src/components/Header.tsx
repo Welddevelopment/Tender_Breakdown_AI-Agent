@@ -8,11 +8,11 @@ export function Header({ title, subtitle }: HeaderProps) {
     <header className="border-b border-hairline bg-paper-raised">
       <div className="mx-auto flex max-w-6xl flex-col gap-1 px-6 py-5">
         <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-forest text-sm font-bold text-paper">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-forest font-serif text-sm font-semibold text-paper">
             BF
           </div>
           <div>
-            <h1 className="text-lg font-semibold tracking-tight text-ink">
+            <h1 className="font-serif text-lg font-semibold tracking-tight text-ink">
               Bidframe
             </h1>
             <p className="text-xs text-ink-muted">
@@ -21,7 +21,7 @@ export function Header({ title, subtitle }: HeaderProps) {
           </div>
         </div>
         <div className="mt-3">
-          <h2 className="text-base font-medium text-ink">{title}</h2>
+          <h2 className="font-serif text-2xl font-semibold tracking-tight text-ink">{title}</h2>
           {subtitle && (
             <p className="text-sm text-ink-muted">{subtitle}</p>
           )}

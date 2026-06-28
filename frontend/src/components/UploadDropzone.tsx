@@ -83,7 +83,7 @@ export function UploadDropzone() {
             />
           </svg>
         </span>
-        <h2 className="mt-4 text-base font-semibold tracking-tight text-ink">
+        <h2 className="mt-4 font-serif text-lg font-semibold tracking-tight text-ink">
           Requirements extracted
         </h2>
         <p className="mt-1 text-sm text-ink-muted">
@@ -135,12 +135,12 @@ export function UploadDropzone() {
             />
           </svg>
         </span>
-        <h2 className="mt-4 text-base font-semibold tracking-tight text-ink">
+        <h2 className="mt-4 font-serif text-lg font-semibold tracking-tight text-ink">
           Couldn&rsquo;t reach the extractor
         </h2>
         <p className="mt-1 text-sm text-ink-muted">
           The backend didn&rsquo;t respond. Check it&rsquo;s running and
-          reachable at <code className="text-ink">NEXT_PUBLIC_API_BASE_URL</code>, then try again.
+          reachable at <code className="font-mono text-ink">NEXT_PUBLIC_API_BASE_URL</code>, then try again.
         </p>
         <div className="mt-6 flex items-center justify-center">
           <button
@@ -162,7 +162,7 @@ export function UploadDropzone() {
           className="inline-block h-10 w-10 animate-spin rounded-full border-[3px] border-hairline border-t-forest"
           aria-hidden
         />
-        <h2 className="mt-4 text-base font-semibold tracking-tight text-ink">
+        <h2 className="mt-4 font-serif text-lg font-semibold tracking-tight text-ink">
           Extracting requirements&hellip;
         </h2>
         <p className="mt-1 truncate text-sm text-ink-muted" title={fileName ?? undefined}>
