@@ -1,0 +1,6 @@
+id,text,type,is_gating,source_page,source_clause,notes
+# Fill in one row per requirement you find in data/tenders/spso-cleaning.pdf
+# type = mandatory|optional ; is_gating = yes|no ; delete these comment lines when done.
+# The two rows below are EXAMPLES showing the format — replace them with what YOU find.
+g1,Prices quoted must be held firm for at least 45 days from the closing date,mandatory,no,4,,example row — verify against the PDF
+g2,The supplier must hold valid public liability insurance,mandatory,yes,,,"example row — gating if missing it disqualifies; check the PDF for the real wording/page"
