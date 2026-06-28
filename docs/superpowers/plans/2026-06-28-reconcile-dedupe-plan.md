@@ -3,6 +3,16 @@
 Pipeline **step 5**. One engineer can execute this top-to-bottom with no other context.
 Every number below is verified against the golden trace and live difflib output on this machine.
 
+> **BUILD ORDER (eval-prioritized — read this first).** The eval harness is the Generalist's headline
+> deliverable, so it is built *before* the bulk of reconcile. This plan is split across that order:
+> 1. **This plan, Phases 0–2** — `engine/` scaffolding + `_io.py` + `similarity.py`. *(the shared foundation; `similarity.py` is reused by eval)*
+> 2. **`2026-06-28-eval-harness-plan.md`, Phases E0–E3** — the eval harness against synthetic fixtures. *(THE PRIORITY)*
+> 3. **This plan, Phases 3–9** — grouping → merge → `to_final` → ids → report → end-to-end.
+> 4. **Eval plan, Phase E4** — the closed loop: `reconcile(mock raw)` → `score` vs `mock.gold.json`.
+>
+> If time runs short, reconcile's anti-transitivity guard (Phase 3 all-pairs + its chain tests) is the one
+> deferrable piece — but the conservative AND gate and the token-Jaccard floor are essential, not optional.
+
 ---
 
 ## 1. Goal & Context
