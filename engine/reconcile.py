@@ -1,8 +1,12 @@
 """Reconcile raw extraction candidates into final Bidframe requirements."""
 from __future__ import annotations
 
+import argparse
+import sys
+from pathlib import Path
 from typing import Any
 
+from engine._io import read_json, write_json
 from engine.similarity import (
     TEXT_SIM_THRESHOLD,
     TOKEN_SIM_FLOOR,
@@ -213,3 +217,41 @@ def reconcile(raw_envelope: dict[str, Any]) -> tuple[dict[str, Any], dict[str, A
     }
     report = build_report(raw_envelope.get("tender_id"), len(raws), assigned, final_requirements)
     return final_envelope, report
+
+
+
+def main(argv: list[str]) -> int:
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except (AttributeError, ValueError):
+        pass
+
+    parser = argparse.ArgumentParser(description="Reconcile raw Bidframe extraction output.")
+    parser.add_argument("raw_json", help="Path to raw extraction envelope JSON")
+    parser.add_argument("--out", help="Path to write final reconciled envelope JSON")
+    parser.add_argument("--report", help="Path to write reconcile report JSON")
+    args = parser.parse_args(argv[1:])
+
+    raw_path = Path(args.raw_json)
+    if not raw_path.exists():
+        parser.error(f"raw JSON not found: {raw_path}")
+
+    out_path = Path(args.out) if args.out else raw_path.with_name(f"{raw_path.stem}.final.json")
+    report_path = Path(args.report) if args.report else raw_path.with_name(f"{raw_path.stem}.report.json")
+
+    raw_envelope = read_json(raw_path)
+    final, report = reconcile(raw_envelope)
+    write_json(out_path, final)
+    write_json(report_path, report)
+
+    merge_count = sum(1 for group in report["merge_groups"] if len(group["member_raw_ids"]) > 1)
+    needs_review_count = sum(1 for req in final["requirements"] if req["needs_review"])
+    print(
+        f"reconciled {report['raw_count']} raw -> {report['final_count']} final "
+        f"({merge_count} merge group); needs_review: {needs_review_count}"
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main(sys.argv))
