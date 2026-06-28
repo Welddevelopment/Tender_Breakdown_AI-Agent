@@ -14,10 +14,10 @@ interface RequirementDrawerProps {
 type ActiveForm = "none" | "edit" | "flag";
 
 const statusBadge: Record<string, string> = {
-  pending: "bg-slate-100 text-slate-600 ring-slate-200",
-  accepted: "bg-emerald-50 text-emerald-700 ring-emerald-200",
-  edited: "bg-blue-50 text-blue-700 ring-blue-200",
-  flagged: "bg-red-50 text-red-700 ring-red-200",
+  pending: "bg-paper text-ink-muted ring-hairline",
+  accepted: "bg-forest/10 text-forest ring-forest/30",
+  edited: "bg-ink/5 text-ink ring-ink/15",
+  flagged: "bg-signal-oxblood/10 text-signal-oxblood ring-signal-oxblood/30",
 };
 
 export function RequirementDrawer({
@@ -50,7 +50,7 @@ export function RequirementDrawer({
     >
       {/* Scrim */}
       <div
-        className={`fixed inset-0 bg-black/30 transition-opacity ${
+        className={`fixed inset-0 bg-ink/40 transition-opacity ${
           open ? "opacity-100" : "opacity-0"
         }`}
         onClick={onClose}
@@ -63,7 +63,7 @@ export function RequirementDrawer({
         aria-modal="true"
         aria-label="Requirement detail"
         tabIndex={-1}
-        className={`fixed inset-y-0 right-0 flex w-full max-w-md flex-col bg-white shadow-xl outline-none transition-transform duration-200 ${
+        className={`fixed inset-y-0 right-0 flex w-full max-w-md flex-col bg-paper-raised shadow-xl outline-none transition-transform duration-200 ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -108,11 +108,11 @@ function DrawerContent({
 
   return (
     <>
-      <div className="flex items-start justify-between gap-3 border-b border-slate-200 px-5 py-4">
+      <div className="flex items-start justify-between gap-3 border-b border-hairline px-5 py-4">
         <div className="flex flex-col gap-2">
           <div className="flex flex-wrap items-center gap-2">
             {requirement.is_gating && (
-              <span className="inline-flex items-center gap-1 rounded-md bg-red-600 px-2 py-0.5 text-xs font-semibold text-white shadow-sm">
+              <span className="inline-flex items-center gap-1 rounded-md bg-signal-oxblood px-2 py-0.5 text-xs font-semibold text-paper shadow-sm">
                 <svg
                   className="h-3 w-3"
                   fill="currentColor"
@@ -137,13 +137,13 @@ function DrawerContent({
                 requirement.status.slice(1)}
             </span>
           </div>
-          <span className="text-xs text-slate-400">{requirement.category}</span>
+          <span className="text-xs text-ink-muted">{requirement.category}</span>
         </div>
         <button
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="-mr-1 rounded-md p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+          className="-mr-1 rounded-md p-1 text-ink-muted transition-colors hover:bg-paper hover:text-ink"
         >
           <svg
             className="h-5 w-5"
@@ -163,12 +163,12 @@ function DrawerContent({
       </div>
 
       <div className="flex-1 overflow-y-auto px-5 py-4">
-        <p className="text-base font-medium leading-snug text-slate-900">
+        <p className="text-base font-medium leading-snug text-ink">
           {requirement.text}
         </p>
 
         {requirement.needs_review && (
-          <span className="mt-3 inline-flex w-fit items-center gap-1 rounded bg-amber-100 px-1.5 py-0.5 text-[11px] font-medium text-amber-800">
+          <span className="mt-3 inline-flex w-fit items-center gap-1 rounded bg-signal-amber/15 px-1.5 py-0.5 text-[11px] font-medium text-ink">
             <svg
               className="h-3 w-3"
               fill="none"
@@ -188,14 +188,14 @@ function DrawerContent({
         )}
 
         <div className="mt-5">
-          <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-ink-muted">
             Source excerpt
           </h3>
-          <blockquote className="rounded-lg border-l-4 border-amber-300 bg-amber-50/70 px-3 py-2.5 text-sm italic leading-relaxed text-slate-700">
+          <blockquote className="rounded-lg border-l-4 border-forest/30 bg-paper px-3 py-2.5 text-sm italic leading-relaxed text-ink">
             &ldquo;{requirement.source_excerpt}&rdquo;
           </blockquote>
-          <div className="mt-2 flex items-center gap-2 text-xs text-slate-500">
-            <span className="font-medium text-slate-700">
+          <div className="mt-2 flex items-center gap-2 text-xs text-ink-muted">
+            <span className="font-medium text-ink">
               p.{requirement.source_page}
             </span>
             <span aria-hidden>·</span>
@@ -208,11 +208,11 @@ function DrawerContent({
         <OpenQuestions requirement={requirement} />
 
         {requirement.decision && (
-          <div className="mt-5 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5">
-            <h3 className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <div className="mt-5 rounded-lg border border-hairline bg-paper px-3 py-2.5">
+            <h3 className="mb-1 text-xs font-semibold uppercase tracking-wide text-ink-muted">
               Current decision
             </h3>
-            <p className="text-sm text-slate-700">
+            <p className="text-sm text-ink">
               <span className="font-medium capitalize">
                 {requirement.decision.action}
               </span>
@@ -224,13 +224,13 @@ function DrawerContent({
         )}
       </div>
 
-      <div className="border-t border-slate-200 px-5 py-4">
+      <div className="border-t border-hairline px-5 py-4">
         {activeForm === "none" ? (
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
               onClick={handleApprove}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-emerald-700"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-forest px-3.5 py-2 text-sm font-medium text-paper shadow-sm transition-colors hover:bg-forest-hover"
             >
               Approve
             </button>
@@ -240,7 +240,7 @@ function DrawerContent({
                 setActiveForm("edit");
                 setNote("");
               }}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-white px-3.5 py-2 text-sm font-medium text-blue-700 ring-1 ring-inset ring-blue-200 transition-colors hover:bg-blue-50"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-paper-raised px-3.5 py-2 text-sm font-medium text-forest ring-1 ring-inset ring-forest/30 transition-colors hover:bg-forest/5"
             >
               Edit
             </button>
@@ -250,7 +250,7 @@ function DrawerContent({
                 setActiveForm("flag");
                 setNote("");
               }}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-white px-3.5 py-2 text-sm font-medium text-red-700 ring-1 ring-inset ring-red-200 transition-colors hover:bg-red-50"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-paper-raised px-3.5 py-2 text-sm font-medium text-signal-oxblood ring-1 ring-inset ring-signal-oxblood/30 transition-colors hover:bg-signal-oxblood/5"
             >
               Flag
             </button>
@@ -259,7 +259,7 @@ function DrawerContent({
           <div className="flex flex-col gap-2.5">
             <label
               htmlFor="decision-note"
-              className="text-xs font-semibold uppercase tracking-wide text-slate-500"
+              className="text-xs font-semibold uppercase tracking-wide text-ink-muted"
             >
               {activeForm === "edit" ? "Edit note" : "Reason for flagging"}
             </label>
@@ -274,16 +274,16 @@ function DrawerContent({
                   ? "What did you change or correct?"
                   : "Why does this need attention?"
               }
-              className="w-full resize-none rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-800 shadow-sm outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-400"
+              className="w-full resize-none rounded-lg border border-hairline px-3 py-2 text-sm text-ink shadow-sm outline-none focus:border-forest focus:ring-1 focus:ring-forest"
             />
             <div className="flex gap-2">
               <button
                 type="button"
                 onClick={handleSubmitForm}
-                className={`inline-flex items-center rounded-lg px-3.5 py-2 text-sm font-medium text-white shadow-sm transition-colors ${
+                className={`inline-flex items-center rounded-lg px-3.5 py-2 text-sm font-medium text-paper shadow-sm transition-colors ${
                   activeForm === "edit"
-                    ? "bg-blue-600 hover:bg-blue-700"
-                    : "bg-red-600 hover:bg-red-700"
+                    ? "bg-forest hover:bg-forest-hover"
+                    : "bg-signal-oxblood hover:opacity-90"
                 }`}
               >
                 {activeForm === "edit" ? "Save edit" : "Flag requirement"}
@@ -294,7 +294,7 @@ function DrawerContent({
                   setActiveForm("none");
                   setNote("");
                 }}
-                className="inline-flex items-center rounded-lg bg-white px-3.5 py-2 text-sm font-medium text-slate-600 ring-1 ring-inset ring-slate-200 transition-colors hover:bg-slate-50"
+                className="inline-flex items-center rounded-lg bg-paper-raised px-3.5 py-2 text-sm font-medium text-ink-muted ring-1 ring-inset ring-hairline transition-colors hover:bg-paper"
               >
                 Cancel
               </button>

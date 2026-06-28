@@ -9,10 +9,10 @@ interface ComplianceMatrixProps {
 
 function StatusBadge({ status }: { status: RequirementStatus }) {
   const styles: Record<RequirementStatus, string> = {
-    pending: "bg-slate-100 text-slate-600 ring-slate-200",
-    accepted: "bg-emerald-50 text-emerald-700 ring-emerald-200",
-    edited: "bg-blue-50 text-blue-700 ring-blue-200",
-    flagged: "bg-red-50 text-red-700 ring-red-200",
+    pending: "bg-paper text-ink-muted ring-hairline",
+    accepted: "bg-forest/10 text-forest ring-forest/30",
+    edited: "bg-ink/5 text-ink ring-ink/15",
+    flagged: "bg-signal-oxblood/10 text-signal-oxblood ring-signal-oxblood/30",
   };
 
   const labels: Record<RequirementStatus, string> = {
@@ -40,7 +40,7 @@ function TypeBadge({
 }) {
   if (isGating) {
     return (
-      <span className="inline-flex items-center gap-1 rounded-md bg-red-600 px-2 py-0.5 text-xs font-semibold text-white shadow-sm">
+      <span className="inline-flex items-center gap-1 rounded-md bg-signal-oxblood px-2 py-0.5 text-xs font-semibold text-paper shadow-sm">
         <svg
           className="h-3 w-3"
           fill="currentColor"
@@ -60,38 +60,36 @@ function TypeBadge({
 
   if (type === "mandatory") {
     return (
-      <span className="inline-flex items-center rounded-md bg-orange-100 px-2 py-0.5 text-xs font-medium text-orange-800 ring-1 ring-inset ring-orange-200">
+      <span className="inline-flex items-center rounded-md bg-ink/5 px-2 py-0.5 text-xs font-medium text-ink ring-1 ring-inset ring-ink/15">
         Mandatory
       </span>
     );
   }
 
   return (
-    <span className="inline-flex items-center rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600 ring-1 ring-inset ring-slate-200">
+    <span className="inline-flex items-center rounded-md bg-paper px-2 py-0.5 text-xs font-medium text-ink-muted ring-1 ring-inset ring-hairline">
       Optional
     </span>
   );
 }
 
 function rowClasses(req: Requirement, isSelected: boolean): string {
-  const base = "cursor-pointer border-b border-slate-200 transition-colors";
-  const selected = isSelected
-    ? " ring-2 ring-inset ring-slate-900/70"
-    : "";
+  const base = "cursor-pointer border-b border-hairline transition-colors";
+  const selected = isSelected ? " ring-2 ring-inset ring-ink/70" : "";
 
   if (req.is_gating) {
-    return `${base} bg-red-50/80 hover:bg-red-50 border-l-4 border-l-red-500${selected}`;
+    return `${base} bg-signal-oxblood/10 hover:bg-signal-oxblood/15 border-l-4 border-l-signal-oxblood${selected}`;
   }
 
   if (req.needs_review) {
-    return `${base} bg-amber-50/60 hover:bg-amber-50 border-l-4 border-l-amber-400 border-dashed${selected}`;
+    return `${base} bg-signal-amber/10 hover:bg-signal-amber/15 border-l-4 border-l-signal-amber border-dashed${selected}`;
   }
 
   if (req.type === "mandatory") {
-    return `${base} hover:bg-slate-50 border-l-4 border-l-orange-300${selected}`;
+    return `${base} hover:bg-paper border-l-4 border-l-ink/20${selected}`;
   }
 
-  return `${base} hover:bg-slate-50 border-l-4 border-l-transparent${selected}`;
+  return `${base} hover:bg-paper border-l-4 border-l-transparent${selected}`;
 }
 
 export function ComplianceMatrix({
@@ -104,29 +102,29 @@ export function ComplianceMatrix({
 
   return (
     <div className="w-full">
-      <div className="mb-4 flex flex-wrap items-center gap-3 text-sm text-slate-600">
+      <div className="mb-4 flex flex-wrap items-center gap-3 text-sm text-ink-muted">
         <span>
-          <strong className="text-slate-900">{requirements.length}</strong>{" "}
+          <strong className="text-ink">{requirements.length}</strong>{" "}
           requirements
         </span>
         {gatingCount > 0 && (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800">
-            <span className="h-1.5 w-1.5 rounded-full bg-red-600" />
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-signal-oxblood/15 px-2.5 py-0.5 text-xs font-medium text-signal-oxblood">
+            <span className="h-1.5 w-1.5 rounded-full bg-signal-oxblood" />
             {gatingCount} deal-breaker{gatingCount !== 1 ? "s" : ""}
           </span>
         )}
         {reviewCount > 0 && (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-800">
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-amber-500" />
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-signal-amber/15 px-2.5 py-0.5 text-xs font-medium text-signal-amber">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-signal-amber" />
             {reviewCount} need{reviewCount !== 1 ? "" : "s"} human review
           </span>
         )}
       </div>
 
-      <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
+      <div className="overflow-x-auto rounded-xl border border-hairline bg-paper-raised shadow-sm">
         <table className="w-full min-w-[720px] text-left text-sm">
           <thead>
-            <tr className="border-b border-slate-200 bg-slate-50 text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <tr className="border-b border-hairline bg-paper text-xs font-semibold uppercase tracking-wide text-ink-muted">
               <th className="px-4 py-3">Requirement</th>
               <th className="px-4 py-3 w-32">Type</th>
               <th className="px-4 py-3 w-36">Source</th>
@@ -144,12 +142,12 @@ export function ComplianceMatrix({
                 <td className="px-4 py-3.5">
                   <div className="flex flex-col gap-1.5">
                     <p
-                      className={`leading-snug ${req.is_gating ? "font-semibold text-red-900" : req.needs_review ? "text-amber-900" : "text-slate-800"}`}
+                      className={`leading-snug ${req.is_gating ? "font-semibold text-signal-oxblood" : "text-ink"}`}
                     >
                       {req.text}
                     </p>
                     {req.needs_review && (
-                      <span className="inline-flex w-fit items-center gap-1 rounded bg-amber-100 px-1.5 py-0.5 text-[11px] font-medium text-amber-800">
+                      <span className="inline-flex w-fit items-center gap-1 rounded bg-signal-amber/15 px-1.5 py-0.5 text-[11px] font-medium text-ink">
                         <svg
                           className="h-3 w-3"
                           fill="none"
@@ -167,17 +165,17 @@ export function ComplianceMatrix({
                         Tool is unsure — verify manually
                       </span>
                     )}
-                    <span className="text-xs text-slate-400">{req.category}</span>
+                    <span className="text-xs text-ink-muted">{req.category}</span>
                   </div>
                 </td>
                 <td className="px-4 py-3.5 align-top">
                   <TypeBadge type={req.type} isGating={req.is_gating} />
                 </td>
                 <td className="px-4 py-3.5 align-top">
-                  <div className="text-slate-700">
+                  <div className="text-ink">
                     <span className="font-medium">p.{req.source_page}</span>
                   </div>
-                  <div className="text-xs text-slate-500">
+                  <div className="text-xs text-ink-muted">
                     {req.source_clause}
                   </div>
                 </td>

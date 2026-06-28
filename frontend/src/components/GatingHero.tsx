@@ -11,8 +11,8 @@ export function GatingHero() {
   }
 
   return (
-    <div className="mb-6 overflow-hidden rounded-xl border border-red-200 bg-red-50 shadow-sm">
-      <div className="flex items-start gap-3 border-b border-red-200 bg-red-600 px-5 py-4 text-white">
+    <div className="mb-6 overflow-hidden rounded-xl border border-signal-oxblood/30 bg-signal-oxblood/10 shadow-sm">
+      <div className="flex items-start gap-3 border-b border-signal-oxblood/40 bg-signal-oxblood px-5 py-4 text-paper">
         <svg
           className="mt-0.5 h-6 w-6 shrink-0"
           fill="currentColor"
@@ -30,26 +30,26 @@ export function GatingHero() {
             {gating.length} deal-breaker{gating.length !== 1 ? "s" : ""} — miss
             any one and the bid is disqualified
           </h2>
-          <p className="mt-0.5 text-sm text-red-100">
+          <p className="mt-0.5 text-sm text-paper/80">
             These are pass/fail gating requirements. Confirm each one before
             submission.
           </p>
         </div>
       </div>
 
-      <ul className="divide-y divide-red-100">
+      <ul className="divide-y divide-signal-oxblood/15">
         {gating.map((req) => (
           <li
             key={req.id}
-            className="flex items-start gap-2.5 px-5 py-3 text-sm text-red-900"
+            className="flex items-start gap-2.5 px-5 py-3 text-sm text-ink"
           >
             <span
-              className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-red-600"
+              className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-signal-oxblood"
               aria-hidden
             />
             <span className="leading-snug">
               {req.text}
-              <span className="ml-2 text-xs font-medium text-red-500">
+              <span className="ml-2 text-xs font-medium text-ink-muted">
                 p.{req.source_page} · {req.source_clause}
               </span>
             </span>

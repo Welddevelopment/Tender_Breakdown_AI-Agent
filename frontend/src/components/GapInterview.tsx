@@ -27,23 +27,23 @@ export function GapInterview() {
   return (
     <div className="flex flex-col gap-6">
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <StatCard label="Answers drafted" value={drafted} tone="slate" />
-        <StatCard label="Auto-drafted" value={autoCount} tone="emerald" />
+        <StatCard label="Answers drafted" value={drafted} tone="neutral" />
+        <StatCard label="Auto-drafted" value={autoCount} tone="forest" />
         <StatCard label="Need your input" value={needsInputCount} tone="amber" />
         <StatCard label="Gaps remaining" value={remaining} tone="amber" />
       </div>
 
       {total > 0 && (
-        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+        <div className="rounded-xl border border-hairline bg-paper-raised p-4 shadow-sm">
           <div className="mb-2 flex items-center justify-between text-sm">
-            <span className="font-medium text-slate-700">Gap interview</span>
-            <span className="text-slate-500">
+            <span className="font-medium text-ink">Gap interview</span>
+            <span className="text-ink-muted">
               {answered} of {total} answered
             </span>
           </div>
-          <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
+          <div className="h-2 w-full overflow-hidden rounded-full bg-hairline">
             <div
-              className="h-full rounded-full bg-emerald-500 transition-all"
+              className="h-full rounded-full bg-forest transition-all"
               style={{ width: `${pct}%` }}
             />
           </div>
@@ -51,11 +51,11 @@ export function GapInterview() {
       )}
 
       {groups.length === 0 ? (
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-5 py-8 text-center">
-          <p className="text-sm font-medium text-emerald-800">
+        <div className="rounded-xl border border-forest/30 bg-forest/10 px-5 py-8 text-center">
+          <p className="text-sm font-medium text-forest">
             All clear — no open questions.
           </p>
-          <p className="mt-1 text-xs text-emerald-700">
+          <p className="mt-1 text-xs text-forest/80">
             Every drafted answer is fully grounded. Nothing needs your input
             right now.
           </p>
@@ -65,11 +65,11 @@ export function GapInterview() {
           {groups.map(({ req, questions }) => (
             <li
               key={req.id}
-              className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
+              className="rounded-xl border border-hairline bg-paper-raised p-4 shadow-sm"
             >
               <div className="mb-2.5 flex flex-wrap items-center gap-2">
                 {req.is_gating && (
-                  <span className="inline-flex items-center gap-1 rounded-md bg-red-600 px-2 py-0.5 text-xs font-semibold text-white shadow-sm">
+                  <span className="inline-flex items-center gap-1 rounded-md bg-signal-oxblood px-2 py-0.5 text-xs font-semibold text-paper shadow-sm">
                     <svg
                       className="h-3 w-3"
                       fill="currentColor"
@@ -86,11 +86,11 @@ export function GapInterview() {
                   </span>
                 )}
                 {req.answer && <AnswerStateBadge state={req.answer.state} />}
-                <span className="text-xs text-slate-400">
+                <span className="text-xs text-ink-muted">
                   {req.category} · p.{req.source_page}
                 </span>
               </div>
-              <p className="mb-3 text-sm font-medium leading-snug text-slate-800">
+              <p className="mb-3 text-sm font-medium leading-snug text-ink">
                 {req.text}
               </p>
               <ul className="flex flex-col gap-2.5">
@@ -117,18 +117,18 @@ function StatCard({
 }: {
   label: string;
   value: number;
-  tone: "slate" | "emerald" | "amber";
+  tone: "neutral" | "forest" | "amber";
 }) {
   const valueTone: Record<typeof tone, string> = {
-    slate: "text-slate-900",
-    emerald: "text-emerald-700",
-    amber: "text-amber-700",
+    neutral: "text-ink",
+    forest: "text-forest",
+    amber: "text-signal-amber",
   };
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+    <div className="rounded-xl border border-hairline bg-paper-raised px-4 py-3 shadow-sm">
       <div className={`text-2xl font-bold ${valueTone[tone]}`}>{value}</div>
-      <div className="text-xs text-slate-500">{label}</div>
+      <div className="text-xs text-ink-muted">{label}</div>
     </div>
   );
 }

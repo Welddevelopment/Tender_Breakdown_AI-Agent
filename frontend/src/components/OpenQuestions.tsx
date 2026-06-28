@@ -13,11 +13,11 @@ export function OpenQuestions({ requirement }: { requirement: Requirement }) {
   return (
     <section className="mt-5">
       <div className="mb-1.5 flex items-center justify-between gap-2">
-        <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+        <h3 className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
           Open questions
         </h3>
         {unanswered > 0 && (
-          <span className="inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-medium text-amber-800">
+          <span className="inline-flex items-center rounded-full bg-signal-amber/15 px-2 py-0.5 text-[11px] font-medium text-signal-amber">
             {unanswered} need{unanswered === 1 ? "s" : ""} an answer
           </span>
         )}
@@ -52,14 +52,14 @@ export function OpenQuestionItem({
     <li
       className={`rounded-lg border px-3 py-2.5 ${
         answered
-          ? "border-emerald-200 bg-emerald-50/40"
-          : "border-amber-200 bg-amber-50/40"
+          ? "border-forest/30 bg-forest/5"
+          : "border-signal-amber/30 bg-signal-amber/10"
       }`}
     >
       <div className="flex items-start gap-2">
         {answered ? (
           <svg
-            className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600"
+            className="mt-0.5 h-4 w-4 shrink-0 text-forest"
             fill="currentColor"
             viewBox="0 0 20 20"
             aria-hidden
@@ -72,11 +72,11 @@ export function OpenQuestionItem({
           </svg>
         ) : (
           <span
-            className="mt-1 h-2 w-2 shrink-0 rounded-full bg-amber-500"
+            className="mt-1 h-2 w-2 shrink-0 rounded-full bg-signal-amber"
             aria-hidden
           />
         )}
-        <p className="text-sm leading-snug text-slate-800">
+        <p className="text-sm leading-snug text-ink">
           {question.question}
         </p>
       </div>
@@ -86,7 +86,7 @@ export function OpenQuestionItem({
           value={value}
           onChange={(event) => setValue(event.target.value)}
           placeholder="Type the answer…"
-          className="min-w-0 flex-1 rounded-md border border-slate-200 px-2.5 py-1.5 text-sm text-slate-800 shadow-sm outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-400"
+          className="min-w-0 flex-1 rounded-md border border-hairline px-2.5 py-1.5 text-sm text-ink shadow-sm outline-none focus:border-forest focus:ring-1 focus:ring-forest"
         />
         <button
           type="button"
@@ -94,7 +94,7 @@ export function OpenQuestionItem({
           onClick={() =>
             answerOpenQuestion(requirementId, question.id, trimmed)
           }
-          className="shrink-0 rounded-md bg-slate-900 px-3 py-1.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
+          className="shrink-0 rounded-md bg-forest px-3 py-1.5 text-sm font-medium text-paper shadow-sm transition-colors hover:bg-forest-hover disabled:cursor-not-allowed disabled:opacity-40"
         >
           {answered ? "Update" : "Save"}
         </button>

@@ -17,26 +17,27 @@ const REQ_COLUMN_X = 40;
 const CRITERIA_COLUMN_X = 520;
 const ROW_GAP = 92;
 
-// Brand palette: red = deal-breaker (gating), amber = needs review, slate = default.
+// Signal palette on status carriers only: oxblood = deal-breaker (gating),
+// amber = needs review. Everything else uses brand neutrals (paper/ink/hairline).
 function nodeStyle(req: Requirement): React.CSSProperties {
   if (req.is_gating) {
     return {
-      background: "#fef2f2",
-      border: "1px solid #ef4444",
-      color: "#7f1d1d",
+      background: "#f3e0df",
+      border: "1px solid #8a2d2a",
+      color: "#8a2d2a",
     };
   }
   if (req.needs_review) {
     return {
-      background: "#fffbeb",
-      border: "1px dashed #f59e0b",
-      color: "#78350f",
+      background: "#f6ebdb",
+      border: "1px dashed #bc6b2e",
+      color: "#211d17",
     };
   }
   return {
-    background: "#ffffff",
-    border: "1px solid #cbd5e1",
-    color: "#334155",
+    background: "#fbf8f1",
+    border: "1px solid #e4ddce",
+    color: "#211d17",
   };
 }
 
@@ -52,9 +53,9 @@ const baseNodeStyle: React.CSSProperties = {
 const criteriaNodeStyle: React.CSSProperties = {
   ...baseNodeStyle,
   width: 200,
-  background: "#f8fafc",
-  border: "1px solid #94a3b8",
-  color: "#475569",
+  background: "#f6f2e9",
+  border: "1px solid #6b6358",
+  color: "#6b6358",
   fontWeight: 600,
 };
 
@@ -112,7 +113,7 @@ export function GraphView() {
           source: req.id,
           target: `crit:${req.criteria_ref}`,
           style: {
-            stroke: req.is_gating ? "#ef4444" : "#94a3b8",
+            stroke: req.is_gating ? "#8a2d2a" : "#6b6358",
             strokeWidth: req.is_gating ? 2 : 1.25,
           },
         });
@@ -127,7 +128,7 @@ export function GraphView() {
           target: depId,
           animated: true,
           style: {
-            stroke: "#6366f1",
+            stroke: "#2c5640",
             strokeWidth: 1.5,
             strokeDasharray: "6 4",
           },
@@ -139,19 +140,19 @@ export function GraphView() {
   }, [requirements]);
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white shadow-sm">
-      <div className="flex flex-wrap items-center gap-4 border-b border-slate-200 px-4 py-2.5 text-xs text-slate-600">
-        <span className="font-medium text-slate-700">Legend</span>
+    <div className="rounded-xl border border-hairline bg-paper-raised shadow-sm">
+      <div className="flex flex-wrap items-center gap-4 border-b border-hairline px-4 py-2.5 text-xs text-ink-muted">
+        <span className="font-medium text-ink">Legend</span>
         <span className="inline-flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-sm border border-red-500 bg-red-50" />
+          <span className="h-2.5 w-2.5 rounded-sm border border-signal-oxblood bg-signal-oxblood/10" />
           Deal-breaker
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-sm border border-dashed border-amber-500 bg-amber-50" />
+          <span className="h-2.5 w-2.5 rounded-sm border border-dashed border-signal-amber bg-signal-amber/10" />
           Needs review
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-sm border border-slate-400 bg-slate-50" />
+          <span className="h-2.5 w-2.5 rounded-sm border border-ink-muted bg-paper" />
           Award criterion
         </span>
         <span className="inline-flex items-center gap-1.5">
@@ -161,7 +162,7 @@ export function GraphView() {
               y1="4"
               x2="22"
               y2="4"
-              stroke="#6366f1"
+              stroke="#2c5640"
               strokeWidth="1.5"
               strokeDasharray="6 4"
             />
@@ -179,7 +180,7 @@ export function GraphView() {
           nodesDraggable
           nodesConnectable={false}
         >
-          <Background color="#e2e8f0" gap={20} />
+          <Background color="#e4ddce" gap={20} />
           <Controls showInteractive={false} />
         </ReactFlow>
       </div>

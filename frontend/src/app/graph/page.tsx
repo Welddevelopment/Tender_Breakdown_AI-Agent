@@ -5,7 +5,7 @@ export const metadata = { title: "Graph — Bidframe" };
 
 export default function GraphPage() {
   return (
-    <div className="flex min-h-full flex-col bg-slate-50">
+    <div className="flex min-h-full flex-col bg-paper">
       <Header
         title="Requirement relationship graph"
         subtitle="Requirements linked to award criteria and their dependencies · gating items lit up"

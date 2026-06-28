@@ -19,14 +19,14 @@ export function AnswerPanel({ requirement }: { requirement: Requirement }) {
   return (
     <section className="mt-5">
       <div className="mb-1.5 flex items-center justify-between gap-2">
-        <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+        <h3 className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
           Draft answer
         </h3>
         {answer && <AnswerStateBadge state={answer.state} />}
       </div>
 
       {!answer ? (
-        <p className="rounded-lg border border-dashed border-slate-200 bg-slate-50 px-3 py-3 text-sm text-slate-500">
+        <p className="rounded-lg border border-dashed border-hairline bg-paper px-3 py-3 text-sm text-ink-muted">
           No draft generated yet. The autofill step will draft a grounded answer
           for this requirement.
         </p>
@@ -37,7 +37,7 @@ export function AnswerPanel({ requirement }: { requirement: Requirement }) {
             onChange={(event) => setDraft(event.target.value)}
             rows={4}
             autoFocus
-            className="w-full resize-none rounded-lg border border-slate-200 px-3 py-2 text-sm leading-relaxed text-slate-800 shadow-sm outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-400"
+            className="w-full resize-none rounded-lg border border-hairline px-3 py-2 text-sm leading-relaxed text-ink shadow-sm outline-none focus:border-forest focus:ring-1 focus:ring-forest"
           />
           <div className="flex gap-2">
             <button
@@ -46,7 +46,7 @@ export function AnswerPanel({ requirement }: { requirement: Requirement }) {
                 editAnswer(requirement.id, draft.trim());
                 setEditing(false);
               }}
-              className="inline-flex items-center rounded-lg bg-blue-600 px-3.5 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-700"
+              className="inline-flex items-center rounded-lg bg-forest px-3.5 py-2 text-sm font-medium text-paper shadow-sm transition-colors hover:bg-forest-hover"
             >
               Save answer
             </button>
@@ -56,7 +56,7 @@ export function AnswerPanel({ requirement }: { requirement: Requirement }) {
                 setDraft(answer.text);
                 setEditing(false);
               }}
-              className="inline-flex items-center rounded-lg bg-white px-3.5 py-2 text-sm font-medium text-slate-600 ring-1 ring-inset ring-slate-200 transition-colors hover:bg-slate-50"
+              className="inline-flex items-center rounded-lg bg-paper-raised px-3.5 py-2 text-sm font-medium text-ink-muted ring-1 ring-inset ring-hairline transition-colors hover:bg-paper"
             >
               Cancel
             </button>
@@ -64,11 +64,11 @@ export function AnswerPanel({ requirement }: { requirement: Requirement }) {
         </div>
       ) : (
         <div className="flex flex-col gap-3">
-          <div className="rounded-lg border border-slate-200 bg-white px-3 py-2.5">
-            <p className="whitespace-pre-wrap text-sm leading-relaxed text-slate-800">
+          <div className="rounded-lg border border-hairline bg-paper-raised px-3 py-2.5">
+            <p className="whitespace-pre-wrap text-sm leading-relaxed text-ink">
               {answer.text}
             </p>
-            <div className="mt-2.5 flex items-center justify-between gap-3 border-t border-slate-100 pt-2.5">
+            <div className="mt-2.5 flex items-center justify-between gap-3 border-t border-hairline pt-2.5">
               <ConfidenceIndicator
                 confidence={answer.confidence}
                 needsReview={answer.state === "needs_input"}
@@ -79,7 +79,7 @@ export function AnswerPanel({ requirement }: { requirement: Requirement }) {
                   setDraft(answer.text);
                   setEditing(true);
                 }}
-                className="shrink-0 text-xs font-medium text-blue-700 transition-colors hover:text-blue-900 hover:underline"
+                className="shrink-0 text-xs font-medium text-forest transition-colors hover:text-forest-hover hover:underline"
               >
                 Edit answer
               </button>
@@ -87,11 +87,11 @@ export function AnswerPanel({ requirement }: { requirement: Requirement }) {
           </div>
 
           <div>
-            <h4 className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+            <h4 className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-ink-muted">
               Evidence
             </h4>
             {answer.evidence_refs.length === 0 ? (
-              <p className="rounded-lg border border-dashed border-amber-200 bg-amber-50/60 px-3 py-2 text-xs leading-relaxed text-amber-800">
+              <p className="rounded-lg border border-dashed border-signal-amber/30 bg-signal-amber/10 px-3 py-2 text-xs leading-relaxed text-ink">
                 No supporting evidence linked yet — upload a capability document
                 so this claim is backed and auditable.
               </p>
@@ -100,9 +100,9 @@ export function AnswerPanel({ requirement }: { requirement: Requirement }) {
                 {answer.evidence_refs.map((ref, index) => (
                   <li
                     key={`${ref.doc_id}-${index}`}
-                    className="rounded-lg border-l-4 border-emerald-300 bg-emerald-50/60 px-3 py-2"
+                    className="rounded-lg border-l-4 border-forest/40 bg-forest/5 px-3 py-2"
                   >
-                    <div className="flex items-center gap-1.5 text-xs font-medium text-emerald-800">
+                    <div className="flex items-center gap-1.5 text-xs font-medium text-forest">
                       <svg
                         className="h-3.5 w-3.5 shrink-0"
                         fill="none"
@@ -118,11 +118,11 @@ export function AnswerPanel({ requirement }: { requirement: Requirement }) {
                         />
                       </svg>
                       <span>{docName(ref.doc_id)}</span>
-                      <span className="font-normal text-emerald-600/80">
+                      <span className="font-normal text-forest/70">
                         · p.{ref.page}
                       </span>
                     </div>
-                    <p className="mt-1 text-xs italic leading-relaxed text-slate-600">
+                    <p className="mt-1 text-xs italic leading-relaxed text-ink-muted">
                       &ldquo;{ref.excerpt}&rdquo;
                     </p>
                   </li>

@@ -1,10 +1,10 @@
 import type { AnswerState } from "@/types/requirement";
 
 const styles: Record<AnswerState, string> = {
-  auto: "bg-emerald-50 text-emerald-700 ring-emerald-200",
-  needs_input: "bg-amber-50 text-amber-800 ring-amber-200",
-  human_edited: "bg-blue-50 text-blue-700 ring-blue-200",
-  empty: "bg-slate-100 text-slate-600 ring-slate-200",
+  auto: "bg-forest/10 text-forest ring-forest/30",
+  needs_input: "bg-signal-amber/15 text-signal-amber ring-signal-amber/30",
+  human_edited: "bg-ink/5 text-ink ring-ink/15",
+  empty: "bg-paper text-ink-muted ring-hairline",
 };
 
 const labels: Record<AnswerState, string> = {

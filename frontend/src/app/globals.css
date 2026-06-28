@@ -1,22 +1,34 @@
 @import "tailwindcss";
 
+/* Bidframe colour system — source of truth is design/colours.html.
+   Two palettes, kept strictly apart: brand builds the app's furniture,
+   signal only ever marks status. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f6f2e9; /* paper */
+  --foreground: #211d17; /* ink */
 }
 
-@theme inline {
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Brand palette — backgrounds, text, buttons, navigation, headings */
+  --color-paper: #f6f2e9;
+  --color-paper-raised: #fbf8f1;
+  --color-ink: #211d17;
+  --color-ink-muted: #6b6358;
+  --color-forest: #2c5640;
+  --color-forest-hover: #21412f;
+  --color-hairline: #e4ddce;
+
+  /* Signal palette — status carriers only (confidence dot, thin answer
+     edge, status cell). Never on a button, background, heading, or nav. */
+  --color-signal-oxblood: #8a2d2a;
+  --color-signal-amber: #bc6b2e;
+  --color-signal-yellow: #d2a435;
+  --color-signal-light-green: #6f9a57;
 }
 
 body {

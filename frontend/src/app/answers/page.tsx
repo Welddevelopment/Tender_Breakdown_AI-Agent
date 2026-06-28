@@ -5,7 +5,7 @@ export const metadata = { title: "Answers — Bidframe" };
 
 export default function AnswersPage() {
   return (
-    <div className="flex min-h-full flex-col bg-slate-50">
+    <div className="flex min-h-full flex-col bg-paper">
       <Header
         title="Auditable autofill"
         subtitle="Grounded draft answers and the open questions the tool needs you to resolve"

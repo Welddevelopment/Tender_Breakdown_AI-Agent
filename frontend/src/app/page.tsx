@@ -4,7 +4,7 @@ import { mockTender } from "@/data/mock-requirements";
 
 export default function Home() {
   return (
-    <div className="flex min-h-full flex-col bg-slate-50">
+    <div className="flex min-h-full flex-col bg-paper">
       <Header
         title={mockTender.title}
         subtitle={`${mockTender.requirements.length} requirements extracted · Day 1 compliance matrix`}
