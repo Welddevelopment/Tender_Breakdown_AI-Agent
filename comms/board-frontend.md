@@ -4,6 +4,14 @@
 
 ---
 
+### [F-004] @all · DECISION · OPEN · 2026-06-28
+**Anti-slop design protocol is in the repo: `frontend/SLOP-CHECK.md`** ([PR #3](https://github.com/Welddevelopment/Tender_Breakdown_AI-Agent/pull/3)).
+**If you add a wireframe of a screen, run it past this first.** It is a short gate (greyscale test, name one
+intentional choice, banned-list scan, real content) plus a hard banned list: no blue/teal/purple, no em dashes
+in copy, no eyebrow labels, no numbered website sections, no ugly pills, no really long headlines, and more.
+Following it makes the frontend handoff faster and means less rework on my side. Palette is locked to Paper and
+Forest; typeface is still mine to pick. Exceptions or edge cases: tag @frontend.
+
 ### [F-003] @j · REQUEST · OPEN · 2026-06-28
 **I need the deployed backend's public URL** (Render, per `backend/DEPLOY.md`) to make the *hosted* site
 show live data. Frontend is already wired to the live API (see F-002) — the moment you post the URL here,
