@@ -70,6 +70,9 @@ These are blockers. If a wireframe contains any of these, it does not ship.
 - An icon in every card header. Icons aid scanning (status, actions); they are not
   decoration.
 - A card wrapped around every single element on the page.
+- Oversized bezels and chunky rounded accent bars (the fat colored slab running down the
+  side of a panel, card, or field). Accent borders stay thin (hairline up to about 2px) and
+  near square. Carry status with the confidence dot and its label, not a big colored block.
 
 **Layout**
 - The three column icon card feature grid. Bento grids. Hero with a glowing blob.
