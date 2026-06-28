@@ -25,7 +25,7 @@ Check it's alive: `curl http://localhost:8000/health` → `{"status":"ok","extra
 |--------|------|
 | `ingest.py` | PDF → page-numbered text (PyMuPDF, pypdf fallback) |
 | `chunk.py` | structure-aware **overlapping** chunks (nothing lost at boundaries) |
-| `extract.py` | chunk → raw requirements. **Pluggable:** heuristic (no key) or **Claude** (set `ANTHROPIC_API_KEY`) |
+| `extract.py` | chunk → raw requirements. **Pluggable:** heuristic (no key), **OpenAI** (set `OPENAI_API_KEY` — our provider), or Claude (`ANTHROPIC_API_KEY`) |
 | `pipeline.py` | ingest → chunk → extract → thin reconcile → `Requirement[]` |
 | `store.py` | SQLite persistence (tenders + requirements) |
 | `schema.py` | the locked data contract as Pydantic models |
@@ -34,8 +34,11 @@ Check it's alive: `curl http://localhost:8000/health` → `{"status":"ok","extra
 ### Extraction is pluggable (no API key needed today)
 - **No key →** `HeuristicExtractor` (signal words: shall/must/PASS-FAIL). Proves the
   plumbing + gives the frontend real data. *Not the quality bar.*
-- **`ANTHROPIC_API_KEY` set →** `ClaudeExtractor` uses `prompts/extraction.md` + structured
-  output. This is where real accuracy (esp. the gating catch + honest confidence) comes from.
+- **`OPENAI_API_KEY` set →** `OpenAIExtractor` (our chosen provider) uses
+  `prompts/extraction.md` + function-calling structured output. Set `LLM_MODEL` to whatever
+  your credits cover (default `gpt-4o`). This is where real accuracy comes from.
+- `ANTHROPIC_API_KEY` → `ClaudeExtractor` (optional alternative). Force any with
+  `LLM_PROVIDER=openai|anthropic|heuristic`.
 
 ## Endpoints (match the locked schema — see ../AGENTS.md)
 
@@ -46,7 +49,7 @@ Check it's alive: `curl http://localhost:8000/health` → `{"status":"ok","extra
 | `PATCH`| `/requirements/{id}` | body `{ status?, decision? }` → updated requirement |
 
 ## Owner TODOs (backend, when back on track)
-- Swap the heuristic for the Claude path (lock the provider/model; add prompt caching + retries).
+- Add the `OPENAI_API_KEY` and confirm the OpenAI path (model choice via `LLM_MODEL`; add retries/backoff).
 - Harden ingest: pdfplumber fallback for tables; strip header/footer noise; OCR detection.
 - Refine `source_page` to the exact page (currently chunk-level best-effort).
 - Build graph edges (`criteria_ref`, `depends_on`, `is_gating` relationships).

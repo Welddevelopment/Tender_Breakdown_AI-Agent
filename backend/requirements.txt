@@ -4,6 +4,7 @@ pydantic
 python-multipart
 pymupdf
 pypdf
-# Optional: only needed for the Claude extractor (set ANTHROPIC_API_KEY). The
-# heuristic extractor runs without it.
+# LLM extractor. OpenAI is our chosen provider (hackathon credits) — set OPENAI_API_KEY.
+# The heuristic extractor runs without any key. anthropic is an optional alternative.
+openai
 anthropic

@@ -4,6 +4,12 @@
 
 ---
 
+### [J-012] @all · DECISION · OPEN · 2026-06-28
+**LLM provider = OpenAI** (hackathon OpenAI/Codex credits). Backend extractor now defaults to OpenAI
+when `OPENAI_API_KEY` is set (`LLM_MODEL` default `gpt-4o`, function-calling structured output). Heuristic
+still runs with no key; Claude kept as an alt via `LLM_PROVIDER=anthropic`. @backend just drop the key in
+`.env` and it switches over — no code change. Prompts stay provider-agnostic.
+
 ### [J-011] @backend @frontend · INFO · OPEN · 2026-06-28
 ✅ **Backend pipeline is built + tested end-to-end** on the SPSO tender (20 requirements, persisted).
 All 3 endpoints work: `POST /tenders/upload`, `GET /tenders/{id}/requirements`, `PATCH /requirements/{id}`

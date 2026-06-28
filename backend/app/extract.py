@@ -6,19 +6,22 @@ Step 3+4 (extract + classify). PLUGGABLE by design:
     NO API key, so the whole pipeline works end-to-end today. Good enough to prove the
     plumbing + give frontend real-shaped data from a real tender. NOT the final quality bar.
 
-  • ClaudeExtractor — calls Anthropic with the extraction prompt (prompts/extraction.md)
-    and structured output. Activates when ANTHROPIC_API_KEY is set + `anthropic` installed.
+  • OpenAIExtractor — calls OpenAI with the extraction prompt (prompts/extraction.md) and
+    structured output (function calling). Activates when OPENAI_API_KEY is set. **This is
+    our chosen provider** (hackathon OpenAI/Codex credits).
 
-`get_extractor()` picks Claude if configured, else heuristic. Output = list of raw
-requirement dicts in the shape of prompts/raw-extraction-format.md (pre-reconcile;
-cross-chunk duplicates expected — the generalist merges them).
+  • ClaudeExtractor — same, for Anthropic. Kept as an alternative (ANTHROPIC_API_KEY).
 
-Scaffolded by J as backend cover. Backend: tune the heuristic, and own the Claude path
-(model choice, prompt caching, retries) once the provider is locked.
+Provider selection: LLM_PROVIDER=openai|anthropic|heuristic to force one, else auto by
+which key is present (OpenAI first). Output = raw requirement dicts in the shape of
+prompts/raw-extraction-format.md (pre-reconcile; cross-chunk duplicates expected).
+
+Scaffolded by J as backend cover. Backend owns tuning the LLM path (model, retries).
 """
 
 from __future__ import annotations
 
+import json
 import os
 import re
 
@@ -136,109 +139,170 @@ class HeuristicExtractor:
         return out
 
 
-class ClaudeExtractor:
-    """Anthropic extractor using the extraction prompt + structured output.
+# ---- shared LLM bits (used by both providers) --------------------------------
+_LLM_SYSTEM = (
+    "You are a requirements-extraction engine for UK public-sector tenders. "
+    "Extract every obligation/condition/criterion the bidder must satisfy from the "
+    "CHUNK as structured data. Recall first: if a sentence might be a requirement, "
+    "extract it with low confidence rather than dropping it. source_excerpt must be "
+    "an EXACT substring of the chunk. Classify type (mandatory/optional) on binding "
+    "language; is_gating=true only when missing it disqualifies the bid. Report honest "
+    "0-1 confidence. (Full spec: prompts/extraction.md.)"
+)
 
-    Activates only when ANTHROPIC_API_KEY is set and `anthropic` is installed.
-    Backend owns tuning this (model, caching, retries). Untested without a key.
+# JSON Schema for the structured output (one object with a `requirements` array).
+_REQ_PARAMETERS = {
+    "type": "object",
+    "properties": {
+        "requirements": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "text": {"type": "string"},
+                    "source_excerpt": {"type": "string"},
+                    "source_page": {"type": "integer"},
+                    "source_clause": {"type": ["string", "null"]},
+                    "type": {"type": "string", "enum": ["mandatory", "optional"]},
+                    "is_gating": {"type": "boolean"},
+                    "category": {"type": "string"},
+                    "confidence": {"type": "number"},
+                    "extractor_notes": {"type": ["string", "null"]},
+                },
+                "required": [
+                    "text", "source_excerpt", "source_page",
+                    "type", "is_gating", "category", "confidence",
+                ],
+            },
+        }
+    },
+    "required": ["requirements"],
+}
+
+
+def _user_prompt(chunk: Chunk) -> str:
+    return (
+        f"CHUNK_ID: {chunk.id}\nPAGE_RANGE: pages {chunk.page_start}-{chunk.page_end}\n"
+        f"--- BEGIN CHUNK TEXT ---\n{chunk.text}\n--- END CHUNK TEXT ---"
+    )
+
+
+def _to_raw(items: list[dict], chunk: Chunk) -> list[dict]:
+    """Wrap the model's requirement items into raw-extraction-format dicts."""
+    out: list[dict] = []
+    for seq, it in enumerate(items):
+        excerpt = it.get("source_excerpt", "")
+        start = chunk.text.find(excerpt) if excerpt else -1
+        out.append(
+            {
+                "raw_id": f"raw-{chunk.id}-{seq:04d}",
+                "chunk_id": chunk.id,
+                "text": it.get("text", ""),
+                "source_page": it.get("source_page", chunk.page_start),
+                "source_clause": it.get("source_clause"),
+                "source_excerpt": excerpt,
+                "type": it.get("type", "mandatory"),
+                "is_gating": bool(it.get("is_gating", False)),
+                "category": it.get("category", "other"),
+                "confidence": float(it.get("confidence", 0.5)),
+                "char_start": start if start >= 0 else None,
+                "char_end": (start + len(excerpt)) if start >= 0 else None,
+                "extractor_notes": it.get("extractor_notes"),
+            }
+        )
+    return out
+
+
+class OpenAIExtractor:
+    """OpenAI extractor (our chosen provider) using function-calling structured output.
+
+    Activates when OPENAI_API_KEY is set and `openai` is installed. Set LLM_MODEL to
+    whatever your credits cover (default below). Backend owns tuning (model, retries).
     """
+
+    name = "openai"
+
+    def __init__(self) -> None:
+        from openai import OpenAI
+        self._client = OpenAI()
+        self._model = os.environ.get("LLM_MODEL", "gpt-4o")
+
+    def extract_chunk(self, chunk: Chunk) -> list[dict]:
+        resp = self._client.chat.completions.create(
+            model=self._model,
+            messages=[
+                {"role": "system", "content": _LLM_SYSTEM},
+                {"role": "user", "content": _user_prompt(chunk)},
+            ],
+            tools=[{
+                "type": "function",
+                "function": {
+                    "name": "emit_requirements",
+                    "description": "Return every requirement found in the chunk.",
+                    "parameters": _REQ_PARAMETERS,
+                },
+            }],
+            tool_choice={"type": "function", "function": {"name": "emit_requirements"}},
+        )
+        calls = resp.choices[0].message.tool_calls or []
+        items: list[dict] = []
+        if calls:
+            items = json.loads(calls[0].function.arguments).get("requirements", [])
+        return _to_raw(items, chunk)
+
+
+class ClaudeExtractor:
+    """Anthropic extractor (alternative provider). Activates on ANTHROPIC_API_KEY."""
 
     name = "claude"
 
     def __init__(self) -> None:
-        import anthropic  # noqa: F401  (import-time check)
+        import anthropic
         self._client = anthropic.Anthropic()
         self._model = os.environ.get("LLM_MODEL", "claude-opus-4-8")
 
-    _SYSTEM = (
-        "You are a requirements-extraction engine for UK public-sector tenders. "
-        "Extract every obligation/condition/criterion the bidder must satisfy from the "
-        "CHUNK as structured data. Recall first: if a sentence might be a requirement, "
-        "extract it with low confidence rather than dropping it. source_excerpt must be "
-        "an EXACT substring of the chunk. Classify type (mandatory/optional) on binding "
-        "language; is_gating=true only when missing it disqualifies the bid. Report honest "
-        "0-1 confidence. (Full spec: prompts/extraction.md.)"
-    )
-
-    _TOOL = {
-        "name": "emit_requirements",
-        "description": "Return every requirement found in the chunk.",
-        "input_schema": {
-            "type": "object",
-            "properties": {
-                "requirements": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "text": {"type": "string"},
-                            "source_excerpt": {"type": "string"},
-                            "source_page": {"type": "integer"},
-                            "source_clause": {"type": ["string", "null"]},
-                            "type": {"type": "string", "enum": ["mandatory", "optional"]},
-                            "is_gating": {"type": "boolean"},
-                            "category": {"type": "string"},
-                            "confidence": {"type": "number"},
-                            "extractor_notes": {"type": ["string", "null"]},
-                        },
-                        "required": [
-                            "text", "source_excerpt", "source_page",
-                            "type", "is_gating", "category", "confidence",
-                        ],
-                    },
-                }
-            },
-            "required": ["requirements"],
-        },
-    }
-
     def extract_chunk(self, chunk: Chunk) -> list[dict]:
-        user = (
-            f"CHUNK_ID: {chunk.id}\nPAGE_RANGE: pages {chunk.page_start}-{chunk.page_end}\n"
-            f"--- BEGIN CHUNK TEXT ---\n{chunk.text}\n--- END CHUNK TEXT ---"
-        )
         msg = self._client.messages.create(
             model=self._model,
             max_tokens=4096,
-            system=self._SYSTEM,
-            tools=[self._TOOL],
+            system=_LLM_SYSTEM,
+            tools=[{
+                "name": "emit_requirements",
+                "description": "Return every requirement found in the chunk.",
+                "input_schema": _REQ_PARAMETERS,
+            }],
             tool_choice={"type": "tool", "name": "emit_requirements"},
-            messages=[{"role": "user", "content": user}],
+            messages=[{"role": "user", "content": _user_prompt(chunk)}],
         )
         items: list[dict] = []
         for block in msg.content:
             if getattr(block, "type", None) == "tool_use":
                 items = block.input.get("requirements", [])
                 break
-        out: list[dict] = []
-        for seq, it in enumerate(items):
-            excerpt = it.get("source_excerpt", "")
-            start = chunk.text.find(excerpt) if excerpt else -1
-            out.append(
-                {
-                    "raw_id": f"raw-{chunk.id}-{seq:04d}",
-                    "chunk_id": chunk.id,
-                    "text": it.get("text", ""),
-                    "source_page": it.get("source_page", chunk.page_start),
-                    "source_clause": it.get("source_clause"),
-                    "source_excerpt": excerpt,
-                    "type": it.get("type", "mandatory"),
-                    "is_gating": bool(it.get("is_gating", False)),
-                    "category": it.get("category", "other"),
-                    "confidence": float(it.get("confidence", 0.5)),
-                    "char_start": start if start >= 0 else None,
-                    "char_end": (start + len(excerpt)) if start >= 0 else None,
-                    "extractor_notes": it.get("extractor_notes"),
-                }
-            )
-        return out
+        return _to_raw(items, chunk)
 
 
 def get_extractor():
-    """Pick the Claude extractor if configured, else the heuristic fallback."""
-    if os.environ.get("ANTHROPIC_API_KEY"):
+    """Pick the LLM extractor by LLM_PROVIDER, else auto by key (OpenAI first),
+    else the heuristic fallback. Degrades gracefully if an SDK/key is misconfigured."""
+    provider = os.environ.get("LLM_PROVIDER", "").lower()
+    has_openai = bool(os.environ.get("OPENAI_API_KEY"))
+    has_anthropic = bool(os.environ.get("ANTHROPIC_API_KEY"))
+
+    if provider == "heuristic":
+        return HeuristicExtractor()
+
+    want_openai = provider == "openai" or (not provider and has_openai)
+    want_anthropic = provider == "anthropic" or (not provider and has_anthropic)
+
+    if want_openai:
+        try:
+            return OpenAIExtractor()
+        except Exception as exc:
+            print(f"[extract] OpenAI unavailable ({exc}); falling back.")
+    if want_anthropic:
         try:
             return ClaudeExtractor()
-        except Exception as exc:  # missing sdk / bad config → degrade gracefully
-            print(f"[extract] Claude unavailable ({exc}); using heuristic extractor.")
+        except Exception as exc:
+            print(f"[extract] Claude unavailable ({exc}); falling back.")
     return HeuristicExtractor()
