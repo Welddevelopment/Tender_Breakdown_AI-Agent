@@ -44,3 +44,46 @@ def match_requirements(
     unmatched_gold = [g for i, g in enumerate(gold_reqs) if i not in matched_gold]
     unmatched_output = [o for i, o in enumerate(output_reqs) if i not in matched_output]
     return matches, unmatched_gold, unmatched_output
+
+
+
+def _rounded_ratio(numerator: int, denominator: int) -> float:
+    if denominator == 0:
+        return 0.0
+    return round(numerator / denominator, 4)
+
+
+def score(gold: dict[str, Any], output: dict[str, Any]) -> dict[str, float | int]:
+    """Compute hand-auditable recall/precision and gating metrics."""
+    matches, unmatched_gold, unmatched_output = match_requirements(gold, output)
+    tp = len(matches)
+    fn = len(unmatched_gold)
+    fp = len(unmatched_output)
+
+    recall = _rounded_ratio(tp, tp + fn)
+    precision = _rounded_ratio(tp, tp + fp)
+    f1 = 0.0 if recall == 0.0 or precision == 0.0 else round(2 * recall * precision / (recall + precision), 4)
+
+    gating_correct = sum(
+        1 for gold_req, output_req in matches
+        if bool(output_req.get("is_gating")) == bool(gold_req.get("is_gating"))
+    )
+    gating_accuracy = _rounded_ratio(gating_correct, len(matches))
+
+    gold_gating = [g for g in _requirements(gold) if bool(g.get("is_gating"))]
+    caught_and_flagged = sum(
+        1 for gold_req, output_req in matches
+        if bool(gold_req.get("is_gating")) and bool(output_req.get("is_gating"))
+    )
+    gating_recall = _rounded_ratio(caught_and_flagged, len(gold_gating))
+
+    return {
+        "tp": tp,
+        "fn": fn,
+        "fp": fp,
+        "recall": recall,
+        "precision": precision,
+        "f1": f1,
+        "gating_accuracy": gating_accuracy,
+        "gating_recall": gating_recall,
+    }
