@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bidframe — typeface specimens</title>
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=chillax@400,500,600,700&f[]=telma@400,500,600,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Spectral:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F6F2E9; --raised:#FBF8F1; --ink:#211D17; --muted:#6B6358;
+    --forest:#2C5640; --forest-hover:#21412F; --hair:#E4DDCE;
+    --oxblood:#8A2D2A; --amber:#BC6B2E; --yellow:#D2A435; --lgreen:#6F9A57;
+    --mono:'IBM Plex Mono', ui-monospace, monospace;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:'Hanken Grotesk', system-ui, sans-serif;
+    line-height:1.6; padding:48px 20px 96px;
+  }
+  .wrap{max-width:860px; margin:0 auto}
+
+  .lead{margin-bottom:40px}
+  .kicker{font-family:var(--mono); font-size:12px; color:var(--muted); letter-spacing:.04em; margin:0 0 12px}
+  .lead h1{font-family:'Fraunces',serif; font-weight:600; font-size:34px; line-height:1.1; margin:0 0 14px}
+  .lead p{font-size:16px; max-width:60ch; margin:0 0 12px; color:var(--ink)}
+  .lead .note{color:var(--muted); font-size:14.5px}
+
+  .pick{
+    background:var(--raised); border:1px solid var(--hair); border-radius:12px;
+    padding:20px 22px; margin:0 0 40px;
+  }
+  .pick h2{font-family:'Fraunces',serif; font-weight:600; font-size:21px; margin:0 0 8px}
+  .pick p{margin:0 0 8px; font-size:15px}
+  .pick .why{color:var(--muted); font-size:14px; margin:0}
+  .pill{display:inline-block; font-family:var(--mono); font-size:11px; color:var(--forest);
+    background:#E7EFE9; border:1px solid #CBDCD1; border-radius:6px; padding:3px 9px; margin-bottom:12px}
+
+  .card{margin:0 0 18px; border:1px solid var(--hair); border-radius:14px; overflow:hidden; background:var(--raised)}
+  .card.lead-card{border-color:#CBDCD1; box-shadow:0 0 0 2px #E7EFE9}
+  .meta{padding:16px 20px; border-bottom:1px solid var(--hair); background:var(--paper)}
+  .meta .names{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap}
+  .meta .names .h{font-family:'Fraunces',serif; font-weight:600; font-size:18px}
+  .meta .names .src{font-family:var(--mono); font-size:11.5px; color:var(--muted)}
+  .meta .badge{float:right; font-family:var(--mono); font-size:11px; color:var(--forest);
+    background:#E7EFE9; border:1px solid #CBDCD1; border-radius:6px; padding:2px 9px}
+  .plain{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px 22px; margin-top:12px}
+  .plain div{font-size:13px}
+  .plain b{display:block; font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); margin-bottom:2px}
+  .plain .good b{color:var(--forest)}
+  .plain .watch b{color:var(--amber)}
+
+  /* the realistic Bidframe sample, fonts swapped per card via --fh / --fb */
+  .sample{padding:26px 26px 28px}
+  .sample .ctx{font-family:var(--mono); font-size:11.5px; color:var(--muted); letter-spacing:.02em; margin:0 0 16px}
+  .sample h3{font-family:var(--fh); font-weight:600; font-size:30px; line-height:1.08; margin:0 0 8px; color:var(--ink)}
+  .sample .sub{font-family:var(--fb); font-size:15px; color:var(--muted); margin:0 0 22px; max-width:54ch}
+
+  .req{border:1px solid var(--hair); border-radius:12px; padding:16px 18px; margin:0 0 12px; background:var(--paper)}
+  .req .top{display:flex; align-items:center; gap:10px; margin-bottom:10px}
+  .req .text{font-family:var(--fb); font-size:15.5px; color:var(--ink); margin:0 0 12px; line-height:1.5}
+  .dealbreaker{font-family:var(--fb); font-size:12px; font-weight:600; color:var(--oxblood);
+    background:#F3E1DF; border:1px solid #E6C7C4; border-radius:6px; padding:3px 10px}
+  .dlab{font-family:var(--fb); font-size:13px; color:var(--muted)}
+  .spacer{flex:1}
+
+  .dot{width:15px; height:15px; border-radius:50%; border:1.6px solid var(--ink); flex:none}
+  .d-high{background:conic-gradient(var(--lgreen) 0 100%, transparent 0)}
+  .d-warn{background:conic-gradient(var(--yellow) 0 75%, var(--paper) 0)}
+  .d-need{background:conic-gradient(var(--amber) 0 50%, var(--paper) 0)}
+
+  .ev{font-family:var(--mono); font-size:12.5px; color:var(--muted);
+    background:var(--raised); border:1px solid var(--hair); border-radius:6px; padding:7px 11px; display:inline-block; margin:0 0 14px}
+  .actions{display:flex; align-items:center; gap:10px}
+  .approve{font-family:var(--fb); font-weight:500; font-size:13.5px; color:var(--raised);
+    background:var(--forest); border:none; border-radius:8px; padding:9px 18px; cursor:pointer}
+  .approve:hover{background:var(--forest-hover)}
+  .edit{font-family:var(--fb); font-weight:500; font-size:13.5px; color:var(--ink);
+    background:transparent; border:1px solid var(--hair); border-radius:8px; padding:9px 16px; cursor:pointer}
+  .approved{display:flex; align-items:center; gap:8px; font-family:var(--fb); font-size:13.5px; color:var(--forest); font-weight:500}
+  .tick{width:18px; height:18px}
+
+  .specimen-line{font-family:var(--fh); font-size:38px; line-height:1.1; margin:22px 0 4px; color:var(--ink)}
+  .specimen-body{font-family:var(--fb); font-size:15px; color:var(--muted); margin:0}
+
+  footer{margin-top:48px; padding-top:20px; border-top:1px solid var(--hair); color:var(--muted); font-size:13px}
+  footer code{font-family:var(--mono); font-size:12px; background:var(--raised); border:1px solid var(--hair); border-radius:5px; padding:1px 6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="lead">
+    <p class="kicker">Bidframe · design · typeface specimens</p>
+    <h1>Pick the Bidframe typeface</h1>
+    <p>Every card below is the same little slice of Bidframe, set in a different pair of fonts. Nothing changes except the type, so you can trust your eye. Scroll, see which screen you would be happy to demo, and tell me the number.</p>
+    <p class="note">Three jobs, three kinds of font: a <b>heading</b> face (the warm bit you read first), a <b>body</b> face (the workhorse, used everywhere), and a fixed-width <b>evidence</b> face for source text like <span style="font-family:var(--mono)">Section 4.2.1</span> so it always reads as the document talking, not us.</p>
+  </div>
+
+  <div class="pick">
+    <span class="pill">my recommendation, if you want it decided</span>
+    <h2>Telma for headings, Chillax for body</h2>
+    <p>It is card 1. Both are the faces you already liked, both are free on Fontshare, and together they are warm and distinctive without looking like every other AI app. It honours Paper and Forest.</p>
+    <p class="why">One honest caveat: Chillax is rounded, so in the densest matrix rows it is a touch softer than a plain workhorse sans. If that ever bothers us mid build, card 2 keeps Telma headings and swaps the body to Hanken Grotesk, which is built for small dense text. That is a one line change, so we are not locked in.</p>
+  </div>
+
+  <div id="cards"></div>
+
+  <footer>
+    Switching later is one change: the whole system reads from two variables, <code>--font-head</code> and <code>--font-body</code>, plus <code>--font-mono</code> for evidence. Fonts load from Fontshare (Chillax, Telma) and Google Fonts (the rest); all free for commercial use. Evidence stays IBM Plex Mono whichever pairing wins.
+  </footer>
+
+</div>
+
+<script>
+  const tick = '<svg class="tick" viewBox="0 0 24 24" fill="none" stroke="#2C5640" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>';
+
+  function sample(fh, fb){
+    return `
+    <div class="sample" style="--fh:${fh}; --fb:${fb}">
+      <p class="ctx">NHS Greater Manchester · cleaning services tender · 21 requirements</p>
+      <h3>Two items need your eye</h3>
+      <p class="sub">Most of this tender is already answered. These are the parts only you can confirm.</p>
+
+      <div class="req">
+        <div class="top">
+          <span class="dealbreaker">Deal breaker</span>
+          <span class="spacer"></span>
+          <span class="dot d-need" aria-hidden="true"></span>
+          <span class="dlab">Needs a quick check</span>
+        </div>
+        <p class="text">The supplier must hold ISO 9001 certification, valid for the full term of the contract.</p>
+        <div class="ev">Section 4.2.1 · page 14 · req-0001</div>
+        <div class="actions">
+          <button class="approve">Approve</button>
+          <button class="edit">Edit answer</button>
+        </div>
+      </div>
+
+      <div class="req">
+        <div class="top">
+          <span class="dot d-high" aria-hidden="true"></span>
+          <span class="dlab">High confidence</span>
+          <span class="spacer"></span>
+          <span class="approved">${tick} Approved by you</span>
+        </div>
+        <p class="text">The supplier shall provide a named account manager for the duration of the engagement.</p>
+        <div class="ev">Section 6.1 · page 22 · req-0008</div>
+      </div>
+
+      <div class="specimen-line">Bidframe</div>
+      <p class="specimen-body">The quick brown fox jumps over the lazy dog. Tenders, won faster.</p>
+    </div>`;
+  }
+
+  const pairings = [
+    {
+      lead:true, badge:'recommended',
+      name:'Telma + Chillax',
+      src:'Telma & Chillax — both free on Fontshare',
+      fh:"'Telma', serif", fb:"'Chillax', sans-serif",
+      feels:'Warm and full of character. Serif headings with personality, a friendly rounded body. The most "made by people" of the lot.',
+      good:'When we want Bidframe to feel approachable and unmistakable, not corporate.',
+      watch:'Chillax is rounded, so the very densest table rows are a touch softer than a plain sans.'
+    },
+    {
+      name:'Telma + Hanken Grotesk',
+      src:'Telma (Fontshare) · Hanken Grotesk (Google)',
+      fh:"'Telma', serif", fb:"'Hanken Grotesk', sans-serif",
+      feels:'The same characterful Telma heading, but a quieter, very legible body built for small dense text.',
+      good:'The safe version of card 1. Keeps the warmth up top, maximum legibility in the matrix.',
+      watch:'Slightly less personality in the body than Chillax. A hair more neutral.'
+    },
+    {
+      name:'Fraunces + Chillax',
+      src:'Fraunces (Google) · Chillax (Fontshare)',
+      fh:"'Fraunces', serif", fb:"'Chillax', sans-serif",
+      feels:'A softer, gentler serif than Telma over the same friendly Chillax body. Calm and considered.',
+      good:'If Telma feels a touch too quirky and you want the serif dialled back.',
+      watch:'Less distinctive than Telma. Lovely, but more expected.'
+    },
+    {
+      name:'Fraunces + Hanken Grotesk',
+      src:'Both free on Google Fonts',
+      fh:"'Fraunces', serif", fb:"'Hanken Grotesk', sans-serif",
+      feels:'The modern, safe, grown-up pairing. Soft serif, clean sans. Hard to get wrong.',
+      good:'The low-risk default if you want zero surprises.',
+      watch:'The most familiar of the set. Trustworthy, but it will not turn heads.'
+    },
+    {
+      name:'Chillax only',
+      src:'Chillax (Fontshare), used everywhere',
+      fh:"'Chillax', sans-serif", fb:"'Chillax', sans-serif",
+      feels:'No serif at all. One friendly rounded sans for everything. Simple and soft.',
+      good:'The calmest, simplest route. One font to manage.',
+      watch:'Gives up the paper-document warmth the serif buys. Easier to mistake for any other tool.'
+    },
+    {
+      name:'Newsreader + IBM Plex Sans',
+      src:'Both free on Google Fonts',
+      fh:"'Newsreader', serif", fb:"'IBM Plex Sans', sans-serif",
+      feels:'Newspaper serious. An editorial serif over an engineered sans. Authoritative more than friendly.',
+      good:'If we decide Bidframe should feel weighty and official over warm.',
+      watch:'Cooler in tone. Further from the warm brief you set.'
+    }
+  ];
+
+  document.getElementById('cards').innerHTML = pairings.map((p,i)=>`
+    <div class="card ${p.lead?'lead-card':''}">
+      <div class="meta">
+        ${p.badge?`<span class="badge">${p.badge}</span>`:''}
+        <div class="names">
+          <span class="h">${i+1}. ${p.name}</span>
+          <span class="src">${p.src}</span>
+        </div>
+        <div class="plain">
+          <div><b>Feels like</b>${p.feels}</div>
+          <div class="good"><b>Best for</b>${p.good}</div>
+          <div class="watch"><b>Watch out</b>${p.watch}</div>
+        </div>
+      </div>
+      ${sample(p.fh, p.fb)}
+    </div>
+  `).join('');
+</script>
+</body>
+</html>

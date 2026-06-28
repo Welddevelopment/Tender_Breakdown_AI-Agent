@@ -6,8 +6,8 @@ guided, and honest. This document is the source of truth for how Bidframe looks 
 [SLOP-CHECK.md](SLOP-CHECK.md) is the enforceable subset: the banned list and the gate you run a
 wireframe against.
 
-**Status:** living draft, open for team feedback (PR #3). Exact color values and the typeface are
-provisional and will be tuned by frontend.
+**Status:** living draft, open for team feedback. Exact color values are provisional and will be tuned
+by frontend. The typeface is locked: Fraunces for headings, Chillax for body (see section 11).
 
 ## 1. Philosophy: confident calm
 
@@ -125,7 +125,7 @@ Anatomy, top to bottom, mapped to the schema:
 - **Needs you** (`needs_input` + `open_questions`) - not a draft. Shows the question read-only with a
   single link into the gap review (section 7).
 - **Edited** - your words now, the AI draft kept in history for audit.
-- **Approved** - settled, forest-deep tick, your name and timestamp recorded.
+- **Approved** - settled, forest tick, your name and timestamp recorded.
 - **Flagged** - parked for a teammate or for later.
 
 ## 6. The side panel
@@ -178,9 +178,31 @@ to forest on approval).
 
 ## 11. Typography
 
-To be chosen by frontend. A characterful display face for headings paired with a clean workhorse for
-body. Real hierarchy from size, weight, and spacing. Left-aligned body. Not Inter-everything.
-Placeholder only until locked.
+Calm warmth, not loud warmth. **Fraunces** (soft serif) for headings, **Chillax** (rounded sans) for
+body, **IBM Plex Mono** for evidence and source references. Both display faces are free: Fraunces from
+Google Fonts, Chillax from Fontshare. The pairing is distinctive without looking like every other tool,
+and it sits inside Paper and Forest.
+
+| Role | Face | Weights | Sizes |
+|---|---|---|---|
+| Heading | Fraunces | 600 (500 for quiet sub-heads) | 34 / 24 / 19 |
+| Body | Chillax | 400 (500 labels and buttons, 600 rare emphasis) | 16 / 14 |
+| Label | Chillax | 500 | 12.5 |
+| Evidence | IBM Plex Mono | 400 | 12.5 |
+
+Six sizes, no more. A short scale is what keeps it from looking templated. Headings stay short (Fraunces
+earns its warmth in a few words, never a long headline, see SLOP-CHECK). Serif is used sparingly:
+headings and the odd hero number only, never in dense UI. No thin Chillax weights on paper.
+
+**Numbers live in the mono evidence style.** Confidence is never a number, so almost every digit in
+Bidframe is a page or clause reference. Setting those in mono aligns columns, sidesteps any
+figure-rendering worry in Chillax, and reinforces "this is the document talking."
+
+Tokens: `--font-head` (Fraunces), `--font-body` (Chillax), `--font-mono` (IBM Plex Mono), defined next
+to the colour tokens in [design/colours.html](design/colours.html). If Chillax ever feels soft in the
+densest rows during the build, swapping `--font-body` to Hanken Grotesk is a one-line change and nothing
+else moves. Full reference with the scale shown in context:
+[design/typography.html](design/typography.html).
 
 ## 12. Relationship to the slop check
 

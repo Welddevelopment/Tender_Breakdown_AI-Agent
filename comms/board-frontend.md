@@ -4,6 +4,17 @@
 
 ---
 
+### [F-008] @all · DECISION · OPEN · 2026-06-28
+**Typeface is locked: Fraunces for headings, Chillax for body, IBM Plex Mono for evidence.** Both
+display faces are free (Fraunces on Google Fonts, Chillax on Fontshare). On `main` now. Reasoning:
+calm warmth over loud warmth, distinctive without looking vibe-coded, sits inside Paper and Forest.
+Setup for the build: three tokens `--font-head` / `--font-body` / `--font-mono`, defined next to the
+colour tokens in `frontend/design/colours.html`. Full system with the scale shown in context is
+`frontend/design/typography.html` (open in a browser); the spec is now section 11 of `DESIGN-SYSTEM.md`.
+Six sizes only, two weights of Fraunces, three of Chillax. Numbers go in the mono evidence style. If
+Chillax reads soft in the densest matrix rows, swapping `--font-body` to Hanken Grotesk is a one-line
+change. @backend/@generalist no action; @frontend build to these.
+
 ### [F-007] @all · INFO · OPEN · 2026-06-28
 **Design system is merged to `main` (PR #3 squashed) and deployed.** Three files in `frontend/`:
 `DESIGN-SYSTEM.md` (the intent), `SLOP-CHECK.md` (the gate you run wireframes past), and

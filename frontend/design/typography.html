@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bidframe — typography (Fraunces + Chillax)</title>
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=chillax@400,500,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F6F2E9; --raised:#FBF8F1; --ink:#211D17; --muted:#6B6358;
+    --forest:#2C5640; --forest-hover:#21412F; --hair:#E4DDCE;
+    --oxblood:#8A2D2A; --amber:#BC6B2E; --yellow:#D2A435; --lgreen:#6F9A57;
+    --font-head:'Fraunces', Georgia, serif;
+    --font-body:'Chillax', system-ui, sans-serif;
+    --font-mono:'IBM Plex Mono', ui-monospace, monospace;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility}
+  body{margin:0; background:var(--paper); color:var(--ink); font-family:var(--font-body); line-height:1.6; padding:48px 20px 96px}
+  .wrap{max-width:880px; margin:0 auto}
+  h1,h2,h3,.disp{font-family:var(--font-head); font-optical-sizing:auto}
+
+  .lead{margin-bottom:40px}
+  .kicker{font-family:var(--font-mono); font-size:12px; color:var(--muted); letter-spacing:.04em; margin:0 0 12px}
+  .lead h1{font-weight:600; font-size:36px; line-height:1.08; margin:0 0 14px; letter-spacing:-.005em}
+  .lead p{font-size:16px; max-width:62ch; margin:0 0 10px}
+  .lead .pair{font-family:var(--font-mono); font-size:12.5px; color:var(--forest)}
+
+  section{margin:0 0 40px}
+  .seckick{font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin:0 0 14px}
+
+  .panel{background:var(--raised); border:1px solid var(--hair); border-radius:14px; padding:24px 26px}
+
+  /* the two faces */
+  .faces{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+  @media(max-width:640px){.faces{grid-template-columns:1fr}}
+  .face .role{font-family:var(--font-mono); font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin:0 0 6px}
+  .face .nm{font-weight:600; font-size:30px; line-height:1.1; margin:0 0 2px}
+  .face .src{font-family:var(--font-mono); font-size:11.5px; color:var(--muted); margin:0 0 16px}
+  .face .ag{font-size:30px; line-height:1.2; margin:0 0 10px}
+  .wts{display:flex; flex-direction:column; gap:4px}
+  .wts span{font-size:16px}
+  .wt400{font-weight:400} .wt500{font-weight:500} .wt600{font-weight:600}
+  .wts small{font-family:var(--font-mono); font-size:10.5px; color:var(--muted)}
+
+  /* the scale */
+  .scale .row{display:flex; align-items:baseline; gap:20px; padding:14px 0; border-bottom:1px solid var(--hair)}
+  .scale .row:last-child{border-bottom:none}
+  .scale .demo{flex:1; min-width:0}
+  .scale .spec{font-family:var(--font-mono); font-size:11.5px; color:var(--muted); white-space:nowrap; text-align:right}
+  .d-h1{font-family:var(--font-head); font-weight:600; font-size:34px; line-height:1.1; letter-spacing:-.005em}
+  .d-h2{font-family:var(--font-head); font-weight:600; font-size:24px; line-height:1.15}
+  .d-h3{font-family:var(--font-head); font-weight:600; font-size:19px; line-height:1.2}
+  .d-body{font-size:16px; font-weight:400}
+  .d-small{font-size:14px; font-weight:400; color:var(--muted)}
+  .d-label{font-size:12.5px; font-weight:500; letter-spacing:.01em}
+  .d-ev{font-family:var(--font-mono); font-size:12.5px; color:var(--muted)}
+
+  /* numbers + dense row */
+  .numnote{font-size:15px; margin:0 0 16px; color:var(--ink); max-width:62ch}
+  .matrix{width:100%; border-collapse:collapse; font-size:14px}
+  .matrix th{font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); text-align:left; font-weight:400; padding:0 12px 10px 0; border-bottom:1px solid var(--hair)}
+  .matrix td{padding:12px 12px 12px 0; border-bottom:1px solid var(--hair); vertical-align:middle}
+  .matrix .req{font-weight:400}
+  .matrix .num{font-family:var(--font-mono); font-size:12.5px; color:var(--muted); font-variant-numeric:tabular-nums}
+  .dot{width:14px; height:14px; border-radius:50%; border:1.5px solid var(--ink); display:inline-block; vertical-align:-2px}
+  .d-high{background:conic-gradient(var(--lgreen) 0 100%, transparent 0)}
+  .d-warn{background:conic-gradient(var(--yellow) 0 75%, var(--paper) 0)}
+  .d-need{background:conic-gradient(var(--amber) 0 50%, var(--paper) 0)}
+  .d-low{background:conic-gradient(var(--oxblood) 0 25%, var(--paper) 0)}
+  .deal{font-size:11px; font-weight:600; color:var(--oxblood); background:#F3E1DF; border:1px solid #E6C7C4; border-radius:6px; padding:2px 8px}
+
+  /* in context */
+  .ctx{font-family:var(--font-mono); font-size:11.5px; color:var(--muted); margin:0 0 14px}
+  .ctx-h{font-family:var(--font-head); font-weight:600; font-size:28px; line-height:1.08; margin:0 0 8px}
+  .ctx-sub{font-size:15px; color:var(--muted); margin:0 0 20px; max-width:54ch}
+  .ev{font-family:var(--font-mono); font-size:12.5px; color:var(--muted); background:var(--raised); border:1px solid var(--hair); border-radius:6px; padding:7px 11px; display:inline-block; margin:14px 0}
+  .btns{display:flex; gap:10px}
+  .approve{font-family:var(--font-body); font-weight:500; font-size:13.5px; color:var(--raised); background:var(--forest); border:none; border-radius:8px; padding:10px 18px; cursor:pointer}
+  .approve:hover{background:var(--forest-hover)}
+  .edit{font-family:var(--font-body); font-weight:500; font-size:13.5px; color:var(--ink); background:transparent; border:1px solid var(--hair); border-radius:8px; padding:10px 16px; cursor:pointer}
+
+  /* rules */
+  .rules{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+  @media(max-width:640px){.rules{grid-template-columns:1fr}}
+  .rule{font-size:14px; padding:14px 16px; border:1px solid var(--hair); border-radius:10px; background:var(--raised)}
+  .rule b{display:block; font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; margin-bottom:4px}
+  .rule.do b{color:var(--forest)} .rule.dont b{color:var(--oxblood)}
+
+  footer{margin-top:48px; padding-top:20px; border-top:1px solid var(--hair); color:var(--muted); font-size:13px}
+  footer code{font-family:var(--font-mono); font-size:12px; background:var(--raised); border:1px solid var(--hair); border-radius:5px; padding:1px 6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="lead">
+    <p class="kicker">Bidframe · design · typography</p>
+    <h1>Fraunces and Chillax</h1>
+    <p>Calm warmth, not loud warmth. Fraunces gives the headings a soft, considered, paper-document feel; Chillax keeps everything underneath friendly and human. The pairing is distinctive without looking like every other tool, and it sits inside Paper and Forest.</p>
+    <p class="pair">Heading: Fraunces · Body: Chillax · Evidence: IBM Plex Mono</p>
+  </div>
+
+  <section>
+    <p class="seckick">The two faces</p>
+    <div class="panel faces">
+      <div class="face">
+        <p class="role">Heading face</p>
+        <p class="nm">Fraunces</p>
+        <p class="src">Google Fonts · free · variable, soft serif</p>
+        <p class="ag">Aa Bb Gg 0123</p>
+        <div class="wts">
+          <span class="wt600">Semibold 600 — headings <small>the workhorse weight</small></span>
+          <span class="wt500">Medium 500 — quieter sub-heads <small>used rarely</small></span>
+        </div>
+      </div>
+      <div class="face">
+        <p class="role">Body face</p>
+        <p class="nm" style="font-family:var(--font-body); font-weight:600">Chillax</p>
+        <p class="src">Fontshare · free · variable, rounded sans</p>
+        <p class="ag" style="font-family:var(--font-body)">Aa Bb Gg 0123</p>
+        <div class="wts" style="font-family:var(--font-body)">
+          <span class="wt400">Regular 400 — body and matrix <small>the default</small></span>
+          <span class="wt500">Medium 500 — labels, buttons, emphasis</span>
+          <span class="wt600">Semibold 600 — the odd strong word <small>sparingly</small></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="seckick">The scale — six sizes, no more</p>
+    <div class="panel scale">
+      <div class="row"><div class="demo"><div class="d-h1">Two items need your eye</div></div><div class="spec">Fraunces 600 · 34px<br>display / page title</div></div>
+      <div class="row"><div class="demo"><div class="d-h2">Certification and insurance</div></div><div class="spec">Fraunces 600 · 24px<br>section heading</div></div>
+      <div class="row"><div class="demo"><div class="d-h3">ISO 9001 certification</div></div><div class="spec">Fraunces 600 · 19px<br>card / panel title</div></div>
+      <div class="row"><div class="demo"><div class="d-body">The supplier must hold ISO 9001 certification, valid for the full term of the contract.</div></div><div class="spec">Chillax 400 · 16px<br>body</div></div>
+      <div class="row"><div class="demo"><div class="d-small">Most of this tender is already answered.</div></div><div class="spec">Chillax 400 · 14px<br>secondary / help</div></div>
+      <div class="row"><div class="demo"><div class="d-label">NEEDS A QUICK CHECK</div></div><div class="spec">Chillax 500 · 12.5px<br>label / button</div></div>
+      <div class="row"><div class="demo"><div class="d-ev">Section 4.2.1 · page 14 · req-0001</div></div><div class="spec">Plex Mono 400 · 12.5px<br>evidence / source</div></div>
+    </div>
+  </section>
+
+  <section>
+    <p class="seckick">Numbers — the one place Chillax steps aside</p>
+    <div class="panel">
+      <p class="numnote">Confidence is never a number, so most digits in Bidframe are page references, clause numbers and IDs. Those are <b>source facts</b>, so we set them in the mono evidence style. That keeps columns aligned, sidesteps any worry about rounded figures in a dense table, and reinforces the "this is the document talking" idea.</p>
+      <table class="matrix">
+        <thead><tr><th style="width:46%">Requirement</th><th>Source</th><th>Confidence</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td class="req"><span class="deal">Deal breaker</span> &nbsp;ISO 9001 certification</td><td class="num">p.14 · §4.2.1</td><td><span class="dot d-need"></span> needs a check</td><td class="num">pending</td></tr>
+          <tr><td class="req">Named account manager</td><td class="num">p.22 · §6.1</td><td><span class="dot d-high"></span> high</td><td class="num">approved</td></tr>
+          <tr><td class="req">Employer liability £5m cover</td><td class="num">p.09 · §3.4</td><td><span class="dot d-warn"></span> good</td><td class="num">pending</td></tr>
+          <tr><td class="req">Modern slavery statement</td><td class="num">p.31 · §8.2</td><td><span class="dot d-low"></span> uncertain</td><td class="num">flagged</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <p class="seckick">In context</p>
+    <div class="panel">
+      <p class="ctx">NHS Greater Manchester · cleaning services tender · 21 requirements</p>
+      <h3 class="ctx-h">Two items need your eye</h3>
+      <p class="ctx-sub">Most of this tender is already answered. These are the parts only you can confirm.</p>
+      <div class="d-body" style="max-width:54ch">The supplier must hold ISO 9001 certification, valid for the full term of the contract. We matched this to the certificate already on your file, so there is nothing to write.</div>
+      <div class="ev">Section 4.2.1 · page 14 · req-0001</div>
+      <div class="btns"><button class="approve">Approve</button><button class="edit">Edit answer</button></div>
+    </div>
+  </section>
+
+  <section>
+    <p class="seckick">Holding the line (ties into the slop check)</p>
+    <div class="rules">
+      <div class="rule do"><b>Do</b>Keep headings short. Fraunces earns its warmth in a few words, not a long sentence.</div>
+      <div class="rule dont"><b>Don't</b>No really long headlines. No thin Chillax weights on paper, they go muddy.</div>
+      <div class="rule do"><b>Do</b>Use the serif sparingly. Headings and the odd hero number only, never in dense UI.</div>
+      <div class="rule dont"><b>Don't</b>No gradient text, no all-caps sentences, no third or fourth size sneaking in.</div>
+      <div class="rule do"><b>Do</b>Numbers and source refs go in the mono evidence style so columns line up.</div>
+      <div class="rule dont"><b>Don't</b>No raw confidence figures like 0.92. Confidence is the dot, never a digit.</div>
+    </div>
+  </section>
+
+  <footer>
+    The whole system reads from three variables: <code>--font-head</code> (Fraunces), <code>--font-body</code> (Chillax), <code>--font-mono</code> (IBM Plex Mono). Two weights of Fraunces, three of Chillax, kept deliberately small. If Chillax ever feels soft in the very densest rows during the build, swapping <code>--font-body</code> to Hanken Grotesk is a one line change and nothing else moves.
+  </footer>
+
+</div>
+</body>
+</html>
