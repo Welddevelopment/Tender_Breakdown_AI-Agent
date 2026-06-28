@@ -2,8 +2,10 @@ id,text,type,is_gating,source_page,source_clause,notes
 # GOLD LABEL — SPSO Cleaning Services ITT (data/tenders/spso-cleaning.pdf)
 # FIRST-PASS DRAFT by J's agent from the tender text — Joel: read down it, fix anything wrong,
 #   delete non-requirements, add anything missed. Then delete these comment lines.
-# Scope: bidder-facing requirements (submission, conditions, logistics, eligibility). The detailed
-#   room-by-room cleaning tasks in Appendix 1 (pp.7-11) are summarised in g1-g3, not line-by-line.
+# SCOPE — label PAGES 1-6 ONLY (the tender instructions). Pages 7-13 are appendices and are NOT
+#   labelled line-by-line: the detailed cleaning checklist (pp.7-11) is summarised as g1-g3, and the
+#   section 19 legal/confidentiality text (pp.12-13) is summarised as g4. When verifying, only read
+#   pages 1-6 to check for anything missed; ignore pages 7-13. (Eval scores tool output for pp.1-6.)
 # type = mandatory|optional ; is_gating = yes|no
 g1,"Provide cleaning services for the office at 4 Melville St Edinburgh per the detailed specification",mandatory,no,3,Project Specification,core service; full task list in Appendix 1
 g2,"Keep risk assessment and COSHH manuals up to date and on site",mandatory,no,3,Project Specification,from the spec task list
