@@ -33,7 +33,7 @@ The **requirement object** schema in [AGENTS.md](AGENTS.md) §"Data contract" is
 
 `{ id, text, source_page, source_clause, source_excerpt, type, is_gating, category, confidence, status, needs_review, decision, criteria_ref, depends_on, draft_answer }`
 
-**Intermediate format (backend → generalist):** the *raw extraction list* — requirement objects pre-reconcile (cross-chunk duplicates allowed, raw confidence, ids not yet deduped). **Spec being drafted by J today** at `prompts/raw-extraction-format.md`. Backend + generalist: build against mock raw data until it lands, then align.
+**Intermediate format (backend → generalist):** the *raw extraction list* — requirement objects pre-reconcile (cross-chunk duplicates allowed, raw confidence, ids not yet deduped). **Spec is up — `prompts/raw-extraction-format.md` (PROPOSED v1)** with a 6-item mock at `prompts/mock-raw-extraction.json`. **Backend + generalist: review + sign off in standup today**, build against the mock meanwhile.
 
 ---
 
@@ -44,7 +44,7 @@ The **requirement object** schema in [AGENTS.md](AGENTS.md) §"Data contract" is
 | **Backend** | PDF ingest · chunk · extract · classify · graph · SQLite · REST API | _not started_ | Day-1 spike: PyMuPDF → text+page numbers on one real tender; FastAPI skeleton + mock `/requirements` | needs a sample tender from sourcing sprint |
 | **Generalist** | reconcile/dedupe · confidence routing · eval harness · answer-draft | _not started_ | Day-1: agree raw-extraction format; start reconcile vs mock raw data; label one tender | raw-extraction format spec (J, today) |
 | **Frontend** | compliance matrix · source panel · decision controls · graph view · demo | _scaffold exists_ (`frontend/src/`) | Day-1: matrix over mock requirements; gating rows stand out; `needs_review` looks uncertain; confidence as bar/dot | nothing — mock-first, never blocked |
-| **J** | prompts · orchestration · narrative · traction · glue | **in progress** | Day-1: raw-extraction spec → v1 extraction+classification prompts → standup. Name locked ✅ | nothing |
+| **J** | prompts · orchestration · narrative · traction · glue | **in progress** | Day-1 ✅ name locked · raw-extraction spec+mock · v1 extraction+classification prompts (`prompts/`). Next: run standup, do sourcing share + label one tender | nothing |
 
 ---
 
@@ -57,4 +57,6 @@ The **requirement object** schema in [AGENTS.md](AGENTS.md) §"Data contract" is
 
 ## Recently shipped (newest first)
 
-- **2026-06-28** — J: cleaned up stray global config; locked tool name **Bidframe**; created this `STATUS.md`. Raw-extraction format spec + v1 prompts next.
+- **2026-06-28** — J: v1 extraction + classification prompts (`prompts/extraction.md`, `prompts/classification.md`) — provider-agnostic, recall-first, structured-output schemas inline.
+- **2026-06-28** — J: raw-extraction format spec + 6-item mock (`prompts/raw-extraction-format.md`, `prompts/mock-raw-extraction.json`) — backend→generalist contract.
+- **2026-06-28** — J: cleaned up stray global config; locked tool name **Bidframe**; created this `STATUS.md`.
