@@ -1,8 +1,12 @@
 """Deterministic eval harness for gold-set scoring."""
 from __future__ import annotations
 
+import argparse
+import sys
+from pathlib import Path
 from typing import Any
 
+from engine._io import read_json, write_json
 from engine.similarity import similarity
 
 MATCH_THRESHOLD = 0.60
@@ -46,7 +50,6 @@ def match_requirements(
     return matches, unmatched_gold, unmatched_output
 
 
-
 def _rounded_ratio(numerator: int, denominator: int) -> float:
     if denominator == 0:
         return 0.0
@@ -87,3 +90,58 @@ def score(gold: dict[str, Any], output: dict[str, Any]) -> dict[str, float | int
         "gating_accuracy": gating_accuracy,
         "gating_recall": gating_recall,
     }
+
+
+def format_report(gold: dict[str, Any], output: dict[str, Any]) -> dict[str, Any]:
+    """Build eval report with headline metrics, dangerous misses, and false positives."""
+    metrics = score(gold, output)
+    _, unmatched_gold, unmatched_output = match_requirements(gold, output)
+    misses = [dict(g, dangerous=bool(g.get("is_gating"))) for g in unmatched_gold]
+    return {
+        **metrics,
+        "tender_id": gold.get("tender_id") or output.get("tender_id"),
+        "misses": misses,
+        "false_positives": unmatched_output,
+    }
+
+
+def _render(report: dict[str, Any]) -> str:
+    dangerous_count = sum(1 for miss in report.get("misses", []) if miss.get("dangerous"))
+    false_positive_count = len(report.get("false_positives", []))
+    return "\n".join([
+        f"recall: {report['recall']}",
+        f"precision: {report['precision']}",
+        f"f1: {report['f1']}",
+        f"gating_accuracy: {report['gating_accuracy']}",
+        f"gating_recall: {report['gating_recall']}",
+        f"dangerous_misses: {dangerous_count}",
+        f"false_positives: {false_positive_count}",
+    ])
+
+
+def main(argv: list[str]) -> int:
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except (AttributeError, ValueError):
+        pass
+
+    parser = argparse.ArgumentParser(description="Score Bidframe output against a gold set.")
+    parser.add_argument("--gold", required=True, help="Path to gold JSON")
+    parser.add_argument("--output", required=True, help="Path to output JSON")
+    parser.add_argument("--report", help="Optional path to write JSON report")
+    args = parser.parse_args(argv[1:])
+
+    gold_path = Path(args.gold)
+    output_path = Path(args.output)
+    if not gold_path.exists() or not output_path.exists():
+        parser.error("gold and output files must exist")
+
+    report = format_report(read_json(gold_path), read_json(output_path))
+    if args.report:
+        write_json(args.report, report)
+    print(_render(report))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main(sys.argv))
