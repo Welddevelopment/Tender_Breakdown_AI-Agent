@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bidframe colour system</title>
+<style>
+  :root{
+    --paper:#F6F2E9; --paper-raised:#FBF8F1; --ink:#211D17; --ink-muted:#6B6358;
+    --forest:#2C5640; --forest-hover:#21412F; --hairline:#E4DDCE;
+    --signal-oxblood:#8A2D2A; --signal-amber:#BC6B2E; --signal-yellow:#D2A435; --signal-light-green:#6F9A57;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);line-height:1.6;
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .wrap{max-width:880px;margin:0 auto;padding:48px 24px 80px}
+  h1{font-size:26px;font-weight:600;margin:0 0 6px}
+  .sub{color:var(--ink-muted);font-size:15px;margin:0}
+  .hint{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+    margin:30px 0 4px;font-size:13px;color:var(--ink-muted)}
+  #status{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .lbl{font-size:13px;font-weight:600;color:var(--ink-muted);margin:34px 0 12px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px}
+  .sw{cursor:pointer;border:1px solid var(--hairline);border-radius:12px;overflow:hidden;
+    background:var(--paper-raised);text-align:left;font:inherit;color:inherit;padding:0}
+  .sw:hover{border-color:#cdc3ad}
+  .sw:focus-visible{outline:2px solid var(--forest);outline-offset:2px}
+  .chip{height:64px;border-bottom:1px solid var(--hairline)}
+  .meta{padding:9px 11px}
+  .nm{font-size:14px;font-weight:600}
+  .role{font-size:12px;color:var(--ink-muted)}
+  .hex{font-size:13px;margin-top:3px;color:var(--ink-muted);
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .panel{background:var(--paper-raised);border:1px solid var(--hairline);border-radius:12px;padding:18px 20px}
+  .dots{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start}
+  .col{display:flex;flex-direction:column;align-items:center;gap:6px;width:62px}
+  .cap{font-size:13px;font-weight:600}
+  .cap2{font-size:11px;color:var(--ink-muted)}
+  .tick{width:26px;height:26px;border-radius:50%;background:var(--forest);
+    display:flex;align-items:center;justify-content:center}
+  .note{font-size:12px;color:var(--ink-muted);margin-top:14px}
+  .pair{border:1px solid var(--hairline);border-radius:12px;overflow:hidden}
+  .pair .demo{padding:16px 14px;font-size:18px;font-weight:600}
+  .pair .pm{padding:9px 11px}
+  .copyall{margin-top:28px;font:inherit;font-size:14px;background:var(--forest);color:var(--paper);
+    border:0;border-radius:10px;padding:10px 16px;cursor:pointer}
+  .copyall:hover{background:var(--forest-hover)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Bidframe colour system</h1>
+  <p class="sub">Two palettes, kept apart. Brand builds the app; signal only ever marks status.</p>
+
+  <div class="hint"><span>Click any swatch to copy its hex.</span><span id="status" aria-live="polite"></span></div>
+
+  <div class="lbl">Brand palette — the app's furniture</div>
+  <div class="grid" id="brand"></div>
+
+  <div class="lbl">Status signal — only on status carriers</div>
+  <div class="grid" id="signal"></div>
+
+  <div class="lbl">The confidence dot in context</div>
+  <div class="panel" id="context"></div>
+
+  <div class="lbl">Text pairings (measured contrast)</div>
+  <div class="grid" id="pairings"></div>
+
+  <button class="copyall" id="copyall">Copy all as CSS variables</button>
+</div>
+
+<script>
+  var brand=[
+    ["Paper","App background","#F6F2E9"],
+    ["Paper-raised","Panels, side panel","#FBF8F1"],
+    ["Ink","Primary text","#211D17"],
+    ["Ink-muted","Secondary text","#6B6358"],
+    ["Forest","Actions, approval","#2C5640"],
+    ["Forest-hover","Hover, pressed","#21412F"],
+    ["Hairline","Dividers, borders","#E4DDCE"]
+  ];
+  var signal=[
+    ["Oxblood","Critical · ¼ fill","#8A2D2A"],
+    ["Amber","Low confidence · ½","#BC6B2E"],
+    ["Yellow","Caution · ¾ fill","#D2A435"],
+    ["Light-green","Confident · full","#6F9A57"]
+  ];
+  function swatch(s){
+    var b=document.createElement("button");
+    b.className="sw"; b.setAttribute("aria-label","Copy "+s[0]+" "+s[2]);
+    b.innerHTML='<div class="chip" style="background:'+s[2]+'"></div>'+
+      '<div class="meta"><div class="nm">'+s[0]+'</div>'+
+      '<div class="role">'+s[1]+'</div><div class="hex">'+s[2]+'</div></div>';
+    b.addEventListener("click",function(){copy(s[2]);});
+    return b;
+  }
+  brand.forEach(function(s){document.getElementById("brand").appendChild(swatch(s));});
+  signal.forEach(function(s){document.getElementById("signal").appendChild(swatch(s));});
+
+  var tiers=[["Critical","¼ fill","#8A2D2A","14.1"],["Low","½ fill","#BC6B2E","28.3"],
+    ["Caution","¾ fill","#D2A435","42.4"],["Confident","full","#6F9A57","56.5"]];
+  var html='<div class="dots"><div style="display:flex;gap:16px;flex-wrap:wrap">';
+  tiers.forEach(function(t){
+    html+='<div class="col"><svg width="30" height="30" viewBox="0 0 24 24">'+
+      '<circle cx="12" cy="12" r="9" fill="none" stroke="#211D17" stroke-width="1.5"/>'+
+      '<circle cx="12" cy="12" r="9" fill="none" stroke="'+t[2]+'" stroke-width="3" '+
+      'stroke-dasharray="'+t[3]+' 56.5" transform="rotate(-90 12 12)"/></svg>'+
+      '<div class="cap">'+t[0]+'</div><div class="cap2">'+t[1]+'</div></div>';
+  });
+  html+='</div><div class="col" style="width:72px;border-left:1px solid var(--hairline);padding-left:18px">'+
+    '<div class="tick"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#F6F2E9" '+
+    'stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></div>'+
+    '<div class="cap">Approved</div><div class="cap2">human tick</div></div></div>'+
+    '<div class="note">A 1px ink ring plus a tiered fill keeps the level legible in greyscale. '+
+    'Hue only speeds the glance. Approval is a separate solid forest tick, never a brighter dot.</div>';
+  document.getElementById("context").innerHTML=html;
+
+  var pairs=[["Ink on Paper","15:1 · AAA","#F6F2E9","#211D17"],
+    ["Ink-muted on Paper","5.3:1 · AA","#F6F2E9","#6B6358"],
+    ["Paper on Forest","7.5:1 · AAA","#2C5640","#F6F2E9"]];
+  pairs.forEach(function(p){
+    var d=document.createElement("div"); d.className="pair";
+    d.innerHTML='<div class="demo" style="background:'+p[2]+';color:'+p[3]+'">Aa</div>'+
+      '<div class="pm"><div class="role">'+p[0]+'</div>'+
+      '<div class="hex" style="color:var(--ink)">'+p[1]+'</div></div>';
+    document.getElementById("pairings").appendChild(d);
+  });
+
+  function setStatus(t){document.getElementById("status").textContent=t;}
+  function fb(text){var ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";
+    ta.style.left="-9999px";document.body.appendChild(ta);ta.select();
+    try{document.execCommand("copy");}catch(e){}document.body.removeChild(ta);}
+  function copy(text,msg){
+    var done=function(){setStatus(msg||("Copied "+text));};
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done).catch(function(){fb(text);done();});
+    }else{fb(text);done();}
+  }
+  var css=":root {\n"+
+    "  --paper: #F6F2E9;\n  --paper-raised: #FBF8F1;\n  --ink: #211D17;\n  --ink-muted: #6B6358;\n"+
+    "  --forest: #2C5640;\n  --forest-hover: #21412F;\n  --hairline: #E4DDCE;\n"+
+    "  --signal-oxblood: #8A2D2A;\n  --signal-amber: #BC6B2E;\n  --signal-yellow: #D2A435;\n"+
+    "  --signal-light-green: #6F9A57;\n}";
+  document.getElementById("copyall").addEventListener("click",function(){copy(css,"Copied :root CSS variables");});
+</script>
+</body>
+</html>

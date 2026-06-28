@@ -45,8 +45,8 @@ Everything structural: backgrounds, text, buttons, navigation, headings.
 | Paper-raised | Lifted surface (a panel) | `#FBF8F1` |
 | Ink | Primary text, warm near-black | `#211D17` |
 | Ink-muted | Secondary text | `#6B6358` |
-| Forest | Primary actions, brand accent | `#2C5640` |
-| Forest-deep | Approval signature (see status) | `#21412F` |
+| Forest | Primary actions, brand accent, approval signature | `#2C5640` |
+| Forest-hover | Hover and pressed shade of Forest | `#21412F` |
 | Hairline | Dividers, thin borders | `#E4DDCE` |
 
 ### Signal palette (status only)
@@ -61,9 +61,16 @@ matrix. Never on a button, background, heading, or nav. At most one signal hue p
 | Yellow | Minor caution: glance before trusting | `#D2A435` |
 | Light-green | Confident: quick read and approve | `#6F9A57` |
 
-Light-green (AI confidence) and Forest-deep (human approval) do two different jobs and must stay
-clearly apart in tone. Approval always carries a tick and a settled style as well, so the two greens
-are never confused, including in greyscale.
+Light-green (AI confidence) and Forest (human approval) do two different jobs and must stay clearly
+apart in tone. Approval always carries a tick and a settled style as well, so the two greens are never
+confused, including in greyscale.
+
+**Copy-paste reference:** [design/colours.html](design/colours.html) renders every swatch with
+click-to-copy hex and a "copy all as CSS variables" button. It is the single source of truth for the
+exact values; keep it and this table in sync.
+
+These hex values passed a contrast and greyscale audit. Yellow and light-green are too low-contrast as
+bare fills on paper, which is why signal never appears as a bare block: see the dot in section 4.
 
 ## 4. The status model: two axes, never one ramp
 
@@ -78,17 +85,19 @@ The **confidence dot**, on a four-tier scale, worst to best:
 3. **Yellow** - fairly sure, minor caution. Glance before trusting.
 4. **Light-green** - confident. Quick read and approve.
 
-The dot also fills by tier (empty to full), so the level reads with color switched off, and a word
-always sits beside it ("Low confidence", "Confident"). Never a raw number like 0.92.
+The dot always carries a **1px Ink ring** and **fills by tier** (quarter, half, three-quarter, full),
+so the level reads with color switched off and every dot clears the 3:1 graphical contrast floor on
+paper regardless of its hue. A word always sits beside it ("Low confidence", "Confident"). Never a raw
+number like 0.92.
 
 ### Axis 2: Approval (has a human signed off?)
 
-A separate device: a **forest-deep green tick** plus a settled style. Maps to `status`:
+A separate device: a **solid forest-green tick** plus a settled style. Maps to `status`:
 pending / accepted / edited / flagged. Approval can sit on top of any confidence tier. Approving a
 yellow answer is honest and recorded as exactly that: signed off despite medium confidence.
 
-When you approve, light-green resolves to forest-deep under your hand. That small settle is the only
-celebration the moment needs.
+When you approve, the light-green dot gives way to the solid forest tick under your hand. That small
+settle is the only celebration the moment needs.
 
 ## 5. The signature component: the AI-suggested field
 
