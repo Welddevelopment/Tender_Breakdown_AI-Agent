@@ -15,12 +15,16 @@ to a list a **human** made by hand. That comparison gives us the headline number
 No human answer key → no way to prove the tool works. This is that answer key. It's also genuinely
 useful: reading one real tender end-to-end makes you sharper about the whole product.
 
+> 📄 **The tender PDFs are in the repo** at `data/tenders/` — just `git pull` and they're there
+> (e.g. `data/tenders/spso-cleaning.pdf`, `data/tenders/museum-cleaning-itt.pdf`). No download needed.
+
 ## The job
 
 Read one tender. Every time you find something the bidder **must** or **should** do (to be allowed to
 bid, to comply, or to score points), write it down as **one line** in the template. That's it.
 
-**Start with `spso-cleaning.pdf`** — it's only 13 pages. ~30–45 minutes.
+Each person labels a **different** tender (see your handoff). The example below uses SPSO, but use
+whichever tender you were assigned — the steps are identical.
 
 ## Step by step
 

@@ -10,7 +10,7 @@ things you can do **right now without AI or coding**. Everything you need is on 
 ## Your tender
 
 **MAC (Metropolitan Arts Centre) — Cleaning Services ITT**
-**Download:** https://museuminsider.co.uk/wp-content/uploads/2016/02/Cleaning-ITT-Version-1.3-FINAL-1.pdf
+**It's in the repo:** `data/tenders/museum-cleaning-itt.pdf` — just `git pull` (no download needed).
 (41 pages. Real cleaning ITT with published award criteria — Quality 40% / Commercial 60% — and clear
 pass/fail gates.)
 

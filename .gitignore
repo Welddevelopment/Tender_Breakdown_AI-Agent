@@ -29,11 +29,11 @@ next-env.d.ts
 *.pem
 *.key
 
-# ---- Uploaded tenders / data dumps (keep the repo light) ----
-/data/
+# ---- Data ----
+# Commit the shared tender corpus (team test data); ignore logs / runtime / db.
+/data/*
+!/data/tenders/
 /backend/data/
-*.pdf
-!**/fixtures/*.pdf
 
 # ---- OS / editor ----
 .DS_Store
