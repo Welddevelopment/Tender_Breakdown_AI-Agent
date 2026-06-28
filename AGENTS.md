@@ -5,11 +5,56 @@ Conduct "Make Legacy Move" hackathon project. This repo extracts requirements fr
 ## Repo layout
 
 ```
-/backend          Python + FastAPI (PDF ingest, extraction, API) — not yet scaffolded
+/backend          Python + FastAPI (PDF ingest, extraction, API) — skeleton in place
 /frontend         Next.js + React + Tailwind — compliance matrix UI (Day 1 deliverable)
 tender-master-plan.md   Source of truth for schema, pipeline, and roles
 role-*.md         Per-person day-by-day briefs
 ```
+
+## Git workflow — every agent and human MUST follow this
+
+We are 4 people building in parallel for 7 days. The rules below keep `main`
+always demo-able while moving fast. **Agents: follow these exactly. Do not invent
+your own branching scheme.**
+
+**Model: trunk-based.** Work directly on `main` for normal changes in your own
+area. We do NOT open a PR for everyday work — that's too slow for this sprint.
+
+**The daily loop (run this constantly):**
+
+```bash
+git pull --rebase        # 1. ALWAYS pull before you start AND before you push
+# ...make a focused change...
+git add -A
+git commit -m "clear message"   # commit small and often
+git pull --rebase        # 2. pull again in case a teammate pushed while you worked
+git push                 # 3. share it
+```
+
+`--rebase` keeps history linear. It's the default in this repo
+(`git config pull.rebase true` is assumed). Never use a plain merge-pull.
+
+**Stay in your lane.** Each role owns a folder (see Team roles). Frontend agents
+edit `/frontend`, backend agents edit `/backend`. This is what makes concurrent
+pushes conflict-free — do not edit another role's files without coordinating.
+
+**Branch + PR ONLY for these two cases** (everything else goes straight to `main`):
+1. A change to the **locked requirement schema** (it breaks both sides at once).
+2. A **large or risky change** that could leave `main` broken (a big refactor).
+   Branch name: `<role>/<short-name>` (e.g. `frontend/graph-view`). Open a PR,
+   get one teammate's glance, merge, delete the branch.
+
+**Hard rules for agents:**
+- **Never push a broken build.** Run the project's build/lint (see Commands)
+  before pushing. If it fails, fix it or don't push.
+- **Keep `main` runnable at all times** — it is the live demo branch.
+- If `git pull --rebase` reports a **conflict inside your own area**, resolve it
+  and continue. If the conflict is in **another role's files or the schema**,
+  STOP and tell the human — do not guess.
+- **Never** `git add -f` past `.gitignore`. Never commit `.env`, secrets,
+  `node_modules/`, `.venv/`, or tender PDFs.
+- **Never** force-push `main` (`git push --force`) or rewrite shared history.
+- Write commit messages a teammate can scan: what changed, not "wip".
 
 ## Data contract (lock this shape)
 
