@@ -28,6 +28,50 @@
 
 ---
 
+## ⭐ Master target list (ranked — the CRM)
+
+Ranked by **decides-fast × bids-often × reachable × wedge-fit**. Verify ✅ handles before sending; "route"
+= no clean personal handle yet (use the company page / contact form). **All Status: Not contacted.** Detail
++ provenance for each row is in §A / §B below.
+
+| # | Firm / Person | Tier | Segment | Fit & hook (one line) | Handle / contact |
+|---|---------------|------|---------|----------------------|------------------|
+| 1 | **Vicki Stewart** — Tender Victory | ⭐⭐ | Consultancy (SME-focused) | Ex public-sector *buyer* + SME-majority writer → ultimate validator of the disqualifier catch | `/in/vicki-stewart-42a58a2a` ✅ |
+| 2 | **Dave Thornton** — Thornton & Lowe | ⭐⭐ | Consultancy (largest UK) | Biggest SME-focused consultancy; posts actively → warm-comment then DM; his interest = a headline quote | `/in/dave-thornton-56833625` ✅ |
+| 3 | **Ian Evans** — BFT Consult | ⭐ | Consultancy (H&SC) | H&SC specialist, 80%+ win, £950m+; demo on a care-framework ITT he'll know cold | `/company/bftconsult` (route) |
+| 4 | **Neil Capstick** — Executive Compass | ⭐ | Consultancy | Social-value + auditability thought-leader; "trust not prose" lands; strong validator | `/in/tenderwriter` ✅ |
+| 5 | **Katrina Gibson** — Della Pip | ⭐ | Consultancy (H&SC) | Care-sector Director; pair with a domiciliary ITT | `/in/katrina-gibson-2278516b` ✅ |
+| 6 | **Dewi Hughes** — Silverlock | ⭐ | Consultancy (small) | Small/solo → replies personally, tries it on a live bid | `/in/dewihughes` ✅ |
+| 7 | **Christopher Martin** — Tenders UK | — | Consultancy (care/FM) | 4,000+ bids since 2008; care/FM; live demo on a sector ITT | `/in/winmoretenders` ✅ |
+| 8 | **Stuart Reed** — independent | — | Solo bid writer | Active "bid writing expert"; fast personal reply | `/in/stuart-reed` ✅ |
+| 9 | **Julian Clarke** — independent | — | Solo bid writer | Helps SMEs; personal reply likely | `/in/julian-clarke-a156bb50` ✅ |
+| 10 | **John Hudson** — Hudson Succeed | — | Consultancy (large) | COO of a 2,000-client bid shop; bigger/slower but high-volume validator | `/in/johnhudson3` ✅ |
+| 11 | **Sharon Welch** — Bid Writer Consultancy | — | Consultancy (SME, "AI bid") | Already markets AI bid support → receptive to the framing | `/company/bid-writer-consultancy` (route) |
+| 12 | **David Anderson** — Fuelling Minds | — | SME bidder (catering) | New (Apr 2025) SME caterer; demo on Discovery Trust ITT (FTS `076817-2025`) | LinkedIn (find David Anderson) |
+| 13 | **Fareport / Runway Training** | — | SME bidder (training) | Bid constantly into Skills Bootcamps/DPS2; under-tooled | company LinkedIn |
+| 14 | **Joghide / MC&DS** | — | SME bidder (care) | Herefordshire framework awardees; demo on that ITT | company LinkedIn |
+| 15 | **Agile Guarding / Brightr** | — | SME bidder (security/cleaning) | Regional SME FM bidders (ESPO/RM6257 + school cleaning) | company LinkedIn |
+
+> **Firm-only (no named contact yet — find a person before outreach):** Complete Tenders, BidRight UK,
+> Tsaks (London office), Bid Writing Service, GovData, Glaxtons, Think Tenders (Amanda + team).
+
+## Day-3 sequencing (the play)
+
+**Gate:** run live demos only once the OpenAI path is solid — a stumbling demo burns a warm contact.
+
+1. **Day 3 AM — warm up (no ask):** genuinely comment on recent LinkedIn posts from #1–#4 (Stewart,
+   Thornton, Capstick) + any APMP/BIDx thread. Name recognition before the DM.
+2. **Day 3 PM — first-touch DMs to the top 6** (Stewart, Thornton, Evans, Capstick, Gibson, Hughes) using
+   the §Outreach drafts; personalise line 1 to their firm/sector.
+3. **Day 3–4 — book the 10-min live demos:** "I'll run it on a past tender you pick." Have a care-framework
+   ITT loaded for H&SC targets; a clean SPSO-style ITT for generalists.
+4. **Day 4 — capture:** name, role, firm, verbatim quote, short screen-recording of the reaction. Label
+   honestly. Target: 5–8 conversations · 3–4 "I'd use it" · 1–2 "I'll pilot it".
+5. **Parallel scalable touch:** pitch a **BIDx Digital Festival** webinar slot (APMP UK, `members@apmpuk.co.uk`)
+   — the audience *is* the market.
+
+---
+
 ## A) Bid-writing consultancies ⭐ (priority 1)
 
 **Why best:** their entire business is responding to tenders, so they feel the pain daily, run *many*
@@ -233,3 +277,10 @@ Ranked for: decides fast · bids often · reachable · strong wedge fit.
   table (firm/person · tier · segment · fit · verified handle · hook · status) + tightened Day-3 sequencing.
   Then cycle 7+: pin remaining handles (Ian Evans/BFT, Sharon Welch), study mytender.io + AutogenAI pricing,
   polish outreach per segment.
+- **2026-06-29 (cycle 6)** — 🔨 **Synthesis:** built the ranked **Master target list (CRM)** near the top —
+  15 ranked rows (top 11 consultancy contacts, 9 with ✅ verified handles; then key SME bidders), each with
+  tier · segment · one-line hook · contact · Status=Not contacted; plus a firm-only watchlist. Added the
+  **Day-3 sequencing play** (warm-up comments → top-6 first-touch DMs → live demo on a tender they know →
+  capture honestly; + a BIDx webinar slot as the scalable touch). Dossier is now outreach-ready. **Next
+  (cycle 7):** WebFetch mytender.io + AutogenAI for sharper pricing/positioning intel; pin the two open
+  handles (Ian Evans, Sharon Welch); polish per-segment outreach + add warm-intro paths.
