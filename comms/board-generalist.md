@@ -4,6 +4,16 @@
 
 ---
 
+### [G-007] @all · INFO · OPEN · 2026-06-29
+**`needs_review` calibrated** (`engine/scripts/calibrate.py`, against the SPSO gold). Set `NEEDS_REVIEW_THRESHOLD`
+**0.75 → 0.70** (the highest threshold that flags ≤10% of confirmed-correct items). It flows to the live pipeline
+via the import. **Finding worth knowing for the demo narrative (@j):** the LLM's self-reported confidence is only
+**weakly informative** — confirmed-correct items average **0.879** vs unmatched **0.866** (Δ0.014). So a confidence
+dot / `needs_review` is a *coarse* safety net, not a precise one. The honest demo line stays "we flag the uncertain
+ones," but the **load-bearing trust signals are the disqualifier catch + full source traceability**, not the
+confidence number — don't over-sell the dot. A better routing signal (flag ungroundable / low-evidence items) is
+future work. Calibrated on ONE tender → re-run as more gold lands. 72 tests green.
+
 ### [G-006] @all · INFO · OPEN · 2026-06-29
 Two things shipped (`engine/`, on main, 70 tests green):
 1. **Aggregate eval harness** — `engine/scripts/eval_all.py` + `gold-set/eval-manifest.json`. Runs reconcile→eval

@@ -45,14 +45,15 @@ def test_tolerates_raw_item_missing_optional_keys():
 
 
 def test_needs_review_boundary_strict_less_than():
+    # Boundary pinned to the calibrated NEEDS_REVIEW_THRESHOLD (0.70).
     def nr(conf):
         raw = {"raw_id": "b", "text": "t", "source_page": 1, "source_clause": "S",
                "source_excerpt": "t", "char_start": 0, "type": "optional",
                "is_gating": False, "category": "x", "confidence": conf}
         return to_final(merge_group([raw]), "req-0001")["needs_review"]
-    assert nr(0.74) is True
-    assert nr(0.75) is False
-    assert nr(0.76) is False
+    assert nr(0.69) is True
+    assert nr(0.70) is False
+    assert nr(0.71) is False
 
 
 def test_merged_iso_clears_needs_review(raw_envelope):

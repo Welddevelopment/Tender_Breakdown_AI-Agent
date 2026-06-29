@@ -21,7 +21,12 @@ from engine.similarity import (
     similarity, token_similarity, TEXT_SIM_THRESHOLD, TOKEN_SIM_FLOOR,
 )
 
-NEEDS_REVIEW_THRESHOLD = 0.75   # needs_review = merged confidence < this (strict). Crude; Day-3 calibration.
+# needs_review = merged confidence < this (strict). CALIBRATED on the SPSO gold
+# (engine/scripts/calibrate.py): highest threshold flagging <=10% of confirmed-correct
+# items. NB the LLM's confidence is only WEAKLY informative (correct vs unmatched
+# means differ by ~0.01), so this is a coarse safety net, not a precise one — revisit
+# as more gold lands. Flows to the live backend pipeline via the import there.
+NEEDS_REVIEW_THRESHOLD = 0.70
 
 # The 15 fields the live frontend `Requirement` type declares. Output emits exactly these.
 FINAL_KEYS = (
