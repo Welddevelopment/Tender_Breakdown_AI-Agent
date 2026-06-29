@@ -3,18 +3,20 @@
 import Link from "next/link";
 
 // The two landing-page calls to action (landing-page-brief §3, §14). The primary
-// is one forest "Book a demo" button, the only saturated colour in its viewport.
-// The secondary is a quiet "See it run" link into the preloaded demo at /review,
-// so a cold visitor watches it work with no upload friction. Each fires exactly
-// one analytics event; nothing else on the page is instrumented.
+// is one forest "Book a demo" button on light sections, inverting to a cream
+// button on the dark ink bands so it always carries the most contrast in its
+// viewport. The secondary is a quiet "See it run" link into the preloaded demo
+// at /review. Each fires one analytics event; nothing else is instrumented.
+//
+// The destination is a scheduling link, set via NEXT_PUBLIC_BOOKING_URL so it
+// can be swapped without a code change (brief §16.1). Until it is set, the
+// button falls back to an on-page anchor.
+const BOOKING_URL = process.env.NEXT_PUBLIC_BOOKING_URL ?? "#book-a-demo";
 
-// TODO (brief §16.1): swap for the real destination, a scheduling link
-// (Cal.com / Calendly) or a team mailto. Built as a single, easily-swapped href.
-const BOOKING_URL = "#book-a-demo";
+type Tone = "light" | "dark";
 
 function track(event: string, props?: Record<string, string>): void {
   if (typeof window === "undefined") return;
-  // Push to a dataLayer if analytics is wired downstream; a safe no-op otherwise.
   const w = window as unknown as { dataLayer?: Record<string, unknown>[] };
   w.dataLayer?.push({ event, ...props });
 }
@@ -22,40 +24,88 @@ function track(event: string, props?: Record<string, string>): void {
 export function BookDemoButton({
   location,
   variant = "button",
-  className,
+  tone = "light",
+  size = "md",
+  className = "",
 }: {
   location: string;
   variant?: "button" | "link";
+  tone?: Tone;
+  size?: "md" | "lg";
   className?: string;
 }) {
-  const style =
-    variant === "button"
-      ? "inline-flex items-center justify-center rounded-md bg-forest px-5 py-2.5 text-sm font-semibold text-paper transition-colors hover:bg-forest-hover"
-      : "text-sm text-ink-muted underline decoration-hairline decoration-1 underline-offset-4 transition-colors hover:text-forest";
+  const sizeCls =
+    size === "lg"
+      ? "gap-2.5 px-7 py-3.5 text-base"
+      : "gap-2 px-5 py-2.5 text-sm";
+  if (variant === "link") {
+    const linkTone =
+      tone === "dark"
+        ? "text-paper/80 hover:text-paper focus-visible:ring-paper focus-visible:ring-offset-ink"
+        : "text-ink-muted hover:text-forest focus-visible:ring-forest focus-visible:ring-offset-paper";
+    return (
+      <a
+        href={BOOKING_URL}
+        onClick={() => track("demo_cta_click", { location })}
+        className={`rounded-sm text-sm underline decoration-hairline decoration-1 underline-offset-4 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${linkTone} ${className}`}
+      >
+        Book a demo
+      </a>
+    );
+  }
+
+  const btnTone =
+    tone === "dark"
+      ? "bg-paper text-ink hover:bg-paper-raised focus-visible:ring-paper focus-visible:ring-offset-ink"
+      : "bg-forest text-paper hover:bg-forest-hover focus-visible:ring-forest focus-visible:ring-offset-paper";
 
   return (
     <a
       href={BOOKING_URL}
       onClick={() => track("demo_cta_click", { location })}
-      className={`${style} focus:outline-none focus-visible:ring-2 focus-visible:ring-forest focus-visible:ring-offset-2 focus-visible:ring-offset-paper${
-        className ? ` ${className}` : ""
-      }`}
+      className={`group inline-flex items-center rounded-md font-semibold shadow-[var(--depth-control)] transition-[transform,background-color] active:translate-y-px focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${sizeCls} ${btnTone} ${className}`}
     >
       Book a demo
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 14 14"
+        fill="none"
+        aria-hidden="true"
+        className="transition-transform group-hover:translate-x-0.5"
+      >
+        <path
+          d="M2.5 7h9M8 3.5 11.5 7 8 10.5"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
     </a>
   );
 }
 
-export function SeeItRunLink({ className }: { className?: string }) {
+export function SeeItRunLink({
+  tone = "light",
+  size = "md",
+  className = "",
+}: {
+  tone?: Tone;
+  size?: "md" | "lg";
+  className?: string;
+}) {
+  const t =
+    tone === "dark"
+      ? "text-paper/80 hover:text-paper focus-visible:ring-paper focus-visible:ring-offset-ink"
+      : "text-ink-muted hover:text-ink focus-visible:ring-forest focus-visible:ring-offset-paper";
   return (
     <Link
       href="/review"
       onClick={() => track("see_it_run_click")}
-      className={`text-sm text-ink-muted underline decoration-hairline decoration-1 underline-offset-4 transition-colors hover:text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-forest focus-visible:ring-offset-2 focus-visible:ring-offset-paper${
-        className ? ` ${className}` : ""
-      }`}
+      className={`rounded-sm ${size === "lg" ? "text-base" : "text-sm"} underline decoration-hairline decoration-1 underline-offset-4 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${t} ${className}`}
     >
-      See it run on a tender you already know
+      See a worked example
     </Link>
   );
 }

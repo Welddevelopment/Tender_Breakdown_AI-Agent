@@ -75,3 +75,108 @@ body {
     transform: none;
   }
 }
+
+/* === Landing page material + motion (landing-page-brief §6, design-language).
+   The landing pushes a little past the product's restraint (a sanctioned
+   departure): a tilted hero sheet, paper grain, scroll reveals, the stamp. All
+   motion is prefers-reduced-motion safe and degrades to the composed end state. */
+
+@theme {
+  --color-paper-recessed: #efe7d6;
+  --color-rule-section: #d9cfbb;
+}
+
+/* Paper grain, raised surfaces only. One shared fractal-noise overlay at
+   --grain opacity, multiply-blended, never on the page or the scanning rows. */
+.surface-grain {
+  position: relative;
+  isolation: isolate;
+}
+.surface-grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: var(--grain);
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 150px 150px;
+}
+
+/* The hero sheet: a tilted sheet filed into the register. --rx/--ry rest at the
+   composed angle and are nudged by the cursor in JS (hi-fi). SSR and no-JS show
+   the same resting tilt. */
+.hero-stage {
+  perspective: 1600px;
+}
+.hero-sheet {
+  --rx: 15deg;
+  --ry: -13deg;
+  transform: rotateX(var(--rx)) rotateY(var(--ry));
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Calm motion only (SLOP-CHECK bans fade-up-on-everything). One staggered hero
+   entrance on load, and the approval-stamp settle. Both reduced-motion safe. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-enter {
+    animation: hero-enter 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .hero-enter-2 {
+    animation: hero-enter 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.09s both;
+  }
+  .hero-enter-3 {
+    animation: hero-enter 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.18s both;
+  }
+  .stamp-settle {
+    animation: stamp-settle 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+}
+
+@keyframes hero-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes stamp-settle {
+  from {
+    opacity: 0;
+    transform: rotate(-9deg) scale(1.16);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(-3deg) scale(1);
+  }
+}
+
+/* A faint ledger grid across the page, for texture (a graph-paper nod to the
+   civic record). It sits under the warm paper; the raised sheets and the ink
+   bands paint over it, so it never touches a working surface. */
+.paper-grid {
+  background-image:
+    linear-gradient(to right, rgba(33, 29, 23, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(33, 29, 23, 0.035) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* The confidence bead: a larger, dimensional status dot (the honesty section).
+   An ink ring, a top gloss and bottom shade, and a soft drop shadow read it as
+   a physical bead on the paper, so the four-tier scale draws the eye it earns.
+   The hue still carries meaning; the word beside it keeps it greyscale-safe. */
+.conf-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  box-shadow:
+    0 0 0 1px rgba(33, 29, 23, 0.42),
+    inset 0 2px 1.5px rgba(255, 255, 255, 0.55),
+    inset 0 -2px 2.5px rgba(33, 29, 23, 0.22),
+    0 2px 3px rgba(33, 29, 23, 0.3);
+}
