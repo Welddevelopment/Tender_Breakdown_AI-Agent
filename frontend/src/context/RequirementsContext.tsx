@@ -31,7 +31,7 @@ interface RequirementsContextValue {
     answerText: string
   ) => void;
   loadTender: (tenderId: string) => Promise<void>;
-  draftAnswers: (provider?: "openai" | "mock") => Promise<void>;
+  draftAnswers: (provider?: "openai" | "mock", files?: File[]) => Promise<void>;
 }
 
 const RequirementsContext = createContext<RequirementsContextValue | null>(null);
@@ -69,12 +69,13 @@ export function RequirementsProvider({
   }
 
   // Auditable autofill: ask the API to (re)draft grounded answers for the loaded
-  // tender, then swap the enriched requirements + capability docs into the UI.
-  async function draftAnswers(provider: "openai" | "mock" = "openai") {
+  // tender, optionally against freshly-uploaded capability docs, then swap the enriched
+  // requirements + capability docs into the UI.
+  async function draftAnswers(provider: "openai" | "mock" = "openai", files?: File[]) {
     if (!tenderId || !isApiEnabled()) return;
     setDrafting(true);
     try {
-      const tender = await apiDraftAnswers(tenderId, { provider });
+      const tender = await apiDraftAnswers(tenderId, { provider, files });
       setRequirements(tender.requirements);
       setCapabilityDocs(tender.capability_docs ?? []);
     } finally {
