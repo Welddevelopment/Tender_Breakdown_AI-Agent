@@ -39,13 +39,13 @@ are also the sharpest *validators* of the wedge (traceability, the disqualifier 
 |------|---------------|-------------|--------------------|---------|
 | **Thornton & Lowe** ⭐ | ~48 staff, ~$8m rev, est 2009, Bolton — "largest UK bid consultancy"; ~75–78% win | Gov, local gov, NHS, housing, education, FM (~30% of work) | **Dave Thornton** (founder) · also new MD "Tom" (Oct 2025) | LinkedIn `/in/dave-thornton-56833625` |
 | **Executive Compass** ⭐ | est 2009, Newcastle, 7,000+ bids, ~85%, ISO 9001 team | PQQ/SQ + tender, social value, all sectors | **Neil Capstick** (founder; now leads "Social Value Practice") + the new MD | LinkedIn `/in/tenderwriter` |
-| **Hudson Succeed** | div. of Hudson Outsourcing, 2,000+ clients/40+ countries, 87% | Cross-sector, framework-heavy | (find Hudson Outsourcing bid director) *(verify)* | LinkedIn co. page |
+| **Hudson Succeed** | div. of Hudson Outsourcing, 2,000+ clients/40+ countries, 87% | Cross-sector, framework-heavy | **John Hudson** (COO) ✅; also a "Head of Bid Management (SMEs)" role + **Zoë Tumelty** (Succeed writer) | LinkedIn `/in/johnhudson3` |
 | **BidRight UK** | 13+ yrs, £200m+ secured | SMEs + not-for-profit: education, training, employment, **health & social care** | (founder TBD) *(verify)* | bidrightuk.co.uk contact |
 | **Complete Tenders** | senior consultants, UK-wide | SME tender writing, all sectors | (founder TBD) *(verify)* | completetenders.com |
 | **Tenders UK** | est 2008, 4,000+ bids, 83% win | Domiciliary/adult social care frameworks, FM | **Christopher Martin** | LinkedIn `/in/winmoretenders` |
 | **Tender Victory** ⭐⭐ | est 2010, **majority clients are SMEs**; founder is **ex public-sector buyer** (Devon & Cornwall Police, 2005–10), MCIPS | SME-focused, cross-sector | **Vicki Stewart** (founder) ✅ | LinkedIn `/in/vicki-stewart-42a58a2a` · ☎ 07971 526587 (public on site) |
 | **Silverlock Tenders** | small/independent | Tenders, SME | **Dewi Hughes** (MD) | LinkedIn `/in/dewihughes` |
-| **Bid Writer Consultancy** | est 2014, "Best SMB" 2017, freelancer collective; markets **AI bid support** | Cross-sector, SME | **Sharon Welch** (founder) *(verify handle)* | bidwriterconsultancy.co.uk |
+| **Bid Writer Consultancy** | est 2014, "Best SMB" 2017, freelancer collective; markets **AI bid support** | Cross-sector, SME | **Sharon Welch** (founder; 30 yrs BD) | `/company/bid-writer-consultancy` · Co. House 09245742 *(personal handle ambiguous)* |
 | **BFT Consult** ⭐ | est 2014, **80%+ win, £950m+ secured**; founder is ex-care-org BD (grew one £2m→£12m in <4 yrs), 18+ yrs in sector | **Health & social care** (homecare, supported living, mental health, dementia) | **Ian Evans** (founder/Bid Director) | via `/company/bftconsult` *(personal handle to confirm)* |
 | **Della Pip** | founder-led, 15+ yrs | **Health & social care** (care homes, home care) | **Katrina Gibson** (Director) ✅ | LinkedIn `/in/katrina-gibson-2278516b` |
 | **Think Tenders** | award-winning, freelance model, £500m in 3 yrs | Public sector, cross-sector | **Amanda** + team *(surname/handle to verify)* | thinktenders.co.uk |
@@ -89,7 +89,16 @@ them. Consultancies are the better *first* target (value compounds), but SMEs gi
   *they* recognise. *Named regional SME cleaner found:* **Brightr** (school cleaning, Northampton). Harvest
   more via `bidstats.uk` (search "school cleaning" award notices), `facilitiestenders.co.uk`, Supply2Gov
   awardees — avoid the giants (Medirest/Compass, Mitie, OCS).
-- **Catering · Training providers · Grounds maintenance / security** — same method. *(later cycles.)*
+- **Catering** — public-sector route = council/academy-trust + school catering (not independent schools).
+  *Named SME caterers:* **Fuelling Minds Catering Management** (est Apr 2025, founder **David Anderson**,
+  ex-MD Wilson Vale), **Culinera** (premium school catering, S England), **Alliance in Partnership / AiP**
+  (education catering). Live-demo pairing: the **Discovery Educational Trust catering ITT** (Find a Tender
+  `076817-2025`). Avoid the giants (Chartwells/Compass, Pabulum/CH&CO, Lexington).
+- **Training providers** ⭐ — bid constantly into **Skills Bootcamps** + **DWP DPS2** (both SME/VCSE-friendly
+  procurement routes). *Named SME providers:* **Fareport Training** (Ofsted "Good"; apprenticeships +
+  bootcamps), **Runway Training** (Ofsted "Good", independent). Mine Contracts Finder "Skills Bootcamp"
+  award notices (e.g. Mastered) for more awardees + their ITTs.
+- **Grounds maintenance / security** — same method. *(next cycle.)*
 
 > **Method (repeat per sector):** recent Contracts Finder/Find-a-Tender award → SME awardee name → their
 > BD/bid lead on LinkedIn → pair with the public ITT for a live-demo on a doc they know.
@@ -196,3 +205,11 @@ Ranked for: decides fast · bids often · reachable · strong wedge fit.
   Marketplace / Tussell pull (generic search only returns framework stats) — queued for a WebFetch next cycle.
   **Next (cycle 4):** catering / training-provider / grounds-maintenance-security SME bidders + their public
   contracts; verify Sharon Welch + a Hudson Outsourcing bid lead; attempt the Digital Marketplace MSP pull.
+- **2026-06-29 (cycle 4)** — ✅ **Hudson Succeed:** John Hudson (COO) `/in/johnhudson3` + Zoë Tumelty (Succeed)
+  + a "Head of Bid Management (SMEs)" role. **Bid Writer Consultancy:** Sharon Welch confirmed founder (Co.
+  House 09245742); personal handle ambiguous → reach via company page. **Segment B catering:** Fuelling Minds
+  (David Anderson), Culinera, AiP + Discovery Educational Trust ITT (FTS 076817-2025). **Training:** Fareport,
+  Runway + the Skills-Bootcamp/DWP-DPS2 route. **Next (cycle 5):** grounds-maintenance/security SME bidders;
+  communities/channels (APMP UK, LinkedIn bid voices like Dave Thornton/Vicki Stewart who post actively);
+  then cycle 6 = ranked CRM master table + Day-3 sequencing. (Digital Marketplace MSP names still need a direct
+  fetch — try `applytosupply.digitalmarketplace.service.gov.uk` search, else leave as a method note.)
