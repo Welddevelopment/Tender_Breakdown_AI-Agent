@@ -24,8 +24,12 @@ from __future__ import annotations
 import json
 import os
 import re
+import time
 
 from .chunk import Chunk
+
+MAX_RETRIES = 3
+RETRY_BACKOFF = [1.0, 3.0, 8.0]
 
 # ---- classification signal words ---------------------------------------------
 MANDATORY_SIGNALS = (
@@ -236,27 +240,37 @@ class OpenAIExtractor:
         self._model = os.environ.get("LLM_MODEL", "gpt-4o")
 
     def extract_chunk(self, chunk: Chunk) -> list[dict]:
-        resp = self._client.chat.completions.create(
-            model=self._model,
-            messages=[
-                {"role": "system", "content": _LLM_SYSTEM},
-                {"role": "user", "content": _user_prompt(chunk)},
-            ],
-            tools=[{
-                "type": "function",
-                "function": {
-                    "name": "emit_requirements",
-                    "description": "Return every requirement found in the chunk.",
-                    "parameters": _REQ_PARAMETERS,
-                },
-            }],
-            tool_choice={"type": "function", "function": {"name": "emit_requirements"}},
-        )
-        calls = resp.choices[0].message.tool_calls or []
-        items: list[dict] = []
-        if calls:
-            items = json.loads(calls[0].function.arguments).get("requirements", [])
-        return _to_raw(items, chunk)
+        for attempt in range(MAX_RETRIES):
+            try:
+                resp = self._client.chat.completions.create(
+                    model=self._model,
+                    messages=[
+                        {"role": "system", "content": _LLM_SYSTEM},
+                        {"role": "user", "content": _user_prompt(chunk)},
+                    ],
+                    tools=[{
+                        "type": "function",
+                        "function": {
+                            "name": "emit_requirements",
+                            "description": "Return every requirement found in the chunk.",
+                            "parameters": _REQ_PARAMETERS,
+                        },
+                    }],
+                    tool_choice={"type": "function", "function": {"name": "emit_requirements"}},
+                )
+                calls = resp.choices[0].message.tool_calls or []
+                items: list[dict] = []
+                if calls:
+                    items = json.loads(calls[0].function.arguments).get("requirements", [])
+                return _to_raw(items, chunk)
+            except Exception as exc:
+                if attempt < MAX_RETRIES - 1:
+                    wait = RETRY_BACKOFF[attempt]
+                    print(f"[extract] OpenAI retry {attempt + 1}/{MAX_RETRIES} after {wait}s ({exc})")
+                    time.sleep(wait)
+                else:
+                    print(f"[extract] OpenAI failed after {MAX_RETRIES} attempts ({exc}); returning empty")
+                    return []
 
 
 class ClaudeExtractor:
@@ -270,24 +284,34 @@ class ClaudeExtractor:
         self._model = os.environ.get("LLM_MODEL", "claude-opus-4-8")
 
     def extract_chunk(self, chunk: Chunk) -> list[dict]:
-        msg = self._client.messages.create(
-            model=self._model,
-            max_tokens=4096,
-            system=_LLM_SYSTEM,
-            tools=[{
-                "name": "emit_requirements",
-                "description": "Return every requirement found in the chunk.",
-                "input_schema": _REQ_PARAMETERS,
-            }],
-            tool_choice={"type": "tool", "name": "emit_requirements"},
-            messages=[{"role": "user", "content": _user_prompt(chunk)}],
-        )
-        items: list[dict] = []
-        for block in msg.content:
-            if getattr(block, "type", None) == "tool_use":
-                items = block.input.get("requirements", [])
-                break
-        return _to_raw(items, chunk)
+        for attempt in range(MAX_RETRIES):
+            try:
+                msg = self._client.messages.create(
+                    model=self._model,
+                    max_tokens=4096,
+                    system=_LLM_SYSTEM,
+                    tools=[{
+                        "name": "emit_requirements",
+                        "description": "Return every requirement found in the chunk.",
+                        "input_schema": _REQ_PARAMETERS,
+                    }],
+                    tool_choice={"type": "tool", "name": "emit_requirements"},
+                    messages=[{"role": "user", "content": _user_prompt(chunk)}],
+                )
+                items: list[dict] = []
+                for block in msg.content:
+                    if getattr(block, "type", None) == "tool_use":
+                        items = block.input.get("requirements", [])
+                        break
+                return _to_raw(items, chunk)
+            except Exception as exc:
+                if attempt < MAX_RETRIES - 1:
+                    wait = RETRY_BACKOFF[attempt]
+                    print(f"[extract] Claude retry {attempt + 1}/{MAX_RETRIES} after {wait}s ({exc})")
+                    time.sleep(wait)
+                else:
+                    print(f"[extract] Claude failed after {MAX_RETRIES} attempts ({exc}); returning empty")
+                    return []
 
 
 def get_extractor():

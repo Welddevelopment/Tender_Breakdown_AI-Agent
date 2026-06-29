@@ -126,6 +126,19 @@ def _strip_headers_footers(pages_text: list[str]) -> list[str]:
     return ["\n".join(ln for ln in lines if ln not in repeated) for lines in per_page_lines]
 
 
+def _flag_sparse_pages(pages_text: list[str]) -> list[str]:
+    """Append a warning to pages that are still near-empty after all enrichment.
+    These are likely scanned/image-only pages that need OCR."""
+    flagged = list(pages_text)
+    for i, text in enumerate(flagged):
+        if len(text.strip()) < SPARSE_PAGE_CHARS:
+            flagged[i] = (
+                f"{text}\n[WARNING: page {i + 1} has very little extractable text "
+                f"— likely scanned/image-only, may need OCR]"
+            )
+    return flagged
+
+
 def ingest_pdf(pdf_path: str | Path, *, enrich: bool = True) -> IngestedDoc:
     """Read a PDF into page-numbered text. Raises on missing file / no PDF engine."""
     path = Path(pdf_path)
@@ -143,6 +156,7 @@ def ingest_pdf(pdf_path: str | Path, *, enrich: bool = True) -> IngestedDoc:
     if enrich:
         raw_pages = _enrich_with_pdfplumber(path, raw_pages)
         raw_pages = _strip_headers_footers(raw_pages)
+        raw_pages = _flag_sparse_pages(raw_pages)
 
     pages = [Page(number=i + 1, text=text) for i, text in enumerate(raw_pages)]
     return IngestedDoc(filename=path.name, pages=pages)

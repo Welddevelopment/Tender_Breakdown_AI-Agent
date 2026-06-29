@@ -70,16 +70,22 @@ def _criterion_for(req: Requirement, criteria: list[dict]) -> str | None:
     return None
 
 
+_CROSS_REF_RE = re.compile(
+    r"\b(?:as (?:set out|described|specified|detailed|outlined) in|"
+    r"in accordance with|refer(?:ring)? to|see|per)\s+"
+    r"(?:Section|Clause|Para(?:graph)?|Appendix)\s+[\w.]+",
+    re.IGNORECASE,
+)
+
+
 def build_graph(requirements: list[Requirement], full_text: str) -> list[dict]:
     """Populate criteria_ref + depends_on in place. Returns the detected criteria."""
     criteria = detect_criteria(full_text)
 
-    # criteria_ref — only when we have published criteria AND a category match.
     if criteria:
         for req in requirements:
             req.criteria_ref = _criterion_for(req, criteria)
 
-    # depends_on — link a requirement to another whose clause it cites verbatim.
     by_clause: dict[str, str] = {}
     for req in requirements:
         if req.source_clause:
@@ -87,6 +93,16 @@ def build_graph(requirements: list[Requirement], full_text: str) -> list[dict]:
     for req in requirements:
         refs = set()
         for m in _CLAUSE_REF_RE.finditer(req.text):
+            target = by_clause.get(m.group(0).lower())
+            if target and target != req.id:
+                refs.add(target)
+        for m in _CROSS_REF_RE.finditer(req.text):
+            clause = _CLAUSE_REF_RE.search(m.group(0))
+            if clause:
+                target = by_clause.get(clause.group(0).lower())
+                if target and target != req.id:
+                    refs.add(target)
+        for m in _CLAUSE_REF_RE.finditer(req.source_excerpt):
             target = by_clause.get(m.group(0).lower())
             if target and target != req.id:
                 refs.add(target)
