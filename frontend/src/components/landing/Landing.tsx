@@ -320,7 +320,7 @@ export function Landing() {
             </p>
           </div>
           <Link
-            href="/review"
+            href="/demo"
             className="rounded-sm text-sm text-paper/70 underline decoration-paper/30 decoration-1 underline-offset-4 transition-colors hover:text-paper"
           >
             See the demo

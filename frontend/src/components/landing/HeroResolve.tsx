@@ -88,7 +88,7 @@ export function HeroResolve() {
           can feel the product in seconds. The inner sheet stays inert and
           aria-hidden (an illustration); the Link carries the accessible name. */}
       <Link
-        href="/review"
+        href="/demo"
         aria-label="Open the worked example on the demo tender"
         className="group block [perspective:1600px] rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-forest focus-visible:ring-offset-4 focus-visible:ring-offset-paper"
       >

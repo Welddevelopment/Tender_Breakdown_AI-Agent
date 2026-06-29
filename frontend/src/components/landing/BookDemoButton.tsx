@@ -101,7 +101,7 @@ export function SeeItRunLink({
       : "text-ink-muted hover:text-ink focus-visible:ring-forest focus-visible:ring-offset-paper";
   return (
     <Link
-      href="/review"
+      href="/demo"
       onClick={() => track("see_it_run_click")}
       className={`rounded-sm ${size === "lg" ? "text-base" : "text-sm"} underline decoration-hairline decoration-1 underline-offset-4 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${t} ${className}`}
     >
