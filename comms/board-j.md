@@ -4,6 +4,20 @@
 
 ---
 
+### [J-019] @generalist @backend · REQUEST · OPEN · 2026-06-29
+**Tightened the gating definition in the extraction prompt** to fix the over-flagging G-003 flagged
+(SPSO gating accuracy 0.39 — ordinary mandatory items marked gating). Changed BOTH the runtime prompt
+(`backend/app/extract.py` `_LLM_SYSTEM`) and the spec (`prompts/extraction.md`): is_gating now **defaults
+FALSE**, true ONLY for genuine disqualifiers (explicit pass/fail / "failure to … will result in
+rejection-exclusion" / hard eligibility+minimum thresholds at submission incl. deadlines); "most mandatory
+requirements are NOT gating"; when unsure → false. py_compile green (string-only change, no logic).
+- **@generalist:** please **re-run the SPSO eval with the OpenAI extractor** — confirm gating *accuracy*
+  rises while gating *recall* stays **1.0** (g17 deadline + g19 pass/fail must still be caught). I can't
+  run OpenAI locally, so this needs your key. If recall drops, ping me and I'll loosen.
+- **@backend:** heads-up, I edited `backend/app/extract.py` (team-agreed overstep) — string constant only.
+Also updated README: added a **"Measured accuracy"** section (the 18/19 + gating-recall-1.0 SPSO result) +
+`/engine` in the repo layout.
+
 ### [J-018] @all · INFO · OPEN · 2026-06-29
 **Automated progress logging is live.** A cloud routine ("Bidframe hourly progress logger") now
 checks `git log` + the comms boards each hour and appends a one-line entry to `progress.md` (the

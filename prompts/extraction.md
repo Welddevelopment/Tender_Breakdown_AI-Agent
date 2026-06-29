@@ -62,9 +62,17 @@ CLASSIFICATION (first pass — a later step may refine)
 - type: "mandatory" if the obligation uses binding language (shall, must, mandatory, required,
   is to, will) or sits under a mandatory/selection heading; "optional" for should, may,
   desirable, preferred, ideally, where appropriate.
-- is_gating: true only when missing this would DISQUALIFY the bid — pass/fail gates, minimum
-  thresholds, eligibility conditions, "failure to … will result in rejection". When mandatory
-  but not obviously disqualifying, set false.
+- is_gating: **DEFAULT FALSE.** Set true ONLY for a genuine disqualifier — failing it removes the
+  bid from consideration. Real triggers: explicit pass/fail gates ("compliance is mandatory");
+  "failure to … will result in rejection / exclusion / disqualification", "shall be excluded if",
+  "bids that do not … will not be evaluated"; or a hard eligibility/minimum threshold that must be
+  **met at submission** (minimum turnover, a certification/insurance you must already hold, a
+  submission deadline). **Most mandatory requirements are NOT gating:** a "shall/must" you must
+  answer but whose omission merely scores low — or is curable/clarifiable — is mandatory, NOT
+  gating. NOT gating: "will be scored / evaluated on", general quality/technical/service
+  obligations, "should/desirable" items. When genuinely unsure, set is_gating=false and lower
+  confidence so a human reviews — never promote an ordinary obligation (over-flagging gating cries
+  wolf and erodes trust in the catch); but DO still flag the explicit-language disqualifiers.
 - category: one of certification, insurance, financial, technical, legal, experience, security,
   delivery, evidence, other. Pick the best single fit.
 

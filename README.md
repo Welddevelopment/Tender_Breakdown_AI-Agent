@@ -32,11 +32,25 @@ approve/edit/flag, every answer to a gap question, every piece of evidence linke
 becomes reusable context that **compounds across future bids**. The matrix is the surface; the captured
 decisions are the moat. (Full story: [demo-narrative.md](demo-narrative.md), [prior-art.md](prior-art.md).)
 
+## Measured accuracy — the proof, not a promise
+
+Most tools hand you a requirement list and you *hope* it's complete. We measure ours. An eval harness
+(`engine/eval.py`) scores the tool's output against a **hand-labelled gold set** per tender — recall
+(did we catch every requirement), precision, and the safety headline **gating recall** (did every
+disqualifier survive). It's deterministic — no LLM-as-judge — so the score is itself auditable.
+
+**First real tender (SPSO Cleaning ITT):** the extractor caught **18 of 19** requirements and **every
+disqualifier (gating recall 1.0), with zero dangerous misses** — and flags what it's unsure of rather
+than guessing. Early, on one tender, and broadening as we add gold-labelled tenders — but it's a *real*
+number on a *real* document. That's the wedge: we quantify what we might have missed instead of asking
+you to trust a black box.
+
 ## Repo layout
 
 ```
 /frontend     Next.js 16 + React 19 + Tailwind 4 — compliance matrix, source panel, gating hero, graph, upload
 /backend      Python + FastAPI — ingest → chunk → extract → SQLite → REST API (pluggable LLM: OpenAI / heuristic)
+/engine       Python — reconcile/dedupe + the eval harness (the measured-accuracy machine)
 /comms        Async agent message boards (one per role)
 /prompts      Extraction · classification · answer-generation · gap-interview prompts + the raw-extraction contract
 *.md          Plan, status, narrative, positioning, per-role briefs

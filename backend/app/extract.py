@@ -147,7 +147,12 @@ _LLM_SYSTEM = (
     "CHUNK as structured data. Recall first: if a sentence might be a requirement, "
     "extract it with low confidence rather than dropping it. source_excerpt must be "
     "an EXACT substring of the chunk. Classify type (mandatory/optional) on binding "
-    "language; is_gating=true only when missing it disqualifies the bid. Report honest "
+    "language. is_gating DEFAULTS FALSE: set true ONLY for a genuine disqualifier - "
+    "explicit pass/fail gates, 'failure to ... will result in rejection/exclusion/"
+    "disqualification', or a hard eligibility/minimum threshold that must be met at "
+    "submission (minimum turnover, a required certification/insurance, a submission "
+    "deadline). Most mandatory requirements are NOT gating; when unsure, set "
+    "is_gating=false. Report honest "
     "0-1 confidence. (Full spec: prompts/extraction.md.)"
 )
 
