@@ -151,13 +151,18 @@ them. Consultancies are the better *first* target (value compounds), but SMEs gi
   *Named SME caterers:* **Fuelling Minds Catering Management** (est Apr 2025, founder **David Anderson**,
   ex-MD Wilson Vale), **Culinera** (premium school catering, S England), **Alliance in Partnership / AiP**
   (education catering). Live-demo pairing: the **Discovery Educational Trust catering ITT** (Find a Tender
-  `076817-2025`). Avoid the giants (Chartwells/Compass, Pabulum/CH&CO, Lexington).
+  `076817-2025`). Also on **Hampshire CC's £16m schools catering framework** (mini-competition bidders, the
+  SME/mid end): **Accent Catering**, **Aspens Services**, **Caterlink**, **Edwards & Ward**, **Harrison
+  Catering**, **Innovate Services** — pair with a Hampshire schools mini-comp. Avoid the giants (Sodexo, Elior/
+  Taylor Shaw, ABM, Chartwells/Compass, Pabulum/CH&CO).
 - **Training providers** ⭐ — bid constantly into **Skills Bootcamps** + **DWP DPS2** (both SME/VCSE-friendly
   procurement routes). *Named SME providers:* **Fareport Training** (Ofsted "Good"; apprenticeships +
   bootcamps), **Runway Training** (Ofsted "Good", independent). Mine Contracts Finder "Skills Bootcamp"
   award notices (e.g. Mastered) for more awardees + their ITTs.
 - **Grounds maintenance / security** — security via **ESPO** + **CCS RM6257** frameworks; grounds via
-  council FTS/Contracts Finder notices (many live in 2025). *Named SME security:* **Agile Guarding**.
+  council FTS/Contracts Finder notices (many live in 2025). *Named SME security:* **Agile Guarding**. *Named SME
+  grounds firms* (Grounds Maintenance Services Framework, awarded 6 Jan 2025): **Cleanscapes Ltd**, **Countrywide
+  Grounds Maintenance Ltd**, **Gould Landscapes Ltd**; + **Fusion21's £85m** GM framework (22 suppliers, 72% SME).
   Avoid giants (Continental Landscapes, the big guarding firms). **Market context for the pitch:** SMEs won
   **£45.2bn of direct public-sector spend in 2025 (21% share — a six-year high)**; local government alone
   spent **£29.1bn with SMEs (34% share)** — these contracts are genuinely SME-winnable.
@@ -427,3 +432,7 @@ Two moments must land: **the catch** and **click-to-source**. Keep it ~60s; let 
   care providers** (Care at Home Group, Lumina Care, Able Support, Yes Care, Bluebird Care St Helens) to
   Segment B; the public council list also names each provider's registered manager + contact, so these are
   approachable with a real framework to demo on. Real named bidders for the care segment. Maintenance mode.
+- **2026-06-29 (maintenance 4)** — Filled the two thinnest sectors with named SMEs: **catering** — Accent,
+  Aspens, Caterlink, Edwards & Ward, Harrison, Innovate (Hampshire CC £16m schools framework); **grounds** —
+  Cleanscapes, Countrywide Grounds Maintenance, Gould Landscapes (GM Services Framework, 6 Jan 2025) + Fusion21
+  £85m GM framework (72% SME). Every SME sector now has real named bidders + a public framework. Maintenance mode.
