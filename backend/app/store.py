@@ -117,6 +117,18 @@ def get_tender(tender_id: str) -> TenderResponse | None:
     )
 
 
+def list_tenders() -> list[dict]:
+    """Return a summary of all uploaded tenders (id, title, requirement count)."""
+    with _conn() as c:
+        rows = c.execute(
+            "SELECT t.id, t.title, COUNT(r.id) as req_count "
+            "FROM tenders t LEFT JOIN requirements r ON t.id = r.tender_id "
+            "GROUP BY t.id ORDER BY t.id DESC"
+        ).fetchall()
+    return [{"tender_id": row["id"], "title": row["title"], "requirement_count": row["req_count"]}
+            for row in rows]
+
+
 def update_requirement(req_id: str, update: DecisionUpdate) -> Requirement | None:
     with _conn() as c:
         row = c.execute(

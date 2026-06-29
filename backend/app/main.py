@@ -90,9 +90,19 @@ def _startup() -> None:
     UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 
+MAX_UPLOAD_MB = 50
+
+
 @app.get("/health")
 def health():
     return {"status": "ok", "extractor": get_extractor().name}
+
+
+@app.get("/tenders")
+def list_tenders():
+    """List all uploaded tenders (id, title, requirement count). Useful for the frontend
+    to show previously processed tenders without re-uploading."""
+    return store.list_tenders()
 
 
 @app.post("/tenders/upload")
@@ -102,11 +112,19 @@ async def upload_tender(file: UploadFile = File(...), title: str = Form(None)):
         raise HTTPException(status_code=400, detail="Please upload a PDF.")
 
     tender_id = f"tnd-{uuid.uuid4().hex[:8]}"
-    UPLOAD_DIR.mkdir(parents=True, exist_ok=True)   # robust even if startup didn't run
+    UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
     store.init_db()
     dest = UPLOAD_DIR / f"{tender_id}.pdf"
     with dest.open("wb") as out:
         shutil.copyfileobj(file.file, out)
+
+    size_mb = dest.stat().st_size / (1024 * 1024)
+    if size_mb > MAX_UPLOAD_MB:
+        dest.unlink(missing_ok=True)
+        raise HTTPException(
+            status_code=413,
+            detail=f"File too large ({size_mb:.1f} MB). Maximum is {MAX_UPLOAD_MB} MB.",
+        )
 
     try:
         resp = run_pipeline(

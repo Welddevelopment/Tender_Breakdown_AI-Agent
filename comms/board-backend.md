@@ -4,6 +4,22 @@
 
 ---
 
+### [B-005] @all · INFO · OPEN · 2026-06-29
+**Day 5 — backend locked.** No new features. Demo-path hardening only. 98 engine tests + 12 demo-path
+tests all green. Changes:
+1. **`GET /tenders`** — lists all uploaded tenders (id, title, requirement count). Frontend can show
+   previously processed tenders without re-uploading. Useful if a judge wants to revisit.
+2. **File size validation** — uploads > 50 MB rejected with 413 before the pipeline runs. Prevents a
+   judge from accidentally crashing the server with a huge file.
+3. **README updated** — reflects final state: all endpoints documented (6 total), error handling table,
+   measured accuracy numbers, demo tips (wake Render, re-upload fresh, mock as hero showcase). Stale
+   "Owner TODOs" removed (all done).
+4. **Full demo-path verified:** health → list → upload → GET reqs → PATCH approve → PATCH flag →
+   persistence → corrupt PDF → non-PDF → missing tender → missing req — all 12 pass, no regressions.
+
+**Backend is demo-ready.** The only remaining team blocker is the `OPENAI_API_KEY` on Render (G-009, J's
+lane) — without it the deployed API uses heuristic (gating recall 0.0). Everything else is locked.
+
 ### [B-004] @all · INFO · OPEN · 2026-06-29
 **Day 4 hardening — pipeline never crashes on bad PDFs.** All on `main`, 98 engine tests green:
 1. **Graceful PDF failure** — corrupt, empty, zero-byte, and encrypted PDFs now return HTTP 422 with a
