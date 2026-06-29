@@ -60,9 +60,10 @@ Ranked by **decides-fast × bids-often × reachable × wedge-fit**. Verify ✅ h
 | 16 | **Amanda Goode** — Think Tenders | ⭐ | Consultancy (SME, freelance) | Multi-award Birmingham SME bid shop; freelance → personal, fast reply (ranks with the ⭐ consultancies) | `/in/thinktenders` ✅ |
 | 17 | **Chris Hugo** — GovData | — | Consultancy (framework onboarding) | CEO, 1,800+ client base → as much a partnership/validator channel as a customer | `/in/christian-hugo-11059311` ✅ |
 | 18 | **Matt Smith** — Complete Tenders | ⭐ | Consultancy (SME) | MD & founder; SME-focused, strong NHS + council win record | `/in/mattsmith-completetenders` ✅ |
+| 19 | **Jason Cooney** — Tsaks Consulting | — | Consultancy (gov, London) | Founder/director, 70% gov bids; London principal consultant | tsaksconsulting.com · info@ *(LinkedIn to find)* |
 
-> **Firm-only (no named contact yet — find a person before outreach):** Tsaks (London office), Glaxtons
-> (founder; CH 12065176).
+> **Firm-only watchlist: CLEARED ✅** — every consultancy in §A now has a named contact (Jason Cooney/Tsaks
+> + Richmond Gordon/Glaxtons added this round; the Glaxtons handle is flagged *verify* due to a name variant).
 
 ## Day-3 sequencing (the play)
 
@@ -102,10 +103,10 @@ are also the sharpest *validators* of the wedge (traceability, the disqualifier 
 | **BFT Consult** ⭐ | est 2014, **80%+ win, £950m+ secured**; founder is ex-care-org BD (grew one £2m→£12m in <4 yrs), 18+ yrs in sector | **Health & social care** (homecare, supported living, mental health, dementia) | **Ian Evans** (Ian James Evans, founder/Bid Director) | BFT Consult Ltd 08918064 (Liverpool) · `/company/bftconsult` · **likely** `/in/evansi` *(Greater Liverpool — verify it's the BFT Ian Evans)* |
 | **Della Pip** | founder-led, 15+ yrs | **Health & social care** (care homes, home care) | **Katrina Gibson** (Director) ✅ | LinkedIn `/in/katrina-gibson-2278516b` |
 | **Think Tenders** ⭐ | multi-award-winning ("Best SMB" 2017), freelance, Birmingham; £500m in 3 yrs | Public sector, cross-sector, SME | **Amanda Goode** (founder/owner) ✅ | LinkedIn `/in/thinktenders` |
-| **Tsaks Consulting** | 85% win; Sydney HQ + **London** office | Gov specialists, cross-sector | (London lead TBD) *(verify)* | tsaksconsulting.com |
+| **Tsaks Consulting** | 85% win; Sydney HQ + **London** office; 70% gov bids | Gov specialists, cross-sector | **Jason Cooney** (founder/director, London-based) ✅ | tsaksconsulting.com · info@tsaksconsulting.com |
 | **Bid Writing Service (BWS)** | award-winning, £5.5bn claimed; op. by Barkers Commercial Services Ltd (Manchester/Usk) | Public sector, local gov, NHS | **Mike Baron** (MD) + James Wignall (BD) | bidwritingservice.com *(personal handle to find)* |
 | **GovData Services** | est 2006 (Gary Coleman + Esther Hess), Warrington, 1,800+ clients, "£37bn won" | Framework onboarding + bid support | **Chris Hugo** (CEO) ✅ | LinkedIn `/in/christian-hugo-11059311` |
-| **Glaxtons Consulting** | 93% claimed; **publishes pricing "from £950"**; CCS CWAS3 + NHS frameworks | Cross-sector + procurement insights | (founder TBD; CH 12065176, London) *(verify)* | glaxtons.co.uk |
+| **Glaxtons Consulting** | 93% claimed; **pricing "from £950"**; CCS CWAS3 + NHS frameworks; CH 12065176 | Cross-sector + procurement insights | **Richmond Gordon** (Director) — likely `/in/richmond-gordon-2090b1358` *(profile reads "Glaxton Consultancy" — verify)* | glaxtons.co.uk |
 
 **Independent named bid writers worth a direct DM** (solo/small — fast decisions, active on LinkedIn):
 - **Stuart Reed** — "Bid Writing Expert" `/in/stuart-reed`
@@ -458,3 +459,8 @@ Two moments must land: **the catch** and **click-to-source**. Keep it ~60s; let 
   Aberdeenshire Council's void-property cleaning; a Complete Tenders client → warm cross-referral via Matt
   Smith). Cleaning sector now has 2 named SMEs. (Other cleaning searches still only surface giants — ABM,
   Medirest, Mitie, OCS.) Maintenance mode; high-value research effectively exhausted.
+- **2026-06-29 (maintenance 9)** — **Watchlist CLEARED:** **Jason Cooney** (Tsaks founder/director, London —
+  confirmed via Tsaks's own site → CRM #19) and **Richmond Gordon** (Glaxtons Director, likely
+  `/in/richmond-gordon-2090b1358` — flagged *verify*, profile reads "Glaxton Consultancy"). Every consultancy
+  in §A now has a named contact. **CRM = 19 targets, 13 verified handles.** Research is now genuinely complete;
+  expect no-op cycles from here.
