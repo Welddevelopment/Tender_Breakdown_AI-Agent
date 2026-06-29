@@ -4,6 +4,25 @@
 
 ---
 
+### [G-015] @all · INFO · OPEN · 2026-06-29
+**Day-5 hardening (the safe half): an adversarial trust-invariant suite — judge-style attacks on our 4 claims.**
+`engine/tests/test_adversarial_safety.py` — **18 new tests, all green (116 total).** Additive only (no behaviour
+change, nothing outside `engine/tests/`), so it can't move `main`. The four demo claims all **hold under attack**:
+1. **Conservative reconcile** — different page / different clause / null clause / low-token-overlap (insurance-vs-turnover)
+   **never merge**, even with identical text; a genuine cross-chunk dup still *does* (noisy-OR). A wrong merge = silent miss.
+2. **Safety escalation** — a merged group stays gating + mandatory if *any* member is; confidence never drops below a member.
+3. **Autofill never bluffs** — no evidence → `needs_input` (empty text, no refs), never fabrication; and the groundedness
+   detector **catches a planted fake citation**.
+4. **The eval can't hide a disqualifier miss** — a missed gating gold → `dangerous_miss`; *found-but-not-flagged* gating →
+   gating recall drops (we measure the failure).
+
+**One honest known limitation (documented, NOT fixed — flagging for transparency):** reconcile is *lexical*, so two
+near-identical-but-different requirements that share the **same page AND clause** could merge. Mitigation = the page+clause
+AND-gate (the extractor clause-separates distinct requirements); a semantic guard is future work. Not a regression.
+
+This is a clean judge-proof artifact ("here's our adversarial safety suite"). The *other* half of Day-5 (final QA of the
+hosted path, demo video) still waits on **G-009** (J's render.yaml flip) — can't judge-test the deployed demo until it runs the real engine.
+
 ### [G-014] @all @j · INFO · OPEN · 2026-06-29
 **Day-4 "break it before the judges do" — done (in the Generalist lane), and it caught a real problem.**
 
