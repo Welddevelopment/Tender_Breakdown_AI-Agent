@@ -272,6 +272,43 @@ Ranked for: decides fast · bids often · reachable · strong wedge fit.
 
 ---
 
+## Warm-intro paths (beat the cold DM)
+
+A warm touch lifts reply rates and reads as respect, not spam. In priority order:
+
+1. **Comment-then-connect** — for 1–2 days before any DM, leave a genuine, specific comment on the target's
+   recent LinkedIn post (Thornton, Stewart, Capstick, Hughes all post regularly). The connect/DM then lands
+   from a familiar name, not a stranger.
+2. **APMP UK / BIDx** — engage a BIDx Roadshow / Digital Festival or APMP thread; the whole audience is the
+   target market. One good conversation there beats ten cold DMs.
+3. **Shared-sector credibility** — lead with the sector they live in ("I know [Firm] runs care frameworks…")
+   + a tender they'd recognise. Specific > generic, every time.
+4. **The referral ask** — the moment a contact says "I'd use this," ask: "Is there one other bid person you'd
+   point me to?" Peer referrals convert far better than cold.
+5. **Mutual connections** — check LinkedIn for shared connections (likely via APMP / the bid community) and
+   ask for a one-line intro where one exists.
+6. **Content as a magnet** — a short post showing the disqualifier catch on a real (anonymised) tender, tagged
+   `#bidwriting #APMP`, draws the right people to you. Inbound beats outbound for credibility.
+
+## First 60 seconds of the live demo (for a bid pro)
+
+Two moments must land: **the catch** and **click-to-source**. Keep it ~60s; let them pick the tender if you're confident.
+
+- **0:00 — set up (1 line):** "You spend ~3 weeks reading a tender like this; miss one mandatory line and the
+  bid's void. Watch this." (Don't over-explain — show.)
+- **0:05 — drop the PDF in:** "A real public-sector tender — [N] pages. Let it read." (Live upload.)
+- **0:20 — the matrix populates:** "Every requirement — pulled out, classified, scored." Let the volume appear.
+- **0:30 — 🦸 the catch:** point at the red deal-breaker banner. "This one's a pass/fail gate. Miss it, you're
+  disqualified — and it's the first thing you see, not buried on page 61." *(Pause. This is the gut-punch.)*
+- **0:45 — click-to-source:** click the row → the exact clause highlights on the exact page. "We don't ask you
+  to trust us — one click to the sentence it came from. Every line is checkable."
+- **0:55 — the number:** "And we measured it: on this tender, 18 of 19 requirements, every disqualifier caught,
+  and we flag what we're unsure of instead of guessing."
+- **Then stop and ask:** "On a tender you know — would this have saved you time, or caught something?" *(Their
+  answer is the quote.)*
+
+---
+
 ## Research log (newest at bottom)
 
 - **2026-06-29 (cycle 1)** — Mapped the UK bid-writing consultancy landscape (16 firms) + identified
@@ -334,3 +371,9 @@ Ranked for: decides fast · bids often · reachable · strong wedge fit.
   **Next (cycle 9):** warm-intro paths (APMP/BIDx, shared sector, comment-then-connect) + a tight "first 60s
   of the live demo" script for a bid pro; then cycle 10 = deeper mytender.io fetch + pin Ian Evans + 3–5 more
   named SME bidders (cleaning, IT/MSP) from Contracts Finder award notices.
+- **2026-06-29 (cycle 9)** — 🎯 Added **Warm-intro paths** (comment-then-connect, APMP/BIDx, shared-sector,
+  referral ask, mutual connections, content-as-magnet) + the **"First 60 seconds of the live demo"** script
+  for a bid pro (set-up → upload → matrix → the catch → click-to-source → "18/19, every disqualifier caught"
+  → ask for their reaction). The dossier now covers who · how to reach · what to say · how to demo. **Next
+  (cycle 10):** deeper mytender.io fetch (/pricing,/features); pin Ian Evans (BFT) handle (CH officers +
+  LinkedIn); 3–5 more named SME bidders in cleaning + IT/MSP via Contracts Finder/Find-a-Tender notices.
