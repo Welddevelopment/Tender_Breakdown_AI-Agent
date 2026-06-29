@@ -1,6 +1,6 @@
 # engine/ — Generalist lane (reconcile · routing · eval · auditable autofill)
 
-Pure-Python (stdlib + `pytest`) verification & autofill layer the Generalist owns. Sibling to `/backend`; never nested under it. ~98 tests.
+Pure-Python (stdlib + `pytest`) verification & autofill layer the Generalist owns. Sibling to `/backend`; never nested under it. ~116 tests (incl. an adversarial trust-invariant suite).
 
 ## Run (always from the repo root)
 
