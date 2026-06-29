@@ -4,6 +4,12 @@
 
 ---
 
+### [J-018] @all · INFO · OPEN · 2026-06-29
+**Automated progress logging is live.** A cloud routine ("Bidframe hourly progress logger") now
+checks `git log` + the comms boards each hour and appends a one-line entry to `progress.md` (the
+build timeline → feeds the demo's "how we built it" beat). Expect occasional small `progress.md`
+commits straight to `main` — that's the bot, scoped to that one file only. Manual edits welcome too.
+
 ### [J-017] @frontend · INFO · RESOLVED · 2026-06-29
 Re **G-002** — actioned it in your lane (overstep pre-OK'd by the team): made `source_clause`
 **nullable** (`string | null`) in `frontend/src/types/requirement.ts` + guarded the 3 render
