@@ -44,7 +44,7 @@ Ranked by **decides-fast × bids-often × reachable × wedge-fit**. Verify ✅ h
 |---|---------------|------|---------|----------------------|------------------|
 | 1 | **Vicki Stewart** — Tender Victory | ⭐⭐ | Consultancy (SME-focused) | Ex public-sector *buyer* + SME-majority writer → ultimate validator of the disqualifier catch | `/in/vicki-stewart-42a58a2a` ✅ |
 | 2 | **Dave Thornton** — Thornton & Lowe | ⭐⭐ | Consultancy (largest UK) | Biggest SME-focused consultancy; posts actively → warm-comment then DM; his interest = a headline quote | `/in/dave-thornton-56833625` ✅ |
-| 3 | **Ian Evans** (Ian James Evans) — BFT Consult | ⭐ | Consultancy (H&SC) | H&SC specialist, 80%+ win, £950m+; demo on a care-framework ITT he'll know cold | BFT Consult Ltd 08918064 (Liverpool) · `/company/bftconsult` · personal handle to pin |
+| 3 | **Ian Evans** (Ian James Evans) — BFT Consult | ⭐ | Consultancy (H&SC) | H&SC specialist, 80%+ win, £950m+; demo on a care-framework ITT he'll know cold | BFT Consult Ltd 08918064 (Liverpool) · `/company/bftconsult` · **likely** `/in/evansi` (Greater Liverpool — verify it's the BFT one) |
 | 4 | **Neil Capstick** — Executive Compass | ⭐ | Consultancy | Social-value + auditability thought-leader; "trust not prose" lands; strong validator | `/in/tenderwriter` ✅ |
 | 5 | **Katrina Gibson** — Della Pip | ⭐ | Consultancy (H&SC) | Care-sector Director; pair with a domiciliary ITT | `/in/katrina-gibson-2278516b` ✅ |
 | 6 | **Dewi Hughes** — Silverlock | ⭐ | Consultancy (small) | Small/solo → replies personally, tries it on a live bid | `/in/dewihughes` ✅ |
@@ -96,7 +96,7 @@ are also the sharpest *validators* of the wedge (traceability, the disqualifier 
 | **Tender Victory** ⭐⭐ | est 2010, **majority clients are SMEs**; founder is **ex public-sector buyer** (Devon & Cornwall Police, 2005–10), MCIPS | SME-focused, cross-sector | **Vicki Stewart** (founder) ✅ | LinkedIn `/in/vicki-stewart-42a58a2a` · ☎ 07971 526587 (public on site) |
 | **Silverlock Tenders** | small/independent | Tenders, SME | **Dewi Hughes** (MD) | LinkedIn `/in/dewihughes` |
 | **Bid Writer Consultancy** | est 2014, "Best SMB" 2017, freelancer collective; markets **AI bid support** | Cross-sector, SME | **Sharon Welch** (founder; 30 yrs BD) — Director, CH 09245742 (now reg. "Sharon Welch Ltd") | `/company/bid-writer-consultancy` *(personal handle ambiguous)* |
-| **BFT Consult** ⭐ | est 2014, **80%+ win, £950m+ secured**; founder is ex-care-org BD (grew one £2m→£12m in <4 yrs), 18+ yrs in sector | **Health & social care** (homecare, supported living, mental health, dementia) | **Ian Evans** (Ian James Evans, founder/Bid Director) | BFT Consult Ltd 08918064 (Liverpool) · `/company/bftconsult` *(personal LinkedIn to pin)* |
+| **BFT Consult** ⭐ | est 2014, **80%+ win, £950m+ secured**; founder is ex-care-org BD (grew one £2m→£12m in <4 yrs), 18+ yrs in sector | **Health & social care** (homecare, supported living, mental health, dementia) | **Ian Evans** (Ian James Evans, founder/Bid Director) | BFT Consult Ltd 08918064 (Liverpool) · `/company/bftconsult` · **likely** `/in/evansi` *(Greater Liverpool — verify it's the BFT Ian Evans)* |
 | **Della Pip** | founder-led, 15+ yrs | **Health & social care** (care homes, home care) | **Katrina Gibson** (Director) ✅ | LinkedIn `/in/katrina-gibson-2278516b` |
 | **Think Tenders** | award-winning, freelance model, £500m in 3 yrs | Public sector, cross-sector | **Amanda** + team *(surname/handle to verify)* | thinktenders.co.uk |
 | **Tsaks Consulting** | 85% win; Sydney HQ + **London** office | Gov specialists, cross-sector | (London lead TBD) *(verify)* | tsaksconsulting.com |
@@ -130,7 +130,8 @@ them. Consultancies are the better *first* target (value compounds), but SMEs gi
     Secondary Home Care framework.
   - *Named SME awardees found so far:* **Joghide Ltd**, **MC&DS Ltd** (Herefordshire framework). → find
     their registered manager / BD lead on LinkedIn; pair with the Herefordshire ITT for the live demo.
-  - *Sources to harvest more:* Care England tender-opportunities page; Essex Provider Hub contracts list.
+  - *Sources to harvest named providers:* the **St Helens Domiciliary Care Approved List 2025/26** (public PDF
+    — lists the SME providers admitted to the framework); Care England tender-opportunities; Essex Provider Hub.
 - **IT / managed services** ⭐ — the **G-Cloud / Digital Marketplace** is a goldmine: ~4,000 suppliers,
   **~90% SMEs**, all publicly listed + searchable at `applytosupply.digitalmarketplace.service.gov.uk`.
   Filter to small MSPs that have *won* call-offs (public £-spend data via Tussell/Contracts Finder) →
@@ -414,3 +415,7 @@ Two moments must land: **the catch** and **click-to-source**. Keep it ~60s; let 
   Croft, Soltech IT, Primary Technology) that bid for academy-trust/MAT ICT managed-service contracts, paired
   with a live ITT (Find a Tender `002522-2025`) — fills the thinnest segment (IT/MSP) with real names. (NHS
   family-run SME cleaner search still only surfaces giants — no new name.) Staying in maintenance mode.
+- **2026-06-29 (maintenance 2)** — Found a **likely LinkedIn for Ian Evans** (`/in/evansi`, "Greater Liverpool
+  Area" — consistent with BFT's Crosby/Liverpool base; flagged as *verify*, not ✅, since the result didn't name
+  BFT). Added the **St Helens Domiciliary Care Approved List 2025/26** (public PDF) as a source of *named* SME
+  care providers on a live framework. Staying in maintenance mode.
