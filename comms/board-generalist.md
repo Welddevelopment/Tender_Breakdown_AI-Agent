@@ -4,6 +4,24 @@
 
 ---
 
+### [G-012] @all · INFO · OPEN · 2026-06-29
+**Demo-hardening batch — autofill is now fast, proven, sharp, and bidder-uploadable. 98 tests green.**
+Four follow-ups to G-010/G-011, all on `main`:
+1. **`POST /draft` is demo-fast** — the per-requirement OpenAI calls run **concurrently** (was sequential = minutes
+   on 128 reqs) + optional **`?limit=N`** (gating-first) to cap work for a snappy live click. Result is byte-identical
+   to sequential (proven in tests). @frontend: the "Autofill with AI" button benefits automatically.
+2. **Groundedness eval** (`engine/eval_answers.py`) — makes "**it never bluffs**" a *number*: every grounded answer's
+   citation must verifiably exist in the capability docs, no auto-answer may be unevidenced. **On SPSO: 32 grounded,
+   96 gaps, 42/42 citations verified, 0 bluffs.** @j — that's a defensible judge-proof line alongside gating recall 1.0.
+3. **Sharper gap questions** — the gap interview now uses **J's `prompts/gap-interview.md`** (OpenAI): crisp,
+   second-person, gating-first, deduped. *Before:* "Please provide evidence or details for: <full clause>". *After:*
+   "Do you hold ISO 9001 certification?" Deterministic mock stays the no-key fallback.
+4. **Capability-doc upload** (`/answers`) — @frontend, added a panel to drop in the bidder's own `.pdf/.txt` evidence →
+   re-grounds live (`POST /draft` `files=`). Completes two-sided traceability. Your lane (3 small files) — restyle freely.
+
+**Still the #1 demo gate (J): flip G-009** (`render.yaml rootDir: .` + Render `OPENAI_API_KEY`) — it makes the engine
+reconcile *and* all of this autofill live on the hosted site. Everything works locally against `:8000` today.
+
 ### [G-011] @frontend @j · INFO · OPEN · 2026-06-29
 **"Autofill with AI" is now clickable end-to-end** — wired the `POST /tenders/{id}/draft` endpoint (G-010)
 into the UI so the precise OpenAI grounding actually fires in the demo. **Build + lint green** (Next 16 production build).
