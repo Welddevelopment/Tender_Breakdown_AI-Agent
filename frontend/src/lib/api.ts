@@ -9,6 +9,43 @@ export function isApiEnabled(): boolean {
   return BASE.length > 0;
 }
 
+// A failed API response. It carries the backend's human-readable `detail`
+// (FastAPI returns `{ detail: "..." }`, e.g. "File too large…" or a corrupt
+// PDF) and the status, so the UI can show the real reason instead of a generic
+// failure. status 0 means the request never reached the server (a network fail).
+export class ApiError extends Error {
+  readonly status: number;
+  constructor(message: string, status: number) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+  }
+}
+
+const NETWORK_MESSAGE =
+  "Couldn't reach the server. Check it's running, then try again.";
+
+// fetch, but a network failure becomes an ApiError(status 0) we can recognise.
+async function request(input: string, init?: RequestInit): Promise<Response> {
+  try {
+    return await fetch(input, init);
+  } catch {
+    throw new ApiError(NETWORK_MESSAGE, 0);
+  }
+}
+
+// Build an ApiError from a non-ok response, preferring the server's `detail`.
+async function asError(res: Response, fallback: string): Promise<ApiError> {
+  let detail: string | undefined;
+  try {
+    const data = (await res.json()) as { detail?: unknown };
+    if (typeof data?.detail === "string") detail = data.detail;
+  } catch {
+    // No JSON body; use the fallback.
+  }
+  return new ApiError(detail ?? fallback, res.status);
+}
+
 interface UploadResult {
   tender_id: string;
   requirement_count?: number;
@@ -20,11 +57,11 @@ export async function uploadTender(file: File, title?: string): Promise<string> 
   form.append("file", file);
   if (title) form.append("title", title);
 
-  const res = await fetch(`${BASE}/tenders/upload`, {
+  const res = await request(`${BASE}/tenders/upload`, {
     method: "POST",
     body: form,
   });
-  if (!res.ok) throw new Error(`Upload failed (${res.status})`);
+  if (!res.ok) throw await asError(res, `Upload failed (${res.status}).`);
 
   const data = (await res.json()) as UploadResult;
   return data.tender_id;
@@ -32,8 +69,8 @@ export async function uploadTender(file: File, title?: string): Promise<string> 
 
 // GET /tenders/{id}/requirements — returns the full tender in the locked schema.
 export async function getTender(tenderId: string): Promise<Tender> {
-  const res = await fetch(`${BASE}/tenders/${tenderId}/requirements`);
-  if (!res.ok) throw new Error(`Fetch failed (${res.status})`);
+  const res = await request(`${BASE}/tenders/${tenderId}/requirements`);
+  if (!res.ok) throw await asError(res, `Couldn't load that tender (${res.status}).`);
   return (await res.json()) as Tender;
 }
 
@@ -53,8 +90,8 @@ export async function draftAnswers(
     for (const file of opts.files) form.append("files", file);
     init.body = form;
   }
-  const res = await fetch(`${BASE}/tenders/${tenderId}/draft${query}`, init);
-  if (!res.ok) throw new Error(`Autofill failed (${res.status})`);
+  const res = await request(`${BASE}/tenders/${tenderId}/draft${query}`, init);
+  if (!res.ok) throw await asError(res, `Autofill failed (${res.status}).`);
   return (await res.json()) as Tender;
 }
 

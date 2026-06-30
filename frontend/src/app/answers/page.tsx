@@ -1,5 +1,6 @@
 import { AppMain } from "@/components/AppMain";
 import { AutofillButton } from "@/components/AutofillButton";
+import { AutofillPreview } from "@/components/AutofillPreview";
 import { CapabilityUpload } from "@/components/CapabilityUpload";
 import { DocumentHeader } from "@/components/DocumentHeader";
 import { GapInterview } from "@/components/GapInterview";
@@ -23,6 +24,7 @@ export default function AnswersPage() {
         <div className="mt-6 flex flex-col gap-4">
           <AutofillButton />
           <CapabilityUpload />
+          <AutofillPreview />
         </div>
 
         <div className="mt-8">

@@ -32,6 +32,8 @@ So for outreach the site is effectively mock-only, which is why the mock path ha
 | 1 | Mock-mode upload lies | BLOCKING | ✅ done — `frontend/close-the-loop` |
 | 7 | No export (response pack + CSV) | BLOCKING | ✅ done — `frontend/close-the-loop` |
 | 8 | No completion moment | HIGH | ✅ done — came with #7 |
+| 3 | Generic upload errors | HIGH | ✅ done — `frontend/close-the-loop` |
+| 19 | Autofill invisible on mock | HIGH | ✅ done — `frontend/close-the-loop` |
 
 ---
 
@@ -67,11 +69,15 @@ touches none of these. The danger is entirely in the live product a curious lead
   *Fix:* resolve into the matrix in place, or at minimum make the handoff feel like one motion.
   `frontend/src/app/upload/page.tsx`, `frontend/src/components/UploadDropzone.tsx:69-101`
 
-- [ ] **3. HIGH — Upload errors are generic.** Pranav ships human-readable `422`s (corrupt / encrypted / empty
+- [x] **3. HIGH — Upload errors are generic.** Pranav ships human-readable `422`s (corrupt / encrypted / empty
   PDF) and a `413` (>50MB). The UI throws all of them away and shows one flat *"Couldn't reach the server."* —
   the wrong message for a bad file, and it teaches a lead the tool is flaky when it isn't.
   *Fix:* surface the backend's real message; distinguish bad-file from server-down.
   `frontend/src/components/UploadDropzone.tsx:104-125`, `frontend/src/lib/api.ts:18-31`
+  **✅ Done** (`frontend/close-the-loop`): `api.ts` now throws a typed `ApiError` carrying the FastAPI
+  `detail` string (and status; 0 = network), so the upload error state shows the real reason ("File too
+  large…", a corrupt/encrypted PDF) with a "bad file" heading, and falls back to "Couldn't reach the
+  server" only for an actual network failure. Verified lint + build green.
 
 - [ ] **4. MEDIUM — Single file only.** Real tender packs are multiple PDFs (the master plan says "PDF(s)").
   `handleFiles` takes `files?.[0]`; dropping several silently ignores the rest.
@@ -145,12 +151,16 @@ touches none of these. The danger is entirely in the live product a curious lead
 
 ## Answers / autofill (`/answers`)
 
-- [ ] **19. HIGH — The whole autofill story is invisible on the deployed site.** Both "Draft my answers" and
+- [x] **19. HIGH — The whole autofill story is invisible on the deployed site.** Both "Draft my answers" and
   "Add evidence docs" `return null` without a live `tenderId` — i.e. on the mock default. The page header
   promises "Draft answers built from your own documents" but the two hero actions don't render. "Auditable
   autofill" is half the product's scope and a lead never sees it exists.
   *Fix:* make the draft action work against the sample data, or show an explanatory disabled state.
   `frontend/src/components/AutofillButton.tsx:13`, `frontend/src/components/CapabilityUpload.tsx:15`
+  **✅ Done** (`frontend/close-the-loop`): new `AutofillPreview` renders on the deployed (mock) `/answers`
+  in place of the hidden live controls. It states the answers were drafted from a prepared capability
+  document (listing them), that each links to its source page, and offers "Book a demo" to draft from your
+  own. The live controls still take over once a real tender is loaded. Verified lint + build green.
 
 - [ ] **20. MEDIUM — Answering a gap doesn't improve the answer.** You fill an open question, but on the sample
   nothing re-drafts; the loop "answer the gap → the draft gets better" isn't closed in the UI.

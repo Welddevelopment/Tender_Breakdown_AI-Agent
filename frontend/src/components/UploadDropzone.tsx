@@ -2,17 +2,34 @@
 
 import Link from "next/link";
 import { useRef, useState } from "react";
-import { isApiEnabled, uploadTender } from "@/lib/api";
+import { ApiError, isApiEnabled, uploadTender } from "@/lib/api";
 import { useRequirements } from "@/context/RequirementsContext";
 import { BookDemoButton } from "@/components/landing/BookDemoButton";
 
 type UploadStage = "idle" | "extracting" | "done" | "error";
+
+// Turn an upload/load failure into a heading + body. A rejection the server
+// explained (a bad or oversized PDF) shows its real message; anything else
+// reads as the server being unreachable.
+function toErrorInfo(err: unknown): { heading: string; body: string } {
+  if (err instanceof ApiError && err.status >= 400) {
+    return { heading: "We couldn't read that tender.", body: err.message };
+  }
+  return {
+    heading: "Couldn't reach the server.",
+    body: "The server didn't respond. Check it's running, then try again.",
+  };
+}
 
 export function UploadDropzone() {
   const { loadTender } = useRequirements();
   const [stage, setStage] = useState<UploadStage>("idle");
   const [isDragging, setIsDragging] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
+  const [errorInfo, setErrorInfo] = useState<{
+    heading: string;
+    body: string;
+  } | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   // With no live backend (the deployed default), there is nothing to read the
@@ -39,7 +56,8 @@ export function UploadDropzone() {
       const tenderId = await uploadTender(file, file.name);
       await loadTender(tenderId);
       setStage("done");
-    } catch {
+    } catch (err) {
+      setErrorInfo(toErrorInfo(err));
       setStage("error");
     }
   }
@@ -69,6 +87,7 @@ export function UploadDropzone() {
   function reset() {
     setStage("idle");
     setFileName(null);
+    setErrorInfo(null);
     if (inputRef.current) inputRef.current.value = "";
   }
 
@@ -136,11 +155,11 @@ export function UploadDropzone() {
     return (
       <div className="w-full max-w-xl">
         <h2 className="text-base font-semibold text-ink">
-          Couldn&rsquo;t reach the server.
+          {errorInfo?.heading ?? "Couldn't reach the server."}
         </h2>
-        <p className="mt-1 text-sm text-ink-muted">
-          The server didn&rsquo;t respond. Check it&rsquo;s running, then try
-          again.
+        <p className="mt-1 text-sm leading-relaxed text-ink-muted">
+          {errorInfo?.body ??
+            "The server didn't respond. Check it's running, then try again."}
         </p>
         <div className="mt-5">
           <button
