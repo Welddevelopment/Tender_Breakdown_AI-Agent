@@ -36,15 +36,25 @@ questions · #23 multiline gap inputs · #32 matrix empty state.
 miss these, users see them); **fixed on `frontend/fix-ux-render-bugs`:** a stray `Â·` in the `/review`
 header, plus `&rsquo;`/`&hellip;` showing literally in four upload strings.
 
-**Done this session (`frontend/audit-gaps`):** #15 undo / reopen a decision · #25 clickable graph nodes
-(→ `/review?req=`) · #28 (slice) deep-linkable, refresh-safe selection · #33 route error boundary.
+> **Note (2026-07-01):** the OpenAI key lands tomorrow AM and the deployed product goes **live** (real
+> tender upload → real results), so the "live-only" items are no longer moot — they decide whether a lead's
+> first real session works. Re-scoped below.
 
-**Deferred — frontend, with reason:** #2 resolve-in-place upload transition (large; the honest-upload copy
+**Done this session (`frontend/audit-gaps`):** #15 undo / reopen a decision · #25 clickable graph nodes
+(→ `/review?req=`) · #28 (slice) deep-linkable, refresh-safe selection · #33 route error boundary ·
+**#30 save-failure toast** (a failed decision PATCH no longer fails silently on the live path) ·
+**#5 extraction patience** (elapsed timer + "large tenders take a minute or two" on the live path, so a
+long real extraction never looks frozen).
+
+**For the team to do tomorrow, WITH the live key (touches the live data flow — should be verified against
+the real backend, not shipped blind tonight):** #28 full tender-in-URL + reload (refresh-safety across a
+session) · #29 tenders-list to revisit a tender (`GET /tenders` already exists) · #22 capability-doc
+management (remove a doc, see which answers it backs).
+
+**Deferred — low value / not blocking:** #2 resolve-in-place upload transition (large; honest-upload
 already removes the credibility risk) · #14 two "Next"s (acceptable as-is) · #16 keyboard shortcuts (LOW) ·
-#22 capability-doc management, #29 tenders-list, #30 silent-PATCH surfacing (all **live-only** — no value
-on the mock-only deploy) · #26 graph scale filter (only matters at real-tender size) · #31 nav to the
-upload trap (now moot — #1 made upload honest) · #28 full tender-in-URL + decision persistence (larger
-architectural change).
+#26 graph scale filter (only matters at real-tender size) · #31 nav to the upload trap (now moot — #1 made
+upload honest).
 
 **Backend lane (not frontend):** #24 source-on-the-page (needs page images / bbox coords or a servable
 PDF) · #27 criterion titles · #4 true multi-file tender-pack ingest (the UI already rejects multi-file

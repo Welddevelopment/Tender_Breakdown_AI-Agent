@@ -117,6 +117,10 @@ export function MatrixView({ title }: { title: string }) {
     if (appliedUrlSelection.current) return;
     const id = new URLSearchParams(window.location.search).get("req");
     if (id && requirements.some((r) => r.id === id)) {
+      // One-shot deep-link sync from the URL, applied after hydration (not a
+      // render-time derive, which would cause an SSG hydration mismatch); the
+      // ref makes it run once.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelectedId(id);
       appliedUrlSelection.current = true;
     } else if (requirements.length > 0) {

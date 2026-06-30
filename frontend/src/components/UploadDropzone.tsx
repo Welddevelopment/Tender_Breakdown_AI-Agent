@@ -1,11 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ApiError, isApiEnabled, uploadTender } from "@/lib/api";
 import { useRequirements } from "@/context/RequirementsContext";
 
 type UploadStage = "idle" | "extracting" | "done" | "error";
+
+function formatElapsed(seconds: number): string {
+  const minutes = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${minutes}:${secs.toString().padStart(2, "0")}`;
+}
 
 export function UploadDropzone() {
   const { loadTender } = useRequirements();
@@ -13,7 +19,19 @@ export function UploadDropzone() {
   const [isDragging, setIsDragging] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [elapsed, setElapsed] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // While a live extraction runs, tick an elapsed counter so a long wait on a
+  // large tender reads as working, not frozen.
+  useEffect(() => {
+    if (stage !== "extracting" || !isApiEnabled()) return;
+    const start = Date.now();
+    const id = window.setInterval(() => {
+      setElapsed(Math.round((Date.now() - start) / 1000));
+    }, 1000);
+    return () => window.clearInterval(id);
+  }, [stage]);
 
   async function handleFiles(files: FileList | null) {
     if (stage === "extracting") return;
@@ -47,6 +65,7 @@ export function UploadDropzone() {
     }
 
     setFileName(file.name);
+    setElapsed(0);
     setStage("extracting");
 
     // No API configured → wireframe path (fake extraction, mock stays in place).
@@ -168,25 +187,34 @@ export function UploadDropzone() {
   }
 
   if (stage === "extracting") {
+    const liveWait = isApiEnabled();
     return (
-      <div className="flex w-full max-w-xl items-center gap-3">
-        <span
-          className="inline-block h-5 w-5 shrink-0 animate-spin rounded-full border-[3px] border-hairline border-t-forest"
-          aria-hidden
-        />
-        <div className="min-w-0">
-          <h2 className="text-base font-semibold text-ink">
-            {isApiEnabled()
-              ? "Extracting requirements…"
-              : "Opening the sample matrix…"}
-          </h2>
-          <p
-            className="truncate text-sm text-ink-muted"
-            title={fileName ?? undefined}
-          >
-            {fileName}
-          </p>
+      <div className="w-full max-w-xl">
+        <div className="flex items-center gap-3">
+          <span
+            className="inline-block h-5 w-5 shrink-0 animate-spin rounded-full border-[3px] border-hairline border-t-forest"
+            aria-hidden
+          />
+          <div className="min-w-0">
+            <h2 className="text-base font-semibold text-ink">
+              {liveWait
+                ? "Extracting requirements…"
+                : "Opening the sample matrix…"}
+            </h2>
+            <p
+              className="truncate text-sm text-ink-muted"
+              title={fileName ?? undefined}
+            >
+              {fileName}
+            </p>
+          </div>
         </div>
+        {liveWait && (
+          <p className="mt-3 text-sm text-ink-muted">
+            Large tenders can take a minute or two. {formatElapsed(elapsed)}{" "}
+            elapsed.
+          </p>
+        )}
       </div>
     );
   }
