@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 import { isApiEnabled, uploadTender } from "@/lib/api";
 import { useRequirements } from "@/context/RequirementsContext";
+import { BookDemoButton } from "@/components/landing/BookDemoButton";
 
 type UploadStage = "idle" | "extracting" | "done" | "error";
 
@@ -14,6 +15,11 @@ export function UploadDropzone() {
   const [fileName, setFileName] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // With no live backend (the deployed default), there is nothing to read the
+  // dropped file. Rather than imply we parsed it, the preview path opens a
+  // worked example on a prepared tender and says so plainly.
+  const apiEnabled = isApiEnabled();
+
   async function handleFiles(files: FileList | null) {
     if (stage === "extracting") return;
     const file = files?.[0];
@@ -22,9 +28,9 @@ export function UploadDropzone() {
     setFileName(file.name);
     setStage("extracting");
 
-    // No API configured → wireframe path (fake extraction, mock stays in place).
-    if (!isApiEnabled()) {
-      window.setTimeout(() => setStage("done"), 1800);
+    // Preview path: no backend to read the file, so show the worked example.
+    if (!apiEnabled) {
+      window.setTimeout(() => setStage("done"), 1100);
       return;
     }
 
@@ -67,6 +73,31 @@ export function UploadDropzone() {
   }
 
   if (stage === "done") {
+    // Preview: be explicit that we showed a prepared example, not their file.
+    if (!apiEnabled) {
+      return (
+        <div className="w-full max-w-xl">
+          <h2 className="text-base font-semibold text-ink">
+            A worked example, ready to explore
+          </h2>
+          <p className="mt-1 text-sm leading-relaxed text-ink-muted">
+            This preview shows Bidframe reading a prepared public-sector tender,
+            not the file you dropped. To run it on your own tender, book a short
+            demo.
+          </p>
+          <div className="mt-5 flex flex-wrap items-center gap-4">
+            <Link
+              href="/review"
+              className="inline-flex items-center rounded-md bg-forest px-4 py-2 text-sm font-semibold text-paper transition-colors hover:bg-forest-hover"
+            >
+              View the worked example
+            </Link>
+            <BookDemoButton location="upload-preview" variant="link" />
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="w-full max-w-xl">
         <h2 className="text-base font-semibold text-ink">
@@ -133,14 +164,18 @@ export function UploadDropzone() {
         />
         <div className="min-w-0">
           <h2 className="text-base font-semibold text-ink">
-            Extracting requirements&hellip;
+            {apiEnabled
+              ? "Extracting requirements…"
+              : "Opening a worked example…"}
           </h2>
-          <p
-            className="truncate text-sm text-ink-muted"
-            title={fileName ?? undefined}
-          >
-            {fileName}
-          </p>
+          {apiEnabled && (
+            <p
+              className="truncate text-sm text-ink-muted"
+              title={fileName ?? undefined}
+            >
+              {fileName}
+            </p>
+          )}
         </div>
       </div>
     );
@@ -187,7 +222,9 @@ export function UploadDropzone() {
           Drop a tender PDF here, or click to browse
         </p>
         <p className="mt-1 text-sm text-ink-muted">
-          We&rsquo;ll extract every requirement into a compliance matrix.
+          {apiEnabled
+            ? "We'll extract every requirement into a compliance matrix."
+            : "We'll show you a worked example on a prepared tender."}
         </p>
       </div>
 

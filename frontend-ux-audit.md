@@ -21,6 +21,19 @@ So for outreach the site is effectively mock-only, which is why the mock path ha
 
 ---
 
+## Build progress (live)
+
+> Updated as work lands. Frontend fixes are on branch `frontend/close-the-loop` (opened as a PR for
+> Jawad's glance, since `/frontend` is his lane). Jawad's own in-flight work takes priority where it
+> overlaps; nothing here touches the files his current branches change.
+
+| # | Issue | Severity | Status |
+|---|---|---|---|
+| 1 | Mock-mode upload lies | BLOCKING | ✅ done — `frontend/close-the-loop` |
+| 7 | No export / no completion | BLOCKING | 🟡 next |
+
+---
+
 ## TL;DR — the outreach-blocking shortlist
 
 If we only fix four things before sending leads, fix these:
@@ -37,12 +50,15 @@ touches none of these. The danger is entirely in the live product a curious lead
 
 ## Upload (`/upload`)
 
-- [ ] **1. BLOCKING — Mock-mode upload lies about what it did.** With no API set (the deployed default),
+- [x] **1. BLOCKING — Mock-mode upload lies about what it did.** With no API set (the deployed default),
   uploading any file waits 1.8s then says *"Parsed {your filename} and built the compliance matrix"* — but it
   never loads the file; the matrix still shows the hard-coded IT-services sample. A lead who uploads their own
   tender is told it parsed theirs, then shown someone else's requirements and numbers.
   *Fix:* make mock upload honest (label it a sample / worked example) or load a believable sample flow that
   doesn't claim it read their file. `frontend/src/components/UploadDropzone.tsx:25-39`
+  **✅ Done** (`frontend/close-the-loop`): with no live backend the preview now says it shows a prepared
+  worked example, not the dropped file, and offers "Book a demo" to run your own. The live path (real upload
+  → extract → matrix) is unchanged. Verified lint + build green.
 
 - [ ] **2. HIGH — The signature "resolve in place" transition doesn't exist.** Design §9 calls for the PDF
   resolving into rows in the same frame. It's two routes (`/upload` → click → `/review`), a full page nav. The
