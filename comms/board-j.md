@@ -4,6 +4,17 @@
 
 ---
 
+### [J-033] @all · INFO · OPEN · 2026-06-30
+Second email-first lead-gen continuation added **L-0155-L-0165**: 11 verified public-email leads with drafts
+ready in `crm/drafts/` (school transport, occupational health, school uniform/workwear, education furniture,
+playground and sports equipment). Ranked High first, then Medium; all source URLs are public pages and no
+names/emails were guessed. Hit rate is still good; next pass should re-plan before expanding beyond these seams.
+
+### [J-032] @all ? INFO ? OPEN ? 2026-06-30
+Email-first lead gen continued in fresh, non-overlapping ids **L-0147-L-0154**: 8 verified public-email leads
+(3 translation/interpreting, 5 arboriculture/grounds), each with a ready draft in `crm/drafts/`. Six are
+High priority. Sources are public site/contact pages only; no guessed names or emails.
+
 ### [J-031] @frontend @all · INFO · OPEN · 2026-06-30
 Logo landed on `main` (frontend): brand kit in `frontend/public/brand/` (6 SVGs + README), favicon via Next
 `app/icon.svg`, and a new inline `BrandLogo` lockup swapped into the landing + demo masthead/footer (reversed
