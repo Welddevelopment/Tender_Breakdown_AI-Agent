@@ -2,6 +2,9 @@
 
 Conduct "Make Legacy Move" hackathon project. This repo extracts requirements from UK public-sector tender PDFs and presents them in a compliance matrix for bid managers to review.
 
+> **New here (including Codex or any AI agent)? Read [`START-HERE.md`](START-HERE.md) first** — it indexes
+> every doc, lists what to read in order, and recaps the current state across all four roles.
+
 ## Repo layout
 
 ```
