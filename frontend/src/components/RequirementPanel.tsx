@@ -6,6 +6,7 @@ import type { Requirement, RequirementStatus } from "@/types/requirement";
 import { AnswerPanel } from "./AnswerPanel";
 import { ApprovalStamp } from "./ApprovalStamp";
 import { ConfidenceIndicator } from "./ConfidenceIndicator";
+import { useRequirements } from "@/context/RequirementsContext";
 
 // The open-state panel internals (layout.md section 6). One sheet on a
 // paper-raised surface, read top to bottom, flat zones separated by hairlines:
@@ -280,6 +281,7 @@ function DecisionZone({
   onNext: () => void;
   onClose: () => void;
 }) {
+  const { reopen } = useRequirements();
   const [mode, setMode] = useState<"idle" | "edit" | "flag">("idle");
   const [note, setNote] = useState("");
   const [confirmingGating, setConfirmingGating] = useState(false);
@@ -362,6 +364,15 @@ function DecisionZone({
           >
             Flag
           </button>
+          {resolved && (
+            <button
+              type="button"
+              onClick={() => reopen(requirement.id)}
+              className="px-3 py-1.5 text-sm text-ink-muted transition-colors hover:text-ink"
+            >
+              Reopen
+            </button>
+          )}
           <span className="ml-auto flex items-center gap-3">
             {confirmingGating && (
               <button

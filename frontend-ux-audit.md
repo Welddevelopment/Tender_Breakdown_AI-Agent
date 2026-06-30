@@ -36,10 +36,22 @@ questions · #23 multiline gap inputs · #32 matrix empty state.
 miss these, users see them); **fixed on `frontend/fix-ux-render-bugs`:** a stray `Â·` in the `/review`
 header, plus `&rsquo;`/`&hellip;` showing literally in four upload strings.
 
-**Still open (not in `c17edb0`):** #24 source-on-the-page (backend) · #25/#26 graph (clickable nodes,
-scale) · #28 URL / tender state · #29 tenders-list screen · #30 silent PATCH failures · #4/#5 multi-file +
-extract progress (backend) · #27 criterion titles (backend) · #33 global error boundary. A printable
-**response pack** (print → PDF, beyond the CSV) is built on `frontend/close-the-loop` if wanted.
+**Done this session (`frontend/audit-gaps`):** #15 undo / reopen a decision · #25 clickable graph nodes
+(→ `/review?req=`) · #28 (slice) deep-linkable, refresh-safe selection · #33 route error boundary.
+
+**Deferred — frontend, with reason:** #2 resolve-in-place upload transition (large; the honest-upload copy
+already removes the credibility risk) · #14 two "Next"s (acceptable as-is) · #16 keyboard shortcuts (LOW) ·
+#22 capability-doc management, #29 tenders-list, #30 silent-PATCH surfacing (all **live-only** — no value
+on the mock-only deploy) · #26 graph scale filter (only matters at real-tender size) · #31 nav to the
+upload trap (now moot — #1 made upload honest) · #28 full tender-in-URL + decision persistence (larger
+architectural change).
+
+**Backend lane (not frontend):** #24 source-on-the-page (needs page images / bbox coords or a servable
+PDF) · #27 criterion titles · #4 true multi-file tender-pack ingest (the UI already rejects multi-file
+gracefully) · #5 streamed extract progress.
+
+A printable **response pack** (print → PDF, beyond Pranav's CSV) sits on `frontend/close-the-loop` if the
+team wants the document deliverable; otherwise that branch is superseded and can be closed.
 
 ---
 

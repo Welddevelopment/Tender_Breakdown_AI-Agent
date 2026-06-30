@@ -24,6 +24,7 @@ interface RequirementsContextValue {
   approve: (id: string) => void;
   editRequirement: (id: string, note: string) => void;
   flag: (id: string, note: string) => void;
+  reopen: (id: string) => void;
   editAnswer: (id: string, text: string) => void;
   answerOpenQuestion: (
     reqId: string,
@@ -121,6 +122,17 @@ export function RequirementsProvider({
     });
   }
 
+  // Undo a decision: return the requirement to pending and clear the recorded
+  // decision. Optimistic in-memory, best-effort persistence like applyDecision.
+  function reopen(id: string) {
+    updateRequirement(id, { status: "pending", decision: null });
+    if (isApiEnabled()) {
+      patchRequirement(id, { status: "pending", decision: null }).catch(() => {
+        // Best-effort: the optimistic update already reflects the change.
+      });
+    }
+  }
+
   // Human revises the drafted answer — record it as human-edited and keep the
   // deprecated draft_answer alias in sync. (No backend endpoint yet — in-memory.)
   function editAnswer(id: string, text: string) {
@@ -172,6 +184,7 @@ export function RequirementsProvider({
         approve,
         editRequirement,
         flag,
+        reopen,
         editAnswer,
         answerOpenQuestion,
         loadTender,
