@@ -30,7 +30,8 @@ So for outreach the site is effectively mock-only, which is why the mock path ha
 | # | Issue | Severity | Status |
 |---|---|---|---|
 | 1 | Mock-mode upload lies | BLOCKING | ✅ done — `frontend/close-the-loop` |
-| 7 | No export / no completion | BLOCKING | 🟡 next |
+| 7 | No export (response pack + CSV) | BLOCKING | ✅ done — `frontend/close-the-loop` |
+| 8 | No completion moment | HIGH | ✅ done — came with #7 |
 
 ---
 
@@ -85,15 +86,21 @@ touches none of these. The danger is entirely in the live product a curious lead
 
 ## Compliance matrix (`/review`)
 
-- [ ] **7. BLOCKING — There is no export. The loop has no end.** The master plan ends at "export the matrix +
+- [x] **7. BLOCKING — There is no export. The loop has no end.** The master plan ends at "export the matrix +
   decisions." When everything resolves the header button becomes "Export response" but `onNext` is a no-op
   (priorityId is null) — a dead button. The bid writer does all the work and walks away with no artifact.
   *Fix:* client-side export (print-to-PDF / CSV / copy) of requirements + decisions + answers + citations.
   `frontend/src/components/MatrixView.tsx:72-74`, `frontend/src/components/MatrixView.tsx:99`
+  **✅ Done** (`frontend/close-the-loop`): the "Export response" button is now live. New `lib/export.ts` +
+  `ExportDialog.tsx` give two client-side artifacts — a **printable response pack** (each requirement with its
+  decision, drafted answer, and citation; print → Save as PDF) and a **matrix CSV** download. Scoped print
+  stylesheet so only the pack prints. Verified lint + build green.
 
-- [ ] **8. HIGH — No completion moment.** Finish a 3-week job in minutes and nothing marks it: no
+- [x] **8. HIGH — No completion moment.** Finish a 3-week job in minutes and nothing marks it: no
   "12 approved, 2 edited, 1 flagged" summary, no payoff, no home for the export. The emotional beat of the
   whole pitch is unmarked. *Fix:* a completion summary that doubles as the export surface.
+  **✅ Done** (`frontend/close-the-loop`): a `CompletionBanner` ("Every requirement reviewed" + the
+  approved/edited/flagged counts) now sits above the matrix once nothing is pending, and opens the export.
 
 - [ ] **9. HIGH — No bulk "approve all confident."** `frontend/layout.md` §2/§8 explicitly designs this at the
   head of the Ready group. Unbuilt. On a real tender (the NHS stress test hit 472 reqs) clearing confident items

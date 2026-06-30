@@ -196,3 +196,24 @@ body {
 .graph-canvas .react-flow__edge.animated path {
   animation-duration: 1.6s;
 }
+
+/* Export: while the response-pack dialog is open (body.bf-exporting), print only
+   the pack. Scoping to the class keeps a normal Ctrl+P on any other view from
+   being blanked. */
+@media print {
+  body.bf-exporting * {
+    visibility: hidden;
+  }
+  body.bf-exporting #bf-response-pack,
+  body.bf-exporting #bf-response-pack * {
+    visibility: visible;
+  }
+  body.bf-exporting #bf-response-pack {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    border: 0;
+    padding: 0;
+  }
+}

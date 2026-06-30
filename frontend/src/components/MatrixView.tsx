@@ -7,8 +7,10 @@ import {
   nextPriorityId,
   type GroupKey,
 } from "@/lib/triage";
+import { summarize } from "@/lib/export";
 import { AppMain } from "./AppMain";
 import { ComplianceMatrix } from "./ComplianceMatrix";
+import { CompletionBanner, ExportDialog } from "./ExportDialog";
 import { DocumentHeader } from "./DocumentHeader";
 import { GatingHero } from "./GatingHero";
 import { RequirementDrawer } from "./RequirementDrawer";
@@ -50,6 +52,7 @@ export function MatrixView({ title }: { title: string }) {
   const { requirements, approve, editRequirement, flag } = useRequirements();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [activeFilter, setActiveFilter] = useState<GroupKey | null>(null);
+  const [exporting, setExporting] = useState(false);
   const isWide = useIsWide();
 
   const triage = deriveTriage(requirements);
@@ -67,10 +70,10 @@ export function MatrixView({ title }: { title: string }) {
   );
 
   // The header Next routes to the highest-priority unresolved item and opens it.
-  // When nothing is pending it becomes Export response (a no-op stub here, the
-  // export route is a later pass).
+  // When nothing is pending it becomes Export response and opens the export.
   function onNext() {
     if (priorityId) setSelectedId(priorityId);
+    else if (requirements.length > 0) setExporting(true);
   }
 
   // The panel Next advances to the next item within its current triage group,
@@ -128,6 +131,12 @@ export function MatrixView({ title }: { title: string }) {
           // RESTING, plus the narrow-viewport open state: the matrix stays put and
           // the panel arrives as a drawer over it (rendered below).
           <>
+            {priorityId === null && requirements.length > 0 && (
+              <CompletionBanner
+                summary={summarize(requirements)}
+                onExport={() => setExporting(true)}
+              />
+            )}
             <GatingHero />
             <ComplianceMatrix
               groups={triage.groups}
@@ -151,6 +160,10 @@ export function MatrixView({ title }: { title: string }) {
           onNext={selected ? () => goNext(selected.id) : () => {}}
           onClose={close}
         />
+      )}
+
+      {exporting && (
+        <ExportDialog title={title} onClose={() => setExporting(false)} />
       )}
     </>
   );
