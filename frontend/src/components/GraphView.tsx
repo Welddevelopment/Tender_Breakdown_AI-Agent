@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import {
   ReactFlow,
   Background,
@@ -284,8 +285,18 @@ function GraphKey() {
   );
 }
 
-export function GraphView() {
+export function GraphView({ interactive = true }: { interactive?: boolean }) {
   const { requirements } = useRequirements();
+  const router = useRouter();
+
+  // Clicking a requirement node opens it in the matrix (deep link via ?req=).
+  // Disabled on the read-only demo (interactive=false).
+  const onNodeClick = useCallback(
+    (_event: React.MouseEvent, node: Node) => {
+      if (node.type === "requirement") router.push(`/review?req=${node.id}`);
+    },
+    [router]
+  );
 
   const { nodes, edges, counts } = useMemo(() => {
     const reqIds = new Set(requirements.map((r) => r.id));
@@ -439,6 +450,11 @@ export function GraphView() {
           {counts.reqs} requirements · {counts.crits} award criteria ·{" "}
           {counts.deps} dependencies
         </p>
+        {interactive && (
+          <p className="mt-1 font-mono text-xs text-ink-muted">
+            Click a requirement to open it in the matrix.
+          </p>
+        )}
       </div>
 
       {/* Inline height, not a Tailwind class: React Flow measures its container on
@@ -459,6 +475,7 @@ export function GraphView() {
           maxZoom={1.6}
           proOptions={{ hideAttribution: true }}
           nodesConnectable={false}
+          onNodeClick={interactive ? onNodeClick : undefined}
           className="graph-canvas bg-paper"
         >
           <Background

@@ -110,7 +110,7 @@ export function DemoView() {
           </div>
 
           <div className="mt-6 overflow-hidden rounded-xl border border-hairline bg-paper-raised p-3 shadow-[var(--depth-sheet)] sm:p-4">
-            <GraphView />
+            <GraphView interactive={false} />
           </div>
         </section>
       </main>

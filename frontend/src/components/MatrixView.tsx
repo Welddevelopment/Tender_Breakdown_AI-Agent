@@ -1,6 +1,12 @@
 "use client";
 
-import { useCallback, useState, useSyncExternalStore } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { useRequirements } from "@/context/RequirementsContext";
 import type { Requirement } from "@/types/requirement";
 import {
@@ -103,6 +109,20 @@ export function MatrixView({ title }: { title: string }) {
   const selected = requirements.find((r) => r.id === selectedId) ?? null;
   const priorityId = nextPriorityId(requirements);
   const decidedCount = requirements.filter((req) => req.status !== "pending").length;
+
+  // Open a requirement from a ?req= URL param (a deep link from the graph, a
+  // shared link, or a refresh), once, after its requirement is present.
+  const appliedUrlSelection = useRef(false);
+  useEffect(() => {
+    if (appliedUrlSelection.current) return;
+    const id = new URLSearchParams(window.location.search).get("req");
+    if (id && requirements.some((r) => r.id === id)) {
+      setSelectedId(id);
+      appliedUrlSelection.current = true;
+    } else if (requirements.length > 0) {
+      appliedUrlSelection.current = true;
+    }
+  }, [requirements]);
 
   const close = useCallback(() => setSelectedId(null), []);
 
