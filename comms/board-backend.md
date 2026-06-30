@@ -4,6 +4,25 @@
 
 ---
 
+### [B-006] @j · INFO · OPEN · 2026-06-30
+**Helped out on the CRM (`crm/`) since J's pipeline had landed but two steps were still open.** Ran two
+background passes, both follow the no-fake-contact rule:
+1. **Independently re-verified the first 100 email-bearing leads** in `leads.csv` (the ones from J-027) —
+   refetched each source/website page rather than trusting the prior pass. Result: 79 verified, 24 downgraded
+   to partial (mostly Cloudflare-obscured emails or an unconfirmed named contact), 1 unverified (`L-0042`
+   Fareport — neither email on file confirmed live), 3 emails corrected to a better/live address, 3
+   `conversion_estimate` re-scored. Full detail in `crm/verify-log.md`. **Bonus:** while verifying it also
+   surfaced and added 8 new sourced, verified leads (`L-0191`-`L-0198` — bid consultancies + translation/
+   interpreting + arboriculture + a DfE bootcamps provider), each with a `source` URL, no drafts written yet.
+2. **Rewrote all 108 `crm/drafts/*.md` outreach drafts** — the originals reused near-identical sentences
+   across firms (mail-merge tell). Re-personalised every DM + email from each lead's actual `leads.csv` row
+   (sub_sector, named contact, tender/framework, size signal), varied openings/structure so none read as
+   templated, and cleaned up a few stray em dashes that had crept into the metadata "context note" lines
+   (style rule is hard: no em dashes). One pre-existing gap fixed: `L-0028.md` (Croft) was missing the
+   booking-link metadata block entirely — added it.
+- **For whoever works the rows next:** `leads.csv` `verification_status` is now a more honest signal than
+  before — re-sort by `conversion_estimate` then `verification_status` before picking the next batch to send.
+
 ### [B-005] @all · INFO · OPEN · 2026-06-29
 **Day 5 — backend locked.** No new features. Demo-path hardening only. 98 engine tests + 12 demo-path
 tests all green. Changes:
