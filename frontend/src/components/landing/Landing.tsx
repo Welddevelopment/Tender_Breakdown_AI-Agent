@@ -3,6 +3,7 @@ import { BookDemoButton, SeeItRunLink } from "./BookDemoButton";
 import { HeroResolve } from "./HeroResolve";
 import { ApprovalStamp } from "@/components/ApprovalStamp";
 import { BotanicalSprig } from "./BotanicalSprig";
+import { Reveal } from "./Reveal";
 import { ConfidenceIndicator } from "@/components/ConfidenceIndicator";
 import { BrandLogo } from "@/components/BrandLogo";
 
@@ -98,7 +99,7 @@ export function Landing() {
                 bid-killer before you read anything else.
               </p>
             </div>
-            <div className="surface-grain w-full rounded-lg border border-hairline bg-paper-raised p-5 shadow-[var(--depth-sheet)] lg:w-[400px]">
+            <div className="card-live surface-grain w-full rounded-lg border border-hairline bg-paper-raised p-5 shadow-[var(--depth-sheet)] lg:w-[400px]">
               <div className="border-l-2 border-signal-oxblood pl-4">
                 <p className="font-mono text-xs font-medium uppercase tracking-wide text-signal-oxblood">
                   Deal-breaker
@@ -128,15 +129,21 @@ export function Landing() {
               </p>
             </div>
             <dl className="mt-12 border-t border-paper/15">
-              <ProofRow figure="Every" label="deal-breaker caught" />
-              <ProofRow
-                figure="18 / 19"
-                label="requirements found, the last one flagged for you"
-              />
-              <ProofRow
-                figure="0"
-                label="answers invented, every claim links to your document"
-              />
+              <Reveal delay={0}>
+                <ProofRow figure="Every" label="deal-breaker caught" />
+              </Reveal>
+              <Reveal delay={110}>
+                <ProofRow
+                  figure="18 / 19"
+                  label="requirements found, the last one flagged for you"
+                />
+              </Reveal>
+              <Reveal delay={220}>
+                <ProofRow
+                  figure="0"
+                  label="answers invented, every claim links to your document"
+                />
+              </Reveal>
             </dl>
           </div>
         </section>
@@ -171,7 +178,7 @@ export function Landing() {
             We pulled these from the tender. One click shows the exact sentence on
             the exact page, so you never take our word for it.
           </p>
-          <div className="surface-grain mt-8 max-w-[560px] rounded-lg border border-hairline bg-paper-raised p-5 shadow-[var(--depth-row)]">
+          <div className="card-live surface-grain mt-8 max-w-[560px] rounded-lg border border-hairline bg-paper-raised p-5 shadow-[var(--depth-row)]">
             <div className="grid grid-cols-[52px_1fr] gap-x-4">
               <div className="border-r border-hairline pr-3 text-right font-mono text-xs leading-relaxed text-ink-muted">
                 4.2.1
@@ -216,7 +223,7 @@ export function Landing() {
             Bidframe drafts each answer from your own documents and shows which one
             it came from. You approve every line before it goes in the bid.
           </p>
-          <div className="surface-grain mt-8 max-w-[560px] rounded-lg border border-hairline bg-paper-raised p-5 shadow-[var(--depth-row)]">
+          <div className="card-live surface-grain mt-8 max-w-[560px] rounded-lg border border-hairline bg-paper-raised p-5 shadow-[var(--depth-row)]">
             <p className="font-mono text-xs uppercase tracking-wide text-ink-muted">
               Requirement
             </p>
@@ -241,7 +248,7 @@ export function Landing() {
         {/* Before and after: a ruled ledger (1px rules, no heavy ink). */}
         <Band>
           <Head>Before, and with Bidframe</Head>
-          <div className="mt-7 overflow-x-auto">
+          <Reveal className="mt-7 overflow-x-auto">
             <table className="w-full max-w-[760px] border-collapse text-left">
               <thead>
                 <tr className="border-b border-ink">
@@ -283,7 +290,7 @@ export function Landing() {
                 />
               </tbody>
             </table>
-          </div>
+          </Reveal>
         </Band>
       </main>
 
@@ -318,7 +325,7 @@ export function Landing() {
           </div>
           <Link
             href="/login"
-            className="rounded-sm text-sm text-paper/70 underline decoration-paper/30 decoration-1 underline-offset-4 transition-colors hover:text-paper"
+            className="rounded-sm text-sm text-paper/70 underline decoration-paper/30 decoration-1 underline-offset-4 transition-colors hover:text-paper hover:decoration-paper"
           >
             Sign in
           </Link>
@@ -389,7 +396,7 @@ function Row({
   after: string;
 }) {
   return (
-    <tr className="border-b border-hairline align-top">
+    <tr className="border-b border-hairline align-top transition-colors hover:bg-paper-raised">
       <th
         scope="row"
         className="py-3 pr-6 text-left font-mono text-xs font-normal uppercase tracking-wide text-ink-muted"

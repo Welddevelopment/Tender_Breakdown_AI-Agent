@@ -33,7 +33,7 @@ export function DemoView() {
         <div className="mx-auto flex max-w-[1160px] items-center justify-between px-6 py-4">
           <Link
             href="/"
-            aria-label="Bidframe — home"
+            aria-label="Bidframe, home"
             className="rounded-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-forest focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
           >
             <BrandLogo className="h-7 w-auto" />

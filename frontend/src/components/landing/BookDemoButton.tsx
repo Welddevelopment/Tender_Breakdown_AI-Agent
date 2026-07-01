@@ -64,7 +64,7 @@ export function BookDemoButton({
     <a
       href={BOOKING_URL}
       onClick={() => track("demo_cta_click", { location })}
-      className={`group inline-flex items-center rounded-md font-semibold shadow-[var(--depth-control)] transition-[transform,background-color] active:translate-y-px focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${sizeCls} ${btnTone} ${className}`}
+      className={`group inline-flex items-center rounded-md font-semibold shadow-[var(--depth-control)] transition-[transform,background-color,box-shadow] hover:-translate-y-0.5 hover:shadow-[0_8px_18px_-8px_rgba(33,29,23,0.45)] active:translate-y-0 active:shadow-[var(--depth-control)] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${sizeCls} ${btnTone} ${className}`}
     >
       Book a demo
       <svg

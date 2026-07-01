@@ -54,6 +54,15 @@ export function GatingHero({ onSelect }: { onSelect?: (id: string) => void }) {
           </li>
         ))}
       </ul>
+
+      {/* The track record, in the mono record voice. A measured benchmark, not a
+          claim about the tender on screen: it backs the catch above. The numbers
+          are the locked, honest ones (demo-narrative.md): gating recall 1.0 and
+          the needs_review honesty, said the way the demo says them. */}
+      <p className="mt-5 border-t border-hairline pt-3 font-mono text-xs leading-relaxed text-ink-muted">
+        Measured on a real public-sector tender, Bidframe caught every
+        deal-breaker and flagged the rest for you.
+      </p>
     </section>
   );
 }

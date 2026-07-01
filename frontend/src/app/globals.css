@@ -156,6 +156,34 @@ body {
   }
 }
 
+/* Scroll reveal (components/landing/Reveal.tsx). Used only on the proof ledger
+   and the before/after table, the two surfaces where a sequential fill-in reads
+   as the record being written (NOT fade-up-on-everything, which SLOP-CHECK bans).
+   Motion-safe: under reduced motion the hidden start state never applies, so the
+   content is simply already in place. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal] {
+    transition:
+      opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
+      transform 0.6s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms);
+  }
+  [data-reveal="hidden"] {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+/* Card liveness: a raised illustrative sheet warms its shadow on hover. Depth
+   means focus (design-language), so the proof cards feel like material without
+   implying they are clickable, no lift or translate, that stays reserved for the
+   one thing you can actually open (the hero sheet). */
+.card-live {
+  transition: box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.card-live:hover {
+  box-shadow: 0 12px 30px -14px rgba(33, 29, 23, 0.32);
+}
+
 /* A faint ledger grid across the page, for texture (a graph-paper nod to the
    civic record). It sits under the warm paper; the raised sheets and the ink
    bands paint over it, so it never touches a working surface. */

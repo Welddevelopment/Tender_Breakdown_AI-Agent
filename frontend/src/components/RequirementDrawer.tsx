@@ -48,12 +48,14 @@ export function RequirementDrawer({
 
   return (
     <div
-      className={`fixed inset-0 z-50 ${open ? "" : "pointer-events-none"}`}
+      className={`fixed inset-0 z-50 overflow-hidden ${
+        open ? "" : "pointer-events-none"
+      }`}
       aria-hidden={!open}
     >
       {/* Scrim */}
       <div
-        className={`fixed inset-0 bg-ink/40 transition-opacity ${
+        className={`absolute inset-0 bg-ink/40 transition-opacity ${
           open ? "opacity-100" : "opacity-0"
         }`}
         onClick={onClose}
@@ -66,7 +68,7 @@ export function RequirementDrawer({
         aria-modal="true"
         aria-label="Requirement detail"
         tabIndex={-1}
-        className={`fixed inset-y-0 right-0 flex w-full max-w-md flex-col bg-paper-raised shadow-xl outline-none transition-transform duration-200 ${
+        className={`absolute inset-y-0 right-0 flex w-full max-w-md flex-col bg-paper-raised shadow-xl outline-none transition-transform duration-200 ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
