@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type {
   CapabilityDoc,
+  Criterion,
   Requirement,
   RequirementDecision,
   RequirementStatus,
@@ -28,6 +29,7 @@ const SAVE_FAILED =
 interface RequirementsContextValue {
   requirements: Requirement[];
   capabilityDocs: CapabilityDoc[];
+  awardCriteria: Criterion[];
   title: string;
   tenderId: string | null;
   drafting: boolean;
@@ -70,6 +72,10 @@ export function RequirementsProvider({
   const [capabilityDocs, setCapabilityDocs] = useState<CapabilityDoc[]>(
     () => seed.capability_docs ?? []
   );
+  // Published award criteria (#27) — the graph reads real names + weights from here.
+  const [awardCriteria, setAwardCriteria] = useState<Criterion[]>(
+    () => seed.award_criteria ?? []
+  );
   // The live tender currently loaded (null on the mock default). Needed so the
   // autofill action knows which tender to draft against.
   const [tenderId, setTenderId] = useState<string | null>(null);
@@ -99,6 +105,7 @@ export function RequirementsProvider({
       mergeStoreIntoRequirements(tender.requirements, loadAnswerStore(id))
     );
     setCapabilityDocs(tender.capability_docs ?? []);
+    setAwardCriteria(tender.award_criteria ?? []);
     setTenderId(id);
     try {
       window.sessionStorage.setItem("bf-tender", id);
@@ -166,6 +173,7 @@ export function RequirementsProvider({
       const tender = await apiDraftAnswers(tenderId, { provider, files });
       setRequirements(tender.requirements);
       setCapabilityDocs(tender.capability_docs ?? []);
+      setAwardCriteria(tender.award_criteria ?? []);
     } finally {
       setDrafting(false);
     }
@@ -280,6 +288,7 @@ export function RequirementsProvider({
       value={{
         requirements,
         capabilityDocs,
+        awardCriteria,
         title: seed.title,
         tenderId,
         drafting,

@@ -36,6 +36,7 @@ interface MarksViewProps {
 interface CriterionGroup {
   key: string;
   label: string;
+  weight: number | null; // published share of the marks (#27), null when not stated
   items: Requirement[];
   gating: number;
   review: number;
@@ -51,7 +52,7 @@ export function MarksView({
   onSelectCrit,
   compact = false,
 }: MarksViewProps) {
-  const { requirements: all } = useRequirements();
+  const { requirements: all, awardCriteria } = useRequirements();
   const requirements = useMemo(
     () => (filter ? all.filter(filter) : all),
     [all, filter]
@@ -62,7 +63,9 @@ export function MarksView({
   const [openKeys, setOpenKeys] = useState<Set<string>>(() => new Set());
   const rowRefs = useRef<Map<string, HTMLElement>>(new Map());
 
-  const { groups, maxCount, deps } = useMemo(() => {
+  const { groups, maxCount, maxWeight, hasWeights, deps } = useMemo(() => {
+    // Published award criteria (#27) → real name + weight, keyed by id = criteria_ref.
+    const critMeta = new Map(awardCriteria.map((c) => [c.id, c]));
     const keys = orderedCritKeys(requirements);
     const byKey = new Map<string, Requirement[]>();
     for (const r of requirements) {
@@ -71,15 +74,21 @@ export function MarksView({
     }
     const groups: CriterionGroup[] = keys.map((k) => {
       const items = byKey.get(k) ?? [];
+      const meta = critMeta.get(k);
       return {
         key: k,
-        label: criterionLabel(k === UNASSIGNED ? null : k),
+        // Prefer the published criterion name; fall back to the id-derived label.
+        label: meta?.name ?? criterionLabel(k === UNASSIGNED ? null : k),
+        weight: meta && meta.weight > 0 ? meta.weight : null,
         items,
         gating: items.filter((r) => r.is_gating).length,
         review: items.filter((r) => r.needs_review).length,
       };
     });
     const maxCount = Math.max(1, ...groups.map((g) => g.items.length));
+    const maxWeight = Math.max(1, ...groups.map((g) => g.weight ?? 0));
+    // Size bars by the real marks when the tender published weightings, else by count.
+    const hasWeights = groups.some((g) => g.weight != null);
 
     const byId = new Map(requirements.map((r) => [r.id, r]));
     const deps = requirements
@@ -91,8 +100,8 @@ export function MarksView({
       }))
       .filter((d) => d.before.length > 0);
 
-    return { groups, maxCount, deps };
-  }, [requirements]);
+    return { groups, maxCount, maxWeight, hasWeights, deps };
+  }, [requirements, awardCriteria]);
 
   // The group holding the current selection is always shown open, derived rather
   // than forced through state, so a selection from the map never collapses.
@@ -139,7 +148,8 @@ export function MarksView({
           Where the marks live
         </h2>
         <p className="mt-2 max-w-[64ch] text-[14.5px] leading-relaxed text-ink-muted">
-          Every requirement grouped by the award criterion it is scored against.{" "}
+          Every requirement grouped by the award criterion it is scored against
+          {hasWeights ? ", each bar sized by its share of the marks" : ""}.{" "}
           {totalGating > 0 && (
             <span className="text-ink">
               {totalGating} deal-breaker{totalGating === 1 ? "" : "s"}
@@ -158,7 +168,10 @@ export function MarksView({
           {groups.map((g) => {
             const isOpen = isGroupOpen(g.key);
             const isPinned = selectedCrit === g.key;
-            const width = Math.round((g.items.length / maxCount) * 100);
+            const width =
+              hasWeights && g.weight != null
+                ? Math.round((g.weight / maxWeight) * 100)
+                : Math.round((g.items.length / maxCount) * 100);
             const gatingPct = g.items.length
               ? (g.gating / g.items.length) * 100
               : 0;
@@ -192,6 +205,11 @@ export function MarksView({
                       {g.review > 0 && (
                         <span className="font-mono text-[11px] text-ink-muted">
                           {g.review} to check
+                        </span>
+                      )}
+                      {g.weight != null && (
+                        <span className="font-mono text-[11px] font-medium text-ink-muted">
+                          {g.weight}% of marks
                         </span>
                       )}
                     </div>
