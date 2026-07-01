@@ -17,6 +17,7 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { useRequirements } from "@/context/RequirementsContext";
+import { isApiEnabled } from "@/lib/api";
 import type { Requirement } from "@/types/requirement";
 import { ConfidenceIndicator } from "./ConfidenceIndicator";
 
@@ -286,7 +287,7 @@ function GraphKey() {
 }
 
 export function GraphView({ interactive = true }: { interactive?: boolean }) {
-  const { requirements } = useRequirements();
+  const { requirements, tenderId } = useRequirements();
   const router = useRouter();
 
   // Clicking a requirement node opens it in the matrix (deep link via ?req=).
@@ -430,7 +431,9 @@ export function GraphView({ interactive = true }: { interactive?: boolean }) {
     };
   }, [requirements]);
 
-  if (requirements.length === 0) {
+  // No tender loaded on the live product (or genuinely empty) → the same honest
+  // empty state, not the sample graph. The mock showcase keeps its sample.
+  if (requirements.length === 0 || (isApiEnabled() && !tenderId)) {
     return (
       <p className="text-sm text-ink-muted">
         No requirements yet. Upload a tender to see how its requirements connect.
@@ -469,8 +472,11 @@ export function GraphView({ interactive = true }: { interactive?: boolean }) {
           nodes={nodes}
           edges={edges}
           nodeTypes={nodeTypes}
-          fitView
-          fitViewOptions={{ padding: 0.2 }}
+          // Open at a readable zoom anchored to the top of the diagram, rather than
+          // fitView — which, on a large tender (hundreds of requirements), shrinks
+          // the whole column to an unreadable speck. "Fit" (bottom-left) still frames
+          // the whole graph on demand.
+          defaultViewport={{ x: 48, y: 96, zoom: 0.8 }}
           minZoom={0.3}
           maxZoom={1.6}
           proOptions={{ hideAttribution: true }}

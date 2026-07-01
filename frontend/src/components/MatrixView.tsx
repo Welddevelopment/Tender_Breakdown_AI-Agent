@@ -7,7 +7,9 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
+import Link from "next/link";
 import { useRequirements } from "@/context/RequirementsContext";
+import { isApiEnabled } from "@/lib/api";
 import type { Requirement } from "@/types/requirement";
 import {
   deriveTriage,
@@ -100,7 +102,8 @@ function exportRequirements(requirements: Requirement[]) {
 }
 
 export function MatrixView({ title }: { title: string }) {
-  const { requirements, approve, editRequirement, flag } = useRequirements();
+  const { requirements, tenderId, approve, editRequirement, flag } =
+    useRequirements();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [activeFilter, setActiveFilter] = useState<GroupKey | null>(null);
   const isWide = useIsWide();
@@ -109,6 +112,14 @@ export function MatrixView({ title }: { title: string }) {
   const selected = requirements.find((r) => r.id === selectedId) ?? null;
   const priorityId = nextPriorityId(requirements);
   const decidedCount = requirements.filter((req) => req.status !== "pending").length;
+  // What still needs a human: gaps to fill + deal-breakers / low-confidence to verify.
+  // Everything else, Bidframe has handled (ready to approve, or already decided).
+  const needInput = triage.counts["needs-you"] + triage.counts["to-verify"];
+  const verifiedCount = requirements.length - needInput;
+
+  // Live product, no tender loaded yet → show an onboarding empty state rather than
+  // the sample data. The mock showcase build (no API) keeps its sample matrix.
+  const noTenderLoaded = isApiEnabled() && !tenderId;
 
   // Open a requirement from a ?req= URL param (a deep link from the graph, a
   // shared link, or a refresh), once, after its requirement is present.
@@ -164,6 +175,17 @@ export function MatrixView({ title }: { title: string }) {
     [triage.groups]
   );
 
+  if (noTenderLoaded) {
+    return (
+      <>
+        <DocumentHeader title="Compliance matrix" />
+        <AppMain>
+          <NoTenderLoaded />
+        </AppMain>
+      </>
+    );
+  }
+
   return (
     <>
       <DocumentHeader
@@ -215,9 +237,13 @@ export function MatrixView({ title }: { title: string }) {
                 onExport={() => exportRequirements(requirements)}
               />
             )}
-            {priorityId !== null && decidedCount > 0 && (
-              <p className="mb-2 font-mono text-xs text-ink-muted">
-                {decidedCount} of {requirements.length} requirements decided.
+            {priorityId !== null && requirements.length > 0 && (
+              <p className="mb-3 font-mono text-xs text-ink-muted">
+                <span className="text-ink">
+                  Bidframe verified {verifiedCount} of {requirements.length}
+                </span>{" "}
+                — {needInput} need your input
+                {decidedCount > 0 ? ` · ${decidedCount} decided` : ""}.
               </p>
             )}
             <ComplianceMatrix
@@ -244,6 +270,31 @@ export function MatrixView({ title }: { title: string }) {
         />
       )}
     </>
+  );
+}
+
+// Shown on the live product when no tender has been loaded yet — an honest empty
+// state instead of the sample matrix, pointing the user at the upload.
+function NoTenderLoaded() {
+  return (
+    <div className="mx-auto flex max-w-lg flex-col items-center py-20 text-center">
+      <p className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-ink-muted">
+        No tender loaded
+      </p>
+      <h2 className="mt-3 font-serif text-2xl font-semibold text-ink">
+        Nothing to review yet
+      </h2>
+      <p className="mt-2 text-sm leading-relaxed text-ink-muted">
+        Upload a tender and Bidframe pulls out every requirement, flags the
+        deal-breakers, and brings them here for review.
+      </p>
+      <Link
+        href="/upload"
+        className="mt-6 inline-flex items-center rounded-md bg-forest px-5 py-2.5 text-sm font-semibold text-paper shadow-[var(--depth-control)] transition-colors hover:bg-forest-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-forest focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+      >
+        Upload a tender
+      </Link>
+    </div>
   );
 }
 

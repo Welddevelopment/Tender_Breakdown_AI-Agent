@@ -41,7 +41,7 @@ export function DocumentHeader({
 
   return (
     <header className="border-b-2 border-ink bg-paper-raised">
-      <div className="mx-auto flex max-w-[1160px] items-center justify-between gap-6 px-6 py-5">
+      <div className="mx-auto flex max-w-[1160px] flex-wrap items-center justify-between gap-x-6 gap-y-3 px-6 py-5">
         {/* LEFT: the masthead nameplate. Running head, section switcher, the tender
             title (the one Fraunces use), and the mono reference line. */}
         <div className="flex min-w-0 flex-col gap-1.5">
@@ -64,7 +64,7 @@ export function DocumentHeader({
         {triage && (
             <nav
               aria-label="Filter the worklist"
-              className="flex items-center gap-3 text-sm"
+              className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm"
             >
               <TriageFilter
                 count={triage.counts["needs-you"]}
@@ -144,7 +144,7 @@ function TriageFilter({
       type="button"
       aria-pressed={isActive}
       onClick={() => onFilter(isActive ? null : groupKey)}
-      className={`transition-colors ${
+      className={`whitespace-nowrap transition-colors ${
         isActive
           ? "font-semibold text-ink underline decoration-1 underline-offset-4"
           : "text-ink-muted hover:text-ink"

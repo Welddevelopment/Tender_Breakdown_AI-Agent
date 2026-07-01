@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRequirements } from "@/context/RequirementsContext";
+import { ApiError } from "@/lib/api";
 
 // The primary action for the answers surface. On upload the API already drafts
 // answers from your documents with the free mock answerer; this re-runs the
@@ -10,17 +11,33 @@ import { useRequirements } from "@/context/RequirementsContext";
 // drafted answers and no user documents are being processed.
 export function AutofillButton() {
   const { tenderId, drafting, draftAnswers } = useRequirements();
-  const [failed, setFailed] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
 
   const isSampleMode = !tenderId;
 
   async function run() {
     if (isSampleMode) return;
-    setFailed(false);
+    setError(null);
+    setNotice(null);
     try {
       await draftAnswers("openai");
-    } catch {
-      setFailed(true);
+    } catch (err) {
+      // The precise answerer needs an AI key on the server. When it isn't set
+      // (503), fall back to the free model so drafting still produces answers,
+      // and say so plainly — only a genuine connection failure is an error.
+      if (err instanceof ApiError && err.status === 503) {
+        try {
+          await draftAnswers("mock");
+          setNotice(
+            "Drafted with the built-in model. Add an AI key on the server for sharper, evidence-cited prose."
+          );
+        } catch {
+          setError("Couldn't reach the server. Try again.");
+        }
+      } else {
+        setError("Couldn't reach the server. Try again.");
+      }
     }
   }
 
@@ -50,10 +67,11 @@ export function AutofillButton() {
           evidence docs. Connect a live tender to draft from your own documents.
         </span>
       )}
-      {failed && (
-        <span className="text-xs text-signal-oxblood">
-          Couldn&rsquo;t reach the server. Try again.
-        </span>
+      {notice && (
+        <span className="max-w-[64ch] text-xs text-ink-muted">{notice}</span>
+      )}
+      {error && (
+        <span className="text-xs text-signal-oxblood">{error}</span>
       )}
     </div>
   );
