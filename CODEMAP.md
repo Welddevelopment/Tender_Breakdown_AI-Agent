@@ -4,7 +4,7 @@
 >
 > **Interactive graph:** [`frontend/public/codemap.html`](frontend/public/codemap.html) — drag / zoom / click-to-focus; served at `/codemap.html` on the Vercel deploy. (The diagrams below render right here on GitHub.)
 >
-> Map of commit `a9188be` · 2026-07-01T15:04:56Z
+> Map of commit `9254baf` · 2026-07-01T16:55:54+01:00
 
 **Read this first** for a current picture of the codebase — what lives where, and what imports what. It is the fast path to context for both humans and agents. If it looks wrong, it is stale: re-run the generator and push.
 
@@ -12,9 +12,9 @@
 
 | Area | Files | Lines | What it is |
 |------|-------|-------|------------|
-| **frontend** | 91 | 38,555 | Frontend — Next.js 16 / React 19 / Tailwind (compliance matrix UI) |
+| **frontend** | 92 | 38,759 | Frontend — Next.js 16 / React 19 / Tailwind (compliance matrix UI) |
 | **backend** | 19 | 2,564 | Backend — FastAPI (PDF ingest, extraction, REST API) |
-| **engine** | 48 | 3,020 | Engine — reconcile / eval / answer-draft pipeline + tests |
+| **engine** | 55 | 3,153 | Engine — reconcile / eval / answer-draft pipeline + tests |
 | **prompts** | 6 | 678 | Prompts — LLM prompt specs (extraction, classification, answers, gaps) |
 | **gold** | 4 | 222 | Eval gold-set — hand-labelled requirements for accuracy measurement |
 | **data** | 17 | 0 | Data — tender source PDFs (not parsed here) |
@@ -85,26 +85,28 @@ graph LR
   n28[AutofillButton.tsx] --> n14[api.ts]
   n29[CapabilityUpload.tsx] --> n11[RequirementsContext.tsx]
   n33[ComplianceMatrix.tsx] --> n34[ConfidenceIndicator.tsx]
-  n33[ComplianceMatrix.tsx] --> n35[triage.ts]
+  n33[ComplianceMatrix.tsx] --> n35[dedupe.ts]
+  n33[ComplianceMatrix.tsx] --> n36[triage.ts]
   n33[ComplianceMatrix.tsx] --> n27[requirement.ts]
   n6[DemoView.tsx] --> n13[BrandLogo.tsx]
   n6[DemoView.tsx] --> n33[ComplianceMatrix.tsx]
-  n6[DemoView.tsx] --> n36[GatingHero.tsx]
+  n6[DemoView.tsx] --> n37[GatingHero.tsx]
   n6[DemoView.tsx] --> n8[GraphView.tsx]
-  n6[DemoView.tsx] --> n37[BookDemoButton.tsx]
-  n6[DemoView.tsx] --> n38[BotanicalSprig.tsx]
+  n6[DemoView.tsx] --> n38[BookDemoButton.tsx]
+  n6[DemoView.tsx] --> n39[BotanicalSprig.tsx]
   n6[DemoView.tsx] --> n11[RequirementsContext.tsx]
   n6[DemoView.tsx] --> n19[mock-requirements.ts]
-  n6[DemoView.tsx] --> n35[triage.ts]
+  n6[DemoView.tsx] --> n36[triage.ts]
   n4[DocumentHeader.tsx] --> n24[AccountMenu.tsx]
-  n4[DocumentHeader.tsx] --> n39[SectionNav.tsx]
+  n4[DocumentHeader.tsx] --> n40[SectionNav.tsx]
   n4[DocumentHeader.tsx] --> n11[RequirementsContext.tsx]
-  n4[DocumentHeader.tsx] --> n35[triage.ts]
+  n4[DocumentHeader.tsx] --> n36[triage.ts]
   n30[EvidenceLibrary.tsx] --> n11[RequirementsContext.tsx]
   n31[GapInterview.tsx] --> n26[AnswerStateBadge.tsx]
-  n31[GapInterview.tsx] --> n40[OpenQuestions.tsx]
+  n31[GapInterview.tsx] --> n41[OpenQuestions.tsx]
   n31[GapInterview.tsx] --> n11[RequirementsContext.tsx]
-  n36[GatingHero.tsx] --> n11[RequirementsContext.tsx]
+  n37[GatingHero.tsx] --> n11[RequirementsContext.tsx]
+  n37[GatingHero.tsx] --> n35[dedupe.ts]
   n8[GraphView.tsx] --> n34[ConfidenceIndicator.tsx]
   n8[GraphView.tsx] --> n11[RequirementsContext.tsx]
   n8[GraphView.tsx] --> n14[api.ts]
@@ -112,51 +114,52 @@ graph LR
   n18[MatrixView.tsx] --> n2[AppMain.tsx]
   n18[MatrixView.tsx] --> n33[ComplianceMatrix.tsx]
   n18[MatrixView.tsx] --> n4[DocumentHeader.tsx]
-  n18[MatrixView.tsx] --> n36[GatingHero.tsx]
+  n18[MatrixView.tsx] --> n37[GatingHero.tsx]
   n18[MatrixView.tsx] --> n32[NoTenderLoaded.tsx]
-  n18[MatrixView.tsx] --> n41[RequirementDrawer.tsx]
-  n18[MatrixView.tsx] --> n42[RequirementPanel.tsx]
-  n18[MatrixView.tsx] --> n43[RequirementSpine.tsx]
+  n18[MatrixView.tsx] --> n42[RequirementDrawer.tsx]
+  n18[MatrixView.tsx] --> n43[RequirementPanel.tsx]
+  n18[MatrixView.tsx] --> n44[RequirementSpine.tsx]
   n18[MatrixView.tsx] --> n11[RequirementsContext.tsx]
   n18[MatrixView.tsx] --> n14[api.ts]
-  n18[MatrixView.tsx] --> n35[triage.ts]
+  n18[MatrixView.tsx] --> n36[triage.ts]
   n18[MatrixView.tsx] --> n27[requirement.ts]
-  n40[OpenQuestions.tsx] --> n11[RequirementsContext.tsx]
-  n40[OpenQuestions.tsx] --> n27[requirement.ts]
-  n44[ProcessingView.tsx] --> n14[api.ts]
-  n41[RequirementDrawer.tsx] --> n42[RequirementPanel.tsx]
-  n41[RequirementDrawer.tsx] --> n27[requirement.ts]
-  n42[RequirementPanel.tsx] --> n25[AnswerPanel.tsx]
-  n42[RequirementPanel.tsx] --> n45[ApprovalStamp.tsx]
-  n42[RequirementPanel.tsx] --> n34[ConfidenceIndicator.tsx]
-  n42[RequirementPanel.tsx] --> n11[RequirementsContext.tsx]
-  n42[RequirementPanel.tsx] --> n14[api.ts]
-  n42[RequirementPanel.tsx] --> n27[requirement.ts]
-  n43[RequirementSpine.tsx] --> n34[ConfidenceIndicator.tsx]
-  n43[RequirementSpine.tsx] --> n35[triage.ts]
+  n41[OpenQuestions.tsx] --> n11[RequirementsContext.tsx]
+  n41[OpenQuestions.tsx] --> n27[requirement.ts]
+  n45[ProcessingView.tsx] --> n14[api.ts]
+  n42[RequirementDrawer.tsx] --> n43[RequirementPanel.tsx]
+  n42[RequirementDrawer.tsx] --> n27[requirement.ts]
+  n43[RequirementPanel.tsx] --> n25[AnswerPanel.tsx]
+  n43[RequirementPanel.tsx] --> n46[ApprovalStamp.tsx]
+  n43[RequirementPanel.tsx] --> n34[ConfidenceIndicator.tsx]
+  n43[RequirementPanel.tsx] --> n11[RequirementsContext.tsx]
+  n43[RequirementPanel.tsx] --> n14[api.ts]
+  n43[RequirementPanel.tsx] --> n27[requirement.ts]
+  n44[RequirementSpine.tsx] --> n34[ConfidenceIndicator.tsx]
+  n44[RequirementSpine.tsx] --> n36[triage.ts]
   n21[TendersList.tsx] --> n11[RequirementsContext.tsx]
   n21[TendersList.tsx] --> n14[api.ts]
-  n23[UploadDropzone.tsx] --> n44[ProcessingView.tsx]
+  n23[UploadDropzone.tsx] --> n45[ProcessingView.tsx]
   n23[UploadDropzone.tsx] --> n11[RequirementsContext.tsx]
   n23[UploadDropzone.tsx] --> n14[api.ts]
-  n46[HeroResolve.tsx] --> n33[ComplianceMatrix.tsx]
-  n46[HeroResolve.tsx] --> n36[GatingHero.tsx]
-  n46[HeroResolve.tsx] --> n11[RequirementsContext.tsx]
-  n46[HeroResolve.tsx] --> n35[triage.ts]
-  n16[Landing.tsx] --> n45[ApprovalStamp.tsx]
+  n47[HeroResolve.tsx] --> n33[ComplianceMatrix.tsx]
+  n47[HeroResolve.tsx] --> n37[GatingHero.tsx]
+  n47[HeroResolve.tsx] --> n11[RequirementsContext.tsx]
+  n47[HeroResolve.tsx] --> n36[triage.ts]
+  n16[Landing.tsx] --> n46[ApprovalStamp.tsx]
   n16[Landing.tsx] --> n13[BrandLogo.tsx]
   n16[Landing.tsx] --> n34[ConfidenceIndicator.tsx]
-  n16[Landing.tsx] --> n37[BookDemoButton.tsx]
-  n16[Landing.tsx] --> n38[BotanicalSprig.tsx]
-  n16[Landing.tsx] --> n46[HeroResolve.tsx]
+  n16[Landing.tsx] --> n38[BookDemoButton.tsx]
+  n16[Landing.tsx] --> n39[BotanicalSprig.tsx]
+  n16[Landing.tsx] --> n47[HeroResolve.tsx]
   n10[AuthContext.tsx] --> n14[api.ts]
   n11[RequirementsContext.tsx] --> n19[mock-requirements.ts]
   n11[RequirementsContext.tsx] --> n14[api.ts]
   n11[RequirementsContext.tsx] --> n27[requirement.ts]
   n19[mock-requirements.ts] --> n27[requirement.ts]
   n14[api.ts] --> n27[requirement.ts]
-  n35[triage.ts] --> n27[requirement.ts]
-  n47[error.tsx]
+  n35[dedupe.ts] --> n27[requirement.ts]
+  n36[triage.ts] --> n27[requirement.ts]
+  n48[error.tsx]
 ```
 
 ## Backend + Engine module graph (Python, tests excluded)
@@ -283,6 +286,7 @@ graph LR
 - `frontend/src/data/nhs-prebake.json`
 - `frontend/src/data/spso-prebake.json`
 - `frontend/src/lib/api.ts` — exports `isApiEnabled`
+- `frontend/src/lib/dedupe.ts` — exports `JACCARD_THRESHOLD`
 - `frontend/src/lib/triage.ts` — exports `GroupKey`
 - `frontend/src/types/requirement.ts` — exports `RequirementType`
 - `frontend/tsconfig.json`
@@ -323,6 +327,13 @@ graph LR
 - `engine/fixtures/capability/cap-001-company-profile.txt`
 - `engine/fixtures/capability/cap-002-case-studies.txt`
 - `engine/fixtures/capability/cap-003-policies.txt`
+- `engine/fixtures/capability/cap-004-method-statement.txt`
+- `engine/fixtures/capability/cap-005-experience-personnel.txt`
+- `engine/fixtures/capability/cap-006-commercial-terms.txt`
+- `engine/fixtures/capability/cap-007-client-references.txt`
+- `engine/fixtures/capability/cap-008-insurance.txt`
+- `engine/fixtures/capability/cap-009-health-safety-coshh.txt`
+- `engine/fixtures/capability/cap-010-quality-assurance.txt`
 - `engine/gold/mock.gold.json`
 - `engine/reconcile.py` — Reconcile/dedupe — pipeline step 5 (Generalist lane).
 - `engine/requirements.txt`
@@ -782,4 +793,4 @@ graph LR
 
 ---
 
-*568 tracked files mapped. Generated by `scripts/gen_codemap.py`.*
+*576 tracked files mapped. Generated by `scripts/gen_codemap.py`.*
