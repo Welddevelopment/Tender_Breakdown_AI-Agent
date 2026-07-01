@@ -123,6 +123,21 @@ export function MatrixView({ title }: { title: string }) {
     useRequirements();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [activeFilter, setActiveFilter] = useState<GroupKey | null>(null);
+  // Which groups the user has folded away. The long, low-priority groups start
+  // collapsed so a big tender opens short; the actionable ones start open. Held
+  // here (not in ComplianceMatrix) so the fold survives the matrix unmounting when
+  // a requirement opens the split.
+  const [collapsedGroups, setCollapsedGroups] = useState<Set<GroupKey>>(
+    () => new Set<GroupKey>(["ready", "decided"])
+  );
+  const toggleGroup = useCallback((key: GroupKey) => {
+    setCollapsedGroups((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }, []);
   const isWide = useIsWide();
 
   const triage = deriveTriage(requirements);
@@ -311,6 +326,8 @@ export function MatrixView({ title }: { title: string }) {
               onSelect={setSelectedId}
               onApprove={approve}
               activeFilter={activeFilter}
+              collapsed={collapsedGroups}
+              onToggleGroup={toggleGroup}
             />
             <p className="mt-6 font-mono text-[11px] text-ink-muted/70">
               Keys: j / k to move, a to approve a confident item.

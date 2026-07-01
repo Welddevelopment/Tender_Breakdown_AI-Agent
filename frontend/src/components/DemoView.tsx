@@ -9,18 +9,22 @@ import { ComplianceMatrix } from "@/components/ComplianceMatrix";
 import { GatingHero } from "@/components/GatingHero";
 import { GraphView } from "@/components/GraphView";
 import { SourceVerifyOverlay } from "@/components/SourceVerifyOverlay";
+import { DemoScrolly } from "@/components/demo/DemoScrolly";
 import { BookDemoButton } from "@/components/landing/BookDemoButton";
 import { BotanicalSprig } from "@/components/landing/BotanicalSprig";
 import { BrandLogo } from "@/components/BrandLogo";
 
 // A read-only walkthrough of the product for cold visitors arriving from the
-// landing "See the demo" links. It shows the real GatingHero + ComplianceMatrix
-// and the relationship graph over the demo tender, dressed in the Civic Record
-// language (paper grid, grainy raised sheets, ink bands, forest sprigs, staggered
-// reveals) so it sits with the hi-fi landing. The worklist is NON-INTERACTIVE
-// (no-op handlers + pointer-events-none): no upload, no SectionNav, nothing to
-// break. The content stays in the a11y tree so it reads; the only actions are
-// "Book a demo" and an opt-in link into the live product at /review.
+// landing "See the demo" links. It opens with a CINEMATIC SCROLL (DemoScrolly):
+// a pinned stage that transforms through the pipeline — a tender read into a
+// matrix, the deal-breaker lifting out, confidence shown honestly, answers with
+// receipts, the approval stamp, the graph — while short narrative steps scroll
+// past. Then, below the story, the same pipeline is shown for real on a frozen
+// tender: the real GatingHero + ComplianceMatrix and the relationship graph,
+// NON-INTERACTIVE (no-op handlers + pointer-events-none) except one scripted
+// proof — "see a deal-breaker in the document" opens the real SPSO page. Dressed
+// in the Civic Record language throughout. The only actions are "Book a demo"
+// and the source-verify overlay.
 
 const noop = () => {};
 
@@ -57,33 +61,55 @@ export function DemoView() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-[1160px] px-6 py-12 sm:py-16">
-        {/* Intro */}
-        <div className="hero-enter relative">
+      {/* Intro — tees up the scroll story. */}
+      <section className="mx-auto max-w-[1160px] px-6 pb-6 pt-12 sm:pt-16">
+        <div className="hero-enter relative max-w-[46rem]">
           <BotanicalSprig className="pointer-events-none absolute -left-3 -top-3 hidden h-14 w-14 text-forest/30 sm:block" />
           <p className="font-mono text-xs uppercase tracking-wide text-ink-muted">
-            Worked example, read-only
+            The product, end to end
           </p>
           <h1 className="mt-2 font-serif text-3xl font-semibold leading-tight tracking-tight text-ink sm:text-4xl">
-            {title}
+            From a hundred-page tender to a reviewed bid
           </h1>
           <p className="mt-4 max-w-[60ch] text-lg leading-relaxed text-ink-muted">
-            This is Bidframe reading one real public-sector tender. The
-            deal-breakers surface first, every requirement links back to its
-            clause, and nothing here is yours to upload or break.
+            Scroll to watch Bidframe read one public-sector tender. The
+            deal-breakers surface first, it flags what it is unsure of, and it
+            drafts each answer from your own documents with a citation.
           </p>
           <div className="mt-6">
             <BookDemoButton location="demo-intro" />
           </div>
         </div>
+      </section>
+
+      {/* The cinematic scroll: pinned stage + stepping narrative. */}
+      <section aria-label="How Bidframe works, step by step">
+        <DemoScrolly />
+      </section>
+
+      {/* The same pipeline, for real, on a frozen tender — the hands-on example. */}
+      <section className="mx-auto max-w-[1160px] px-6 py-16 sm:py-20">
+        <div className="relative max-w-[46rem]">
+          <p className="font-mono text-xs uppercase tracking-wide text-ink-muted">
+            Worked example, read-only
+          </p>
+          <h2 className="mt-2 font-serif text-2xl font-semibold leading-tight tracking-tight text-ink sm:text-3xl">
+            {title}
+          </h2>
+          <p className="mt-4 max-w-[60ch] text-lg leading-relaxed text-ink-muted">
+            This is the real thing, on one real tender. Nothing here is yours to
+            upload or break, but every requirement links back to its clause, and
+            you can open the document to check any line.
+          </p>
+        </div>
 
         {/* The worklist on a grainy raised sheet, frozen (read-only). */}
-        <section className="hero-enter-2 relative mt-12">
+        <div className="relative mt-8">
           <BotanicalSprig className="pointer-events-none absolute -right-3 -top-4 z-10 hidden h-16 w-16 rotate-180 text-forest/40 sm:block" />
           <div className="surface-grain rounded-xl border border-hairline bg-paper-raised p-5 shadow-[var(--depth-sheet)] sm:p-7">
-            <h2 className="mb-5 border-b border-hairline pb-3 font-serif text-lg font-semibold text-ink">
+            <h3 className="mb-5 border-b border-hairline pb-3 font-serif text-lg font-semibold text-ink">
               The requirements, read and triaged
-            </h2>
+            </h3>
             <div className="pointer-events-none select-none">
               <GatingHero />
               <ComplianceMatrix
@@ -106,21 +132,13 @@ export function DemoView() {
               </div>
             )}
           </div>
-        </section>
-
-        {verifyOpen && dealBreaker && (
-          <SourceVerifyOverlay
-            requirement={dealBreaker}
-            pdfUrl={demoPdfUrl}
-            onClose={() => setVerifyOpen(false)}
-          />
-        )}
+        </div>
 
         {/* The relationship graph, annotated. */}
-        <section className="hero-enter-3 mt-16">
-          <h2 className="font-serif text-2xl font-semibold leading-snug tracking-tight text-ink sm:text-3xl">
+        <div className="mt-16">
+          <h3 className="font-serif text-2xl font-semibold leading-snug tracking-tight text-ink sm:text-3xl">
             How the requirements connect
-          </h2>
+          </h3>
           <p className="mt-3 max-w-[64ch] text-lg leading-relaxed text-ink-muted">
             Every requirement is mapped to the award criterion that scores it and
             to the others it depends on, so you see where the marks live and what
@@ -146,8 +164,16 @@ export function DemoView() {
           <div className="mt-6 overflow-hidden rounded-xl border border-hairline bg-paper-raised p-3 shadow-[var(--depth-sheet)] sm:p-4">
             <GraphView interactive={false} />
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
+
+      {verifyOpen && dealBreaker && (
+        <SourceVerifyOverlay
+          requirement={dealBreaker}
+          pdfUrl={demoPdfUrl}
+          onClose={() => setVerifyOpen(false)}
+        />
+      )}
 
       {/* Closing call to action, on an ink band (Civic Record). */}
       <section className="bg-ink">
@@ -188,7 +214,7 @@ function Annotation({
 }) {
   return (
     <div className="rounded-lg border border-hairline bg-paper-raised p-4 shadow-[var(--depth-row)]">
-      <h3 className="flex items-center gap-2 font-sans text-sm font-semibold text-ink">
+      <h4 className="flex items-center gap-2 font-sans text-sm font-semibold text-ink">
         {oxblood && (
           <span
             aria-hidden
@@ -196,7 +222,7 @@ function Annotation({
           />
         )}
         {title}
-      </h3>
+      </h4>
       <p className="mt-1.5 text-sm leading-relaxed text-ink-muted">{children}</p>
     </div>
   );
