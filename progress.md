@@ -28,7 +28,7 @@
   recall 1.0 · gating accuracy 1.0 (both disqualifiers caught, zero over-flagging), 0 dangerous
   misses.**
 - **Next up:** set `OPENAI_API_KEY` on Render to make recall 1.0 live on hosted site; execute
-  Day-4 outreach (198 named leads); 33-issue frontend UX audit fix pass; expand gold set to 2+ tenders.
+  Day-4 outreach (198 named leads); expand gold set to 2+ tenders.
 
 ---
 
@@ -97,3 +97,4 @@
 ## Day 4 — Wed 01 Jul 2026
 
 - **00:04** — **Demo-day ops playbook complete** (P): `demo-day/` folder added with minute-by-minute run-sheet, 4 role-specific cue-cards, 12-scenario QA-prep, backup plan + pre-show checklist; frontend hardened across 10 components (ComplianceMatrix, GatingHero, MatrixView, UploadDropzone, OpenQuestions + API/triage); CRM quality pass — 100 leads re-verified, all 108 outreach drafts humanized (personalized openers), 8 new leads → **198 named targets** *(the team is ops-ready for demo day; no improvisation needed — and the full outreach funnel is battle-tested)*
+- **01:05** — **Frontend UX audit closed** (PR #9): render bugs fixed (mojibake + HTML entities in JSX), route-level error boundary, URL deep-link selection, clickable graph nodes → `/review`, undo/reopen decision, save-failure toast + extraction patience message; CRM outreach re-angled to free-pilot offer *(every audit item now resolved, deferred, or backend-lane — product is live-demo ready for a real upload)*
