@@ -131,12 +131,12 @@ function EvidenceRefItem({
         type="button"
         aria-expanded={open}
         onClick={() => setOpen((prev) => !prev)}
-        className="text-left text-ink-muted transition-colors hover:text-ink"
+        className="text-left text-accent transition-colors hover:text-ink"
       >
         Backed by your {doc}, p.{page}
       </button>
       {open && (
-        <p className="mt-2 rounded bg-paper-recessed p-2.5 leading-relaxed text-ink-muted shadow-[var(--depth-pressed)]">
+        <p className="mt-2 rounded bg-paper-recessed p-2.5 leading-relaxed text-accent shadow-[var(--depth-pressed)]">
           &ldquo;{excerpt}&rdquo;
         </p>
       )}

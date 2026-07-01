@@ -86,17 +86,17 @@ export function SourceVerifyOverlay({
             {requirement.text}
           </p>
 
-          <p className="mt-4 font-mono text-xs text-ink-muted">{ref}</p>
+          <p className="mt-4 font-mono text-xs text-accent">{ref}</p>
           {requirement.source_filename && (
             <p
-              className="truncate font-mono text-xs text-ink-muted/70"
+              className="truncate font-mono text-xs text-accent/70"
               title={requirement.source_filename}
             >
               {requirement.source_filename}
             </p>
           )}
 
-          <p className="mt-3 rounded bg-paper-recessed p-2.5 font-mono text-xs leading-relaxed text-ink-muted shadow-[var(--depth-pressed)]">
+          <p className="mt-3 rounded bg-paper-recessed p-2.5 font-mono text-xs leading-relaxed text-accent shadow-[var(--depth-pressed)]">
             &ldquo;{requirement.source_excerpt}&rdquo;
           </p>
 

@@ -243,7 +243,7 @@ function SourceRef({
   return (
     <div className="font-mono text-xs leading-relaxed">
       {filename && (
-        <p className="truncate text-ink-muted/70" title={filename}>
+        <p className="truncate text-accent/70" title={filename}>
           {filename}
         </p>
       )}
@@ -251,12 +251,12 @@ function SourceRef({
         type="button"
         aria-expanded={open}
         onClick={() => setOpen((prev) => !prev)}
-        className="text-left text-ink-muted transition-colors hover:text-ink"
+        className="text-left text-accent transition-colors hover:text-ink"
       >
         {ref}
       </button>
       {open && excerpt && (
-        <p className="mt-2 rounded bg-paper-recessed p-2.5 leading-relaxed text-ink-muted shadow-[var(--depth-pressed)]">
+        <p className="mt-2 rounded bg-paper-recessed p-2.5 leading-relaxed text-accent shadow-[var(--depth-pressed)]">
           &ldquo;{excerpt}&rdquo;
         </p>
       )}

@@ -34,7 +34,7 @@ export function EvidenceLibrary() {
               key={doc.doc_id}
               className="flex items-baseline justify-between gap-3 text-sm"
             >
-              <span className="min-w-0 truncate font-mono text-xs text-ink">
+              <span className="min-w-0 truncate font-mono text-xs text-accent">
                 {doc.filename}
               </span>
               <span className="shrink-0 font-mono text-xs text-ink-muted">
