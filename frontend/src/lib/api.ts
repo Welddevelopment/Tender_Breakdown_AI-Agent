@@ -121,6 +121,28 @@ export async function getTender(tenderId: string): Promise<Tender> {
   return (await res.json()) as Tender;
 }
 
+export interface TenderSummary {
+  tenderId: string;
+  title: string;
+  requirementCount: number;
+}
+
+// GET /tenders — a summary of every uploaded tender (id, title, requirement count).
+export async function getTenders(): Promise<TenderSummary[]> {
+  const res = await fetch(`${BASE}/tenders`);
+  if (!res.ok) throw await apiError(res, `Couldn't load your tenders (${res.status})`);
+  const rows = (await res.json()) as Array<{
+    tender_id: string;
+    title: string;
+    requirement_count: number;
+  }>;
+  return rows.map((r) => ({
+    tenderId: r.tender_id,
+    title: r.title,
+    requirementCount: r.requirement_count,
+  }));
+}
+
 // POST /tenders/{id}/draft — auditable autofill: draft a grounded answer per
 // requirement from the bidder's capability docs (or flag needs_input). Returns the
 // enriched tender. provider "openai" = precise grounded prose, "mock" = free

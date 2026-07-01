@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   ReactFlow,
@@ -286,8 +286,17 @@ function GraphKey() {
 }
 
 export function GraphView({ interactive = true }: { interactive?: boolean }) {
-  const { requirements } = useRequirements();
+  const { requirements: allRequirements } = useRequirements();
   const router = useRouter();
+  const [gatingOnly, setGatingOnly] = useState(false);
+
+  // #26: a "deal-breakers only" lens for large tenders. Filter before the layout
+  // memo so nodes, edges and counts all reflect it; only offered when there is
+  // something to filter to.
+  const gatingCount = allRequirements.filter((r) => r.is_gating).length;
+  const requirements = gatingOnly
+    ? allRequirements.filter((r) => r.is_gating)
+    : allRequirements;
 
   // Clicking a requirement node opens it in the matrix (deep link via ?req=).
   // Disabled on the read-only demo (interactive=false).
@@ -430,7 +439,7 @@ export function GraphView({ interactive = true }: { interactive?: boolean }) {
     };
   }, [requirements]);
 
-  if (requirements.length === 0) {
+  if (allRequirements.length === 0) {
     return (
       <p className="text-sm text-ink-muted">
         No requirements yet. Upload a tender to see how its requirements connect.
@@ -454,6 +463,22 @@ export function GraphView({ interactive = true }: { interactive?: boolean }) {
           <p className="mt-1 font-mono text-xs text-ink-muted">
             Click a requirement to open it in the matrix.
           </p>
+        )}
+        {gatingCount > 0 && (
+          <button
+            type="button"
+            onClick={() => setGatingOnly((v) => !v)}
+            aria-pressed={gatingOnly}
+            className="mt-2 inline-flex items-center gap-1.5 rounded-md border border-hairline px-2.5 py-1 font-mono text-[11px] uppercase tracking-wide text-ink-muted transition-colors hover:bg-paper-raised hover:text-ink"
+          >
+            <span
+              className={`h-2 w-2 rounded-full ${
+                gatingOnly ? "bg-signal-oxblood" : "border border-hairline"
+              }`}
+              aria-hidden
+            />
+            {gatingOnly ? "Showing deal-breakers only" : "Deal-breakers only"}
+          </button>
         )}
       </div>
 

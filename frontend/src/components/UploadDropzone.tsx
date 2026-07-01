@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   ApiError,
   getJob,
@@ -37,6 +38,15 @@ export function UploadDropzone() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [job, setJob] = useState<JobStatus | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
+
+  // #2: on a live extraction, flow straight into the matrix after a brief reveal,
+  // so upload resolves into the worklist rather than dead-ending on a button.
+  useEffect(() => {
+    if (stage !== "done" || !isApiEnabled()) return;
+    const timer = window.setTimeout(() => router.push("/review"), 1800);
+    return () => window.clearTimeout(timer);
+  }, [stage, router]);
 
   async function handleFiles(files: FileList | null) {
     if (stage === "extracting") return;
@@ -168,6 +178,11 @@ export function UploadDropzone() {
             </>
           )}
         </p>
+        {isApiEnabled() && (
+          <p className="mt-1 font-mono text-xs text-ink-muted">
+            Opening your compliance matrix…
+          </p>
+        )}
         <div className="mt-5 flex items-center gap-4">
           <Link
             href="/review"
