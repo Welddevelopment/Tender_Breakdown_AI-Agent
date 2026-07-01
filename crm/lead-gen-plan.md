@@ -130,3 +130,15 @@ quality softens when it drifts into generic grants or procurement advisory. Comp
 fire/security is crowded; the better next seams are lift frameworks, drainage, line marking, clinical/washroom
 waste, winter gritting and asbestos. Education/AP/SEND still produces strong Highs, but the obvious national
 names are mostly tapped, so future passes need directory/geography searches and strict visible-email checks.
+
+## Round 10 - compliance operators and framework SMEs (2026-07-01)
+Added 35 verified email-bearing leads, taking the CRM to L-0355. The batch stayed strong at 25 High and 10
+Medium after dropping one Low-fit consultancy. Best seams were lift maintenance, drainage/highways/line marking,
+water hygiene/legionella, asbestos and public-estate minor works. Regional built-environment searches still work
+when tied to named frameworks or council/NHS/school case studies; broad roofing/HVAC searches are now duplicate-heavy.
+
+School ICT, occupational health and apprenticeship training were productive only where a framework, DPS or
+local-authority route was visible. Next loop should start from these tighter patterns rather than broad supplier
+search: compliance operators with direct public-estate pages; NEUPC/SPA/NHS/SBS/Fusion21-style framework suppliers;
+and school ICT/OH/training suppliers with public email plus framework proof. If the next pass falls below roughly
+half High leads, pause and re-plan before continuing.

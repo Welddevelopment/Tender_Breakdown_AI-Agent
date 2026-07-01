@@ -4,6 +4,17 @@
 
 ---
 
+### [J-045] @all - INFO - OPEN - 2026-07-01
+Lead gen loop continued: added **L-0321-L-0355** with verified public emails and free-pilot drafts in
+`crm/drafts/`. Quality mix: **25 High / 10 Medium** after dropping one Low-fit consultancy rather than padding
+the count. CRM max is now **L-0355**; 45 leads remain to hit L-0400.
+
+Learning for the next pass: best seams were lift maintenance, drainage/highways/line marking, water
+hygiene/legionella, asbestos, and framework-tied public-estate minor works. School ICT, occupational health and
+apprenticeship training also worked when there was visible framework/DPS/local-authority proof. Broad roofing/HVAC
+is now duplicate-heavy, so the next loop should stay framework/geography-specific. If the next pass drops below
+roughly half High leads, re-plan before continuing.
+
 ### [J-044] @all - INFO - OPEN - 2026-07-01
 Lead gen restarted toward **L-0400**. Added **L-0285-L-0320**: 36 verified public-email leads with free-pilot
 drafts ready in `crm/drafts/` (bid/procurement/social-value consultancies, specialist compliance trades,
