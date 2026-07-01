@@ -22,13 +22,13 @@
   **demo-locked** — no further features; judge-proof on any PDF input. Frontend civic-record design
   sweep complete (graph view, landing, `/demo` route, all components). `render.yaml` fixed (G-009)
   — deployed API now runs real reconcile + autofill. **Demo-day playbook complete:** run-sheet,
-  4 cue-cards, QA prep (12 scenarios), backup plan all in `demo-day/`. CRM at **320+ named leads**
+  4 cue-cards, QA prep (12 scenarios), backup plan all in `demo-day/`. CRM at **400 named leads** (L-0400 goal hit)
   with humanized drafts across every public-sector SME segment (toward L-0400 goal).
 - **Headline number:** SPSO tender (pp.1–6), OpenAI extractor → **recall 0.947 (18/19), gating
   recall 1.0 · gating accuracy 1.0 (both disqualifiers caught, zero over-flagging), 0 dangerous
   misses.**
 - **Next up:** set `OPENAI_API_KEY` on Render to make recall 1.0 live on hosted site; execute
-  Day-4 outreach (320+ named leads); execute J-043 graph reframe + PDF.js source-verification build.
+  Day-4 outreach (400 named leads ready); execute J-043 graph reframe + PDF.js source-verification build.
 
 ---
 
@@ -103,3 +103,4 @@
 - **04:04** — **Invite-only account system shipped** (PR #15): self-hosted JWT auth — pbkdf2 hashing, stateless tokens, per-tender ownership scoping (other user's tender reads as 404); `/auth/login` + `/auth/me`; AuthGate closes `/upload /review /answers /graph`; mock/demo build passes through ungated; 30/30 backend auth checks pass *(Bidframe is now a gated paid product — no public signup, admin-created accounts only; live API and data are private to each bidder)*
 - **05:04** — **Multi-file tender packs + QOL polish integrated with auth** (test/tonight → main, 32/32 checks pass): backend upload now accepts packs AND stays owner-scoped; frontend gains multi-file `uploadTender`, TendersList, EvidenceLibrary, graph filter, keyboard nav, resolve transition; `/demo` scrollytelling design pack added (`demo-scrolly-design-pack.md`) *(three parallel branches — auth, multi-file, QOL — unified into one working system on `main`)*
 - **08:05** — Graph reframe + PDF.js source-verification plan locked (J-043, `graph-and-verification-deep-plan.md`): `/graph` pivots to criteria marks-ladder + heatmap, split-screen PDF.js text-layer highlight for claim verification; CRM extended to L-0320+ toward L-0400 goal *(next frontend build direction confirmed with a concrete spec; outreach funnel now 320+ named targets)*
+- **09:04** — **CRM hit the L-0400 goal**: 400 named leads reached across all public-sector SME segments; append-only `crm/_merge-rows.js` merge helper added *(outreach funnel at the Day-4 target — every named lead has a humanized draft ready to send)*
