@@ -39,9 +39,12 @@ soft, paper, comfort. They are paired on purpose, because each fixes the other's
 - **The civic record stops the warmth going twee.** Paper and softness alone drift toward scrapbook-cosy,
   which wrecks credibility.
 
-The holding rule: **warmth is the material, the civic record is the form, and the form leads. Where they
-conflict, structure wins.** That one rule keeps this from becoming either a cold form or a craft project.
-The single failure mode to watch for is the cold tax-form, and warmth at 45% is the antidote.
+The holding rule: **warmth is the material, the civic record is the form, and the form leads by default.
+Where they conflict, structure usually wins, but not always.** A surface with a reason to let warmth or
+expression lead can take it, the way the landing page does (a sanctioned departure, below). That default
+keeps this from becoming a cold form or a craft project. Watch for two failure modes, not one: the cold
+tax-form, whose antidote is warmth at 45%, and the flat, timid screen that risked nothing, whose antidote
+is a deliberate bold move. Restraint is a tool here, not the goal.
 
 ## The material: warmth at 45%
 
@@ -150,6 +153,10 @@ record is not decoration on top of warming, it is the answer to "the composition
 
 ## Guardrails (so the docs have no holes and nothing slips into slop)
 
+These stop the generic, they do not cap the ambition. Each is a default with a stated reason, so depart
+from it deliberately when a surface is better for it. What you cannot do is drift past one by accident.
+The test is the same throughout: can you name the reason.
+
 - **Real data, not decorative numbering.** The register's clause references are the schema's `source_clause`
   and `id`. SLOP-CHECK bans decorative kicker numbers (01 / 02 / 03), not a real compliance register. The
   two are different things.
@@ -157,8 +164,9 @@ record is not decoration on top of warming, it is the answer to "the composition
   everywhere. The civic look comes from structure and restraint, not period pastiche. This is what keeps
   "the civic record" from becoming "old newspaper" slop.
 - **The stamp is a clean mark**, never a texture.
-- **Warmth is capped at the 45% tokens.** The brutalist discipline keeps depth from creeping up. One soft
-  shadow language, raised surfaces only.
+- **Warmth sits around the 45% tokens by default.** The brutalist discipline keeps depth from creeping up
+  everywhere by habit. One soft shadow language on raised surfaces is the resting state, but a hero surface
+  (a landing, the upload resolve) may push past it on purpose, as a named departure.
 - **Grain only on raised surfaces**, never on the page or the scanning rows.
 - **Light paper only. There is no dark mode**: the document is paper.
 
@@ -183,10 +191,13 @@ from scratch later:
 
 ## The civic-record check
 
-Run a screen past these. Any "no" is a blocker, not a nitpick.
+Run a screen past these. Treat a "no" as a prompt to check your intent, not an automatic veto: a
+deliberate, nameable departure can answer "no" and still be right. An accidental "no", or a sixth "the
+screen is flat and safe", is the real blocker.
 
 1. Does it read as an official record at a glance (a masthead, one firm rule, references present)?
-2. Is depth and grain only on raised surfaces, never on the scanning rows or the page?
+2. Are depth and grain earning their place, kept off the scanning rows so they still scan?
 3. Is every official flourish backed by real data, with no decorative numbering and no nostalgia costume?
-4. Is the warmth at the 45% tokens, not crept up, with one shadow language?
+4. Is the warmth deliberate rather than crept-up, with one coherent shadow language?
 5. Does it still pass the base slop check and the greyscale test?
+6. Did the screen take at least one real swing, or did it play flat and safe?

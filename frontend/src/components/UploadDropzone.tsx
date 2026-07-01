@@ -12,6 +12,7 @@ import {
 } from "@/lib/api";
 import { useRequirements } from "@/context/RequirementsContext";
 import { ProcessingView } from "./ProcessingView";
+import { RegisterPreview } from "./RegisterPreview";
 
 type UploadStage = "idle" | "extracting" | "done" | "error";
 
@@ -252,7 +253,9 @@ export function UploadDropzone() {
   }
 
   return (
-    <div className="w-full max-w-3xl">
+    // Centred intake: one prominent slot as the single focal action, grounded on
+    // the blank register it files into.
+    <div className="w-full text-center">
       <div
         role="button"
         tabIndex={0}
@@ -266,36 +269,56 @@ export function UploadDropzone() {
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
-        className={`surface-grain flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed px-8 py-24 text-center shadow-[var(--depth-sheet)] transition-colors ${
+        className={`surface-grain group flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-8 py-20 shadow-[var(--depth-sheet)] transition-colors ${
           isDragging
             ? "border-forest bg-forest/5"
             : "border-hairline bg-paper-raised hover:border-forest hover:bg-paper"
         }`}
       >
-        <span className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-paper-recessed text-ink-muted shadow-[var(--depth-pressed)]">
+        {/* A document being filed, not a generic upload arrow: a sheet with a
+            folded corner and ruled lines, echoing the register below. */}
+        <span
+          className={`inline-flex h-20 w-20 items-center justify-center rounded-full bg-paper-recessed shadow-[var(--depth-pressed)] transition-colors ${
+            isDragging ? "text-forest" : "text-ink-muted group-hover:text-forest"
+          }`}
+        >
           <svg
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth={1.75}
+            strokeWidth={1.6}
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="h-7 w-7"
+            className="h-9 w-9"
             aria-hidden
           >
-            <path d="M12 16V4" />
-            <path d="m7 9 5-5 5 5" />
-            <path d="M5 16v2a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2" />
+            <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+            <path d="M14 3v5h5" />
+            <path d="M8.5 13h7" />
+            <path d="M8.5 16.5h4.5" />
           </svg>
         </span>
-        <p className="mt-5 text-base font-medium text-ink">
-          Drop your tender here, or click to browse
+
+        <p className="mt-6 font-serif text-2xl font-semibold leading-tight text-ink">
+          {isDragging ? "Let go to file it" : "Drop your tender here, or browse"}
         </p>
-        <p className="mt-1 text-sm text-ink-muted">
+        <p className="mt-2 max-w-[52ch] text-sm leading-relaxed text-ink-muted">
           {isApiEnabled()
-            ? "One PDF or the whole pack. We'll read them all into a compliance matrix."
+            ? "One PDF or the whole pack. We read them into a compliance matrix and flag the deal-breakers."
             : "No live API is configured here, so upload opens the worked example honestly."}
         </p>
+        <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.16em] text-ink-muted">
+          PDF · up to 50MB
+        </p>
+      </div>
+
+      {/* The form it files into. The requirements land here as a matrix, so the
+          empty state shows the shape of its own output. */}
+      <div className="mx-auto mt-8 max-w-md">
+        <p className="mb-2.5 font-mono text-[11px] text-ink-muted">
+          Files into your compliance matrix
+        </p>
+        <RegisterPreview />
       </div>
 
       <input

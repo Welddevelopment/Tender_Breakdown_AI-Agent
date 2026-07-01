@@ -8,16 +8,11 @@ export const metadata = { title: "Upload · Bidframe" };
 export default function UploadPage() {
   return (
     <AuthGate>
-      <DocumentHeader title="Upload a tender" />
+      <DocumentHeader title="Upload a tender" showReference={false} />
       <AppMain>
-        {/* The upload entry is the one screen we centre: a single focal action,
-            no worklist to anchor to a reading edge yet. */}
-        <div className="mx-auto flex max-w-3xl flex-col items-center pt-6 text-center">
-          <p className="mb-6 max-w-[60ch] text-sm text-ink-muted">
-            Drop in a tender PDF and we&rsquo;ll pull out the requirements.
-            Deal-breakers are flagged, uncertainty surfaced.
-          </p>
-
+        {/* The upload entry: one prominent, centred slot as the single focal
+            action, grounded on the blank register it files into. */}
+        <div className="mx-auto max-w-2xl pt-10">
           <UploadDropzone />
         </div>
       </AppMain>

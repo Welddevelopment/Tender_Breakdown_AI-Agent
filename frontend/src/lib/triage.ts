@@ -73,6 +73,32 @@ export function pendingStatusWord(req: Requirement): string | null {
   return "Worth a second look";
 }
 
+// How the matrix orders the rows within a group. 'confidence' is the default
+// worklist order: riskiest (lowest confidence) first, so the items most likely
+// to need a human float to the top. 'page' follows the document; 'category'
+// gathers like content together.
+export type SortKey = "confidence" | "page" | "category";
+
+// A pure comparator for the chosen sort. Kept here (not in the component) so the
+// ordering stays testable and shared. Confidence sorts ascending (riskiest
+// first); page follows the source; category sorts by its label. Each falls back
+// to source order via a stable Array.prototype.sort.
+export function compareRequirements(
+  sortBy: SortKey
+): (a: Requirement, b: Requirement) => number {
+  return (a, b) => {
+    switch (sortBy) {
+      case "page":
+        return a.source_page - b.source_page;
+      case "category":
+        return a.category.localeCompare(b.category);
+      case "confidence":
+      default:
+        return a.confidence - b.confidence;
+    }
+  };
+}
+
 export interface TriageGroup {
   key: GroupKey;
   label: string;

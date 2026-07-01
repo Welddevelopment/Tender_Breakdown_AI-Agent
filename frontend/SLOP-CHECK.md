@@ -12,6 +12,13 @@ afternoon for a normal person, so the product has to feel calm, warm, and credib
 off palette, one generic layout, one hype headline, and procurement people stop trusting
 it. This protocol turns "do not look like AI" into rules you can actually check.
 
+But slop has a twin, and it is the one biting us now: **flat, timid design**. When every rule
+reads as a prohibition, the safe move is to make nothing, and a screen where no choice was risked
+is as much a tell as a generic one. So read this doc as a floor, not a ceiling. Its job is to kill
+the generic, not to talk you out of a bold, deliberate move. A screen that took a real swing and is
+a little rough beats a screen that played it flat. If you are unsure whether something is too much,
+that usually means it is worth trying, then editing back.
+
 ## Foundation (the settled part)
 
 - **Palette: Paper and Forest.** Warm paper background, never pure white. Deep earthy
@@ -41,8 +48,9 @@ it. This protocol turns "do not look like AI" into rules you can actually check.
 2. **Name one intentional choice.** Point to a single deliberate, slightly unexpected
    decision on the screen (an off center anchor, a dense table that earns its density, a
    confident piece of whitespace). If you cannot name one, it is not done.
-3. **Banned scan.** Run the screen against the banned list below. Any hit is a blocker,
-   not a nitpick.
+3. **Tells scan.** Run the screen against the two tiers below. A tier-1 hit (a genuine slop
+   giveaway) is a blocker. A tier-2 default you have broken is fine if you can name why, and only
+   a prompt to check yourself if you cannot.
 4. **Real content.** No lorem, no three identical demo rows. Use real tender titles,
    awkward field names, answers long enough to wrap. Design the empty state and the error
    state too.
@@ -58,69 +66,80 @@ it. This protocol turns "do not look like AI" into rules you can actually check.
   language used sparingly.
 - The AI reads as a helpful colleague, never silent automation. A suggestion is a draft you
   approve, and it shows where it came from.
+- Explore, then edit down. Push a surface further than feels safe, find the one bold move it
+  wants, then trim back to what earns its place. Flat is a failure mode, not a safe harbour.
 
-## The banned list (hard nos)
+## The tells, in two tiers
 
-These are blockers. If a wireframe contains any of these, it does not ship.
+The old version of this list was one flat wall of "hard nos", and that is part of why screens went
+flat: when everything is forbidden, the safe move is to make nothing. So it is split in two. Tier 1
+is the genuine slop giveaways, the actual fingerprints of generated design. Catch one and it does not
+ship. Tier 2 is the house style: strong defaults with a reason attached. Break a tier-2 default when
+the screen is better for it and you can say why out loud. A broken default with intent is design. A
+broken default by accident is slop. The test is whether you can name the reason.
 
-**Color and surface**
-- Blue, teal, purple, or indigo as a primary or accent. These are the number one tell.
-- Status colors leaking into chrome. The signal colors (the confidence red, amber, yellow,
-  green) live only on status carriers (the confidence dot, a thin answer edge, a status cell),
-  never on buttons, nav, headings, or backgrounds. See DESIGN-SYSTEM section 3.
+### Tier 1 — real tells (hard nos)
+
+Any hit is a blocker.
+
+**Colour and surface**
+- Blue, teal, purple, or indigo sprayed as a generic primary or accent. The number one tell. (Our
+  cool accent teal is the one earned exception: it carries a single meaning, "traceable to source". A
+  new cool colour with no meaning is the tell.)
 - Gradients used as decoration. Glassmorphism. Neon on dark.
 - Pure white (#fff) or pure black (#000).
-
-**Type and headlines**
-- Really long headlines. Keep them short and human. If it runs to two long lines, cut it.
-- Eyebrow labels (the little kicker line above a heading). Not needed.
-- Numbered website sections (decorative 01 / 02 / 03 kicker markers). The content should carry itself.
-  This is not the register: real clause and requirement references (`Section 4.2.1`, `req-0001`) are data,
-  and the matrix is allowed to carry them down a quiet margin (see DESIGN-SYSTEM section 13).
-- Gradient text. Centered paragraph blocks. One weight doing every job.
-
-**Components**
-- Ugly pills. No pill buttons or pill badges as a default decorative habit. A pill has to
-  earn its shape, and most do not.
-- An icon in every card header. Icons aid scanning (status, actions); they are not
-  decoration.
-- A card wrapped around every single element on the page. Cards nested inside cards.
-- Oversized bezels and chunky rounded accent bars (the fat colored slab running down the
-  side of a panel, card, or field). Accent borders stay thin (hairline up to about 2px) and
-  near square. Carry status with the confidence dot and its label, not a big colored block.
+- Gradient text.
 
 **Layout**
-- The three column icon card feature grid. Bento grids. Hero with a glowing blob.
-- Everything centered and symmetric with equal padding everywhere. Find one point of
-  intentional tension.
-- A persistent left sidebar or nav rail on what is a single-document app. One tender fills the
-  screen; navigation is contextual and lives in the header. See DESIGN-SYSTEM section 12.
+- The three-column icon-card feature grid. Bento grids. A hero with a glowing blob. The stock
+  generated layouts.
 - A row of summary stat tiles standing in for the honest triage worklist.
-- Prose (requirements, drafted answers) stretched to the full container width. Hold reading text
-  to a comfortable measure (about 64 characters).
-- Equal weight and equal interactivity on every row regardless of stakes. The risky and the safe
-  must not look or behave identically: the layout carries the stakes.
-
-**Material and the civic record** (see DESIGN-SYSTEM section 13)
-- Paper grain or texture on the scanning matrix rows or the page background. Grain lives only on raised
-  surfaces (the lifted sheet, the gating callout, the upload card).
-- Depth that does not mean focus. If a surface is not the thing being worked on, it does not lift, and
-  nothing floats decoratively. Warmth stays at the 45% tokens, it does not creep up.
-- More than one heavy (2px ink) rule per screen. The masthead rule is the one.
-- Nostalgia or newspaper costume: drop caps, halftone, sepia, faux-newsprint. The civic look comes from
-  structure and restraint, not period pastiche.
-- A distressed or rubber-stamp texture on the approval mark. Keep it a clean geometric mark.
 
 **Copy**
-- Em dashes. Banned from all copy, everywhere. Use a period, a comma, or a colon instead.
-- "Supercharge", "Seamlessly", "Unlock", "Elevate", "Effortlessly", and three word hype
-  taglines.
+- Em dashes. Banned from all product copy. Use a period, a comma, or a colon instead.
+- "Supercharge", "Seamlessly", "Unlock", "Elevate", "Effortlessly", and three-word hype taglines.
 - Exclamation marks and vague benefit speak. Say the specific, real thing.
 
 **Content and motion**
 - Lorem ipsum or suspiciously clean placeholder data. Undesigned empty and error states.
-- Fade up on scroll applied to everything. Floating elements. The same default shadow on
-  every surface.
+- Fade-up-on-scroll applied to everything. The same default shadow on every surface with no meaning.
+
+### Tier 2 — strong defaults (break them on purpose)
+
+The settled house style, with the reason for each. This is where the flatness has been creeping in,
+so treat these as starting points, not walls. Depart deliberately, and be able to name why.
+
+- **Status colour rides on status carriers.** By default the signal hues (confidence red, amber,
+  yellow, green) stay off buttons, nav, headings, and backgrounds, so status reads clean and survives
+  the greyscale test (see DESIGN-SYSTEM section 3). Explore other emphasis freely, just keep status
+  legible without colour.
+- **Grain and depth on raised surfaces.** Default: grain and lift on the lifted sheet, gating callout,
+  and upload card, kept off the scanning rows and the page so the rows still scan. A hero surface can
+  carry more material as a named departure.
+- **Depth means focus.** By default nothing floats decoratively and only the worked surface lifts. A
+  deliberate focal moment (a hero, the upload resolve) can break this.
+- **One heavy (2px ink) rule per screen.** A good default for rhythm; the masthead rule is the one. A
+  screen with a different structural idea can rule differently.
+- **Short, human headlines.** Keep them tight; if one runs to two long lines, look hard at it. A longer
+  line can still earn its place.
+- **Pills, eyebrows, kickers, header icons, accent bars, card wrappers.** None are banned outright.
+  They are just what generators reach for by habit, so each has to earn its place rather than appear by
+  default. An eyebrow that orients, a pill carrying real state, header icons that aid scanning, a
+  register of real clause refs (`Section 4.2.1`, `req-0001`, which is data, not decoration): all fine.
+  What to avoid is a card around every element, cards nested in cards, and a fat colour slab where a
+  thin near-square accent (hairline up to ~2px) and the confidence dot would carry the status.
+- **Hold reading prose to a comfortable measure** (about 64 characters). A readability default for
+  requirements and drafted answers, not a cap on every text element.
+- **The layout carries the stakes.** The risky and the safe should not look or behave identically; give
+  gating rows more weight. This one is close to a rule, because it is the product's honesty.
+- **Find one point of intentional tension.** Not everything centred and symmetric with equal padding.
+  This is less a restriction than the whole invitation: an off-centre anchor, a dense table that earns
+  its density, a confident asymmetry, a bold focal move. This is the exploration the doc wants.
+- **Navigation stays in the header** on this single-document app, no persistent left rail (see
+  DESIGN-SYSTEM section 12). One tender fills the screen. This one holds.
+- **Nostalgia costume stays out.** No drop caps, halftone, sepia, faux-newsprint. The civic look comes
+  from structure, not period pastiche, and the approval mark stays a clean geometric stamp, never a
+  distressed texture. This one holds too.
 
 ---
 
