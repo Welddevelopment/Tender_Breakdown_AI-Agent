@@ -80,12 +80,21 @@ class SourceDoc(BaseModel):
     page_count: int = 0
 
 
+class Criterion(BaseModel):
+    """A published award criterion (#27 — the graph needs the real name/weight,
+    not just an opaque criteria_ref id). id matches Requirement.criteria_ref."""
+    id: str
+    name: str
+    weight: int
+
+
 class TenderResponse(BaseModel):
     tender_id: str
     title: str
     requirements: list[Requirement] = Field(default_factory=list)
     capability_docs: list[CapabilityDoc] = Field(default_factory=list)
     source_docs: list[SourceDoc] = Field(default_factory=list)
+    award_criteria: list[Criterion] = Field(default_factory=list)
 
 
 class DecisionUpdate(BaseModel):

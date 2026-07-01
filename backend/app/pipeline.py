@@ -24,6 +24,7 @@ from .ingest import ingest_pdf, PDFIngestError
 from .schema import (
     Answer,
     CapabilityDoc,
+    Criterion,
     OpenQuestion,
     Requirement,
     SourceDoc,
@@ -254,7 +255,10 @@ def run_pipeline_multi(
     emit("reconcile", "Merging duplicates", 0.82, requirement_count=len(requirements))
 
     # 5. Graph + autofill over the combined pack.
-    build_graph(requirements, "\n".join(full_texts))
+    detected_criteria = build_graph(requirements, "\n".join(full_texts))
+    award_criteria = [
+        Criterion(id=c["id"], name=c["name"], weight=c["weight"]) for c in detected_criteria
+    ]
     deal_breakers = sum(1 for r in requirements if r.is_gating)
     emit("graph", "Mapping award criteria and flagging deal-breakers", 0.90,
          requirement_count=len(requirements), deal_breaker_count=deal_breakers)
@@ -266,6 +270,7 @@ def run_pipeline_multi(
     return TenderResponse(
         tender_id=tender_id, title=title, requirements=requirements,
         capability_docs=capability_docs, source_docs=source_docs,
+        award_criteria=award_criteria,
     )
 
 

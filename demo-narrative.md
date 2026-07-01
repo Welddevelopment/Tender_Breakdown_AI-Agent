@@ -20,7 +20,7 @@ your response from your own evidence. The human approves every call.**
 1. **The before.** *(One sentence, no screen.)* "A bid manager spends about three weeks reading a tender
    like this by hand. Miss one mandatory requirement and the whole bid is thrown out — weeks of work, gone."
 2. **Upload.** Drag the tender PDF in. (Let the judge pick it if we're confident.) "We drop in a real
-   public-sector tender. 137 pages."
+   public-sector tender. 13 pages."
 3. **The matrix populates.** "In under a minute, every requirement — pulled out, classified, scored."
 4. **🦸 The catch (hero moment).** Point at the red deal-breaker banner. "This one's a pass/fail gate.
    Miss it and you're disqualified. It's the first thing you see — not buried on page 61."

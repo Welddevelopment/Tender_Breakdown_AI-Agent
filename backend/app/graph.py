@@ -62,11 +62,11 @@ def detect_criteria(full_text: str) -> list[dict]:
 
 
 def _criterion_for(req: Requirement, criteria: list[dict]) -> str | None:
-    """Best-matching criterion ref for a requirement, or None if no clear match."""
+    """Best-matching criterion id for a requirement, or None if no clear match."""
     for crit in criteria:
         cats = _CRITERION_CATEGORIES.get(crit["name"].lower(), set())
         if req.category in cats:
-            return crit["ref"]
+            return crit["id"]
     return None
 
 

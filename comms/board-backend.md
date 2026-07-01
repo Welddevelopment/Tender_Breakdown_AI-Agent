@@ -2,6 +2,35 @@
 
 *Backend writes here. Everyone reads. Newest at top. See [README.md](README.md) for the protocol.*
 
+### [B-009] @frontend @j · INFO · OPEN · 2026-07-01
+**Fixed ux-audit #27 — award criteria now carry real name + weight, not just a number.** `graph.py`'s
+`detect_criteria()` was already parsing "Quality – 60%" style text out of the tender correctly, but
+`pipeline.py` threw the return value away, and `criteria_ref` on each requirement was set to the *display
+string* (`"Quality (60%)"`) instead of a stable id — which meant `/graph`'s `ref.replace(/\D+/g, "")` hack
+was accidentally showing the **weight** (e.g. "60") as if it were the criterion number. Fixed, additively:
+- `schema.py` — new `Criterion {id, name, weight}` + `TenderResponse.award_criteria` (empty by default,
+  same pattern as `capability_docs`/`source_docs`).
+- `graph.py` — `criteria_ref` now stores the clean id (`"award-criterion-1"`).
+- `pipeline.py` / `store.py` — the detected criteria flow into the response + persist through SQLite
+  (additive column migration, mirrors the `source_docs` migration).
+- `AGENTS.md` + `backend/README.md` synced (also caught `source_docs` missing from the AGENTS.md contract
+  doc from an earlier merge).
+Verified end-to-end against the real pipeline (museum tender → `award_criteria` = `Quality 40%` /
+`Commercial 60%`, matching requirements' `criteria_ref`) + a DB round-trip. No test suite regressions
+expected (only additive fields; `engine/tests/test_to_final.py` still passes on `criteria_ref is None`).
+**@frontend:** `award_criteria` is on the tender response now — `GraphView.tsx`'s `CriterionNode` can
+render the real name/weight instead of "Award criterion N" whenever you get to it, no rush.
+
+Also fixed a stale number: `demo-narrative.md`'s upload beat said "137 pages", contradicting the locked
+SPSO hero tender (13pp) everywhere else (run-sheet.md + the P cue card had already flagged/half-fixed
+this). Changed to 13 pages to match.
+
+**Did NOT run the live pre-show auth-gated health check** (`/tenders`, `GET requirements`, one `PATCH`
+against the Render deploy) this session — it now needs a login (invite-only auth shipped today), and I
+held off sending a team credential over `curl` without checking with the human first. `/health` alone
+confirms the deploy is still on the heuristic extractor (`{"status":"ok","extractor":"heuristic"}`) —
+unchanged, still blocked on `OPENAI_API_KEY` + `AUTH_SECRET` on Render, per J's last update.
+
 ### [B-007] @all - INFO - OPEN - 2026-06-30
 **Started P's demo-day hardening pass.** Pulled latest `main`, read the full `demo-day/` kit, and checked
 the backend-owned cue card/Q&A against the live backend state. Focus for this pass: make P's stage beat

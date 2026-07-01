@@ -137,7 +137,7 @@ Every requirement flowing through the system matches this schema. Frontend build
 
 `answer` and `open_questions` are **additive** (Day-1 autofill extension — see `autofill-scope-decision.md`). Both nullable/empty until the autofill pipeline runs; the compliance matrix renders without them. `draft_answer` stays populated (= `answer.text`) for v1 so nothing breaks during migration.
 
-A tender response: `{ "tender_id", "title", "requirements": [ ...requirement objects ], "capability_docs": [ { "doc_id", "filename", "page_count" } ] }`. `capability_docs` lists the bidder's uploaded evidence (empty until any are uploaded).
+A tender response: `{ "tender_id", "title", "requirements": [ ...requirement objects ], "capability_docs": [ { "doc_id", "filename", "page_count" } ], "source_docs": [ { "doc_id", "filename", "page_count" } ], "award_criteria": [ { "id", "name", "weight" } ] }`. `capability_docs` lists the bidder's uploaded evidence (empty until any are uploaded). `source_docs` lists the tender pack's own PDF(s) (multi-file uploads, #4); each `Requirement.source_doc_id`/`source_filename` points into this list. `award_criteria` lists the tender's published award criteria with their real name + weight (e.g. `{ "id": "award-criterion-1", "name": "Quality", "weight": 60 }`); `Requirement.criteria_ref` is the matching `id`, empty until the tender publishes weighted criteria.
 
 ## Frontend conventions
 

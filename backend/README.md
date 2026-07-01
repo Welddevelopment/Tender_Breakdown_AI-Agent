@@ -82,7 +82,7 @@ otherwise) and is scoped to the signed-in user (someone else's tender reads as 4
 | `GET` | `/auth/me` | ✓ | the signed-in `{ id, email }` — the frontend validates the token with this |
 | `GET` | `/tenders` | ✓ | List the user's tenders `[{ tender_id, title, requirement_count }]` |
 | `POST` | `/tenders/upload` | ✓ | multipart PDF (`file`, optional `title`) → `{ job_id, tender_id }` (`?sync=1` → `{ tender_id, requirement_count }`) |
-| `GET`  | `/tenders/{id}/requirements` | ✓ | `{ tender_id, title, requirements, capability_docs }` in the locked schema |
+| `GET`  | `/tenders/{id}/requirements` | ✓ | `{ tender_id, title, requirements, capability_docs, source_docs, award_criteria }` in the locked schema |
 | `GET`  | `/tenders/{id}/pdf` | ✓ | the original PDF inline (bearer header **or** `?token=` for `<iframe>`/link opens) |
 | `POST` | `/tenders/{id}/draft` | ✓ | Auditable autofill — re-draft answers with `?provider=openai` or upload capability docs |
 | `PATCH`| `/requirements/{id}` | ✓ | body `{ status?, decision? }` → updated requirement |
