@@ -4,7 +4,7 @@
 >
 > **Interactive graph:** [`frontend/public/codemap.html`](frontend/public/codemap.html) — drag / zoom / click-to-focus; served at `/codemap.html` on the Vercel deploy. (The diagrams below render right here on GitHub.)
 >
-> Map of commit `00c4b4b` · 2026-07-02T18:57:59+01:00
+> Map of commit `a3c8d20` · 2026-07-01T21:53:46+01:00
 
 **Read this first** for a current picture of the codebase — what lives where, and what imports what. It is the fast path to context for both humans and agents. If it looks wrong, it is stale: re-run the generator and push.
 
@@ -12,17 +12,17 @@
 
 | Area | Files | Lines | What it is |
 |------|-------|-------|------------|
-| **frontend** | 124 | 44,601 | Frontend — Next.js 16 / React 19 / Tailwind (compliance matrix UI) |
-| **backend** | 19 | 2,736 | Backend — FastAPI (PDF ingest, extraction, REST API) |
-| **engine** | 63 | 4,291 | Engine — reconcile / eval / answer-draft pipeline + tests |
-| **prompts** | 6 | 713 | Prompts — LLM prompt specs (extraction, classification, answers, gaps) |
-| **gold** | 4 | 204 | Eval gold-set — hand-labelled requirements for accuracy measurement |
+| **frontend** | 124 | 46,172 | Frontend — Next.js 16 / React 19 / Tailwind (compliance matrix UI) |
+| **backend** | 19 | 2,592 | Backend — FastAPI (PDF ingest, extraction, REST API) |
+| **engine** | 55 | 3,184 | Engine — reconcile / eval / answer-draft pipeline + tests |
+| **prompts** | 6 | 678 | Prompts — LLM prompt specs (extraction, classification, answers, gaps) |
+| **gold** | 4 | 222 | Eval gold-set — hand-labelled requirements for accuracy measurement |
 | **data** | 17 | 0 | Data — tender source PDFs (not parsed here) |
-| **comms** | 5 | 1,587 | Comms — async agent message boards |
+| **comms** | 5 | 1,293 | Comms — async agent message boards |
 | **docs** | 3 | 1,663 | Docs — plans & specs |
 | **ci** | 1 | 62 | CI — GitHub Actions |
 | **tooling** | 1 | 516 | Tooling — repo scripts (incl. this map generator) |
-| **root** | 407 | 21,342 | Root — docs, config, role briefs |
+| **root** | 384 | 17,735 | Root — docs, config, role briefs |
 
 ## System shape
 
@@ -242,67 +242,46 @@ graph LR
   n0[admin.py] --> n1[auth.py]
   n2[chunk.py] --> n3[ingest.py]
   n4[extract.py] --> n2[chunk.py]
-  n4[extract.py] --> n5[usage_log.py]
-  n6[graph.py] --> n7[schema.py]
-  n3[ingest.py] --> n5[usage_log.py]
-  n8[main.py] --> n1[auth.py]
-  n8[main.py] --> n4[extract.py]
-  n8[main.py] --> n3[ingest.py]
-  n8[main.py] --> n9[pipeline.py]
-  n8[main.py] --> n7[schema.py]
-  n8[main.py] --> n10[answer.py]
-  n9[pipeline.py] --> n2[chunk.py]
-  n9[pipeline.py] --> n4[extract.py]
-  n9[pipeline.py] --> n6[graph.py]
-  n9[pipeline.py] --> n3[ingest.py]
-  n9[pipeline.py] --> n7[schema.py]
-  n9[pipeline.py] --> n10[answer.py]
-  n9[pipeline.py] --> n11[embeddings.py]
-  n9[pipeline.py] --> n12[reconcile.py]
-  n13[store.py] --> n7[schema.py]
-  n10[answer.py] --> n14[similarity.py]
-  n10[answer.py] --> n5[usage_log.py]
-  n11[embeddings.py] --> n14[similarity.py]
-  n11[embeddings.py] --> n5[usage_log.py]
-  n15[eval.py] --> n16[_io.py]
-  n15[eval.py] --> n14[similarity.py]
-  n17[eval_answers.py] --> n16[_io.py]
-  n17[eval_answers.py] --> n10[answer.py]
-  n17[eval_answers.py] --> n14[similarity.py]
-  n18[gating_scan.py] --> n14[similarity.py]
-  n12[reconcile.py] --> n16[_io.py]
-  n12[reconcile.py] --> n11[embeddings.py]
-  n12[reconcile.py] --> n14[similarity.py]
-  n19[calibrate.py] --> n16[_io.py]
-  n19[calibrate.py] --> n15[eval.py]
-  n20[draft_answers.py] --> n16[_io.py]
-  n20[draft_answers.py] --> n10[answer.py]
-  n20[draft_answers.py] --> n15[eval.py]
-  n21[eval_all.py] --> n16[_io.py]
-  n21[eval_all.py] --> n11[embeddings.py]
-  n21[eval_all.py] --> n15[eval.py]
-  n21[eval_all.py] --> n12[reconcile.py]
-  n21[eval_all.py] --> n22[run_tender.py]
-  n23[gating_recall.py] --> n16[_io.py]
-  n23[gating_recall.py] --> n11[embeddings.py]
-  n23[gating_recall.py] --> n15[eval.py]
-  n23[gating_recall.py] --> n18[gating_scan.py]
-  n23[gating_recall.py] --> n12[reconcile.py]
-  n23[gating_recall.py] --> n22[run_tender.py]
-  n24[precision_report.py] --> n16[_io.py]
-  n24[precision_report.py] --> n15[eval.py]
-  n24[precision_report.py] --> n12[reconcile.py]
-  n24[precision_report.py] --> n22[run_tender.py]
-  n24[precision_report.py] --> n14[similarity.py]
-  n22[run_tender.py] --> n2[chunk.py]
-  n22[run_tender.py] --> n4[extract.py]
-  n22[run_tender.py] --> n3[ingest.py]
-  n22[run_tender.py] --> n16[_io.py]
-  n22[run_tender.py] --> n11[embeddings.py]
-  n22[run_tender.py] --> n15[eval.py]
-  n22[run_tender.py] --> n12[reconcile.py]
-  n25[parse_check.py]
-  n26[stress_test.py]
+  n5[graph.py] --> n6[schema.py]
+  n7[main.py] --> n1[auth.py]
+  n7[main.py] --> n4[extract.py]
+  n7[main.py] --> n3[ingest.py]
+  n7[main.py] --> n8[pipeline.py]
+  n7[main.py] --> n6[schema.py]
+  n7[main.py] --> n9[answer.py]
+  n8[pipeline.py] --> n2[chunk.py]
+  n8[pipeline.py] --> n4[extract.py]
+  n8[pipeline.py] --> n5[graph.py]
+  n8[pipeline.py] --> n3[ingest.py]
+  n8[pipeline.py] --> n6[schema.py]
+  n8[pipeline.py] --> n9[answer.py]
+  n8[pipeline.py] --> n10[reconcile.py]
+  n11[store.py] --> n6[schema.py]
+  n9[answer.py] --> n12[similarity.py]
+  n13[eval.py] --> n14[_io.py]
+  n13[eval.py] --> n12[similarity.py]
+  n15[eval_answers.py] --> n14[_io.py]
+  n15[eval_answers.py] --> n9[answer.py]
+  n15[eval_answers.py] --> n12[similarity.py]
+  n10[reconcile.py] --> n14[_io.py]
+  n10[reconcile.py] --> n12[similarity.py]
+  n16[calibrate.py] --> n14[_io.py]
+  n16[calibrate.py] --> n13[eval.py]
+  n17[draft_answers.py] --> n14[_io.py]
+  n17[draft_answers.py] --> n9[answer.py]
+  n17[draft_answers.py] --> n13[eval.py]
+  n18[eval_all.py] --> n14[_io.py]
+  n18[eval_all.py] --> n13[eval.py]
+  n18[eval_all.py] --> n10[reconcile.py]
+  n18[eval_all.py] --> n19[run_tender.py]
+  n19[run_tender.py] --> n2[chunk.py]
+  n19[run_tender.py] --> n4[extract.py]
+  n19[run_tender.py] --> n3[ingest.py]
+  n19[run_tender.py] --> n14[_io.py]
+  n19[run_tender.py] --> n13[eval.py]
+  n19[run_tender.py] --> n10[reconcile.py]
+  n20[parse_check.py]
+  n21[stress_test.py]
 ```
 
 ## Files by area
@@ -395,11 +374,11 @@ graph LR
 - `frontend/src/components/landing/HowItWorks.tsx` — exports `HowItWorks`
 - `frontend/src/components/landing/Landing.tsx` — exports `Landing`
 - `frontend/src/components/landing/ProductShots.tsx` — Three product shots for the landing page, each a differentiated, generously
-- `frontend/src/components/landing/ProofNumbers.tsx` — exports `ProofNumbers`
+- `frontend/src/components/landing/ProofNumbers.tsx` — The proof ledger on the pine band: three poster-scale mono figures, each
 - `frontend/src/components/landing/Reveal.tsx` — exports `Reveal`
 - `frontend/src/components/landing/SiteFooter.tsx` — exports `SiteFooter`
 - `frontend/src/context/AuthContext.tsx` — exports `AuthProvider`
-- `frontend/src/context/RequirementsContext.tsx` — exports `RequirementsProvider`
+- `frontend/src/context/RequirementsContext.tsx` — exports `DecisionSnapshot`
 - `frontend/src/data/mock-requirements.ts` — exports `mockTender`
 - `frontend/src/data/nhs-prebake.json`
 - `frontend/src/data/spso-prebake.json`
@@ -445,7 +424,6 @@ graph LR
 - `engine/__init__.py` — Bidframe engine package (Generalist lane): reconcile/dedupe + eval harness.
 - `engine/_io.py` — UTF-8-safe JSON I/O. This box defaults to cp1252 (J-008 crash); never rely on it.
 - `engine/answer.py` — auditable autofill: grounded answer-draft + gap interview (Generalist lane).
-- `engine/embeddings.py` — optional semantic dedup for reconcile (J-056, Generalist).
 - `engine/eval.py` — Eval harness: score tool output against a hand-labelled gold set.
 - `engine/eval_answers.py` — groundedness eval for auditable autofill (Generalist lane).
 - `engine/fixtures/capability/cap-001-company-profile.txt`
@@ -458,7 +436,6 @@ graph LR
 - `engine/fixtures/capability/cap-008-insurance.txt`
 - `engine/fixtures/capability/cap-009-health-safety-coshh.txt`
 - `engine/fixtures/capability/cap-010-quality-assurance.txt`
-- `engine/gating_scan.py` — deterministic disqualifier SAFETY NET (never miss a deal-breaker).
 - `engine/gold/mock.gold.json`
 - `engine/reconcile.py` — Reconcile/dedupe — pipeline step 5 (Generalist lane).
 - `engine/requirements.txt`
@@ -466,8 +443,6 @@ graph LR
 - `engine/scripts/calibrate.py` — data-driven calibration of the needs_review threshold.
 - `engine/scripts/draft_answers.py` — the auditable-autofill demo run.
 - `engine/scripts/eval_all.py` — aggregate accuracy across every labelled tender.
-- `engine/scripts/gating_recall.py` — the TRUE gating-recall number (semantic + auditable).
-- `engine/scripts/precision_report.py` — categorise extraction false-positives vs a gold set.
 - `engine/scripts/run_tender.py` — the real closed loop on a real tender.
 - `engine/similarity.py` — Swappable similarity seam. difflib char-ratio + content-token Jaccard. No embeddings.
 - `engine/tests/__init__.py`
@@ -482,7 +457,6 @@ graph LR
 - `engine/tests/test_autofill_wiring.py` — Integration: auditable autofill is wired into the live API (generalist lane).
 - `engine/tests/test_calibrate.py`
 - `engine/tests/test_draft_concurrency.py` — draft_all parallelism: drafting concurrently must be byte-identical to sequential.
-- `engine/tests/test_embedding_dedup.py` — Embedding semantic dedup (J-056, Generalist).
 - `engine/tests/test_end_to_end.py`
 - `engine/tests/test_eval_all.py`
 - `engine/tests/test_eval_answers.py` — Groundedness eval — turns "the autofill never bluffs" into an auditable number.
@@ -492,17 +466,14 @@ graph LR
 - `engine/tests/test_eval_metrics.py`
 - `engine/tests/test_eval_report.py`
 - `engine/tests/test_gap_questions.py` — Sharper gap questions: the OpenAI answerer phrases the gap interview via J's
-- `engine/tests/test_gating_scan.py` — gating_scan safety net: surfaces disqualifier lines extraction missed, stays quiet when covered.
 - `engine/tests/test_grouping.py`
 - `engine/tests/test_io.py`
-- `engine/tests/test_match_score.py` — Eval matcher: paraphrase/granularity tolerance without embeddings.
 - `engine/tests/test_merge.py`
 - `engine/tests/test_pipeline_wiring.py` — Integration: the backend pipeline now uses the generalist engine for reconcile + routing.
 - `engine/tests/test_real_data_robustness.py` — Robustness against real extractor output (regression for the SPSO run).
 - `engine/tests/test_report.py`
 - `engine/tests/test_similarity.py`
 - `engine/tests/test_to_final.py`
-- `engine/usage_log.py` — cheap OpenAI spend visibility (J-055) + persistent ledger (J-058).
 
 ### prompts — Prompts — LLM prompt specs (extraction, classification, answers, gaps)
 
@@ -562,14 +533,11 @@ graph LR
 - `archive/waitlist/WaitlistForm.tsx` — exports `WaitlistForm`
 - `archive/waitlist/route.ts` — exports `POST`
 - `autofill-scope-decision.md`
-- `codex-leadgen-handoff.md`
-- `codex-leadgen-instructions.md`
 - `crm/.gitignore`
 - `crm/README.md`
 - `crm/_build-crm.workflow.js` — exports `meta`
 - `crm/_merge-rows.js` — Append NEW per-lead rows (crm/rows/<id>.json) into crm/leads.csv without disturbing existing lines.
 - `crm/_rows-to-csv.js` — Assemble crm/leads.csv from the per-lead JSON the build workflow wrote to crm/rows/.
-- `crm/add_leads_l0401_l0412.py`
 - `crm/apply_verifier_corrections_2026_07_01.py`
 - `crm/build_outreach_send_plan.py`
 - `crm/drafts/L-0001.md`
@@ -895,26 +863,11 @@ graph LR
 - `crm/drafts/L-0398.md`
 - `crm/drafts/L-0399.md`
 - `crm/drafts/L-0400.md`
-- `crm/drafts/L-0401.md`
-- `crm/drafts/L-0402.md`
-- `crm/drafts/L-0403.md`
-- `crm/drafts/L-0404.md`
-- `crm/drafts/L-0405.md`
-- `crm/drafts/L-0406.md`
-- `crm/drafts/L-0407.md`
-- `crm/drafts/L-0408.md`
-- `crm/drafts/L-0409.md`
-- `crm/drafts/L-0410.md`
-- `crm/drafts/L-0411.md`
-- `crm/drafts/L-0412.md`
 - `crm/lead-gen-plan.md`
-- `crm/leadgen-run-2026-07-02.md`
 - `crm/leads.csv`
-- `crm/mt-migration-staging-2026-07-02.csv`
 - `crm/outreach-quality-pass-2026-07-01.md`
 - `crm/outreach-send-plan-2026-07-01.csv`
 - `crm/outreach-send-plan-2026-07-01.md`
-- `crm/sendable-list-2026-07-02.csv`
 - `crm/verifier-pass-2026-07-01.md`
 - `crm/verify-log.md`
 - `crm/verify-sweep-l100-plus-2026-07-01-round2.csv`
@@ -933,13 +886,8 @@ graph LR
 - `fetch-agent-scope.md`
 - `frontend-integration.md`
 - `frontend-ux-audit.md`
-- `go-live-runbook.md`
 - `graph-and-verification-deep-plan.md`
 - `handoff-backend.md`
-- `live-read-call-script.md`
-- `outreach-batch-personalised.md`
-- `outreach-micro-targets.md`
-- `outreach-same-day-kit.md`
 - `positioning-and-traction.md`
 - `prior-art.md`
 - `progress.md`
@@ -958,4 +906,4 @@ graph LR
 
 ---
 
-*650 tracked files mapped. Generated by `scripts/gen_codemap.py`.*
+*619 tracked files mapped. Generated by `scripts/gen_codemap.py`.*

@@ -2,8 +2,8 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import type {
+  AwardCriterion,
   CapabilityDoc,
-  Criterion,
   Requirement,
   RequirementDecision,
   RequirementStatus,
@@ -26,10 +26,18 @@ import {
 const SAVE_FAILED =
   "Couldn't save that change to the server. It shows here, but may not have been kept. Check your connection, then redo it.";
 
+// The undo seam for batch decisions: what to capture before a bulk change so it
+// can be put back exactly (status + recorded decision), one entry per id.
+export interface DecisionSnapshot {
+  id: string;
+  status: RequirementStatus;
+  decision: RequirementDecision | null;
+}
+
 interface RequirementsContextValue {
   requirements: Requirement[];
   capabilityDocs: CapabilityDoc[];
-  awardCriteria: Criterion[];
+  awardCriteria: AwardCriterion[];
   title: string;
   tenderId: string | null;
   drafting: boolean;
@@ -39,6 +47,10 @@ interface RequirementsContextValue {
   approve: (id: string) => void;
   editRequirement: (id: string, note: string) => void;
   flag: (id: string, note: string) => void;
+  approveMany: (ids: string[]) => void;
+  flagMany: (ids: string[], note: string) => void;
+  snapshotDecisions: (ids: string[]) => DecisionSnapshot[];
+  restoreDecisions: (snapshot: DecisionSnapshot[]) => void;
   reopen: (id: string) => void;
   editAnswer: (id: string, text: string) => void;
   answerOpenQuestion: (
@@ -72,8 +84,10 @@ export function RequirementsProvider({
   const [capabilityDocs, setCapabilityDocs] = useState<CapabilityDoc[]>(
     () => seed.capability_docs ?? []
   );
-  // Published award criteria (#27) — the graph reads real names + weights from here.
-  const [awardCriteria, setAwardCriteria] = useState<Criterion[]>(
+  // The tender's published award criteria (name + weight, #27) — the matrix
+  // lens and the graph both read real names + weights from here. Empty until
+  // the tender publishes them; refreshed alongside requirements on load/draft.
+  const [awardCriteria, setAwardCriteria] = useState<AwardCriterion[]>(
     () => seed.award_criteria ?? []
   );
   // The live tender currently loaded (null on the mock default). Needed so the
@@ -193,6 +207,78 @@ export function RequirementsProvider({
     }
   }
 
+  // The batch counterpart of applyDecision: one setRequirements pass for the
+  // whole set (a single render, however many rows), then the same optimistic
+  // fire-and-forget per-id PATCH when the API is wired.
+  function applyDecisionMany(
+    ids: string[],
+    status: RequirementStatus,
+    decision: RequirementDecision
+  ) {
+    if (ids.length === 0) return;
+    const idSet = new Set(ids);
+    setRequirements((prev) =>
+      prev.map((req) => (idSet.has(req.id) ? { ...req, status, decision } : req))
+    );
+    if (isApiEnabled()) {
+      for (const id of ids) {
+        patchRequirement(id, { status, decision }).catch(() => {
+          setNotice(SAVE_FAILED);
+        });
+      }
+    }
+  }
+
+  function approveMany(ids: string[]) {
+    applyDecisionMany(ids, "accepted", {
+      action: "approve",
+      note: "",
+      timestamp: new Date().toISOString(),
+    });
+  }
+
+  function flagMany(ids: string[], note: string) {
+    applyDecisionMany(ids, "flagged", {
+      action: "flag",
+      note,
+      timestamp: new Date().toISOString(),
+    });
+  }
+
+  // Undo seam for batch decisions: capture status + decision for a set of ids
+  // BEFORE a bulk change, and put a captured snapshot back afterwards. Restore
+  // is one setState pass + the usual per-id PATCH. State mechanics only — the
+  // toast/undo UI lives with the caller.
+  function snapshotDecisions(ids: string[]): DecisionSnapshot[] {
+    const idSet = new Set(ids);
+    return requirements
+      .filter((req) => idSet.has(req.id))
+      .map((req) => ({ id: req.id, status: req.status, decision: req.decision }));
+  }
+
+  function restoreDecisions(snapshot: DecisionSnapshot[]) {
+    if (snapshot.length === 0) return;
+    const byId = new Map(snapshot.map((entry) => [entry.id, entry]));
+    setRequirements((prev) =>
+      prev.map((req) => {
+        const entry = byId.get(req.id);
+        return entry
+          ? { ...req, status: entry.status, decision: entry.decision }
+          : req;
+      })
+    );
+    if (isApiEnabled()) {
+      for (const entry of snapshot) {
+        patchRequirement(entry.id, {
+          status: entry.status,
+          decision: entry.decision,
+        }).catch(() => {
+          setNotice(SAVE_FAILED);
+        });
+      }
+    }
+  }
+
   function approve(id: string) {
     applyDecision(id, "accepted", {
       action: "approve",
@@ -296,6 +382,10 @@ export function RequirementsProvider({
         approve,
         editRequirement,
         flag,
+        approveMany,
+        flagMany,
+        snapshotDecisions,
+        restoreDecisions,
         reopen,
         editAnswer,
         answerOpenQuestion,

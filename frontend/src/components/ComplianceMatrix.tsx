@@ -1,14 +1,14 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { Requirement } from "@/types/requirement";
 import {
-  compareRequirements,
   isConfidentNonGating,
   pendingStatusWord,
   type GroupKey,
   type SortKey,
   type TriageGroup,
 } from "@/lib/triage";
-import { alsoCitedLabel, collapseDuplicates } from "@/lib/dedupe";
+import { alsoCitedLabel } from "@/lib/dedupe";
+import { deriveVisibleGroups, type VisibleGroup } from "@/lib/matrix-derive";
 import {
   ConfidenceIndicator,
   confidenceTier,
@@ -288,7 +288,9 @@ function MatrixGroup({
   onApprove,
   onApproveAll,
 }: {
-  group: TriageGroup;
+  // A visible group with its display dedupe precomputed by deriveVisibleGroups
+  // (one collapseDuplicates pass per group, shared with the shown counter).
+  group: VisibleGroup;
   // Whether this group's rows are shown. When collapsible is false (frozen/demo
   // surfaces) this is always true and no toggle renders.
   expanded: boolean;
@@ -300,11 +302,11 @@ function MatrixGroup({
   onApprove: (id: string) => void;
   onApproveAll: (ids: string[]) => void;
 }) {
-  // Collapse near-duplicate rows within this group (display only — nothing is
+  // Near-duplicate rows arrive already collapsed (display only — nothing is
   // dropped; each representative carries the pages its duplicates were cited on).
   // Approve-all still targets every confident representative, so the count and the
-  // action stay consistent with what is on screen. See lib/dedupe.ts.
-  const { representatives, meta } = collapseDuplicates(group.items);
+  // action stay consistent with what is on screen. See lib/matrix-derive.ts.
+  const { representatives, meta } = group;
   const approvable = representatives.filter(isConfidentNonGating);
   const rowsId = `group-rows-${group.key}`;
 
@@ -400,40 +402,24 @@ export function ComplianceMatrix({
 }) {
   const [query, setQuery] = useState("");
   const normalisedQuery = query.trim().toLowerCase();
-  // An empty (or omitted) category set means no category filtering.
-  const categoryFilter =
-    activeCategories && activeCategories.size > 0 ? activeCategories : null;
-  const comparator = sortBy ? compareRequirements(sortBy) : null;
-  // Skip empty groups; when a filter is active, show only that group. Within a
-  // group, keep only the matching search + category rows, then order by sortBy.
-  const visible = groups
-    .map((group) => {
-      let items =
-        normalisedQuery.length === 0
-          ? group.items
-          : group.items.filter((req) =>
-              [
-                req.text,
-                req.category,
-                req.source_clause ?? "",
-                req.answer?.text ?? "",
-              ]
-                .join(" ")
-                .toLowerCase()
-                .includes(normalisedQuery)
-            );
-      if (categoryFilter) {
-        items = items.filter((req) => categoryFilter.has(req.category));
-      }
-      if (comparator) {
-        items = [...items].sort(comparator);
-      }
-      return { ...group, items };
-    })
-    .filter(
-      (g) =>
-        g.items.length > 0 && (activeFilter === null || g.key === activeFilter)
-    );
+  // Whether any category filtering is live (for the empty-state copy below).
+  const categoryFilterActive =
+    activeCategories !== undefined && activeCategories.size > 0;
+  // The visible worklist: search + category filter + sort + display dedupe, all
+  // derived in one memoised pass (see lib/matrix-derive.ts). Each group arrives
+  // with its representatives precomputed, and shownCount is the same dedupe the
+  // rows use — collapseDuplicates runs exactly once per group per derivation.
+  const { groups: visible, shownCount } = useMemo(
+    () =>
+      deriveVisibleGroups({
+        groups,
+        query,
+        activeFilter,
+        activeCategories,
+        sortBy,
+      }),
+    [groups, query, activeFilter, activeCategories, sortBy]
+  );
 
   function approveAll(ids: string[]) {
     for (const id of ids) onApprove(id);
@@ -453,12 +439,7 @@ export function ComplianceMatrix({
         </label>
         <div className="flex items-center gap-3">
           <span className="font-mono text-xs text-ink-muted">
-            {visible.reduce(
-              (sum, group) =>
-                sum + collapseDuplicates(group.items).representatives.length,
-              0
-            )}{" "}
-            shown
+            {shownCount} shown
           </span>
           {onDensityChange && (
             <DensityToggle density={density} onDensityChange={onDensityChange} />
@@ -468,15 +449,18 @@ export function ComplianceMatrix({
 
       {visible.map((group) => {
         const collapsible = onToggleGroup !== undefined;
+        // VisibleGroup.key is string-typed (lens-ready); on this triage-grouped
+        // surface it is always a GroupKey.
+        const groupKey = group.key as GroupKey;
         // Force a group open when its rows must be seen regardless of the fold:
         // while searching (never hide a hit), when filtered to it, or when it holds
         // the selected row. Otherwise honour the user's fold state.
         const expanded =
           !collapsible ||
           normalisedQuery.length > 0 ||
-          activeFilter === group.key ||
+          activeFilter === groupKey ||
           group.items.some((req) => req.id === selectedId) ||
-          !(collapsed?.has(group.key) ?? false);
+          !(collapsed?.has(groupKey) ?? false);
         return (
           <MatrixGroup
             key={group.key}
@@ -484,7 +468,7 @@ export function ComplianceMatrix({
             expanded={expanded}
             collapsible={collapsible}
             density={density}
-            onToggle={() => onToggleGroup?.(group.key)}
+            onToggle={() => onToggleGroup?.(groupKey)}
             selectedId={selectedId}
             onSelect={onSelect}
             onApprove={onApprove}
@@ -497,7 +481,7 @@ export function ComplianceMatrix({
           filtered={
             normalisedQuery.length > 0 ||
             activeFilter !== null ||
-            categoryFilter !== null
+            categoryFilterActive
           }
           onClear={() => setQuery("")}
           hasQuery={normalisedQuery.length > 0}

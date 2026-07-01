@@ -282,11 +282,13 @@ export const mockTender: Tender = {
     { doc_id: "cap-001", filename: "case-studies-2025.pdf", page_count: 12 },
     { doc_id: "cap-002", filename: "accreditations.pdf", page_count: 3 },
   ],
+  // The tender's published award criteria (weights sum to 100). Each
+  // requirement's criteria_ref points at one of these ids.
   award_criteria: [
-    { id: "award-criterion-1", name: "Quality & Compliance", weight: 30 },
-    { id: "award-criterion-2", name: "Technical Solution", weight: 25 },
-    { id: "award-criterion-3", name: "Experience & Track Record", weight: 20 },
-    { id: "award-criterion-4", name: "Service Delivery & SLAs", weight: 15 },
+    { id: "award-criterion-1", name: "Quality & Information Security", weight: 35 },
+    { id: "award-criterion-2", name: "Service Delivery & Experience", weight: 30 },
+    { id: "award-criterion-3", name: "Risk & Commercial Assurance", weight: 15 },
+    { id: "award-criterion-4", name: "Sustainability & Environmental Management", weight: 10 },
     { id: "award-criterion-5", name: "Social Value", weight: 10 },
   ],
 };

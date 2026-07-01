@@ -60,19 +60,25 @@ export interface Requirement {
   source_filename?: string | null;
 }
 
+// A published award criterion for the tender (e.g. Quality 40%). Additive:
+// requirements point at one via `criteria_ref`; absent until the tender
+// publishes weighted criteria.
+export interface AwardCriterion {
+  id: string;
+  name: string;
+  weight: number;
+}
+
 export interface SourceDoc {
   doc_id: string;
   filename: string;
   page_count: number;
 }
 
-// A published award criterion (#27): the graph needs the real name + weight, not
-// just the opaque criteria_ref id. `id` matches Requirement.criteria_ref.
-export interface Criterion {
-  id: string;
-  name: string;
-  weight: number; // share of the marks (e.g. 40 for "Quality 40%"); 0 when not stated
-}
+// The graph's name for the same shape (#27): both sides of the split-brain
+// merge (matrix lens vs MarksView) added an identical published-criterion type,
+// so one is an alias of the other. `id` matches Requirement.criteria_ref.
+export type Criterion = AwardCriterion;
 
 export interface Tender {
   tender_id: string;
@@ -80,5 +86,5 @@ export interface Tender {
   requirements: Requirement[];
   capability_docs?: CapabilityDoc[]; // bidder's uploaded evidence; empty until any are uploaded
   source_docs?: SourceDoc[]; // the documents in the tender pack (#4)
-  award_criteria?: Criterion[]; // published award criteria (#27); id matches criteria_ref
+  award_criteria?: AwardCriterion[]; // published award criteria (#27); id matches criteria_ref; empty/absent until published
 }
