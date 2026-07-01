@@ -215,7 +215,7 @@ export interface TenderSummary {
 
 // GET /tenders — a summary of every uploaded tender (id, title, requirement count).
 export async function getTenders(): Promise<TenderSummary[]> {
-  const res = await fetch(`${BASE}/tenders`);
+  const res = await fetch(`${BASE}/tenders`, { headers: { ...authHeaders() } });
   if (!res.ok) throw await apiError(res, `Couldn't load your tenders (${res.status})`);
   const rows = (await res.json()) as Array<{
     tender_id: string;
