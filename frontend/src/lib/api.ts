@@ -98,6 +98,36 @@ export function tenderPdfPageUrl(
   const qs = params.toString();
   return `${BASE}/tenders/${tenderId}/pdf${qs ? `?${qs}` : ""}#page=${page}`;
 }
+
+// Static copies of the demo tenders' PDFs, shipped in /public so the read-only
+// showcase can render + highlight the real document with no backend and no key.
+// Keyed by the source_filename carried on each requirement.
+const DEMO_PDFS: Record<string, string> = {
+  "spso-cleaning.pdf": "/demo/spso-cleaning.pdf",
+};
+
+// The source PDF URL for the claim ↔ source verification view, WITHOUT the #page
+// fragment (PDF.js selects the page itself). A live tender streams from the backend
+// (owner-scoped, token as a query param); the mock/demo build falls back to a static
+// public copy for a known demo tender. Null when no PDF is available (excerpt-only).
+export function sourceDocUrl(opts: {
+  tenderId: string | null;
+  docId?: string | null;
+  filename?: string | null;
+}): string | null {
+  const { tenderId, docId, filename } = opts;
+  if (BASE && tenderId) {
+    const params = new URLSearchParams();
+    if (docId) params.set("doc", docId);
+    const token = getToken();
+    if (token) params.set("token", token);
+    const qs = params.toString();
+    return `${BASE}/tenders/${tenderId}/pdf${qs ? `?${qs}` : ""}`;
+  }
+  if (filename && DEMO_PDFS[filename]) return DEMO_PDFS[filename];
+  return null;
+}
+
 interface UploadJobResult {
   job_id: string;
   tender_id: string;

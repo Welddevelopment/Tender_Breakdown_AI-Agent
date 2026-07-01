@@ -7,7 +7,8 @@ import { AnswerPanel } from "./AnswerPanel";
 import { ApprovalStamp } from "./ApprovalStamp";
 import { ConfidenceIndicator } from "./ConfidenceIndicator";
 import { useRequirements } from "@/context/RequirementsContext";
-import { tenderPdfPageUrl } from "@/lib/api";
+import { sourceDocUrl, tenderPdfPageUrl } from "@/lib/api";
+import { SourceVerifyOverlay } from "./SourceVerifyOverlay";
 
 // The open-state panel internals (layout.md section 6). One sheet on a
 // paper-raised surface, read top to bottom, flat zones separated by hairlines:
@@ -148,6 +149,15 @@ function Zone({
 // the verbatim excerpt one expand away) run down the mono margin on the right.
 function RequirementZone({ requirement }: { requirement: Requirement }) {
   const unanswerable = requirement.is_gating && requirement.status === "pending";
+  const { tenderId } = useRequirements();
+  const [verifyOpen, setVerifyOpen] = useState(false);
+  // The source document to verify against: the live tender's PDF, or a static demo
+  // copy. Null in the plain mock (no matching document) — the button hides then.
+  const pdfUrl = sourceDocUrl({
+    tenderId,
+    docId: requirement.source_doc_id ?? null,
+    filename: requirement.source_filename ?? null,
+  });
 
   return (
     <Zone title="Requirement">
@@ -183,8 +193,25 @@ function RequirementZone({ requirement }: { requirement: Requirement }) {
             docId={requirement.source_doc_id ?? null}
             filename={requirement.source_filename ?? null}
           />
+          {pdfUrl && (
+            <button
+              type="button"
+              onClick={() => setVerifyOpen(true)}
+              className="inline-flex w-fit items-center font-mono text-xs text-forest transition-colors hover:text-forest-hover hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-forest focus-visible:ring-offset-2 focus-visible:ring-offset-paper-raised"
+            >
+              See it in the document
+            </button>
+          )}
         </div>
       </div>
+
+      {verifyOpen && (
+        <SourceVerifyOverlay
+          requirement={requirement}
+          pdfUrl={pdfUrl}
+          onClose={() => setVerifyOpen(false)}
+        />
+      )}
     </Zone>
   );
 }

@@ -1,11 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useRequirements } from "@/context/RequirementsContext";
 import { deriveTriage } from "@/lib/triage";
+import { sourceDocUrl } from "@/lib/api";
 import { ComplianceMatrix } from "@/components/ComplianceMatrix";
 import { GatingHero } from "@/components/GatingHero";
 import { GraphView } from "@/components/GraphView";
+import { SourceVerifyOverlay } from "@/components/SourceVerifyOverlay";
 import { BookDemoButton } from "@/components/landing/BookDemoButton";
 import { BotanicalSprig } from "@/components/landing/BotanicalSprig";
 import { BrandLogo } from "@/components/BrandLogo";
@@ -24,6 +27,19 @@ const noop = () => {};
 export function DemoView() {
   const { requirements, title } = useRequirements();
   const triage = deriveTriage(requirements);
+  // One scripted proof moment: the frozen worklist can't be clicked, so a deal-breaker
+  // gets its own "see it in the document" button that opens the real SPSO page,
+  // scrolled to and highlighting the exact line. The demo's trust payoff.
+  const [verifyOpen, setVerifyOpen] = useState(false);
+  const dealBreaker =
+    requirements.find((r) => r.is_gating) ?? requirements[0] ?? null;
+  const demoPdfUrl = dealBreaker
+    ? sourceDocUrl({
+        tenderId: null,
+        docId: dealBreaker.source_doc_id ?? null,
+        filename: dealBreaker.source_filename ?? null,
+      })
+    : null;
 
   return (
     <div className="min-h-screen bg-paper paper-grid">
@@ -78,8 +94,27 @@ export function DemoView() {
                 activeFilter={null}
               />
             </div>
+            {dealBreaker && demoPdfUrl && (
+              <div className="mt-5 border-t border-hairline pt-4">
+                <button
+                  type="button"
+                  onClick={() => setVerifyOpen(true)}
+                  className="inline-flex items-center gap-2 font-mono text-xs text-forest transition-colors hover:text-forest-hover hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-forest focus-visible:ring-offset-2 focus-visible:ring-offset-paper-raised"
+                >
+                  See a deal-breaker in the document
+                </button>
+              </div>
+            )}
           </div>
         </section>
+
+        {verifyOpen && dealBreaker && (
+          <SourceVerifyOverlay
+            requirement={dealBreaker}
+            pdfUrl={demoPdfUrl}
+            onClose={() => setVerifyOpen(false)}
+          />
+        )}
 
         {/* The relationship graph, annotated. */}
         <section className="hero-enter-3 mt-16">

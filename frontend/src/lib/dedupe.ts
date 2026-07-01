@@ -56,7 +56,7 @@ export interface CollapsedResult {
 // exact-equality (Tier A) and as the token source for Jaccard (Tier B), so
 // "Arrive no later than 12.00 noon 06/11/2013." and the same line without the
 // trailing full stop normalize to the same string.
-function normalize(text: string): string {
+export function normalize(text: string): string {
   return text
     .toLowerCase()
     .replace(/[‘’“”]/g, "'") // smart quotes → plain
