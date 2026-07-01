@@ -2,6 +2,7 @@ import { AppMain } from "@/components/AppMain";
 import { AutofillButton } from "@/components/AutofillButton";
 import { CapabilityUpload } from "@/components/CapabilityUpload";
 import { DocumentHeader } from "@/components/DocumentHeader";
+import { EvidenceLibrary } from "@/components/EvidenceLibrary";
 import { GapInterview } from "@/components/GapInterview";
 
 export const metadata = { title: "Answers, with receipts · Bidframe" };
@@ -23,6 +24,7 @@ export default function AnswersPage() {
         <div className="mt-6 flex flex-col gap-4">
           <AutofillButton />
           <CapabilityUpload />
+          <EvidenceLibrary />
         </div>
 
         <div className="mt-8">

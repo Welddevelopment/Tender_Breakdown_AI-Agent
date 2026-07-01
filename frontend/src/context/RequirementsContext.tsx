@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import type {
   CapabilityDoc,
   Requirement,
@@ -74,7 +74,37 @@ export function RequirementsProvider({
     setRequirements(tender.requirements);
     setCapabilityDocs(tender.capability_docs ?? []);
     setTenderId(id);
+    try {
+      window.sessionStorage.setItem("bf-tender", id);
+    } catch {
+      // sessionStorage unavailable (private mode) — refresh-restore just won't work.
+    }
   }
+
+  // #28: restore the last live tender on a refresh — its decisions come back too,
+  // since the backend persists them. sessionStorage keeps it tab-scoped (cleared
+  // when the tab closes). The mock/demo (no API) is unaffected.
+  useEffect(() => {
+    if (!isApiEnabled()) return;
+    let saved: string | null = null;
+    try {
+      saved = window.sessionStorage.getItem("bf-tender");
+    } catch {
+      saved = null;
+    }
+    if (saved) {
+      // Async restore: loadTender awaits the fetch before setting any state, so this
+      // is not a synchronous cascading render (the rule can't see past the await).
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      loadTender(saved).catch(() => {
+        try {
+          window.sessionStorage.removeItem("bf-tender");
+        } catch {
+          /* ignore */
+        }
+      });
+    }
+  }, []);
 
   // Auditable autofill: ask the API to (re)draft grounded answers for the loaded
   // tender, optionally against freshly-uploaded capability docs, then swap the enriched

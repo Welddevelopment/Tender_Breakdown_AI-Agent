@@ -10,6 +10,7 @@ import { usePathname } from "next/navigation";
 // tab, nothing that reads as a dashboard nav.
 
 const SECTIONS = [
+  { href: "/tenders", label: "Tenders" },
   { href: "/upload", label: "Upload" },
   { href: "/review", label: "Matrix" },
   { href: "/answers", label: "Answers" },

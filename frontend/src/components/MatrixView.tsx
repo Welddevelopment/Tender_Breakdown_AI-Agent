@@ -11,6 +11,7 @@ import { useRequirements } from "@/context/RequirementsContext";
 import type { Requirement } from "@/types/requirement";
 import {
   deriveTriage,
+  isConfidentNonGating,
   nextPriorityId,
   type GroupKey,
 } from "@/lib/triage";
@@ -164,6 +165,46 @@ export function MatrixView({ title }: { title: string }) {
     [triage.groups]
   );
 
+  // #16: keyboard shortcuts for the worklist. j / ArrowDown and k / ArrowUp move
+  // through the worklist; `a` approves the selected item only when it is safe (a
+  // confident, non-gating item — gating still needs the panel's named confirm).
+  // Ignored while typing in a field. The listener re-subscribes when the worklist or
+  // selection change, which is cheap.
+  useEffect(() => {
+    function onKey(event: KeyboardEvent) {
+      const el = event.target as HTMLElement | null;
+      if (
+        el &&
+        (el.tagName === "INPUT" ||
+          el.tagName === "TEXTAREA" ||
+          el.isContentEditable)
+      ) {
+        return;
+      }
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
+      const ordered = triage.groups.flatMap((group) => group.items);
+      if (ordered.length === 0) return;
+      const idx = selectedId
+        ? ordered.findIndex((r) => r.id === selectedId)
+        : -1;
+      if (event.key === "j" || event.key === "ArrowDown") {
+        event.preventDefault();
+        setSelectedId(ordered[Math.min(ordered.length - 1, idx + 1)].id);
+      } else if (event.key === "k" || event.key === "ArrowUp") {
+        event.preventDefault();
+        setSelectedId(ordered[idx <= 0 ? 0 : idx - 1].id);
+      } else if (event.key === "a" && selectedId) {
+        const cur = ordered.find((r) => r.id === selectedId);
+        if (cur && isConfidentNonGating(cur)) {
+          event.preventDefault();
+          approve(selectedId);
+        }
+      }
+    }
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [triage.groups, selectedId, approve]);
+
   return (
     <>
       <DocumentHeader
@@ -227,6 +268,9 @@ export function MatrixView({ title }: { title: string }) {
               onApprove={approve}
               activeFilter={activeFilter}
             />
+            <p className="mt-6 font-mono text-[11px] text-ink-muted/70">
+              Keys: j / k to move, a to approve a confident item.
+            </p>
           </>
         )}
       </AppMain>
