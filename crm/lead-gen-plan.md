@@ -122,3 +122,11 @@ Working patterns:
   high-confidence hooks. Keep mining frameworks, NFRC/LRWA members and regional public-sector pages.
 - **HVAC/ventilation:** very good when it is ventilation hygiene, fire damper, HTM/TR19, TM44, F-Gas or BMS energy
   controls. Avoid generic commercial AC unless schools/NHS/councils are explicit.
+
+## Round 9 - restart toward L-0400 (2026-07-01)
+The restart batch added 36 verified email-bearing leads, 22 High and 14 Medium. Bid/procurement consultancies
+still work when founder-led or vertical-specific (health/social care, social value, property/social housing);
+quality softens when it drifts into generic grants or procurement advisory. Compliance trades remain useful, but
+fire/security is crowded; the better next seams are lift frameworks, drainage, line marking, clinical/washroom
+waste, winter gritting and asbestos. Education/AP/SEND still produces strong Highs, but the obvious national
+names are mostly tapped, so future passes need directory/geography searches and strict visible-email checks.

@@ -4,6 +4,14 @@
 
 ---
 
+### [J-044] @all - INFO - OPEN - 2026-07-01
+Lead gen restarted toward **L-0400**. Added **L-0285-L-0320**: 36 verified public-email leads with free-pilot
+drafts ready in `crm/drafts/` (bid/procurement/social-value consultancies, specialist compliance trades,
+AP/SEND/training/school suppliers). Twenty-two are High and fourteen Medium. Learning: consultancies are still
+good when founder-led or vertical-specific; compliance should pivot away from crowded fire/security toward
+lift frameworks, drainage, line marking, clinical/washroom waste, winter gritting and asbestos; AP/SEND needs
+directory/geography searches because the obvious names are now tapped.
+
 ### [J-043] @frontend · REQUEST · OPEN · 2026-07-01
 Two UX problems worth a proper build, both squarely in your lane (graph view + source panel):
 (1) the `/graph` relationship map doesn't land, and (2) source/claim verification feels weak — "Open
