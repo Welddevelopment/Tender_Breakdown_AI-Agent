@@ -7,6 +7,7 @@ import { AnswerPanel } from "./AnswerPanel";
 import { ApprovalStamp } from "./ApprovalStamp";
 import { ConfidenceIndicator } from "./ConfidenceIndicator";
 import { useRequirements } from "@/context/RequirementsContext";
+import { tenderPdfPageUrl } from "@/lib/api";
 
 // The open-state panel internals (layout.md section 6). One sheet on a
 // paper-raised surface, read top to bottom, flat zones separated by hairlines:
@@ -197,8 +198,11 @@ function SourceRef({
   clause: string | null;
   excerpt: string;
 }) {
+  const { tenderId } = useRequirements();
   const [open, setOpen] = useState(false);
   const ref = clause ? `p.${page}, ${clause}` : `p.${page}`;
+  // With a live tender loaded, link to the original PDF opened at this page.
+  const pdfUrl = tenderId ? tenderPdfPageUrl(tenderId, page) : "";
 
   return (
     <div className="font-mono text-xs leading-relaxed">
@@ -214,6 +218,16 @@ function SourceRef({
         <p className="mt-2 rounded bg-paper-recessed p-2.5 leading-relaxed text-ink-muted shadow-[var(--depth-pressed)]">
           &ldquo;{excerpt}&rdquo;
         </p>
+      )}
+      {pdfUrl && (
+        <a
+          href={pdfUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-1.5 inline-block text-forest transition-colors hover:text-forest-hover hover:underline"
+        >
+          Open the page
+        </a>
       )}
     </div>
   );

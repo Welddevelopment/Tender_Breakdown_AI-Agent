@@ -18,6 +18,7 @@ from typing import List, Optional
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.concurrency import run_in_threadpool
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 
 from .extract import get_extractor
 from .ingest import ingest_pdf, PDFIngestError
@@ -148,6 +149,25 @@ def get_requirements(tender_id: str):
     if resp is None:
         raise HTTPException(status_code=404, detail="Tender not found.")
     return resp
+
+
+@app.get("/tenders/{tender_id}/pdf")
+def get_tender_pdf(tender_id: str):
+    """Serve the original uploaded PDF so the frontend can open the exact source page
+    (e.g. /tenders/{id}/pdf#page=14 — browser PDF viewers honour the #page fragment).
+    Inline, so the browser renders it in place rather than downloading. The PDF is
+    persisted at upload time (data/uploads/{id}.pdf)."""
+    # Our ids look like "tnd-<hex>"; guard against path traversal just in case.
+    if not tender_id.replace("-", "").isalnum():
+        raise HTTPException(status_code=400, detail="Invalid tender id.")
+    path = UPLOAD_DIR / f"{tender_id}.pdf"
+    if not path.is_file():
+        raise HTTPException(status_code=404, detail="Source PDF not available for this tender.")
+    return FileResponse(
+        path,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'inline; filename="{tender_id}.pdf"'},
+    )
 
 
 DRAFT_CONCURRENCY = 8   # parallel LLM draft calls — keeps the live "Autofill with AI" snappy

@@ -56,9 +56,12 @@ already removes the credibility risk) · #14 two "Next"s (acceptable as-is) · #
 #26 graph scale filter (only matters at real-tender size) · #31 nav to the upload trap (now moot — #1 made
 upload honest).
 
-**Backend lane (not frontend):** #24 source-on-the-page (needs page images / bbox coords or a servable
-PDF) · #27 criterion titles · #4 true multi-file tender-pack ingest (the UI already rejects multi-file
-gracefully) · #5 streamed extract progress.
+**Backend lane (not frontend):** #24 source-on-the-page — **built (servable PDF), NOT marked done, verify
+with the live key:** `GET /tenders/{id}/pdf` serves the original upload inline + an "Open the page" link
+(`#page=N`) in the source panel; tested on the heuristic path, works end-to-end once the key + a live tender
+are in (not full bbox highlight — that's a later step). · #27 criterion titles (needs the LLM extraction) ·
+#4 true multi-file tender-pack ingest (the UI already rejects multi-file gracefully) · #5 streamed extract
+progress.
 
 A printable **response pack** (print → PDF, beyond Pranav's CSV) sits on `frontend/close-the-loop` if the
 team wants the document deliverable; otherwise that branch is superseded and can be closed.
@@ -196,6 +199,10 @@ touches none of these. The danger is entirely in the live product a curious lead
   backend has the PDF; even an "open PDF at page 14" link would move this from "the sentence we extracted" to
   "the sentence on the page." Biggest depth gap vs the pitch.
   `frontend/src/components/RequirementPanel.tsx:190-219`
+  **Built, not marked done — verify with the key:** `GET /tenders/{id}/pdf` serves the persisted upload
+  inline (`backend/app/main.py`); the source panel shows an "Open the page" link to `.../pdf#page=N` when a
+  live tender is loaded (`api.ts` `tenderPdfPageUrl` + `RequirementPanel`). Endpoint tested on a real SPSO
+  upload (heuristic): 200 / application/pdf / 404 missing / 400 traversal-guard. Full bbox highlight is later.
 
 ## Graph (`/graph`)
 

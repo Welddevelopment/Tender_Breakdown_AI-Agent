@@ -9,6 +9,14 @@ export function isApiEnabled(): boolean {
   return BASE.length > 0;
 }
 
+// Absolute URL to the original tender PDF opened at a given page — browser PDF
+// viewers honour the #page fragment. Empty string when no live API is configured
+// (the mock/demo has no stored PDF), so callers can hide the link.
+export function tenderPdfPageUrl(tenderId: string, page: number): string {
+  if (!BASE) return "";
+  return `${BASE}/tenders/${tenderId}/pdf#page=${page}`;
+}
+
 interface UploadResult {
   tender_id: string;
   requirement_count?: number;
