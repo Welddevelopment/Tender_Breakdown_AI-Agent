@@ -28,7 +28,7 @@
   — demo is now **key-independent**; async-upload silent-crash bug fixed.
 - **Headline number:** SPSO tender (pp.1–6), OpenAI extractor → **recall 0.947 (18/19), gating
   recall 1.0 · gating accuracy 1.0 (both disqualifiers caught, zero over-flagging), 0 dangerous
-  misses.**
+  misses. Autofill: 109/183 grounded · 0 bluffs.**
 - **Next up:** wire `spso-prebake.json` into `/demo` route (frontend, G-021); set `OPENAI_API_KEY`
   on Render behind invite-only auth for live hosted path; execute Day-4 outreach (400 named leads ready);
   execute J-043 graph reframe + PDF.js source-verification build.
@@ -109,3 +109,4 @@
 - **09:04** — **CRM hit the L-0400 goal**: 400 named leads reached across all public-sector SME segments; append-only `crm/_merge-rows.js` merge helper added *(outreach funnel at the Day-4 target — every named lead has a humanized draft ready to send)*
 - **15:04** — **SPSO demo pre-bake committed** (J-020/G-023): real gpt-4o run now in `spso-prebake.json` — 183 reqs · gating recall 1.0 · 48 grounded answers · 0 bluffs; async-upload silent-crash fixed (G-022: shadowed `_run_extract_job` was failing every async job); getTenders 401 auth regression patched (G-021) *(demo is key-independent; live upload path now actually completes end-to-end)*
 - **16:04** — **Live OpenAI path e2e verified + NHS 66pp fixture committed** (G-024): async upload → done (198 reqs, 8 deal-breakers, 221s), both SPSO disqualifiers caught, `POST /draft` → 45 grounded · 0 bluffs; NHS 66pp pre-bake adds a messy-proof fixture (498 reqs, 0 bluffs) *(the live API is proven end-to-end on a real key — Joel's "does it work?" is closed; demo has two real-tender fixtures)*
+- **17:04** — **Autofill grounding doubled + display dedupe shipped** (G-025): richer demo-bidder capability docs → autofill now grounds **109/183 SPSO reqs** (was 48), honestly leaving 74 as `needs_input`; frontend display-level dedupe collapses near-duplicates for clarity (hero 9→6, matrix 183→122 shown) without discarding data; gating rows fold on EXACT text only (adversarial pass caught fuzzy version hiding distinct NHS disqualifiers); 116 tests green · 0 bluffs *(the demo's answer-column is meaningfully full for the first time — and the matrix is uncluttered without hiding any deal-breaker)*
