@@ -9,12 +9,86 @@ export function isApiEnabled(): boolean {
   return BASE.length > 0;
 }
 
+// ---- Session token -----------------------------------------------------------
+// Bidframe is a paid product: the live API is gated behind an account. We keep the
+// bearer token in localStorage and attach it to every request. (localStorage, not an
+// httpOnly cookie, because the API is a separate cross-origin service — a bearer
+// header is the simplest correct fit for that split.)
+const TOKEN_KEY = "bf-token";
+
+export function getToken(): string | null {
+  if (typeof window === "undefined") return null;
+  try {
+    return window.localStorage.getItem(TOKEN_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function setToken(token: string): void {
+  try {
+    window.localStorage.setItem(TOKEN_KEY, token);
+  } catch {
+    // localStorage unavailable (private mode) — the session just won't persist.
+  }
+}
+
+export function clearToken(): void {
+  try {
+    window.localStorage.removeItem(TOKEN_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+
+// Authorization header for the current session, spread into each fetch's headers.
+function authHeaders(): Record<string, string> {
+  const token = getToken();
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
+export interface AuthUser {
+  id: string;
+  email: string;
+}
+
+// POST /auth/login — exchange email + password for a bearer token, which we store.
+export async function login(
+  email: string,
+  password: string
+): Promise<AuthUser> {
+  const res = await fetch(`${BASE}/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+  if (!res.ok) throw await apiError(res, `Sign in failed (${res.status})`);
+  const data = (await res.json()) as { token: string; user: AuthUser };
+  setToken(data.token);
+  return data.user;
+}
+
+// GET /auth/me — validate the stored token and return the account. Throws ApiError
+// (401) if there is no valid session; the caller treats that as "signed out".
+export async function getMe(): Promise<AuthUser> {
+  const res = await fetch(`${BASE}/auth/me`, { headers: { ...authHeaders() } });
+  if (!res.ok) throw await apiError(res, `Not signed in (${res.status})`);
+  return (await res.json()) as AuthUser;
+}
+
+export function logout(): void {
+  clearToken();
+}
+
 // Absolute URL to the original tender PDF opened at a given page — browser PDF
 // viewers honour the #page fragment. Empty string when no live API is configured
-// (the mock/demo has no stored PDF), so callers can hide the link.
+// (the mock/demo has no stored PDF), so callers can hide the link. The session token
+// rides as a query param because a plain <iframe>/link navigation can't set headers.
 export function tenderPdfPageUrl(tenderId: string, page: number): string {
   if (!BASE) return "";
-  return `${BASE}/tenders/${tenderId}/pdf#page=${page}`;
+  const token = getToken();
+  const auth = token ? `?token=${encodeURIComponent(token)}` : "";
+  return `${BASE}/tenders/${tenderId}/pdf${auth}#page=${page}`;
 }
 
 interface UploadJobResult {
@@ -83,6 +157,7 @@ export async function uploadTender(
 
   const res = await fetch(`${BASE}/tenders/upload`, {
     method: "POST",
+    headers: { ...authHeaders() },
     body: form,
   });
   if (!res.ok) throw await apiError(res, `Upload failed (${res.status})`);
@@ -94,7 +169,9 @@ export async function uploadTender(
 // GET /tenders/jobs/{id} — live extraction progress for an upload job. Maps the
 // backend's snake_case fields onto JobStatus.
 export async function getJob(jobId: string): Promise<JobStatus> {
-  const res = await fetch(`${BASE}/tenders/jobs/${jobId}`);
+  const res = await fetch(`${BASE}/tenders/jobs/${jobId}`, {
+    headers: { ...authHeaders() },
+  });
   if (!res.ok) throw await apiError(res, `Couldn't get progress (${res.status})`);
   const j = (await res.json()) as Record<string, unknown>;
   return {
@@ -116,7 +193,9 @@ export async function getJob(jobId: string): Promise<JobStatus> {
 
 // GET /tenders/{id}/requirements — returns the full tender in the locked schema.
 export async function getTender(tenderId: string): Promise<Tender> {
-  const res = await fetch(`${BASE}/tenders/${tenderId}/requirements`);
+  const res = await fetch(`${BASE}/tenders/${tenderId}/requirements`, {
+    headers: { ...authHeaders() },
+  });
   if (!res.ok) throw await apiError(res, `Fetch failed (${res.status})`);
   return (await res.json()) as Tender;
 }
@@ -131,7 +210,7 @@ export async function draftAnswers(
   opts: { provider?: "openai" | "mock"; files?: File[] } = {}
 ): Promise<Tender> {
   const query = opts.provider ? `?provider=${opts.provider}` : "";
-  const init: RequestInit = { method: "POST" };
+  const init: RequestInit = { method: "POST", headers: { ...authHeaders() } };
   if (opts.files && opts.files.length > 0) {
     const form = new FormData();
     for (const file of opts.files) form.append("files", file);
@@ -149,7 +228,7 @@ export async function patchRequirement(
 ): Promise<void> {
   const res = await fetch(`${BASE}/requirements/${id}`, {
     method: "PATCH",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...authHeaders() },
     body: JSON.stringify(body),
   });
   if (!res.ok) throw await apiError(res, `Update failed (${res.status})`);

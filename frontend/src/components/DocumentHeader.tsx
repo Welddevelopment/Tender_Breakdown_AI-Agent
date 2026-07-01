@@ -2,6 +2,7 @@
 
 import type { GroupKey } from "@/lib/triage";
 import { useRequirements } from "@/context/RequirementsContext";
+import { AccountMenu } from "./AccountMenu";
 import { SectionNav } from "./SectionNav";
 
 // The document header (layout.md section 2; design-language section 1: the
@@ -58,10 +59,9 @@ export function DocumentHeader({
           )}
         </div>
 
+        {/* CENTRE: the triage line. Three quiet in-page filters, middot separated.
+            Clicking the active one clears the filter. */}
         {triage && (
-          <>
-            {/* CENTRE: the triage line. Three quiet in-page filters, middot
-                separated. Clicking the active one clears the filter. */}
             <nav
               aria-label="Filter the worklist"
               className="flex items-center gap-3 text-sm"
@@ -104,8 +104,12 @@ export function DocumentHeader({
                 onFilter={triage.onFilter}
               />
             </nav>
+        )}
 
-            {/* RIGHT: exactly one primary action. */}
+        {/* RIGHT: the one primary action (Next, when there's a worklist), with the
+            quiet account control alongside it. */}
+        <div className="flex shrink-0 items-center gap-4">
+          {triage && (
             <button
               type="button"
               onClick={triage.onNext}
@@ -113,8 +117,9 @@ export function DocumentHeader({
             >
               {triage.nextLabel}
             </button>
-          </>
-        )}
+          )}
+          <AccountMenu />
+        </div>
       </div>
     </header>
   );

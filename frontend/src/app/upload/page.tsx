@@ -1,4 +1,5 @@
 import { AppMain } from "@/components/AppMain";
+import { AuthGate } from "@/components/AuthGate";
 import { DocumentHeader } from "@/components/DocumentHeader";
 import { UploadDropzone } from "@/components/UploadDropzone";
 
@@ -6,7 +7,7 @@ export const metadata = { title: "Upload · Bidframe" };
 
 export default function UploadPage() {
   return (
-    <>
+    <AuthGate>
       <DocumentHeader title="Upload a tender" />
       <AppMain>
         {/* The upload entry is the one screen we centre: a single focal action,
@@ -20,6 +21,6 @@ export default function UploadPage() {
           <UploadDropzone />
         </div>
       </AppMain>
-    </>
+    </AuthGate>
   );
 }

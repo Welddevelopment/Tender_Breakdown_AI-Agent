@@ -30,8 +30,10 @@ Check it's alive: `curl http://localhost:8000/health` → `{"status":"ok","extra
 | `extract.py` | chunk → raw requirements. **Pluggable:** heuristic (no key), **OpenAI** (`OPENAI_API_KEY`), or Claude (`ANTHROPIC_API_KEY`). Retries 3× with exponential backoff. |
 | `graph.py` | criteria_ref + depends_on edges (regex + cross-reference detection) |
 | `pipeline.py` | ingest → chunk → extract → reconcile → graph → autofill → `TenderResponse` |
-| `store.py` | SQLite persistence (tenders + requirements + capability docs) |
+| `store.py` | SQLite persistence (tenders + requirements + capability docs + users) |
 | `schema.py` | the locked data contract as Pydantic models |
+| `auth.py` | invite-only auth: pbkdf2 password hashing, JWT sessions, the `current_user` guard |
+| `admin.py` | CLI to create/list accounts (`python -m app.admin …`) — there is no public signup |
 | `main.py` | the FastAPI app + all endpoints |
 
 ### Extraction is pluggable
@@ -39,16 +41,45 @@ Check it's alive: `curl http://localhost:8000/health` → `{"status":"ok","extra
 - **`OPENAI_API_KEY` set →** `OpenAIExtractor` (our provider) — function-calling structured output, gating recall 1.0 on SPSO.
 - **`ANTHROPIC_API_KEY` →** `ClaudeExtractor` (alternative). Force any with `LLM_PROVIDER=openai|anthropic|heuristic`.
 
+## Authentication (invite-only)
+
+Bidframe is a paid product, so every tender endpoint is gated: it requires a bearer
+token and only ever returns the **caller's own** tenders. There is no public signup —
+you create accounts for customers with the admin CLI.
+
+```bash
+# 1. Set a strong signing secret (>=32 bytes) wherever the API runs. Without it the
+#    dev default is used, which is insecure and fine only for local work.
+export AUTH_SECRET="$(python -c 'import secrets; print(secrets.token_urlsafe(48))')"
+
+# 2. Create an account (prompts for the password; --password to pass it inline).
+cd backend
+python -m app.admin create-user alice@firm.co.uk
+python -m app.admin list-users
+python -m app.admin set-password alice@firm.co.uk   # reset a password
+```
+
+Sign in from the frontend, or directly:
+`POST /auth/login {email, password}` → `{ token, user }`. Send the token as
+`Authorization: Bearer <token>` on every request (the frontend does this
+automatically once signed in). Tokens are stateless JWTs, valid 7 days.
+
 ## Endpoints
 
-| Method | Path | Does |
-|--------|------|------|
-| `GET` | `/health` | `{ status, extractor }` — also wakes up the Render free tier |
-| `GET` | `/tenders` | List all uploaded tenders `[{ tender_id, title, requirement_count }]` |
-| `POST` | `/tenders/upload` | multipart PDF (`file`, optional `title`) → `{ tender_id, requirement_count }` |
-| `GET`  | `/tenders/{id}/requirements` | `{ tender_id, title, requirements, capability_docs }` in the locked schema |
-| `POST` | `/tenders/{id}/draft` | Auditable autofill — re-draft answers with `?provider=openai` or upload capability docs |
-| `PATCH`| `/requirements/{id}` | body `{ status?, decision? }` → updated requirement |
+Everything under `/tenders` and `/requirements` requires a valid bearer token (401
+otherwise) and is scoped to the signed-in user (someone else's tender reads as 404).
+
+| Method | Path | Auth | Does |
+|--------|------|------|------|
+| `GET` | `/health` | — | `{ status, extractor }` — also wakes up the Render free tier |
+| `POST` | `/auth/login` | — | `{ email, password }` → `{ token, user }` (generic 401 on bad creds) |
+| `GET` | `/auth/me` | ✓ | the signed-in `{ id, email }` — the frontend validates the token with this |
+| `GET` | `/tenders` | ✓ | List the user's tenders `[{ tender_id, title, requirement_count }]` |
+| `POST` | `/tenders/upload` | ✓ | multipart PDF (`file`, optional `title`) → `{ job_id, tender_id }` (`?sync=1` → `{ tender_id, requirement_count }`) |
+| `GET`  | `/tenders/{id}/requirements` | ✓ | `{ tender_id, title, requirements, capability_docs }` in the locked schema |
+| `GET`  | `/tenders/{id}/pdf` | ✓ | the original PDF inline (bearer header **or** `?token=` for `<iframe>`/link opens) |
+| `POST` | `/tenders/{id}/draft` | ✓ | Auditable autofill — re-draft answers with `?provider=openai` or upload capability docs |
+| `PATCH`| `/requirements/{id}` | ✓ | body `{ status?, decision? }` → updated requirement |
 
 ## Error handling
 

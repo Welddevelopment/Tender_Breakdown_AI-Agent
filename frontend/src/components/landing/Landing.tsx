@@ -28,7 +28,15 @@ export function Landing() {
       <header className="sticky top-0 z-30 border-b-2 border-ink bg-paper/85 backdrop-blur-sm">
         <div className={`${CONTAINER} flex items-center justify-between py-3`}>
           <BrandLogo className="h-7 w-auto" />
-          <BookDemoButton location="masthead" />
+          <div className="flex items-center gap-5">
+            <Link
+              href="/login"
+              className="rounded-sm text-sm text-ink-muted underline decoration-hairline decoration-1 underline-offset-4 transition-colors hover:text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-forest focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+            >
+              Sign in
+            </Link>
+            <BookDemoButton location="masthead" />
+          </div>
         </div>
       </header>
 

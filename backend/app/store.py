@@ -53,6 +53,12 @@ def init_db() -> None:
                 data      TEXT NOT NULL,
                 FOREIGN KEY (tender_id) REFERENCES tenders(id)
             );
+            CREATE TABLE IF NOT EXISTS users (
+                id            TEXT PRIMARY KEY,
+                email         TEXT NOT NULL UNIQUE COLLATE NOCASE,
+                password_hash TEXT NOT NULL,
+                created_at    TEXT NOT NULL
+            );
             """
         )
         # Additive migration: the bidder's capability docs (autofill envelope). Idempotent,
@@ -60,17 +66,23 @@ def init_db() -> None:
         cols = [row["name"] for row in c.execute("PRAGMA table_info(tenders)").fetchall()]
         if "capability_docs" not in cols:
             c.execute("ALTER TABLE tenders ADD COLUMN capability_docs TEXT")
+        # Additive migration: tender ownership (per-user isolation, invite-only auth).
+        # Existing rows get owner=NULL (unowned, invisible to users) — a clean auth start.
+        if "owner" not in cols:
+            c.execute("ALTER TABLE tenders ADD COLUMN owner TEXT")
 
 
 def _caps_json(resp: TenderResponse) -> str:
     return json.dumps([cd.model_dump() for cd in resp.capability_docs])
 
 
-def save_tender(resp: TenderResponse, filename: str | None = None) -> None:
+def save_tender(resp: TenderResponse, filename: str | None = None,
+                owner: str | None = None) -> None:
     with _conn() as c:
         c.execute(
-            "INSERT OR REPLACE INTO tenders (id, title, filename, capability_docs) VALUES (?, ?, ?, ?)",
-            (resp.tender_id, resp.title, filename, _caps_json(resp)),
+            "INSERT OR REPLACE INTO tenders (id, title, filename, capability_docs, owner) "
+            "VALUES (?, ?, ?, ?, ?)",
+            (resp.tender_id, resp.title, filename, _caps_json(resp), owner),
         )
         c.execute("DELETE FROM requirements WHERE tender_id = ?", (resp.tender_id,))
         for seq, req in enumerate(resp.requirements):
@@ -117,16 +129,76 @@ def get_tender(tender_id: str) -> TenderResponse | None:
     )
 
 
-def list_tenders() -> list[dict]:
-    """Return a summary of all uploaded tenders (id, title, requirement count)."""
+def list_tenders(owner: str | None = None) -> list[dict]:
+    """Return a summary of the owner's tenders (id, title, requirement count). With no
+    owner, returns all tenders (used only by trusted callers / eval, never by the API)."""
     with _conn() as c:
-        rows = c.execute(
+        base = (
             "SELECT t.id, t.title, COUNT(r.id) as req_count "
             "FROM tenders t LEFT JOIN requirements r ON t.id = r.tender_id "
-            "GROUP BY t.id ORDER BY t.id DESC"
-        ).fetchall()
+        )
+        if owner is not None:
+            rows = c.execute(
+                base + "WHERE t.owner = ? GROUP BY t.id ORDER BY t.id DESC", (owner,)
+            ).fetchall()
+        else:
+            rows = c.execute(base + "GROUP BY t.id ORDER BY t.id DESC").fetchall()
     return [{"tender_id": row["id"], "title": row["title"], "requirement_count": row["req_count"]}
             for row in rows]
+
+
+def get_tender_owner(tender_id: str) -> str | None:
+    """The user id that owns a tender, or None if the tender is missing/unowned. Used to
+    enforce per-user isolation before returning or mutating tender data."""
+    with _conn() as c:
+        row = c.execute("SELECT owner FROM tenders WHERE id = ?", (tender_id,)).fetchone()
+    return row["owner"] if row is not None else None
+
+
+def get_requirement_owner(req_id: str) -> str | None:
+    """The user id that owns the tender a requirement belongs to (for PATCH isolation)."""
+    with _conn() as c:
+        row = c.execute(
+            "SELECT t.owner FROM requirements r JOIN tenders t ON r.tender_id = t.id "
+            "WHERE r.id = ?",
+            (req_id,),
+        ).fetchone()
+    return row["owner"] if row is not None else None
+
+
+# ---- Users (invite-only auth) ------------------------------------------------
+
+def create_user(user_id: str, email: str, password_hash: str, created_at: str) -> None:
+    """Insert a user. Raises sqlite3.IntegrityError if the email already exists."""
+    with _conn() as c:
+        c.execute(
+            "INSERT INTO users (id, email, password_hash, created_at) VALUES (?, ?, ?, ?)",
+            (user_id, email.strip(), password_hash, created_at),
+        )
+
+
+def get_user_by_email(email: str) -> dict | None:
+    with _conn() as c:
+        row = c.execute(
+            "SELECT id, email, password_hash FROM users WHERE email = ?", (email.strip(),)
+        ).fetchone()
+    return dict(row) if row is not None else None
+
+
+def get_user_by_id(user_id: str) -> dict | None:
+    with _conn() as c:
+        row = c.execute(
+            "SELECT id, email FROM users WHERE id = ?", (user_id,)
+        ).fetchone()
+    return dict(row) if row is not None else None
+
+
+def list_users() -> list[dict]:
+    with _conn() as c:
+        rows = c.execute(
+            "SELECT id, email, created_at FROM users ORDER BY created_at"
+        ).fetchall()
+    return [dict(r) for r in rows]
 
 
 def update_requirement(req_id: str, update: DecisionUpdate) -> Requirement | None:

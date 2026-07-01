@@ -4,7 +4,7 @@
 >
 > **Interactive graph:** [`frontend/public/codemap.html`](frontend/public/codemap.html) — drag / zoom / click-to-focus; served at `/codemap.html` on the Vercel deploy. (The diagrams below render right here on GitHub.)
 >
-> Map of commit `f6be3ef` · 2026-07-01T02:04:46+01:00
+> Map of commit `d037b08` · 2026-07-01T01:04:56Z
 
 **Read this first** for a current picture of the codebase — what lives where, and what imports what. It is the fast path to context for both humans and agents. If it looks wrong, it is stale: re-run the generator and push.
 
@@ -12,8 +12,8 @@
 
 | Area | Files | Lines | What it is |
 |------|-------|-------|------------|
-| **frontend** | 80 | 15,049 | Frontend — Next.js 16 / React 19 / Tailwind (compliance matrix UI) |
-| **backend** | 17 | 2,076 | Backend — FastAPI (PDF ingest, extraction, REST API) |
+| **frontend** | 80 | 15,154 | Frontend — Next.js 16 / React 19 / Tailwind (compliance matrix UI) |
+| **backend** | 17 | 2,238 | Backend — FastAPI (PDF ingest, extraction, REST API) |
 | **engine** | 48 | 2,994 | Engine — reconcile / eval / answer-draft pipeline + tests |
 | **prompts** | 6 | 678 | Prompts — LLM prompt specs (extraction, classification, answers, gaps) |
 | **gold** | 4 | 219 | Eval gold-set — hand-labelled requirements for accuracy measurement |
@@ -22,7 +22,7 @@
 | **docs** | 3 | 1,663 | Docs — plans & specs |
 | **ci** | 1 | 62 | CI — GitHub Actions |
 | **tooling** | 1 | 516 | Tooling — repo scripts (incl. this map generator) |
-| **root** | 254 | 11,015 | Root — docs, config, role briefs |
+| **root** | 254 | 11,016 | Root — docs, config, role briefs |
 
 ## System shape
 

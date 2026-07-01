@@ -17,16 +17,17 @@ import uuid
 from pathlib import Path
 from typing import List, Optional
 
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, UploadFile
 from fastapi.concurrency import run_in_threadpool
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 
+from .auth import current_user
 from .extract import get_extractor
 from .ingest import ingest_pdf, PDFIngestError
 from .pipeline import run_pipeline
 from .schema import DecisionUpdate, Requirement, TenderResponse
-from . import pipeline, store
+from . import auth, pipeline, store
 
 # The generalist's autofill answerers (engine.answer). Guarded like the pipeline import:
 # present at repo-root runtime, absent on a backend-rooted deploy (then /draft returns 503).
@@ -117,15 +118,16 @@ def _set_job(job_id: str, **patch) -> None:
                 JOBS.pop(jid, None)
 
 
-def _run_extract_job(job_id: str, pdf_path: str, tender_id: str, title: str, filename: str) -> None:
+def _run_extract_job(job_id: str, pdf_path: str, tender_id: str, title: str,
+                     filename: str, owner: str) -> None:
     """Run the pipeline on a background thread, streaming progress into JOBS. The result
-    is persisted; the UI polls GET /tenders/jobs/{job_id} until status=done."""
+    is persisted under `owner`; the UI polls GET /tenders/jobs/{job_id} until status=done."""
     def on_progress(**ev) -> None:
         _set_job(job_id, status="processing", **ev)
 
     try:
         resp = run_pipeline(pdf_path, tender_id=tender_id, title=title, on_progress=on_progress)
-        store.save_tender(resp, filename=filename)
+        store.save_tender(resp, filename=filename, owner=owner)
         _set_job(
             job_id,
             status="done",
@@ -154,11 +156,32 @@ def health():
     return {"status": "ok", "extractor": get_extractor().name}
 
 
+# ---- Auth (invite-only; accounts created via `python -m app.admin`) ----------
+
+@app.post("/auth/login", response_model=auth.AuthResponse)
+def login(body: auth.LoginRequest):
+    """Exchange email + password for a bearer token. One generic error for both a
+    missing account and a wrong password, so the endpoint can't be used to enumerate
+    which emails have accounts."""
+    store.init_db()
+    user = store.get_user_by_email(body.email)
+    if user is None or not auth.verify_password(body.password, user["password_hash"]):
+        raise HTTPException(status_code=401, detail="Incorrect email or password.")
+    token = auth.create_token(user["id"])
+    return {"token": token, "user": {"id": user["id"], "email": user["email"]}}
+
+
+@app.get("/auth/me", response_model=auth.AuthUser)
+def me(user: dict = Depends(current_user)):
+    """Return the signed-in account — the frontend calls this on load to confirm the
+    stored token is still valid before showing the app."""
+    return {"id": user["id"], "email": user["email"]}
+
+
 @app.get("/tenders")
-def list_tenders():
-    """List all uploaded tenders (id, title, requirement count). Useful for the frontend
-    to show previously processed tenders without re-uploading."""
-    return store.list_tenders()
+def list_tenders(user: dict = Depends(current_user)):
+    """List the signed-in user's uploaded tenders (id, title, requirement count)."""
+    return store.list_tenders(owner=user["id"])
 
 
 @app.post("/tenders/upload")
@@ -166,6 +189,7 @@ async def upload_tender(
     file: UploadFile = File(...),
     title: str = Form(None),
     sync: bool = False,   # ?sync=1 → block until done (eval harness / back-compat)
+    user: dict = Depends(current_user),
 ):
     """Save the PDF, then run extraction on a background job so the upload UI can show
     live progress. Returns { job_id, tender_id } immediately; poll
@@ -202,37 +226,41 @@ async def upload_tender(
                 status_code=500,
                 detail=f"Pipeline failed on this PDF: {exc}. The file may be corrupt or unsupported.",
             )
-        store.save_tender(resp, filename=file.filename)
+        store.save_tender(resp, filename=file.filename, owner=user["id"])
         return {"tender_id": tender_id, "requirement_count": len(resp.requirements)}
 
     job_id = f"job-{uuid.uuid4().hex[:8]}"
     _set_job(
         job_id, status="processing", stage="queued",
-        message="Starting", progress=0.02, tender_id=tender_id,
+        message="Starting", progress=0.02, tender_id=tender_id, owner=user["id"],
     )
     threading.Thread(
         target=_run_extract_job,
-        args=(job_id, str(dest), tender_id, resolved_title, file.filename),
+        args=(job_id, str(dest), tender_id, resolved_title, file.filename, user["id"]),
         daemon=True,
     ).start()
     return {"job_id": job_id, "tender_id": tender_id}
 
 
 @app.get("/tenders/jobs/{job_id}")
-def get_job(job_id: str):
+def get_job(job_id: str, user: dict = Depends(current_user)):
     """Live progress for an extraction job — poll this after upload. Returns the current
     stage / message / progress (0–1) + counts, and status: processing | done | error
-    (with detail on error)."""
+    (with detail on error). Only the user who started the job can poll it."""
     with _JOBS_LOCK:
         snapshot = dict(JOBS[job_id]) if job_id in JOBS else None
-    if snapshot is None:
+    if snapshot is None or snapshot.get("owner") != user["id"]:
         raise HTTPException(status_code=404, detail="Job not found (it may have expired).")
+    snapshot.pop("owner", None)  # internal — never sent to the client
     return {"job_id": job_id, **snapshot}
 
 
 @app.get("/tenders/{tender_id}/requirements", response_model=TenderResponse)
-def get_requirements(tender_id: str):
-    """Return { tender_id, title, requirements: [...] } in the locked schema."""
+def get_requirements(tender_id: str, user: dict = Depends(current_user)):
+    """Return { tender_id, title, requirements: [...] } in the locked schema — only if
+    the tender belongs to the signed-in user (else 404, so ownership can't be probed)."""
+    if store.get_tender_owner(tender_id) != user["id"]:
+        raise HTTPException(status_code=404, detail="Tender not found.")
     resp = store.get_tender(tender_id)
     if resp is None:
         raise HTTPException(status_code=404, detail="Tender not found.")
@@ -240,14 +268,31 @@ def get_requirements(tender_id: str):
 
 
 @app.get("/tenders/{tender_id}/pdf")
-def get_tender_pdf(tender_id: str):
+def get_tender_pdf(
+    tender_id: str,
+    token: Optional[str] = None,          # accepted so an <iframe>/link can authenticate
+    authorization: str = Header(None),
+):
     """Serve the original uploaded PDF so the frontend can open the exact source page
     (e.g. /tenders/{id}/pdf#page=14 — browser PDF viewers honour the #page fragment).
     Inline, so the browser renders it in place rather than downloading. The PDF is
-    persisted at upload time (data/uploads/{id}.pdf)."""
+    persisted at upload time (data/uploads/{id}.pdf). Owner-scoped.
+
+    A browser opening this in an <iframe> or a new tab can't set an Authorization
+    header, so the bearer token is accepted as a `?token=` query param too."""
+    raw = None
+    if authorization and authorization.lower().startswith("bearer "):
+        raw = authorization[7:].strip()
+    elif token:
+        raw = token
+    user = auth.user_from_token(raw)
+    if user is None:
+        raise HTTPException(status_code=401, detail="Sign in to view this document.")
     # Our ids look like "tnd-<hex>"; guard against path traversal just in case.
     if not tender_id.replace("-", "").isalnum():
         raise HTTPException(status_code=400, detail="Invalid tender id.")
+    if store.get_tender_owner(tender_id) != user["id"]:
+        raise HTTPException(status_code=404, detail="Source PDF not available for this tender.")
     path = UPLOAD_DIR / f"{tender_id}.pdf"
     if not path.is_file():
         raise HTTPException(status_code=404, detail="Source PDF not available for this tender.")
@@ -267,6 +312,7 @@ async def draft_tender(
     provider: Optional[str] = None,                       # "mock" | "openai" | None (env-driven)
     limit: Optional[int] = None,                          # draft only the top-N (gating-first) for speed
     files: Optional[List[UploadFile]] = File(None),       # optional capability docs (.txt/.pdf)
+    user: dict = Depends(current_user),
 ):
     """Auditable autofill: draft a grounded answer per requirement from the bidder's
     capability docs — uploaded here, else the demo bidder — and persist them. Every claim
@@ -277,6 +323,8 @@ async def draft_tender(
     (gating first) for a fast live demo, leaving the rest with their upload-time drafts."""
     if not pipeline._HAVE_ANSWER or not _HAVE_ANSWER_API:
         raise HTTPException(status_code=503, detail="Autofill engine not on this deployment's path.")
+    if store.get_tender_owner(tender_id) != user["id"]:
+        raise HTTPException(status_code=404, detail="Tender not found.")
     resp = store.get_tender(tender_id)
     if resp is None:
         raise HTTPException(status_code=404, detail="Tender not found.")
@@ -301,8 +349,11 @@ async def draft_tender(
 
 
 @app.patch("/requirements/{req_id}", response_model=Requirement)
-def update_requirement(req_id: str, update: DecisionUpdate):
-    """Update status + decision for one requirement."""
+def update_requirement(req_id: str, update: DecisionUpdate,
+                       user: dict = Depends(current_user)):
+    """Update status + decision for one requirement — only on a tender the user owns."""
+    if store.get_requirement_owner(req_id) != user["id"]:
+        raise HTTPException(status_code=404, detail="Requirement not found.")
     req = store.update_requirement(req_id, update)
     if req is None:
         raise HTTPException(status_code=404, detail="Requirement not found.")

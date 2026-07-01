@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Fraunces, IBM_Plex_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
+import { AuthProvider } from "@/context/AuthContext";
 import { RequirementsProvider } from "@/context/RequirementsContext";
 
 // Bidframe type system (DESIGN-SYSTEM.md §11): Fraunces headings, Chillax body,
@@ -48,7 +49,9 @@ export default function RootLayout({
       className={`${fraunces.variable} ${chillax.variable} ${plexMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-paper">
-        <RequirementsProvider>{children}</RequirementsProvider>
+        <AuthProvider>
+          <RequirementsProvider>{children}</RequirementsProvider>
+        </AuthProvider>
       </body>
     </html>
   );

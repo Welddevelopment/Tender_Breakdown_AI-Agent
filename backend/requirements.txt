@@ -5,6 +5,8 @@ python-multipart
 pymupdf
 pdfplumber
 pypdf
+# Auth: JWT session tokens (self-hosted, invite-only). Passwords use stdlib pbkdf2.
+PyJWT>=2.8
 # LLM extractor. OpenAI is our chosen provider (hackathon credits) — set OPENAI_API_KEY.
 # The heuristic extractor runs without any key. anthropic is an optional alternative.
 openai

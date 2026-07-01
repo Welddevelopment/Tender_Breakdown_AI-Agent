@@ -1,4 +1,5 @@
 import { AppMain } from "@/components/AppMain";
+import { AuthGate } from "@/components/AuthGate";
 import { AutofillButton } from "@/components/AutofillButton";
 import { CapabilityUpload } from "@/components/CapabilityUpload";
 import { DocumentHeader } from "@/components/DocumentHeader";
@@ -8,6 +9,7 @@ export const metadata = { title: "Answers, with receipts · Bidframe" };
 
 export default function AnswersPage() {
   return (
+    <AuthGate>
     <div className="flex min-h-full flex-col bg-paper">
       <DocumentHeader title="Answers, with receipts" />
 
@@ -30,5 +32,6 @@ export default function AnswersPage() {
         </div>
       </AppMain>
     </div>
+    </AuthGate>
   );
 }
