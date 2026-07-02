@@ -120,7 +120,7 @@ export function Landing() {
               the product sheet. The one symmetric moment, earned. */}
           <section className={`${CONTAINER} relative z-10 pt-16 pb-8 text-center sm:pt-24 sm:pb-12`}>
             <h1 className="hero-enter font-serif font-semibold tracking-tight text-ink">
-              <span className="block text-balance text-5xl leading-[1.02] sm:whitespace-nowrap sm:text-6xl md:text-7xl">
+              <span className="block text-balance text-6xl leading-[0.98] sm:whitespace-nowrap sm:text-7xl md:text-[5.75rem] lg:text-[7rem] xl:text-[8rem]">
                 Never lose a bid
               </span>
               <span className="mt-3 block text-balance text-2xl font-medium leading-[1.12] sm:whitespace-nowrap sm:text-3xl md:text-4xl">
