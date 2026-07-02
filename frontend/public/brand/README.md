@@ -1,10 +1,11 @@
-# Bidframe — Brand Assets
+# Bidframe - Brand Assets
 
 The Bidframe mark: an **owl** held in a paper disc — it reads in the dark and
-catches what you'd miss. Its right eye is the oxblood **deal-breaker bead**, the
-same signal used throughout the product.
+catches what you'd miss. The face uses a sharper brow, clear ear tufts, and a
+small forest chest so the mark reads as an owl at nav and favicon sizes.
 
-Direction **3b**: paper disc, ink keyline, ink owl, amber beak, oxblood eye.
+Direction: paper disc, ink keyline, ink owl, forest chest and beak. Status
+colours stay out of the brand mark.
 
 ---
 
@@ -39,9 +40,7 @@ set if you do: `bidframe-mark-512/192.png`, `bidframe-apple-touch-180.png`,
 |-------|-----|------|
 | Ink | `#211d17` | Owl, keyline, wordmark |
 | Paper | `#f6f2e9` | Disc, knockouts |
-| Oxblood | `#8a2d2a` | Deal-breaker eye-bead |
-| Coral | `#d2785a` | Eye-bead on dark (ink favicon only) |
-| Amber | `#d2a435` | Beak |
+| Forest | `#2c5640` | Chest and beak |
 
 Wordmark: **Fraunces**, weight 600, tracking ≈ -0.02em.
 

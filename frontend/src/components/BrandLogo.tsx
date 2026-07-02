@@ -1,7 +1,6 @@
-// The Bidframe lockup: a friendlier forest owl plus the Fraunces wordmark,
+// The Bidframe lockup: a restrained forest owl plus the Fraunces wordmark,
 // rendered inline so it inherits the page's loaded Fraunces and costs no extra
-// request. The owl keeps the original mascot idea, but uses rounder geometry
-// and forest as brand furniture instead of signal colour.
+// request. The mark avoids status colours and keeps owl cues legible at nav size.
 export function BrandLogo({
   reversed = false,
   className = "",
@@ -29,30 +28,35 @@ export function BrandLogo({
           strokeWidth="2.2"
         />
       )}
-      <path d="M21 18L27.5 23.5L18 25Z" fill="#211d17" />
-      <path d="M43 18L36.5 23.5L46 25Z" fill="#211d17" />
       <path
-        d="M32 16C21.5 16 16.5 24.4 16.5 34.2C16.5 45.3 23.3 51 32 51C40.7 51 47.5 45.3 47.5 34.2C47.5 24.4 42.5 16 32 16Z"
+        d="M18.2 24.3L21.5 14.8L28.4 20.3C29.6 20 30.8 19.8 32 19.8C33.2 19.8 34.4 20 35.6 20.3L42.5 14.8L45.8 24.3C48.5 27.5 49.8 31.5 49.8 36.2C49.8 46.4 42.6 52 32 52C21.4 52 14.2 46.4 14.2 36.2C14.2 31.5 15.5 27.5 18.2 24.3Z"
         fill="#211d17"
       />
       <path
-        d="M22.4 37.5C24.6 44 28.5 47.2 32 47.2C35.5 47.2 39.4 44 41.6 37.5C38.4 39.2 35.1 40 32 40C28.9 40 25.6 39.2 22.4 37.5Z"
+        d="M21.2 30.3C21.2 25.6 24.3 22.5 28.5 22.5C30.2 22.5 31.5 23 32 23.9C32.5 23 33.8 22.5 35.5 22.5C39.7 22.5 42.8 25.6 42.8 30.3C42.8 35 39.6 38.2 35.6 38.2C34 38.2 32.8 37.7 32 36.8C31.2 37.7 30 38.2 28.4 38.2C24.4 38.2 21.2 35 21.2 30.3Z"
+        fill="#f6f2e9"
+      />
+      <path
+        d="M22.3 38.3C24.7 46 28.3 49.1 32 49.1C35.7 49.1 39.3 46 41.7 38.3C38.5 39.8 35.2 40.6 32 40.6C28.8 40.6 25.5 39.8 22.3 38.3Z"
         fill="#2c5640"
       />
       <path
-        d="M21.8 31.2C21.8 26.9 24.8 23.9 28.5 23.9C30 23.9 31.2 24.3 32 25.1C32.8 24.3 34 23.9 35.5 23.9C39.2 23.9 42.2 26.9 42.2 31.2C42.2 35.1 39.4 37.9 35.7 37.9C34.1 37.9 32.8 37.4 32 36.5C31.2 37.4 29.9 37.9 28.3 37.9C24.6 37.9 21.8 35.1 21.8 31.2Z"
-        fill="#f6f2e9"
-      />
-      <circle cx="27.2" cy="31.2" r="2.5" fill="#211d17" />
-      <circle cx="36.8" cy="31.2" r="2.5" fill="#211d17" />
-      <circle cx="28.1" cy="30.2" r="0.8" fill="#f6f2e9" />
-      <circle cx="37.7" cy="30.2" r="0.8" fill="#f6f2e9" />
-      <path d="M32 35.1L35 38.8H29Z" fill="#2c5640" />
-      <path
-        d="M24 43.5C26.2 45.8 28.8 47 32 47C35.2 47 37.8 45.8 40 43.5"
-        stroke="#f6f2e9"
-        strokeWidth="1.4"
+        d="M24.1 27.2L29.8 28.7M39.9 27.2L34.2 28.7"
+        stroke="#211d17"
+        strokeWidth="1.6"
         strokeLinecap="round"
+      />
+      <circle cx="27.2" cy="31.2" r="2.35" fill="#211d17" />
+      <circle cx="36.8" cy="31.2" r="2.35" fill="#211d17" />
+      <circle cx="28" cy="30.4" r="0.65" fill="#f6f2e9" />
+      <circle cx="37.6" cy="30.4" r="0.65" fill="#f6f2e9" />
+      <path d="M32 34.2L35.1 38.1H28.9Z" fill="#2c5640" />
+      <path
+        d="M27.2 43.1L32 46.7L36.8 43.1"
+        stroke="#f6f2e9"
+        strokeWidth="1.35"
+        strokeLinecap="round"
+        strokeLinejoin="round"
         opacity="0.85"
       />
       <text
