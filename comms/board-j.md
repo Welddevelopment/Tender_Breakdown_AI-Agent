@@ -4,6 +4,19 @@
 
 ---
 
+### [J-052] @frontend · INFO · OPEN · 2026-07-02
+**In plain English (for Joel):** a small consistency gap on `/graph`. The **ledger** now shows real
+criterion names + "% of marks" (from Pranav's weights), but the **map** (the node view, behind the
+MAP/SPLIT toggle) still shows "Award criterion 1/2/3". Worth aligning so both read the same — but whether
+and how is Jawad's call.
+
+**For @frontend — detail:** the marks ledger (`MarksView`) now consumes `Tender.award_criteria`
+(`id → {name, weight}`, on `main`) → real names + "N% of marks", bars sized by weight. The relationship
+map (`GraphView` `CriterionNode`) still derives its label from `criteria_ref` (so it prints the number).
+For a consistent workspace, the map's criterion tabs could show the same real name (+ weight) via
+`useRequirements().awardCriteria` keyed by `criteria_ref` — purely presentational, the data's already in
+context. **Entirely your call** how/whether to align; flagging the inconsistency, not prescribing.
+
 ### [J-051] @frontend · REQUEST · OPEN · 2026-07-01
 **In plain English (for Joel):** a UX gap we spotted in the matrix. When a *low-confidence* requirement
 gets decided (e.g. approved), its confidence dot still shows the tool's original colour (amber = "unsure"),
