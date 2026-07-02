@@ -1728,5 +1728,89 @@ These are perfect-shape tiny firms with NAMED council/HA clients but **no email 
 >
 > Joel, Bidframe
 
+### Wave 6b — family fire-risk assessors / fire-door / passive fire protection (Building Safety Act)
+*5 verified · all kept (1 PERFECT, 4 GOOD) · 0 duplicates. Seam note: thinning for strict ICP — tiny FRA sole traders rarely name clients; fire-door installers that name councils tend to be mid/large.*
+
+---
+
+#### MT-107 · B L Fire Risk Limited · to: bill@blfirerisk.co.uk · PERFECT
+*One-person owner-operator FRA practice (William "Bill" Failey, MIFSM/FRACS/GIFireE), independent of any equipment/alarm company. Named client: Hull College (FE); social-housing & education experience. Source: blfirerisk.co.uk*
+**Subject:** Your FRA bids for colleges & social housing — deal-breakers caught first
+> Hi Bill,
+>
+> You already do fire-risk assessments for an FE college and social-housing blocks — so as you bid council/HA FRA work, one missed pass/fail requirement (a competency/PAS 79 clause, an insurance level) voids the whole submission.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its exact clause, then drafts each answer from your own competency and method docs — a citation on every claim, nothing invented.
+>
+> I'm running free 15-minute live reads today and tomorrow — send me a council/HA FRA tender you're bidding and I'll show you, on the call, exactly what would disqualify it. A couple of slots left; after this week it's a paid pilot.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
+#### MT-108 · Kelray Limited · to: enquiries@kelray.co.uk · GOOD
+*Owner-run FIRAS timber fire-door installer ("Carl and his team"), single unit in Merthyr Tydfil. Self-declared local-authority / social-housing / NHS-estate work (none named). Source: kelray.co.uk/case-studies/fire-door-case-studies*
+**Subject:** Council & HA fire-door framework bids — the pass/fail gates
+> Hi Carl,
+>
+> Under the Building Safety Act, councils and HAs are tendering fire-door work fast — and one missed pass/fail requirement (a FIRAS scope, a data/traceability clause, an insurance level) voids the whole bid.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its clause, then drafts each answer from your own certifications and method docs — a citation on every claim, nothing invented.
+>
+> Free 15-minute live reads today and tomorrow — send me a council/HA fire-door tender you're bidding and I'll show you what would disqualify it, live. Paid pilot after this week.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
+#### MT-109 · CWB Fire Safety Consultancy · to: phil@cwbfiresafety.co.uk · GOOD
+*Solo owner-operator FRA consultancy (Phil Barry, est. 2006), Gloucestershire. Self-declared housing/healthcare/government sectors (none named). Source: cwbfiresafety.co.uk*
+**Subject:** Council / NHS / HA FRA tenders — before you commit a week to writing
+> Hi Phil,
+>
+> As a one-man FRA consultancy bidding council, NHS and social-housing work, unpaid tender-writing is time you can't spare — and one missed pass/fail requirement voids the whole bid.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its clause, then drafts each answer from your own competency and method docs — a citation on every claim, nothing invented.
+>
+> Free 15-minute live reads today and tomorrow — send me a council/NHS FRA tender you're bidding and I'll show you what would disqualify it, live. Paid pilot after this week.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
+#### MT-110 · Fire Assessments Wales Ltd · to: fireassessmentswales@gmail.com · GOOD
+*Two-man owner-run firm (Lee Hicks & Shaun Cooper), Wales & SW England; FRAs + fire-door assessment/install/maintenance. Self-declared landlords & housing associations (none named). Source: fireassessmentswalesltd.co.uk*
+**Subject:** Your HA fire-safety bids — the pass/fail gates
+> Hi Lee and Shaun,
+>
+> You target housing-association FRA and fire-door work — tenders where one missed pass/fail requirement (a competency clause, a FIRAS scope, an insurance level) voids the whole submission.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its clause, then drafts each answer from your own competency and method docs — a citation on every claim, nothing invented.
+>
+> Free 15-minute live reads today and tomorrow — send me an HA fire-safety tender you're bidding and I'll show you what would disqualify it, live. Paid pilot after this week.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
+#### MT-111 · DB Fire Safety · to: info@dbfiresafety.co.uk · GOOD
+*Small independent FRA consultancy, Cambridge ("independent, straight-talking, no upselling"). Self-declared schools/care-homes/high-rise/HMO FRAs (none named — weakest public-sector proof of this batch). Source: dbfiresafety.co.uk*
+**Subject:** School & high-rise FRA tenders — deal-breakers caught first
+> Hi there,
+>
+> You do school and high-rise fire-risk assessments — so as you bid MAT/council FRA work, one missed pass/fail requirement voids the whole submission.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its clause, then drafts each answer from your own competency and method docs — a citation on every claim, nothing invented.
+>
+> Free 15-minute live reads today and tomorrow — send me a school or council FRA tender you're bidding and I'll show you what would disqualify it, live. Paid pilot after this week.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
+**Wave 6b near-misses (manual follow-up — tiny + public-sector shape, but email not confirmable on their JS-rendered site; do NOT fabricate):**
+- **Adena Fire** — https://adenafire.co.uk — self-declares schools/supported housing; search index reports `jacqui@adenafire.co.uk` (unconfirmed on-page).
+- **Pro Fire Safe** — https://profiresafe.co.uk — London communal-area FRAs for HAs; search index reports `admin@profiresafe.co.uk` (unconfirmed on-page).
+
 <!-- next waves appended below -->
 
