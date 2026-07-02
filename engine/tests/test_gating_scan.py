@@ -47,12 +47,43 @@ CANONICAL_GATES = [
 ]
 
 
+# ADVERSARIAL phrasings — deliberately AVOID our keywords (synonyms + passive/legalese) to test
+# recall on wording an unseen tender might use. Exposed 16/32 misses before widening (incl. the
+# 'exclusion' noun bug); all now caught. Locked so a future pattern edit can't silently regress.
+ADVERSARIAL_GATES = [
+    "Proposals that fail to satisfy the essential criteria will be set aside.",
+    "Non-conforming tenders shall be passed over.",
+    "The panel will disregard any late submission.",
+    "Any bid received after the closing time will be returned unopened.",
+    "Submissions that do not meet the requirements will be ruled out.",
+    "A response lacking the signed declaration is invalid.",
+    "Incomplete responses will not be taken forward.",
+    "Bids failing to conform to the instructions may be set aside without further consideration.",
+    "Tenders omitting mandatory information will be treated as non-compliant.",
+    "Bids scoring below the pass mark are eliminated.",
+    "A tender that does not reach the quality threshold will not proceed.",
+    "Bidders lacking the required accreditation cannot be considered.",
+    "Firms without the necessary licences are ineligible to bid.",
+    "You are required to hold a valid waste carrier licence.",
+    "Tenderers must be a member of an approved contractors scheme.",
+    "The tenderer must demonstrate at least three years of relevant experience.",
+    "Economic operators must not be subject to any ground for exclusion.",
+    "Suppliers failing the financial standing assessment will not progress.",
+    "Annual turnover of no less than five hundred thousand pounds is required.",
+    "Any attempt to influence the evaluation will lead to disqualification.",
+    "Undisclosed conflicts of interest will result in exclusion.",
+    "Offers must reach the authority by the stated time; those that do not are excluded.",
+    "Submissions received after the specified time will not be entertained.",
+    "A mandatory site visit is a condition of bidding.",
+]
+
+
 def test_net_catches_canonical_uk_ps_gate_phrasings():
     """Generalisation guard: the deterministic net must recognise standard UK public-sector
     deal-breaker phrasings beyond the 2 tenders we have gold for, or a real unseen tender costs
     us recall. Each line is a canonical gate statement; the net must flag every one."""
-    misses = [g for g in CANONICAL_GATES if not _STRONG.search(g)]
-    assert not misses, f"net missed canonical gate phrasings: {misses}"
+    misses = [g for g in CANONICAL_GATES + ADVERSARIAL_GATES if not _STRONG.search(g)]
+    assert not misses, f"net missed gate phrasings: {misses}"
 
 
 def test_taxonomy_catches_canonical_uk_ps_gate_vocabulary():

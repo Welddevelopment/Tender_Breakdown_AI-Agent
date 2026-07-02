@@ -24,17 +24,22 @@ from engine.similarity import content_tokens
 # grouped for maintainability. Specialising into public sector = making this taxonomy exhaustive.
 _STRONG = re.compile(
     # 1. explicit exclusion / rejection / disqualification / debarment
-    r"(reject(ed|ion)?|exclud(e|ed|ing|sion)|disqualif(y|ied|ication|ies)|eliminat(e|ed|ion)|"
-    r"debarr(ed|ing)?|ineligib(le|ility)?|will\s+not\s+be\s+(considered|evaluated|accepted|"
-    r"assessed|progressed|short[-\s]?listed)|shall\s+be\s+excluded|grounds\s+for\s+exclusion|"
-    r"mandatory\s+exclusion|(render|invalidat)\w*\s+.{0,25}(void|invalid|non[-\s]?compliant)|"
+    r"(reject(ed|ion)?|exclu(de|ded|ding|des|sion|sionary)|disqualif(y|ied|ication|ies)|"
+    r"eliminat(e|ed|ion)|debarr(ed|ing)?|ineligib(le|ility)?|"
+    r"(will\s+not|cannot|shall\s+not|won'?t)\s+be\s+(considered|evaluated|accepted|assessed|"
+    r"progressed|short[-\s]?listed|taken\s+forward|entertained)|shall\s+be\s+excluded|"
+    r"grounds?\s+for\s+exclusion|mandatory\s+exclusion|"
+    r"(render|invalidat)\w*\s+.{0,25}(void|invalid|non[-\s]?compliant)|"
     r"(void|invalid)\s+(tender|bid|submission|proposal|response|offer)|"
     r"(tender|bid|submission|proposal|response|offer)s?\b.{0,25}\b(void|invalid)\b|"
+    r"(is|are|deemed|considered)\s+(void|invalid)\b|"
     # 2. pass/fail selection stage (SQ / PQQ / SPD)
     r"pass\s*/?\s*fail|pass\s+or\s+fail|\bpqq\b|\bsq\b|selection\s+questionnaire|"
     r"deemed\s+.{0,25}fail|fail(ure|ed|s)?\s+.{0,40}(reject|exclu|disqualif|eliminat|not\s+be\s+considered)|"
     # 3. integrity gates
-    r"canvass|collusi|non[-\s]?complian|conflict\s+of\s+interest|anti[-\s]?competitive|"
+    r"canvass|collusi|non[-\s]?complian|conflicts?\s+of\s+interest|anti[-\s]?competitive|"
+    r"improper\s+(contact|approach|influenc\w*)|(attempt|seek)\w*\s+to\s+influenc\w*|"
+    r"influenc\w*\s+.{0,20}(evaluation|award|panel|process)|"
     # 4. mandatory minimums / thresholds / required holdings (certs, insurance, turnover)
     r"minimum\s+(?:[\w'-]+\s+){0,3}(turnover|standard|requirement|level|threshold|score|rating|credit)|"
     r"must\s+hold|must\s+be\s+(registered|certified|accredited|licen[cs]ed)|registration\s+(is\s+)?"
@@ -47,7 +52,16 @@ _STRONG = re.compile(
     # 6. submission deadline / late / incomplete
     r"(receiv(e|ed)|submit(ted)?|return(ed)?|lodg(e|ed)|upload(ed)?|arriv(e|ed|es)|reach(es|ed)?)"
     r"\b.{0,40}no\s+later\s+than|closing\s+(date|time)|\bdeadline\b|"
-    r"late\s+(tender|bid|submission|response)s?|incomplete\s+(tender|bid|submission|response)s?)",
+    r"late\s+(tender|bid|submission|response)s?|incomplete\s+(tender|bid|submission|response)s?|"
+    # 7. varied phrasings — real tenders paraphrase the finite gate set (synonyms for reject /
+    #    exclude / hold / threshold). Widened after an adversarial paraphrase bank exposed 16/32.
+    r"set\s+aside|pass(ed)?\s+over|ruled?\s+out|(will\s+)?not\s+(proceed|progress)\b|"
+    r"non[-\s]?conform\w*|(required\s+to|shall)\s+hold|must\s+be\s+(a\s+)?member|"
+    r"(no\s+less\s+than|not\s+less\s+than|at\s+least)\s+.{0,30}(turnover|insurance|experience|year)|"
+    r"turnover\s+of\s+(at\s+least|no\s+less\s+than|not\s+less\s+than|£|gbp|\d)|"
+    r"financial\s+standing|member\s+of\s+.{0,25}(scheme|register|body|association)|"
+    r"pass\s+mark|(quality|score|scoring)\s+threshold|"
+    r"mandatory\s+.{0,20}(site\s+visit|attendance|briefing)|condition\s+of\s+(bidding|tender))",
     re.IGNORECASE,
 )
 
