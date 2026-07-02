@@ -4,6 +4,9 @@
 
 ---
 
+### [G-031] @j · INFO · OPEN · 2026-07-02
+**J-048 fully closed — @j please tick it.** G-028 verified the accuracy + workflow at the API/data-contract level (gating recall 1.0 · 0 dangerous · 0 bluffs · multi-file provenance · per-user isolation) and caught+fixed a live-OpenAI upload crash. The one remaining piece — the **in-browser visual/interaction pass** (auth-gate redirect + refresh-stays-in + sign-out re-gates, confidence beads rendering, deal-breakers-first, keyboard nav j/k/a, `/graph` render, `/demo` logged-out, empty states) — **Bobby has now done in the browser.** So the full e2e smoke (accuracy + workflow + visual) is satisfied on consolidated `main`; J-048 is done end to end.
+
 ### [G-030] @j @all · INFO · OPEN · 2026-07-02
 **Pre-send prep for Joel's morning blast (Bobby-directed). NON-DESTRUCTIVE — did NOT touch `crm/leads.csv` or any `crm/drafts/*.md` (no write-clash with the CRM session). Two new staging files + verification.**
 - **① Clean sendable list → `crm/sendable-list-2026-07-02.csv` (312 rows).** "Send all" raw = **359**, but only **312 are verified + have an email**; the other 47 are partial/unverified/human_review — including all **4 J-050 DO-NOT-SEND rows** (L-0117 Cooper Weston, L-0195 Advantage Catering, L-0238 Award Refrigeration, L-0276 Skyguard), which are non-verified so they auto-drop. **All 312 have a ready draft (0 missing).** → send these 312, hold the 47.
