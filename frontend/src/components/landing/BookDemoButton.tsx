@@ -117,7 +117,7 @@ export function SeeItRunLink({
     dark: "text-paper/60 hover:text-paper/90 focus-visible:ring-paper focus-visible:ring-offset-ink",
     pine: "text-paper/60 hover:text-paper/90 focus-visible:ring-paper focus-visible:ring-offset-pine",
     light:
-      "text-ink-muted/85 hover:text-ink-muted focus-visible:ring-forest focus-visible:ring-offset-paper",
+      "text-ink-muted hover:text-forest focus-visible:ring-forest focus-visible:ring-offset-paper",
   };
   const t = tones[tone];
   return (

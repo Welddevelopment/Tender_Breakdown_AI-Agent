@@ -95,21 +95,27 @@ export function HeroResolve() {
         <div
           ref={cardRef}
           aria-hidden="true"
-          className="hero-sheet surface-grain mx-auto max-w-[960px] rounded-xl border border-forest/45 bg-paper-raised p-5 shadow-[var(--depth-sheet-pine)] transition-shadow group-hover:shadow-[0_18px_44px_-18px_rgba(22,48,31,0.38)] sm:p-7"
+          className="hero-sheet surface-grain mx-auto max-w-[960px] overflow-hidden rounded-xl border border-forest/45 bg-paper-raised p-5 shadow-[var(--depth-sheet-pine)] transition-shadow group-hover:shadow-[0_18px_44px_-18px_rgba(22,48,31,0.38)] sm:p-7"
         >
           {/* The deal-breaker callout sits on top but settles last (longer delay). */}
           <div className="hr-settle" style={{ animationDelay: "560ms" }}>
             <GatingHero />
           </div>
-          {/* The register fills in first. */}
+          {/* The register fills in first. Below sm the matrix composes at a
+              fixed 560px and the sheet crops its right edge: this is an inert
+              illustration, so a clean crop under the sheet edge beats the row
+              grid collapsing and the category tags colliding with the status
+              words at phone widths. */}
           <div className="hr-settle mt-6" style={{ animationDelay: "140ms" }}>
-            <ComplianceMatrix
-              groups={groups}
-              selectedId={null}
-              onSelect={noop}
-              onApprove={noop}
-              activeFilter={null}
-            />
+            <div className="min-w-[560px] sm:min-w-0">
+              <ComplianceMatrix
+                groups={groups}
+                selectedId={null}
+                onSelect={noop}
+                onApprove={noop}
+                activeFilter={null}
+              />
+            </div>
           </div>
         </div>
         <span className="mt-5 flex justify-center">

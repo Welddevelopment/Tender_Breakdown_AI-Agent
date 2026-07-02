@@ -49,7 +49,7 @@ export function SiteFooter() {
             </div>
             <Seal
               id="seal-footer"
-              className="h-28 w-28 text-paper/70 sm:h-32 sm:w-32"
+              className="relative h-28 w-28 text-paper/70 sm:h-32 sm:w-32"
             />
           </div>
           <p className="mt-12 border-t border-paper/15 pt-6 font-mono text-xs tracking-[0.2em] text-paper/60">

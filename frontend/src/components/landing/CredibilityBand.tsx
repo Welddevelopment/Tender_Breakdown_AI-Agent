@@ -6,7 +6,7 @@ export function CredibilityBand() {
   return (
     <div className="grid gap-8 md:grid-cols-2 md:gap-12">
       <div>
-        <h3 className="font-serif text-3xl font-semibold leading-tight tracking-tight text-ink sm:text-4xl">
+        <h3 className="text-balance font-serif text-3xl font-semibold leading-tight tracking-tight text-ink sm:text-4xl">
           How we measured this
         </h3>
         <p className="mt-4 text-lg leading-relaxed text-ink-muted">

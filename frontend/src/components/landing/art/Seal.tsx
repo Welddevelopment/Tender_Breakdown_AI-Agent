@@ -8,7 +8,10 @@ import { BotanicalSprig } from "../BotanicalSprig";
 // it acceptable. The id prop keys the textPath's circle, so it must be unique
 // per instance (server components cannot use useId). Purely decorative, so
 // the whole thing is aria-hidden; colour comes from the parent via
-// currentColor, size and opacity from the className.
+// currentColor, size, opacity and positioning from the className. The caller
+// must make the wrapper positioned (relative or absolute, both establish a
+// containing block) so the sprig overlay resolves against it; hardcoding
+// relative here would override an absolute passed in by the caller.
 
 export function Seal({
   id,
@@ -18,7 +21,7 @@ export function Seal({
   className?: string;
 }) {
   return (
-    <div aria-hidden="true" className={`relative ${className}`}>
+    <div aria-hidden="true" className={className}>
       {/* art-lines admits the ring strokes (which carry pathLength) to the
           draw-on rules; the overlaid sprig is its own svg without the class,
           so its unmeasured paths are never armed */}

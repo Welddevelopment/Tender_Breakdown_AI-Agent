@@ -295,7 +295,7 @@ export function Landing() {
             className="absolute right-[6%] top-1/2 hidden h-52 w-52 -translate-y-1/2 rotate-[7deg] text-paper/25 lg:block"
           />
           <div className="surface-grain relative z-10 mx-auto max-w-[600px] rounded-2xl border border-hairline bg-paper-raised p-8 text-center shadow-[var(--depth-sheet)] sm:p-10">
-            <h2 className="mx-auto max-w-[20ch] font-serif text-3xl font-semibold leading-tight tracking-tight text-ink sm:text-4xl">
+            <h2 className="mx-auto max-w-[20ch] text-balance font-serif text-3xl font-semibold leading-tight tracking-tight text-ink sm:text-4xl">
               See it on a tender you already know
             </h2>
             <p className="mx-auto mt-4 max-w-[46ch] leading-relaxed text-ink-muted">
@@ -429,7 +429,7 @@ function Head({
   const scale =
     size === "poster"
       ? "text-balance text-4xl leading-[1.02] sm:text-6xl md:text-7xl"
-      : "text-3xl leading-tight sm:text-4xl";
+      : "text-balance text-3xl leading-tight sm:text-4xl";
   return (
     <>
       {eyebrow && (
