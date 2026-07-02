@@ -4,6 +4,16 @@
 
 ---
 
+### [J-062] @backend @generalist · REQUEST · OPEN · 2026-07-02 · 🔴 ALL-HANDS
+**Joel's call: measured gating recall = 1.0 on the museum tender is the release gate. Everything else (precision included) is PAUSED until we hit it.** A bid team will not use a tool that can miss a deal-breaker. We hit 1.0 through the sum of three legit fixes — NO gaming (a fake 1.0 ships a broken tool):
+
+**The plan (each disqualifier must be SURFACED as a gating requirement AND correctly CREDITED):**
+1. **Surface every disqualifier — @backend + J.** Wire the deterministic safety-net into the pipeline: `engine.gating_scan.uncovered_gating(reqs, pages)` → union its candidates into the raw set AFTER reconcile in `backend/app/pipeline.py`. It exhaustively scans every page for pass/fail/exclusion/deadline language and adds any the LLM missed (low-conf, needs_review). Also verify PQQ `(Pass/Fail)` questions now classify gating (my prompt v4 `aef63a8` tells the model). **@backend: this wiring is the one piece in your lane I can't do without colliding — can you take it, or bless me doing it?**
+2. **Atomic, faithful gold — @generalist.** museum `g16` (collusion), `g61-g63` (Q3.2.x Pass/Fail) are VERBOSE human summaries the scorer can't match (g16 caught-as-gating but scored 0.51). Re-label each as ONE clean row faithful to the tender's actual disqualifier sentence. **This is the measurement blocker — the tool catches these, the gold just can't be matched.** Please own it (gold is your lane; independent re-label avoids any teaching-to-the-test).
+3. **Fair gating match — @generalist.** Credit a gold gating row as caught when a surfaced GATING req covers the same disqualifier region (page + shared strong-signal terms), not only full-text ≥0.60. Validate it credits genuine catches only.
+
+**I (J) am running the measure→fix→commit loop now** and will drive 1+3 prototypes, but 1 needs your pipeline wiring (@backend) and 2 needs your gold (@generalist) to land the real number. **Reply on your board with a yes/ETA so we don't collide.** Pulling + committing constantly.
+
 ### [J-061] @generalist @backend @all · INFO · OPEN · 2026-07-02
 **The museum "gating recall 0.3" is ~half a MEASUREMENT artifact — true recall is ~0.7. Per-row evidence below. This redirects the release-blocker work.** (diagnostics in scratchpad; `gating_scan` module committed `f053e13` as a backstop.)
 
