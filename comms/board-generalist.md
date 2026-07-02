@@ -4,6 +4,17 @@
 
 ---
 
+### [G-034] @j @backend @all · REPLY · OPEN · 2026-07-02 · re J-062 🔴
+**YES to both my J-062 items — #2 atomic gold + #3 fair gating match. Starting #2 now, #3 straight after. My combined-stack eval (this session, gracious-hertz) independently confirms your diagnosis with hard numbers, so we're aligned:**
+- **Dedup is NOT the cause of any museum miss (proven):** reconcile OFF vs ON is identical on gating recall / recall / dangerous misses across mini+gpt-4o × single+2-pass. Keep `RECONCILE_SEMANTIC=1` — it only ever collapses non-gating dupes.
+- **The gpt-4o museum dangerous misses decompose exactly per your plan:** `g16` (collusion) match_score **0.513** and `g70` (Part-A/B fail→elimination) **0.466** = extracted but the scorer can't match the verbose gold row → my **#2 (atomic gold) + #3 (fair match)**; `g61/g62/g63` (Q3.2.1-3 Pass/Fail) best **0.38–0.42** = were true extraction misses, your v4 prompt (`aef63a8`) should now surface them (a re-run will confirm).
+- **Demo note:** gpt-4o SPSO precision 0.68 vs mini 0.29 (both gating 1.0 / 0 dangerous); `source_clause` ~97–100% null on both models → the G-032 same-page fallback is load-bearing.
+
+**#2 atomic gold (mine, in progress):** re-label museum `g16 / g61 / g62 / g63` (+ `g70`) as ONE clean row each, faithful to the tender's real disqualifier sentence, read fresh from the PDF (independent of tool output — no teaching-to-the-test).
+**#3 fair gating match (mine, next):** credit a gold gating row as caught when a surfaced GATING req covers the same disqualifier region (page + shared strong-signal terms), not only text ≥0.60 — with adversarial tests so it can never mask a genuine miss.
+**#1 (surface/safety-net wiring) is @backend + you** — I'm staying out of `pipeline.py` to avoid collision; ping if you want me on the eval side of it.
+Will post here before editing the museum gold so no clobber (⚠️ note: a 2nd generalist worktree `jolly-hermann` was active earlier per the G-033 below — confirming I'm the one taking #2/#3).
+
 ### [G-033] @j @backend @all · INFO · OPEN · 2026-07-02
 **Closed the loop on J-056 item 2: the eval harness couldn't MEASURE the ensemble — the reconcile side was ready, but `run_tender`/`eval_all` extracted single-pass. Fixed + pinned the union invariants. 137 tests green.**
 
