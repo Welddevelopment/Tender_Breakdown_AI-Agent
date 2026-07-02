@@ -1106,5 +1106,180 @@ These are perfect-shape tiny firms with NAMED council/HA clients but **no email 
 >
 > Joel, Bidframe
 
+### Wave 4b — family window/door & heritage-sash restoration (council / school / heritage)
+*6 verified · all kept (3 PERFECT, 3 GOOD) · 0 duplicates. Seam note: UPVC social-housing window programmes go to mid-size regionals who name no clients — the tiny+named-client firms are heritage/sash/timber restoration specialists.*
+
+---
+
+#### MT-69 · Listed Window Refurbishment Ltd · to: info@listedwindowrefurbishment.co.uk · PERFECT
+*Family-owned traditional window/joinery firm (30+ yrs), single Scotland workshop. Named public clients: Edinburgh City Chambers, Scotland Street School Museum, High School of Glasgow, Hermiston School + "various Town Halls". Source: listedwindowrefurbishment.co.uk/about*
+**Subject:** Your council & heritage window bids — deal-breakers caught first
+> Hi there,
+>
+> You restore windows for Scottish councils and schools (Edinburgh City Chambers, Hermiston School) — so you're bidding council/heritage work where one missed pass/fail requirement (a conservation spec, an accreditation, an insurance level) voids the whole bid.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its exact clause, then drafts each answer from your own past-project and accreditation evidence — a citation on every claim, nothing invented.
+>
+> I'm running free 15-minute live reads today and tomorrow — send me a council/heritage window tender you're bidding and I'll show you, on the call, exactly what would disqualify it. A couple of slots left; after this week it's a paid pilot.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
+#### MT-70 · Sash Window Preservation · to: info@sashwindowpreservation.co.uk · PERFECT
+*Small CERTASS team ("Alex and Ross"), Norfolk/Cambridge. Named public clients (case studies): Cromer Town Council, Gresham's School Holt (~90 windows), Norfolk & Norwich Hospital, IWM Duxford. Source: sashwindowpreservation.co.uk/case-studies*
+**Subject:** Your Cromer TC / school glazing bids — deal-breakers caught first
+> Hi there,
+>
+> You've delivered for Cromer Town Council, Gresham's School and a public hospital — so you're bidding council/school glazing where one missed pass/fail requirement voids the whole submission.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its exact clause, then drafts each answer from your own past-project evidence — a citation on every claim, nothing invented.
+>
+> Free 15-minute live reads today and tomorrow — send me a council or school glazing tender you're bidding and I'll show you what would disqualify it, live. Paid pilot after this week.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
+#### MT-71 · CJL Designs · to: cjldesigns@macunlimited.net · PERFECT
+*Micro specialist heritage window restorer (25+ yrs; owner-operator, subcontracts specialist trades), Glastonbury, Somerset. Named clients: Roundway Hospital Devizes + churches across Oxford/Winchester/Guildford dioceses + listed buildings. (Family status implied, not stated.) Source: cjldesigns.co.uk*
+**Subject:** Heritage window tenders — the conservation pass/fail gates
+> Hi there,
+>
+> Public bodies (hospitals, dioceses, councils) tender heritage window restoration with strict conservation and compliance clauses — miss one pass/fail requirement and the whole bid is void.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its exact clause, then drafts each answer from your own conservation-project evidence — a citation on every claim, nothing invented.
+>
+> Free 15-minute live reads today and tomorrow — send me a heritage window tender you're bidding and I'll show you what would disqualify it, live. Paid pilot after this week.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
+#### MT-72 · Welsh Window Systems (WWS1987 Ltd) · to: enquiries@welshwindows.co.uk · GOOD
+*Small family firm since 1987 (directors Stephen Fifield & Richard Thomas), single unit in Sully, South Wales. Self-declared council/education glazing; one named client (Cardiff Airport). Source: welshwindows.co.uk*
+**Subject:** Your council & school glazing bids — the pass/fail gates
+> Hi Stephen and Richard,
+>
+> You bid council and school glazing work with no bid team — so one missed pass/fail requirement in the tender can void the whole submission however strong your work.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its clause, then drafts each answer from your own accreditations and method docs — a citation on every claim, nothing invented.
+>
+> Free 15-minute live reads today and tomorrow — send me a council or school glazing tender you're bidding and I'll show you what would disqualify it, live. Paid pilot after this week.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
+#### MT-73 · The Oxford Sash Window Co. Ltd · to: oxfordsashwindows@gmail.com · GOOD
+*Independent family-run workshop, Witney, Oxfordshire (site/bench carpenters + apprentices). Self-declared 30+ yrs on Oxford University colleges/buildings & schools (sector-level, none named). Source: sashwindow.co.uk*
+**Subject:** Oxford college & school window bids — deal-breakers caught first
+> Hi there,
+>
+> Oxford colleges and schools tender heritage window work with dense compliance requirements — miss one pass/fail clause and the whole bid is void.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its clause, then drafts each answer from your own past-project evidence — a citation on every claim, nothing invented.
+>
+> Free 15-minute live reads today and tomorrow — send me a college or school window tender you're bidding and I'll show you what would disqualify it, live. Paid pilot after this week.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
+#### MT-74 · Reliant Windows · to: info@reliant-windows.co.uk · GOOD
+*Family-owned window firm since 1982, Oldbury (single HQ + one showroom; installers Nick & Bill). Self-declared schools/hotels/housing projects (none named). NB mailbox (reliant-windows.co.uk) hyphenated vs website (reliantwindows.co.uk). Source: reliantwindows.co.uk*
+**Subject:** Your school & housing window bids — the pass/fail gates
+> Hi there,
+>
+> You take on school and housing window projects without a bid consultant — so one missed pass/fail requirement in the tender can void the whole submission.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its clause, then drafts each answer from your own accreditations and method docs — a citation on every claim, nothing invented.
+>
+> Free 15-minute live reads today and tomorrow — send me a school or housing window tender you're bidding and I'll show you what would disqualify it, live. Paid pilot after this week.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
+### Wave 4c — family painting & decorating (council / school / social-housing voids)
+*5 verified · all kept (2 PERFECT, 3 GOOD; 1 size caveat) · 0 duplicates. Seam note: named-client firms trend mid-size; several tiny named-client firms (Mark Pinchin, The Mils, Avenue) were dropped — no verifiable email on their own site.*
+
+---
+
+#### MT-75 · AJM Decorating Ltd · to: enquiries@ajmdecorating.co.uk · PERFECT
+*Small owner-run firm since 1994 (owner Adrian Morris, on the tools), Kendal, Cumbria; Dulux Trade Contract Partner. Named clients (testimonials): Kendal Town Council, Lancaster City Council + a school. Source: ajmdecorating.co.uk*
+**Subject:** Your Kendal TC / Lancaster CC decorating bids — deal-breakers caught first
+> Hi Adrian,
+>
+> You already decorate for Kendal Town Council and Lancaster City Council — so you're bidding council/HA void frameworks where one missed pass/fail requirement (an accreditation, an insurance level, a method statement) voids the whole submission.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its exact clause, then drafts each answer from your own accreditations and method docs — a citation on every claim, nothing invented.
+>
+> I'm running free 15-minute live reads today and tomorrow — send me a council/HA decorating tender you're bidding and I'll show you, on the call, exactly what would disqualify it. A couple of slots left; after this week it's a paid pilot.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
+#### MT-76 · ALCo Decorating (ALCo Group) · to: info@alcoltd.co.uk · PERFECT
+*Small owner-led Surrey group (construction/decorating/roofing divisions; leader Tom Allen), Chiddingfold. Named state clients: Godalming College, Queen Eleanor's C of E Junior, Stoughton Infant, Glenthorne High + social-housing void contracts. (Size not confirmed strictly tiny.) Sources: alcoltd.co.uk/decorating/education, /services/social-housing-contracts*
+**Subject:** Your school & social-housing decorating bids — the pass/fail gates
+> Hi Tom,
+>
+> You win state-school and social-housing decorating work — so you're bidding school/MAT and council tenders where one missed pass/fail requirement voids the whole submission.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its clause, then drafts each answer from your own accreditations and method docs — a citation on every claim, so one missed mandatory never voids the bid.
+>
+> Free 15-minute live reads today and tomorrow — send me a school or council decorating tender you're bidding and I'll show you what would disqualify it, live. Paid pilot after this week.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
+#### MT-77 · Thistle Decorators (Thistles Decorators Ltd) · to: info@thistledecorators.co.uk · GOOD
+*Edinburgh firm since 1984, single office; Scottish Decorators' Federation member. Names public bodies: Scottish Arts Council, Registers of Scotland, national galleries; "government and civil buildings". (Size not confirmed tiny.) Source: thistledecorators.co.uk/government-painting-contracts*
+**Subject:** Your Scottish public-sector decorating bids — deal-breakers caught first
+> Hi there,
+>
+> You already paint for Registers of Scotland and government buildings — so you're bidding Scottish public-sector work where one missed pass/fail requirement voids the whole submission.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its clause, then drafts each answer from your own accreditations and method docs — a citation on every claim, nothing invented.
+>
+> Free 15-minute live reads today and tomorrow — send me a public-sector decorating tender you're bidding and I'll show you what would disqualify it, live. Paid pilot after this week.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
+#### MT-78 · Decor Developments Ltd · to: decordevelopments@gmail.com · GOOD
+*Small firm (Gmail, "crews", 20+ yrs), East Midlands/Notts/Derbyshire/Norfolk/Yorks. Self-declared council-housing & hospital contracts, void redecorations under framework agreements (none named). Source: decor-developments.co.uk/social-housing*
+**Subject:** Your council-housing void frameworks — the pass/fail gates
+> Hi there,
+>
+> You run council-housing void and framework decorating jobs — so you're constantly bidding frameworks where one missed pass/fail requirement voids the whole submission.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its clause, then drafts each answer from your own accreditations and method docs — a citation on every claim, nothing invented.
+>
+> Free 15-minute live reads today and tomorrow — send me a void/decorating framework you're bidding and I'll show you what would disqualify it, live. Paid pilot after this week.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
+#### MT-79 · Marshels (Marshels of Farnham Ltd) · to: enquiry@marshels.co.uk · GOOD
+*Family-run since 1986, Farnborough, Hants; on Hampshire County Council "Buy with Confidence" scheme; does councils/schools/hospitals. ⚠ Size caveat: states "over 30 painters" — at/over the ~30-staff ceiling. Source: marshels.co.uk/painters-and-decorators*
+**Subject:** On Hampshire CC's approved scheme — but out-gunned on the tender?
+> Hi there,
+>
+> You're on the Hampshire County Council Buy with Confidence scheme and decorate councils, schools and hospitals — so you're bidding public-sector work where one missed pass/fail requirement voids the whole submission.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its clause, then drafts each answer from your own accreditations and method docs — a citation on every claim, nothing invented.
+>
+> Free 15-minute live reads today and tomorrow — send me a council or school decorating tender you're bidding and I'll show you what would disqualify it, live. Paid pilot after this week.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
 <!-- next waves appended below -->
 
