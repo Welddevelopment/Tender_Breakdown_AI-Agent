@@ -717,5 +717,10 @@ Dropped: **Yates Jetting Ltd** — duplicate of existing **L-0360** (same domain
 >
 > Joel, Bidframe
 
+### Near-misses — strong ICP, blocked ONLY by no visible email (manual follow-up, do NOT fabricate an address)
+These are perfect-shape tiny firms with NAMED council/HA clients but **no email published on their own site** — so they fail the core email rule and are *not* ready-to-send. Reach via their contact form / phone if you want them; never guess an email.
+- **Home & Dry Maintenance** (Croydon) — https://www.homeanddry-maintenance.co.uk/ — tiny owner-run (est. 2014); names Lambeth, Croydon & Southwark Councils, Peabody, Sanctuary + 2 NHS trusts. Contact form only, no email.
+- **Holton Building Services** (Bethnal Green, E1) — https://www.holtonbuildingservices.co.uk/local-authorities.html — small core team; names Hackney Council & Poplar HARCA (Stoke Newington Library, Hackney Parking HQ). Email Cloudflare-obfuscated, not readable.
+
 <!-- next waves appended below -->
 
