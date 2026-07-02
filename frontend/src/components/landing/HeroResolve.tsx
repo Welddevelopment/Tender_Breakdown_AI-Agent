@@ -95,7 +95,7 @@ export function HeroResolve() {
         <div
           ref={cardRef}
           aria-hidden="true"
-          className="hero-sheet surface-grain mx-auto max-w-[960px] rounded-xl border border-forest/25 bg-paper-raised p-5 shadow-[var(--depth-sheet)] transition-shadow group-hover:shadow-[0_18px_44px_-18px_rgba(33,29,23,0.38)] sm:p-7"
+          className="hero-sheet surface-grain mx-auto max-w-[960px] rounded-xl border border-forest/45 bg-paper-raised p-5 shadow-[var(--depth-sheet-pine)] transition-shadow group-hover:shadow-[0_18px_44px_-18px_rgba(22,48,31,0.38)] sm:p-7"
         >
           {/* The deal-breaker callout sits on top but settles last (longer delay). */}
           <div className="hr-settle" style={{ animationDelay: "560ms" }}>

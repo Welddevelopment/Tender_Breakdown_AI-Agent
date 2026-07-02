@@ -208,14 +208,17 @@ body {
 /* Draw-on for the landing's engraved botanicals (landing-page-brief §18): each
    piece of line art carries pathLength={1} on every stroked path, so a single
    dasharray rule lets the stroke draw itself in and the faint leaf fill wash in
-   after. .art-draw plays once on load for art above the fold; [data-draw] is
-   armed by an IntersectionObserver (DrawOn.tsx) for art below it, with
-   --draw-delay staggering siblings. Motion-safe only: reduced motion, SSR and
-   no-JS all land on the finished engraving, since the hidden state never
+   after. .art-draw goes on the art svg itself and plays once on load for art
+   above the fold; [data-draw] is armed by an IntersectionObserver (DrawOn.tsx)
+   for art below it, with --draw-delay staggering siblings. The [data-draw]
+   rules reach only .art-lines svgs (the class every sanctioned art component
+   carries on its root), so a stray icon or card path inside a DrawOn wrapper
+   is never blanked by the hidden state. Motion-safe only: reduced motion, SSR
+   and no-JS all land on the finished engraving, since the hidden state never
    applies without the media query and the observer. */
 @media (prefers-reduced-motion: no-preference) {
   .art-draw path,
-  [data-draw] path {
+  [data-draw] .art-lines path {
     stroke-dasharray: 1;
   }
   .art-draw path {
@@ -223,12 +226,12 @@ body {
       art-stroke 1.6s cubic-bezier(0.4, 0, 0.2, 1) both,
       art-fill 0.8s ease 1s both;
   }
-  [data-draw] path {
+  [data-draw] .art-lines path {
     transition:
       stroke-dashoffset 1.4s cubic-bezier(0.4, 0, 0.2, 1) var(--draw-delay, 0ms),
       fill-opacity 0.8s ease calc(var(--draw-delay, 0ms) + 900ms);
   }
-  [data-draw="hidden"] path {
+  [data-draw="hidden"] .art-lines path {
     stroke-dashoffset: 1;
     fill-opacity: 0;
   }
@@ -274,11 +277,16 @@ body {
    to plain paper rather than carrying texture the whole way down. */
 .paper-grid-hero {
   position: relative;
+  /* The grid layer sits at z -1 inside its own stacking context, so it paints
+     behind the hero's in-flow text and the engraved art rather than dirtying
+     the glyph edges, while still covering the page's plain paper. */
+  isolation: isolate;
 }
 .paper-grid-hero::before {
   content: "";
   position: absolute;
   inset: 0;
+  z-index: -1;
   pointer-events: none;
   background-image:
     linear-gradient(to right, rgba(33, 29, 23, 0.06) 1px, transparent 1px),

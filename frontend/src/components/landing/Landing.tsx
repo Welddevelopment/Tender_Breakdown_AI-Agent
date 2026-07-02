@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { BookDemoButton, SeeItRunLink } from "./BookDemoButton";
 import { HeroResolve } from "./HeroResolve";
-import { BotanicalSprig } from "./BotanicalSprig";
 import { Reveal } from "./Reveal";
+import { DrawOn } from "./DrawOn";
 import { ConfidenceIndicator } from "@/components/ConfidenceIndicator";
 import { BrandLogo } from "@/components/BrandLogo";
 import { DealBreakerCard, ClauseCard, AnswerCard } from "./ProductShots";
@@ -10,11 +10,24 @@ import { ProofNumbers } from "./ProofNumbers";
 import { CredibilityBand } from "./CredibilityBand";
 import { HowItWorks } from "./HowItWorks";
 import { SiteFooter } from "./SiteFooter";
+import { FernFrond } from "./art/FernFrond";
+import { PineBranch } from "./art/PineBranch";
+import { TreelineDivider } from "./art/TreelineDivider";
+import { Seal } from "./art/Seal";
 
 // The public landing page (landing-page-brief). It is itself a civic record: the
 // same paper, masthead, rules, mono record voice, and real product components as
 // the app, so the medium makes the credibility argument before a word is read.
 // One job: get a bid writer to book a demo.
+//
+// The page carries the forest identity end to end. The hero stands on its own
+// fading graph paper with two engraved botanicals bleeding in from the edges
+// (a fern off the right, a pine branch off the left), each band opens with a
+// small mono eyebrow so the argument reads as a numbered case, the honesty
+// band rests on the moss surface, and a treeline seam drops the page onto two
+// pine grounds: the proof band and the closing, where the civic seal sits
+// beside the response card. The deal-breaker head is the one poster-scale
+// moment before the giant proof figures.
 //
 // Layout follows layout.md and SLOP-CHECK: the content-bearing bands run a real
 // two-column split (prose one side, the section's card the other) and alternate
@@ -28,7 +41,7 @@ const CONTAINER = "mx-auto w-full max-w-[1160px] px-6";
 
 export function Landing() {
   return (
-    <div className="bg-paper paper-grid">
+    <div className="landing-scope bg-paper">
       {/* Masthead: a slim warm letterhead carrying the one 2px ink rule and the
           prominent forest CTA. */}
       <header className="sticky top-0 z-30 border-b-2 border-ink bg-paper/85 backdrop-blur-sm">
@@ -37,13 +50,13 @@ export function Landing() {
           <div className="flex items-center gap-5">
             <Link
               href="/demo"
-              className="hidden rounded-sm text-sm text-ink-muted underline decoration-hairline decoration-1 underline-offset-4 transition-colors hover:text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-forest focus-visible:ring-offset-2 focus-visible:ring-offset-paper sm:inline"
+              className="hidden rounded-sm text-sm text-ink-muted underline decoration-hairline decoration-1 underline-offset-4 transition-colors hover:text-forest focus:outline-none focus-visible:ring-2 focus-visible:ring-forest focus-visible:ring-offset-2 focus-visible:ring-offset-paper sm:inline"
             >
               See the demo
             </Link>
             <Link
               href="/login"
-              className="hidden rounded-sm text-sm text-ink-muted underline decoration-hairline decoration-1 underline-offset-4 transition-colors hover:text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-forest focus-visible:ring-offset-2 focus-visible:ring-offset-paper sm:inline"
+              className="hidden rounded-sm text-sm text-ink-muted underline decoration-hairline decoration-1 underline-offset-4 transition-colors hover:text-forest focus:outline-none focus-visible:ring-2 focus-visible:ring-forest focus-visible:ring-offset-2 focus-visible:ring-offset-paper sm:inline"
             >
               Sign in
             </Link>
@@ -53,43 +66,53 @@ export function Landing() {
       </header>
 
       <main>
-        {/* Hero: a centred two-line headline, a single supporting line, then the
-            product sheet. The one symmetric moment, earned. */}
-        <section className={`${CONTAINER} relative pt-16 pb-10 text-center sm:pt-24 sm:pb-14`}>
-          <BotanicalSprig className="pointer-events-none absolute left-1 top-10 hidden h-16 w-16 text-forest/25 sm:block" />
-          <BotanicalSprig className="pointer-events-none absolute right-1 top-10 hidden h-16 w-16 -scale-x-100 text-forest/25 sm:block" />
-          <h1 className="hero-enter font-serif font-semibold tracking-tight text-ink">
-            <span className="block text-balance text-5xl leading-[1.02] sm:whitespace-nowrap sm:text-6xl md:text-7xl">
-              Never lose a bid
-            </span>
-            <span className="mt-3 block text-balance text-2xl font-medium leading-[1.12] sm:whitespace-nowrap sm:text-3xl md:text-4xl">
-              to a deal-breaker you missed.
-            </span>
-          </h1>
-          <p className="hero-enter-2 mx-auto mt-6 max-w-[58ch] text-balance text-lg leading-relaxed text-ink-muted sm:text-xl">
-            Bidframe reads a public-sector tender, finds every requirement, and
-            flags the ones that would disqualify you. Each links back to the exact
-            clause, so you can check it yourself.
-          </p>
-          <div className="hero-enter-3 mt-10 flex flex-wrap items-center justify-center gap-x-7 gap-y-4">
-            <BookDemoButton location="hero" size="lg" />
-            <SeeItRunLink size="lg" />
+        {/* The hero fold: headline, supporting line and product sheet stand on
+            their own fading graph paper, with the two large engravings cropped
+            by the page edge so the forest walks into the document rather than
+            decorating it. The art layer paints above the grid but beneath the
+            z-10 content, and the clip stops the bleed causing sideways scroll. */}
+        <div className="paper-grid-hero relative overflow-x-clip">
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+            <FernFrond className="art-draw absolute -right-16 top-24 hidden h-[440px] w-auto rotate-[8deg] text-forest/[0.16] lg:block" />
+            <PineBranch className="art-draw absolute -left-10 bottom-6 hidden h-40 w-auto text-forest/[0.12] lg:block" />
           </div>
-          <p className="hero-enter-3 mx-auto mt-5 font-mono text-xs text-ink-muted">
-            Fifteen minutes. Bring a tender you have already bid.
-          </p>
-        </section>
 
-        <section className={`${CONTAINER} relative pb-20`}>
-          <BotanicalSprig className="pointer-events-none absolute -left-2 top-0 z-10 hidden h-16 w-16 text-forest/55 sm:block" />
-          <BotanicalSprig className="pointer-events-none absolute -right-2 bottom-24 z-10 hidden h-16 w-16 rotate-180 text-forest/55 sm:block" />
-          <HeroResolve />
-        </section>
+          {/* Hero: a centred two-line headline, a single supporting line, then
+              the product sheet. The one symmetric moment, earned. */}
+          <section className={`${CONTAINER} relative z-10 pt-16 pb-10 text-center sm:pt-24 sm:pb-14`}>
+            <h1 className="hero-enter font-serif font-semibold tracking-tight text-ink">
+              <span className="block text-balance text-5xl leading-[1.02] sm:whitespace-nowrap sm:text-6xl md:text-7xl">
+                Never lose a bid
+              </span>
+              <span className="mt-3 block text-balance text-2xl font-medium leading-[1.12] sm:whitespace-nowrap sm:text-3xl md:text-4xl">
+                to a deal-breaker you missed.
+              </span>
+            </h1>
+            <p className="hero-enter-2 mx-auto mt-6 max-w-[58ch] text-balance text-lg leading-relaxed text-ink-muted sm:text-xl">
+              Bidframe reads a public-sector tender, finds every requirement, and
+              flags the ones that would disqualify you. Each links back to the exact
+              clause, so you can check it yourself.
+            </p>
+            <div className="hero-enter-3 mt-10 flex flex-wrap items-center justify-center gap-x-7 gap-y-4">
+              <BookDemoButton location="hero" size="lg" />
+              <SeeItRunLink size="lg" />
+            </div>
+            <p className="hero-enter-3 mx-auto mt-5 font-mono text-xs text-ink-muted">
+              Fifteen minutes. Bring a tender you have already bid.
+            </p>
+          </section>
+
+          <section className={`${CONTAINER} relative z-10 pb-20`}>
+            <HeroResolve />
+          </section>
+        </div>
 
         {/* The before: calm, left-aligned, low weight. A quiet single-column
             opener, no visual, so the two-column bands below land with rhythm. */}
         <Band>
-          <Head>Three weeks of reading, and one missed line voids it</Head>
+          <Head eyebrow="The cost">
+            Three weeks of reading, and one missed line voids it
+          </Head>
           <p className="mt-5 max-w-[56ch] text-lg leading-relaxed text-ink-muted">
             A bid writer spends weeks reading a public-sector tender by hand. The
             requirements are scattered across a hundred pages, and the ones that
@@ -100,7 +123,9 @@ export function Landing() {
         {/* The catch: the hero feature, given weight. Text left, the oxblood
             deal-breaker lifted off the page on the right. The point of tension. */}
         <SplitBand visual={<DealBreakerCard />}>
-          <Head>The one that loses you the bid, first</Head>
+          <Head eyebrow="The catch" size="poster">
+            The one that loses you the bid, first
+          </Head>
           <p className="mt-5 text-lg leading-relaxed text-ink-muted">
             Public tenders have hard pass or fail gates. Bidframe puts the
             deal-breakers at the top, not buried on page 61, so you see the
@@ -111,7 +136,7 @@ export function Landing() {
         {/* How it works: three numbered steps joined by a ruled through-line. Full
             width, its own three columns, so it reads as a ledger row. */}
         <Band>
-          <Head>Three steps, and you stay in control</Head>
+          <Head eyebrow="The method">Three steps, and you stay in control</Head>
           <div className="mt-9">
             <HowItWorks />
           </div>
@@ -120,18 +145,20 @@ export function Landing() {
         {/* Trust: the ruled margin and a pressed evidence block. Card left, prose
             right, so the visual flips side from the band above. */}
         <SplitBand visual={<ClauseCard />} reverse surface="recessed">
-          <Head>Every line, back to its clause</Head>
+          <Head eyebrow="Traceability">Every line, back to its clause</Head>
           <p className="mt-5 text-lg leading-relaxed text-ink-muted">
             We pulled these from the tender. One click shows the exact sentence on
             the exact page, so you never take our word for it.
           </p>
         </SplitBand>
 
-        {/* Honesty: the four-tier confidence scale as dimensional beads. Text
-            left, the scale on the right. */}
+        {/* Honesty: the four-tier confidence scale as dimensional beads on the
+            moss ground, the one band that rests on the landing's third surface.
+            Text left, the scale on the right. */}
         <SplitBand
+          surface="moss"
           visual={
-            <div className="card-live surface-grain w-full rounded-lg border border-hairline bg-paper-raised p-7 shadow-[var(--depth-row)]">
+            <div className="card-live surface-grain w-full rounded-lg border border-moss-line bg-paper-raised p-7 shadow-[var(--depth-row)]">
               <div className="flex flex-col gap-4">
                 <ConfidenceBead
                   confidence={0.3}
@@ -152,7 +179,7 @@ export function Landing() {
           }
           visualWidth="lg:w-[360px]"
         >
-          <Head>It tells you when it is not sure</Head>
+          <Head eyebrow="Honesty">It tells you when it is not sure</Head>
           <p className="mt-5 text-lg leading-relaxed text-ink-muted">
             Where the tool is unsure, it says so and flags it for you to check. It
             does not guess, and it does not dress a rough draft up as a finished
@@ -163,17 +190,18 @@ export function Landing() {
         {/* Answers, with receipts: the autofill payoff and the approval stamp.
             Card left, prose right, flipping side again. */}
         <SplitBand visual={<AnswerCard />} reverse>
-          <Head>Answers, with receipts</Head>
+          <Head eyebrow="Receipts">Answers, with receipts</Head>
           <p className="mt-5 text-lg leading-relaxed text-ink-muted">
             Bidframe drafts each answer from your own documents and shows which one
             it came from. You approve every line before it goes in the bid.
           </p>
         </SplitBand>
 
-        {/* Before and after: a ruled ledger (1px rules, no heavy ink). Full width,
-            the table is the visual. */}
+        {/* Before and after: a ruled ledger, full width, the table is the
+            visual. The payoff column stands on moss behind a full-strength
+            forest rule, so the ledger carries a visible verdict. */}
         <Band space="air">
-          <Head>Before, and with Bidframe</Head>
+          <Head eyebrow="The ledger">Before, and with Bidframe</Head>
           <Reveal className="mt-7 overflow-x-auto">
             <table className="w-full max-w-[760px] border-collapse text-left">
               <thead>
@@ -182,7 +210,7 @@ export function Landing() {
                   <th className="py-3 pr-6 font-serif text-base font-medium text-ink-muted">
                     Before
                   </th>
-                  <th className="border-l border-forest/30 bg-forest/5 py-3 pl-6 font-serif text-base font-medium text-forest">
+                  <th className="border-l-2 border-forest bg-moss py-3 pl-6 font-serif text-base font-medium text-forest">
                     With Bidframe
                   </th>
                 </tr>
@@ -225,13 +253,21 @@ export function Landing() {
           <CredibilityBand />
         </Band>
 
-        {/* Ink band 1: the proof, as giant mono figures reversed out on ink. Held
-            back to here so the page builds toward it as the climax before the
-            closing action. */}
-        <section className="bg-ink">
+        {/* The treeline seam: the page drops off the paper onto the pine
+            grounds here, so the proof reads as arriving somewhere rather than
+            the lights simply going out. The -mb-px overlap stops a hairline of
+            paper showing between the ridge and the band below it. */}
+        <TreelineDivider className="-mb-px block h-12 w-full text-pine sm:h-20" />
+
+        {/* Pine band 1: the proof, as giant mono figures reversed out on the
+            brand's own dark. Held back to here so the page builds toward it as
+            the climax before the closing action. */}
+        <section className="bg-pine">
           <div className={`${CONTAINER} py-24 sm:py-32`}>
             <div className="max-w-[48ch]">
-              <Head tone="dark">Measured on a real tender</Head>
+              <Head tone="dark" eyebrow="The proof" size="poster">
+                Measured on a real tender
+              </Head>
               <p className="mt-5 text-lg leading-relaxed text-paper/70">
                 We ran Bidframe on a live public-sector cleaning contract and
                 checked every line against the source.
@@ -244,11 +280,21 @@ export function Landing() {
         </section>
       </main>
 
-      {/* Ink band 2: the closing. A lifted response card on the dark ground,
-          carrying the one primary action: Book a demo. */}
-      <section className="bg-ink">
-        <div className={`${CONTAINER} py-24 sm:py-32`}>
-          <div className="surface-grain mx-auto max-w-[600px] rounded-2xl border border-hairline bg-paper-raised p-8 text-center shadow-[var(--depth-sheet)] sm:p-10">
+      {/* Pine band 2: the closing. A lifted response card on the pine ground,
+          carrying the one primary action: Book a demo. A cropped pine branch
+          draws in at the top-left corner and the civic seal sits asymmetrically
+          beside the card, so the destination belongs to the same forest the
+          treeline promised. */}
+      <section className="relative overflow-hidden border-t border-paper/10 bg-pine">
+        <DrawOn className="pointer-events-none absolute -left-12 -top-8">
+          <PineBranch className="h-44 w-auto text-paper/10" />
+        </DrawOn>
+        <div className={`${CONTAINER} relative py-24 sm:py-32`}>
+          <Seal
+            id="seal-closing"
+            className="absolute right-[6%] top-1/2 hidden h-52 w-52 -translate-y-1/2 rotate-[7deg] text-paper/25 lg:block"
+          />
+          <div className="surface-grain relative z-10 mx-auto max-w-[600px] rounded-2xl border border-hairline bg-paper-raised p-8 text-center shadow-[var(--depth-sheet)] sm:p-10">
             <h2 className="mx-auto max-w-[20ch] font-serif text-3xl font-semibold leading-tight tracking-tight text-ink sm:text-4xl">
               See it on a tender you already know
             </h2>
@@ -270,16 +316,17 @@ export function Landing() {
 
 // A paper section, left-aligned to the reading edge, separated by a section
 // rule. Hierarchy from type and space, not boxes. `surface` opts one band onto
-// the recessed ground (a third value between paper and the ink bands); `space`
-// varies the vertical rhythm so related ideas cluster and the summarising bands
-// get more air, instead of a uniform py on every band.
+// the recessed ground or the green-tinged moss ground (the surface tones that
+// sit between paper and the pine bands), each with the hairline that reads on
+// it; `space` varies the vertical rhythm so related ideas cluster and the
+// summarising bands get more air, instead of a uniform py on every band.
 function Band({
   children,
   surface = "paper",
   space = "normal",
 }: {
   children: React.ReactNode;
-  surface?: "paper" | "recessed";
+  surface?: "paper" | "recessed" | "moss";
   space?: "tight" | "normal" | "air";
 }) {
   const pad =
@@ -288,12 +335,14 @@ function Band({
       : space === "air"
         ? "py-20 sm:py-28"
         : "py-16 sm:py-20";
+  const ground =
+    surface === "recessed"
+      ? "border-rule-section bg-paper-recessed"
+      : surface === "moss"
+        ? "border-moss-line bg-moss"
+        : "border-rule-section";
   return (
-    <section
-      className={`border-t border-rule-section ${
-        surface === "recessed" ? "bg-paper-recessed" : ""
-      }`}
-    >
+    <section className={`border-t ${ground}`}>
       <div className={`${CONTAINER} ${pad}`}>{children}</div>
     </section>
   );
@@ -340,7 +389,7 @@ function SplitBand({
   visual: React.ReactNode;
   reverse?: boolean;
   visualWidth?: string;
-  surface?: "paper" | "recessed";
+  surface?: "paper" | "recessed" | "moss";
 }) {
   return (
     <Band surface={surface}>
@@ -360,21 +409,46 @@ function SplitBand({
   );
 }
 
+// A section head with an optional mono eyebrow, so each band opens like an
+// entry in a case file rather than a bare title. The eyebrow renders as a
+// sibling above the h2 (heading semantics stay on the h2 alone), forest on
+// paper and moss on the dark grounds. `size="poster"` steps the head up to
+// poster scale, reserved for the deal-breaker band and the proof band, the
+// two moments the page raises its voice.
 function Head({
   children,
   tone = "light",
+  eyebrow,
+  size,
 }: {
   children: React.ReactNode;
   tone?: "light" | "dark";
+  eyebrow?: string;
+  size?: "poster";
 }) {
+  const scale =
+    size === "poster"
+      ? "text-balance text-4xl leading-[1.02] sm:text-6xl md:text-7xl"
+      : "text-3xl leading-tight sm:text-4xl";
   return (
-    <h2
-      className={`max-w-[20ch] font-serif text-3xl font-semibold leading-tight tracking-tight sm:text-4xl ${
-        tone === "dark" ? "text-paper" : "text-ink"
-      }`}
-    >
-      {children}
-    </h2>
+    <>
+      {eyebrow && (
+        <p
+          className={`mb-3 font-mono text-[11px] uppercase tracking-[0.22em] ${
+            tone === "dark" ? "text-moss" : "text-forest"
+          }`}
+        >
+          {eyebrow}
+        </p>
+      )}
+      <h2
+        className={`max-w-[20ch] font-serif font-semibold tracking-tight ${scale} ${
+          tone === "dark" ? "text-paper" : "text-ink"
+        }`}
+      >
+        {children}
+      </h2>
+    </>
   );
 }
 
@@ -396,7 +470,7 @@ function Row({
         {label}
       </th>
       <td className="py-3 pr-6 text-ink-muted">{before}</td>
-      <td className="border-l border-forest/30 bg-forest/5 py-3 pl-6 text-ink">
+      <td className="border-l-2 border-forest bg-moss py-3 pl-6 text-ink">
         {after}
       </td>
     </tr>
