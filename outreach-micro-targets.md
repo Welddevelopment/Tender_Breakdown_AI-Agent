@@ -1011,5 +1011,100 @@ These are perfect-shape tiny firms with NAMED council/HA clients but **no email 
 - **Old Plean Roofing** (Stirling) — https://oldpleanroofing.co.uk — husband-and-wife Mark & Fiona Thornton; does HA/factor work. `info@oldpleanroofing.co.uk` indexed from their own /contact/ page but not confirmed rendered — strong ICP shape, worth verifying the email.
 - **JS Roofing** (Clydebank) — small family (~20 yrs); names West Dunbartonshire Council + Clydebank HA. Email only on Yell/Thomson Local (`Jsroofing@hotmail.co.uk`), not on their own Wix site → not verified.
 
+### Wave 4a — family damp-proofing / damp & mould (social housing, topical: Awaab's Law)
+*6 verified · all kept (2 PERFECT clean, 4 GOOD; 1 size caveat, 1 employee-owned) · 0 duplicates. Live seam — HAs/councils tendering damp & mould fast post-Awaab.*
+
+---
+
+#### MT-63 · Newseal Ltd · to: enquiries@newsealltd.com · PERFECT
+*Family remedial firm since ~1989 (owner/director Phil Bennetto, CSRT surveyor), Redruth, Cornwall. Names Cornwall Housing (Cornwall Council's housing co.) + councils/parish councils/HAs. Source: newsealltd.com*
+**Subject:** Your Cornwall Housing damp bids — deal-breakers caught first
+> Hi Phil,
+>
+> You work for Cornwall Housing and local councils on damp and timber — and with Awaab's Law driving a wave of damp & mould tenders, one missed pass/fail requirement voids the whole bid.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its exact clause, then drafts each answer from your own CSRT surveys and method docs — a citation on every claim, nothing invented.
+>
+> I'm running free 15-minute live reads today and tomorrow — send me a council/HA damp tender you're bidding and I'll show you, on the call, exactly what would disqualify it. A couple of slots left; after this week it's a paid pilot.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
+#### MT-64 · Advanced Preservation Specialists Ltd (APS) · to: info@advancedpreservation.co.uk · PERFECT
+*"Glasgow's longest-running PCA-registered family-run" building-preservation firm (25+ yrs), single Glasgow base. NHS Scotland client logo + trusted by LAs/HAs across Glasgow/Lanarkshire/Renfrewshire (NHS shown as logo, not case study). Source: advancedpreservation.co.uk*
+**Subject:** Glasgow damp & mould tenders — the pass/fail gates
+> Hi there,
+>
+> You're trusted by Glasgow, Lanarkshire and Renfrewshire councils and HAs (and NHS Scotland) for building preservation — and post-Awaab the damp & mould tenders are coming fast, each with pass/fail requirements that void the whole bid if missed.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its clause, then drafts each answer from your own PCA surveys and method docs — a citation on every claim, nothing invented.
+>
+> Free 15-minute live reads today and tomorrow — send me a council/HA damp tender you're bidding and I'll show you what would disqualify it, live. Paid pilot after this week.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
+#### MT-65 · Brick-Tie Preservation · to: info@bricktie.co.uk · GOOD
+*Preservation firm, Leeds (~12 staff + 3 directors, ~£1m turnover; founder Bryan Hindle — family-owned 39 yrs, now employee-owned since 2022). Named clients: Leeds City Council, Harrogate Council, Wakefield District Housing, Yorkshire Housing. Source: btpreservation.co.uk/about*
+**Subject:** Your Leeds CC / Wakefield DH damp bids — caught first
+> Hi Bryan,
+>
+> You deliver damp and timber works for Leeds City Council, Harrogate and Wakefield District Housing — framework tenders where one missed pass/fail requirement voids the whole bid however strong your team.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its clause, then drafts each answer from your own surveys and method docs — a citation on every claim, so your team isn't buried in the paperwork.
+>
+> Free 15-minute live reads today and tomorrow — send me a framework you're bidding and I'll show you what would disqualify it, live. Paid pilot after this week.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
+#### MT-66 · British Damp Proofing · to: enquiries@britishdampproofing.co.uk · GOOD
+*Damp/timber firm since 1970, own labour (no subs). Named clients: North Kesteven DC, Newark & Sherwood DC, NHS. ⚠ Size caveat: LinkedIn "11–50" band — verify staff count before assuming tiny. Source: britishdampproofing.co.uk*
+**Subject:** Your North Kesteven / Newark & Sherwood bids — the pass/fail gates
+> Hi there,
+>
+> You've delivered for North Kesteven and Newark & Sherwood councils and the NHS — public-sector damp work where one missed pass/fail requirement voids the whole submission.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its clause, then drafts each answer from your own surveys and method docs — a citation on every claim, nothing invented.
+>
+> Free 15-minute live reads today and tomorrow — send me a council or NHS damp tender you're bidding and I'll show you what would disqualify it, live. Paid pilot after this week.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
+#### MT-67 · Dampcure (Hereford) Ltd · to: info@dampcure.net · GOOD
+*Small family-run damp firm, Herefordshire ("most work through recommendation"). Self-declared "approved by local authorities and housing associations" (none named). NB mailbox (dampcure.net) differs from website (dampcurelimited.co.uk). Source: dampcurelimited.co.uk*
+**Subject:** Herefordshire council & HA damp tenders — caught first
+> Hi there,
+>
+> As a family damp firm approved by local authorities and HAs, the council/HA tenders you bid have pass/fail requirements where one missed line voids the whole submission.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its clause, then drafts each answer from your own surveys and method docs — a citation on every claim, nothing invented.
+>
+> Free 15-minute live reads today and tomorrow — send me a council or HA damp tender you're bidding and I'll show you what would disqualify it, live. Paid pilot after this week.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
+#### MT-68 · London Dampproofing · to: steve@london-dampproofing.co.uk · GOOD
+*Family-run damp firm ("three generations", run by "Steve"), East London/Essex/Kent. Self-declared LAs & HAs (none named). Source: london-dampproofing.co.uk*
+**Subject:** East London damp & mould tenders — the pass/fail gates
+> Hi Steve,
+>
+> East London and Essex councils and HAs are pushing damp & mould works hard post-Awaab — tenders where one missed pass/fail requirement voids the whole bid.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its clause, then drafts each answer from your own surveys and method docs — a citation on every claim, nothing invented.
+>
+> Free 15-minute live reads today and tomorrow — send me a council or HA damp tender you're bidding and I'll show you what would disqualify it, live. Paid pilot after this week.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
 <!-- next waves appended below -->
 
