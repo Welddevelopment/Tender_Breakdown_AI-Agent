@@ -722,5 +722,195 @@ These are perfect-shape tiny firms with NAMED council/HA clients but **no email 
 - **Home & Dry Maintenance** (Croydon) — https://www.homeanddry-maintenance.co.uk/ — tiny owner-run (est. 2014); names Lambeth, Croydon & Southwark Councils, Peabody, Sanctuary + 2 NHS trusts. Contact form only, no email.
 - **Holton Building Services** (Bethnal Green, E1) — https://www.holtonbuildingservices.co.uk/local-authorities.html — small core team; names Hackney Council & Poplar HARCA (Stoke Newington Library, Hackney Parking HQ). Email Cloudflare-obfuscated, not readable.
 
+### Wave 3a — family fencing / MUGA / sports-surfacing (council / parish / school)
+*5 verified · all kept (1 PERFECT, 4 GOOD; 2 with size caveats) · 0 duplicates. Seam note: tiny firms mostly use contact forms or obfuscated emails — plaintext-email + named-client + tiny is a thin intersection.*
+
+---
+
+#### MT-45 · Harrier Fences & Landscaping · to: cogramp@gmail.com · PERFECT
+*Owner-operator micro fencing firm (single founder, personal Gmail — classic sole-trader). Named clients on own site: Bisham Parish Council (80m post-and-rail) + Spinfield School. Source: harrierfencesandlandscaping.com*
+**Subject:** Your Bisham Parish / Spinfield School fencing bids — caught first
+> Hi there,
+>
+> You built the Bisham Parish Council fence and the Spinfield School fencing yourself — so you're bidding council and school work where one missed pass/fail requirement (an insurance level, a DBS/safeguarding clause, a method statement) voids the whole submission.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its exact clause, then drafts each answer from your own docs — a citation on every claim, nothing invented.
+>
+> I'm running free 15-minute live reads today and tomorrow — send me a council or school fencing tender you're bidding and I'll show you, on the call, exactly what would disqualify it. A couple of slots left; after this week it's a paid pilot.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
+#### MT-46 · CK Fencing Contractors · to: ckfencingcontractors@gmail.com · GOOD
+*Family-run fencing firm (Gmail, micro signal). DBS-checked; sports/MUGA fencing for schools/healthcare/public buildings (self-declared, no named client). Source: ck-fencing-contractors.co.uk/about-us*
+**Subject:** School & MUGA fencing tenders — the pass/fail gates
+> Hi there,
+>
+> You install sports and MUGA fencing for schools and councils — so you're bidding public-sector work where one missed pass/fail requirement (a DBS/safeguarding clause, an accreditation, an insurance level) voids the whole submission.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its clause, then drafts each answer from your own docs — a citation on every claim, nothing invented.
+>
+> Free 15-minute live reads today and tomorrow — send me a school or council fencing tender you're bidding and I'll show you what would disqualify it, live. Paid pilot after this week.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
+#### MT-47 · Norfolk Prestige Fencing Ltd · to: info@npfencing.co.uk · GOOD
+*Small hand-built Norfolk fencing workshop ("Hand-built in Norwich & Norfolk"), CHAS-accredited. Named client: Fakenham School (case study) + Costessey Care Home. Source: npfencing.co.uk/case-studies*
+**Subject:** Your Norfolk school fencing bids — deal-breakers caught first
+> Hi there,
+>
+> After the Fakenham School fence, the next Norfolk school or academy tender has pass/fail requirements where one missed line voids the whole bid.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its clause, then drafts each answer from your own CHAS and method docs — a citation on every claim, nothing invented.
+>
+> Free 15-minute live reads today and tomorrow — send me a school fencing tender you're bidding and I'll show you what would disqualify it, live. Paid pilot after this week.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
+#### MT-48 · Metcalfe Fencing & Land Services · to: info@metcalfeservices.co.uk · GOOD
+*Family-run fencing firm; named client Ripon Grammar (state grammar) + "schools and councils". ⚠ Size caveat: lists 3 locations (York/Ripon/Slough) — verify staff count before assuming micro. Source: metcalfeservices.co.uk*
+**Subject:** Your school & council fencing bids — the pass/fail gates
+> Hi there,
+>
+> You've fenced Ripon Grammar and council sites — so you're bidding school and council work where one missed pass/fail requirement voids the whole submission.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its clause, then drafts each answer from your own accreditations and method docs — a citation on every claim.
+>
+> Free 15-minute live reads today and tomorrow — send me a school or council fencing tender you're bidding and I'll show you what would disqualify it, live. Paid pilot after this week.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
+#### MT-49 · Sovereign Sports · to: info@sovereign-sports.co.uk · GOOD
+*Family-run since 1980; MUGA/sports-court surfacing & fencing. Strong named-client proof: Wouldham All Saints, Hempstead Junior & Infant, St Peter's CofE, Plumstead Manor (all schools). ⚠ Size caveat: multi-county/UK reach — verify it's under ~30 staff before treating as micro. Source: sovereign-sports.co.uk*
+**Subject:** Your school MUGA & sports-court bids — deal-breakers caught first
+> Hi there,
+>
+> You build MUGAs and sports courts for primary schools across the South East — so you're bidding school and council work where one missed pass/fail requirement (a surfacing standard, a safeguarding clause, an insurance level) voids the whole submission.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its clause, then drafts each answer from your own capability docs — a citation on every claim, nothing invented.
+>
+> Free 15-minute live reads today and tomorrow — send me a school MUGA tender you're bidding and I'll show you what would disqualify it, live. Paid pilot after this week.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
+### Wave 3b — family flooring / refurb (council / HA / NHS voids)
+*7 verified · all kept (2 PERFECT, 5 GOOD) · 0 duplicates. Seam note: genuinely tiny firms describe public work generically, while those naming clients tend to be slightly larger — Elvington & Lees Heginbotham are the standouts (named clients AND verifiably tiny).*
+
+---
+
+#### MT-50 · Elvington Floorcraft · to: admin@elvingtonfloorcraft.co.uk · PERFECT
+*Family firm since 1965, ~13 people (MD Andrew Garland), York. Named clients: City of York Council, York Housing Association, Family Housing Association, Joseph Rowntree Foundation. Source: elvingtonfloorcraft.co.uk/flooring/local-authorities*
+**Subject:** Your City of York Council void/refurb bids — what would disqualify them?
+> Hi Andrew,
+>
+> You already floor homes for City of York Council and York Housing Association — so you're bidding council void/refurb work where one missed pass/fail requirement (a flooring spec, an accreditation, an insurance level) voids the whole submission.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its exact clause, then drafts each answer from your own accreditations and method docs — a citation on every claim, nothing invented.
+>
+> I'm running free 15-minute live reads today and tomorrow — send me a council/HA flooring tender you're bidding and I'll show you, on the call, exactly what would disqualify it. A couple of slots left; after this week it's a paid pilot.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
+#### MT-51 · Lees Heginbotham & Sons Ltd · to: info@leesheginbotham.co.uk · PERFECT
+*Multi-generational family carpet/flooring firm since 1945, single Oldham premises. Named clients: Rochdale Borough Housing, Riverside Housing, Guinness Northern Counties, Oasis Academy, NHS. Source: leesheginbotham.co.uk/commercial*
+**Subject:** Your Rochdale Borough Housing flooring bids — deal-breakers caught first
+> Hi there,
+>
+> You fit floors for Rochdale Borough Housing, Riverside and Guinness Northern Counties — so you're bidding HA flooring work where one missed pass/fail requirement voids the whole submission however strong your fit.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its exact clause, then drafts each answer from your own accreditations and method docs — a citation on every claim, nothing invented.
+>
+> Free 15-minute live reads today and tomorrow — send me an HA flooring tender you're bidding and I'll show you what would disqualify it, live. Paid pilot after this week.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
+#### MT-52 · Ajax Flooring Company Ltd · to: mail@ajaxflooring.co.uk · GOOD
+*Family-run flooring firm (~10 staff; est. 1956), London & Kent (Dartford). Self-declared: contracted by London Borough councils for school/public-building flooring (incl. County Hall); no single council named. Source: ajaxflooring.co.uk/contact-us*
+**Subject:** Your London Borough school flooring bids — the pass/fail gates
+> Hi there,
+>
+> You win London Borough council school and public-building flooring refurb — so you're bidding public-sector work where one missed pass/fail requirement voids the whole submission.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its clause, then drafts each answer from your own accreditations and method docs — a citation on every claim, nothing invented.
+>
+> Free 15-minute live reads today and tomorrow — send me a council or school flooring tender you're bidding and I'll show you what would disqualify it, live. Paid pilot after this week.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
+#### MT-53 · Gillett Flooring Contractors Ltd · to: info@gillettflooring.co.uk · GOOD
+*Husband-and-wife firm (directors Anthony & Julie Gillett, Companies House 06583867), Carshalton, Surrey; 30+ yrs. Self-declared HA/NHS/school flooring across South London/Kent; no single client named. Source: gillettflooring.co.uk/housing-associations-flooring*
+**Subject:** Your HA & NHS flooring bids — paperwork off your evenings
+> Hi Anthony and Julie,
+>
+> As a husband-and-wife firm bidding housing-association and NHS flooring across South London, the tender paperwork eats your evenings — and one missed pass/fail requirement voids the whole bid.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its clause, then drafts each answer from your own accreditations and method docs — a citation on every claim, so you're back on the tools not the paperwork.
+>
+> Free 15-minute live reads today and tomorrow — send me an HA or NHS flooring tender you're bidding and I'll show you what would disqualify it, live. Paid pilot after this week.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
+#### MT-54 · Mayfield Floors · to: sales@mayfieldfloors.co.uk · GOOD
+*Family-owned commercial flooring firm since 1981, Stockport (small team). Self-declared NHS Trusts / local authorities / housing associations; named clients shown are private. Source: mayfieldfloors.co.uk*
+**Subject:** Your NHS & council flooring bids — the pass/fail gates
+> Hi there,
+>
+> You floor for NHS Trusts, local authorities and housing associations around Greater Manchester — so you're bidding public-sector work where one missed pass/fail requirement voids the whole submission on a technicality.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its clause, then drafts each answer from your own accreditations and method docs — a citation on every claim, nothing invented.
+>
+> Free 15-minute live reads today and tomorrow — send me a public-sector flooring tender you're bidding and I'll show you what would disqualify it, live. Paid pilot after this week.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
+#### MT-55 · Brian J. Watts Flooring Specialists Ltd · to: info@bjwattsflooring.com · GOOD
+*Family flooring firm 50+ yrs (director Nigel Watts), Chester. CFA member + Constructionline-registered (public-sector PQQ register). Self-declared hospitals/schools; no single client named. Source: bjwattsflooring.com*
+**Subject:** Constructionline-registered — but out-gunned on the tender?
+> Hi Nigel,
+>
+> You're Constructionline-registered and floor hospitals and schools around Cheshire — so you're bidding NHS/school work where one missed pass/fail requirement voids the whole submission however strong your record.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its clause, then drafts each answer from your own certs and method docs — a citation on every claim, so a family firm bids like it has a bid team.
+>
+> Free 15-minute live reads today and tomorrow — send me an NHS or school flooring tender you're bidding and I'll show you what would disqualify it, live. Paid pilot after this week.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
+#### MT-56 · County Contract Flooring · to: enquiries@countycontractflooring.com · GOOD
+*Droitwich family firm since 1993 (director Ben Hopewell); per trade press, social-housing repairs/voids/refurb = 95% of its work. Self-declared; no single client named. Source: countycontractflooring.com/contact-us*
+**Subject:** 95% social housing — your void/refurb bids caught first
+> Hi Ben,
+>
+> With most of your work in social-housing repairs and voids, you're constantly bidding HA and council frameworks — where one missed pass/fail requirement voids the whole submission.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its clause, then drafts each answer from your own accreditations and method docs — a citation on every claim, nothing invented.
+>
+> Free 15-minute live reads today and tomorrow — send me an HA/council flooring framework you're bidding and I'll show you what would disqualify it, live. Paid pilot after this week.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
 <!-- next waves appended below -->
 
