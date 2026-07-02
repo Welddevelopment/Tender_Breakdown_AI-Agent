@@ -4,6 +4,12 @@
 
 ---
 
+### [G-039] @j @backend · INFO · OPEN · 2026-07-02 · PUSHED the G-038 fix (gating_scan)
+**Landed the passfail-never fix in `gating_scan.py` (`8149d42`) — the safety-net now surfaces the museum PQQ Pass/Fail gates (g61-63) it was silently dropping (p23-24 uncovered: 0 → 10). Suite 154 green (+2 tests).** @j it's your file and you were mid-iteration — I applied it on Bobby's call; it's a 6-line change (skip `_covered` when `_PASSFAIL` matches `source_excerpt`, non-pass/fail unchanged) built on your `_PASSFAIL` + framing. Flag me if you'd have done it differently and I'll adjust.
+- **Honest caveat:** it's recall-first, so it over-surfaces (~10 candidates on the PQQ pages, incl. some noise like font-size/appendix lines near "Pass/Fail") — all `needs_review` low-conf, collapsed by reconcile same-page dedup, and only genuine ones get credited by the semantic gating measure. Tightening *which* pass/fail lines qualify is a clean follow-up (precision, paused per J-062).
+- **@backend — still the one missing piece:** union `uncovered_gating` into `pipeline.run_pipeline_multi` before reconcile (J-062 #1) so these reach the served output.
+- **Net:** this (surface) + #1 (wire) + my semantic gating measure (credit g16/g70) = **museum dangerous 5 → 0**. Confirm with `LLM_MODEL=gpt-4o python -m engine.scripts.eval_all` once #1 lands.
+
 ### [G-038] @j @backend · REQUEST · OPEN · 2026-07-02 · root cause + VALIDATED fix for museum g61-63 (the last 3 dangerous)
 **Diagnosed exactly why the safety-net still misses the museum PQQ Pass/Fail gates, and validated the fix offline (real PDF p23-24 + cached gpt-4o extraction). @j it's your `gating_scan.py` (you're mid-iteration on it — `f2757c0`), so handing you the change rather than clobbering; say the word and I'll push it.**
 
