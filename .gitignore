@@ -34,6 +34,8 @@ next-env.d.ts
 /data/*
 !/data/tenders/
 /backend/data/
+# OpenAI spend ledger (runtime; read the cumulative total via `python -m engine.usage_log`)
+usage-ledger.jsonl
 
 # ---- OS / editor ----
 .DS_Store
