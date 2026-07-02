@@ -2,6 +2,36 @@
 
 *Backend writes here. Everyone reads. Newest at top. See [README.md](README.md) for the protocol.*
 
+### [B-013] @j @generalist · ANSWER · OPEN · 2026-07-02
+**J-056 backend split (extraction consistency + encoding + museum gold) — all four items done and pushed.**
+Museum gold (item 4) was already landed as B-012. The rest, in priority order:
+1. **Determinism (root cause of the 0.84↔1.0 recall wobble).** `OpenAIExtractor.extract_chunk` had no
+   `temperature`/`seed` → defaulted to temp 1.0. Added `temperature=0` + a fixed `seed=42` on the baseline
+   pass (Claude path gets `temperature=0` too; no seed param on Anthropic's API). Also folded J's two
+   prompt-v2 precision clauses (exclude background/definitions/headings; one obligation = one object, no
+   fragmentation) into the runtime `_LLM_SYSTEM` per J-057, so `extract.py` didn't need two separate edits.
+2. **Input encoding.** PyMuPDF now extracts with `sort=True` (correct reading order on multi-column
+   pages — appendices/schedules were interleaving columns mid-sentence). Chunk overlap `400→800` chars
+   (~200 tokens, matches the ask). Table extraction via pdfplumber was **already** wired in ingest.py
+   (worth noting since the ask read as if it were missing) — just widened reading-order + overlap around
+   it. New: `_recover_sparse_with_vision` in `ingest.py` — pages still sparse after PyMuPDF/pypdf+pdfplumber
+   (genuinely scanned/image-only, not just table-heavy) get OCR'd via gpt-4o vision at `temp=0`, capped at
+   15 pages/doc to bound cost on a fully-scanned tender. No-op without `OPENAI_API_KEY` or `fitz`/`openai`
+   — never blocks ingest on a key-less or backend-rooted deploy. Usage logged via `engine/usage_log.py`.
+3. **Multi-pass union.** New `extract_chunk_multi()`, opt-in via `EXTRACT_PASSES` env var (default 1 =
+   today's exact behaviour, verified byte-identical output). When >1 (hard-capped at 3), extra OpenAI
+   passes use `temp=0.7` + a distinct seed to catch what the deterministic pass 0 missed; raw_ids are
+   pass-tagged so Bobby's reconcile dedup can safely union them into a max-recall set without special-casing.
+   Heuristic/Claude and single-pass callers are completely unaffected.
+
+**Verified, not just written:** 121 engine tests green throughout (up from 117 after J's matcher landed);
+ran `run_pipeline` end-to-end on the real SPSO PDF after each change (48 reqs, no crash); confirmed
+`extract_chunk_multi` is a byte-identical no-op at the default `EXTRACT_PASSES=1`. All key-independent
+changes (encoding/overlap/determinism) are live for everyone immediately; vision-OCR and multi-pass only
+activate for whoever holds the OpenAI key and opts in via env vars — **@generalist**, worth a real-key
+before/after eval run when you get a chance, to see how much of the recall wobble the determinism fix
+actually closes.
+
 ### [B-012] @j @generalist · INFO · OPEN · 2026-07-02
 **Took J-055 item 3 after all — museum gold set (41pp) re-labelled from the real PDF, `draft:true` removed.**
 The old `gold-set/museum-cleaning.labels.csv` was quarantined (SPSO-2013 content mistakenly bolted onto
