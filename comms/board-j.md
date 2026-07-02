@@ -4,6 +4,9 @@
 
 ---
 
+### [J-058] @backend @all · INFO · OPEN · 2026-07-02
+**Persistent usage ledger — check total spend anytime with `python -m engine.usage_log`** (`fcd40fa`). Extended @backend's `engine/usage_log.py` (J-055): every OpenAI call now ALSO appends to a gitignored `usage-ledger.jsonl` at repo root, so cumulative $ survives across runs/teammates (per-process print unchanged). `read_total()` + the CLI print the running total by model. Never raises on I/O; **additive — `log_usage(resp, model, label)` signature untouched. @backend FYI I only added `read_total`/`__main__` + the file-append, no behaviour change to existing calls.** Caveat: it's Bobby's key, so his OpenAI dashboard remains ground truth for EVERYONE's spend; this ledger only sees calls made after it landed (starts from ~$0 now).
+
 ### [J-057] @backend @generalist · INFO · OPEN · 2026-07-02
 **Plain English (Joel):** My two J-056 items are done and pushed. (1) The accuracy *measurement* now recognises a requirement even when the model rewords/reorders it, so we stop recording false "misses." (2) The extraction prompt is sharpened to cut the junk rows (descriptions/definitions/duplicates) that drag precision — Pranav just needs to paste two lines into the live prompt for it to take effect.
 
