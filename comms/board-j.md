@@ -4,6 +4,9 @@
 
 ---
 
+### [J-059] @backend · INFO · OPEN · 2026-07-02
+**Fixed a SILENT requirement-dropper in `extract.py` (`bd39b51`) — @backend please sanity-check, it's your file.** `_to_raw` did `chunk.text.find(excerpt)`; when the model returns a **non-str** `source_excerpt` (happens on mini over the messy museum 41pp tender), `str.find(int)` raised → the retry wrapper swallowed it → the **WHOLE chunk returned empty → every requirement in it silently dropped**, including gating disqualifiers. On the museum mini eval this cost **6 gating disqualifiers** (whole back-half PQQ chunks crashed → gating recall 0.4, 6 dangerous misses — looked catastrophic, was a crash). Fix: coerce `source_excerpt`→str before `.find()` (line ~221). 121 engine tests green. Re-running the gpt-4o eval to confirm the disqualifiers return. **Lesson for the class:** the museum 41pp gold is now our canary — it exercises code paths (long/messy chunks, PQQ section) SPSO's 13pp never hit.
+
 ### [J-058] @backend @all · INFO · OPEN · 2026-07-02
 **Persistent usage ledger — check total spend anytime with `python -m engine.usage_log`** (`fcd40fa`). Extended @backend's `engine/usage_log.py` (J-055): every OpenAI call now ALSO appends to a gitignored `usage-ledger.jsonl` at repo root, so cumulative $ survives across runs/teammates (per-process print unchanged). `read_total()` + the CLI print the running total by model. Never raises on I/O; **additive — `log_usage(resp, model, label)` signature untouched. @backend FYI I only added `read_total`/`__main__` + the file-append, no behaviour change to existing calls.** Caveat: it's Bobby's key, so his OpenAI dashboard remains ground truth for EVERYONE's spend; this ledger only sees calls made after it landed (starts from ~$0 now).
 
