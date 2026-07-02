@@ -70,6 +70,30 @@ CATEGORY_KEYWORDS = {
 _SENT_SPLIT = re.compile(r"(?<=[.;:])\s+(?=[A-Z0-9])|\n")
 _CLAUSE_RE = re.compile(r"\b(Section|Clause|Para(?:graph)?|Appendix)\s+[\w.]+", re.IGNORECASE)
 
+# A PDF hard-wraps one sentence across several lines. This joins a newline back into a
+# space ONLY when both sides are clearly mid-sentence (lowercase/comma before, lowercase/
+# open-paren after), so a real requirement isn't fragmented into bogus half-sentence rows
+# (J-069: mid-sentence fragments were the biggest source of invented "rules"). Clause /
+# bullet / heading boundaries (a capitalised or numbered next line) are left intact.
+_SOFT_WRAP = re.compile(r"(?<=[a-z,])[ \t]*\n[ \t]*(?=[a-z(])")
+
+# Buyer-side / descriptive openers — the authority describing itself or the process, not an
+# obligation ON the bidder. Rejected even if the sentence happens to contain a modal.
+_BUYER_SIDE_OPENERS = (
+    "the mac will", "the mac reserves", "the mac shall not", "the mac is",
+    "the authority will", "the authority reserves", "the authority is", "the authority may",
+    "the council will", "the council reserves", "the client will", "the client reserves",
+    "the client shall not", "the successful bidder may be", "the successful tenderer will be",
+    "we reserve", "for the avoidance", "for information", "please note", "note that",
+    "this itt", "this tender document", "this section", "the following",
+)
+# Dangling trailing words = a cut-off fragment, not a whole obligation.
+_FRAGMENT_TAIL = (
+    "and", "or", "the", "a", "an", "to", "of", "for", "with", "in", "on", "at", "by",
+    "which", "that", "who", "shall", "must", "should", "may", "will", "including",
+    "such", "as", "is", "are", "be", "following", "any", "all",
+)
+
 
 def _classify_type(text: str) -> str:
     low = text.lower()
@@ -98,9 +122,36 @@ def _clause(text: str) -> str | None:
     return m.group(0) if m else None
 
 
+def _find_in_original(haystack: str, sentence: str) -> int:
+    """Char offset of `sentence` in the original chunk text, tolerant of the newlines the
+    reflow replaced with spaces. Tries an exact find first, then a whitespace-flexible
+    regex on the first ~6 words. Returns -1 if not locatable."""
+    exact = haystack.find(sentence[:40])
+    if exact >= 0:
+        return exact
+    words = sentence.split()[:6]
+    if not words:
+        return -1
+    pattern = r"\s+".join(re.escape(w) for w in words)
+    m = re.search(pattern, haystack)
+    return m.start() if m else -1
+
+
 def _looks_like_requirement(sentence: str) -> bool:
-    low = sentence.lower()
-    if len(sentence.strip()) < 25:
+    s = sentence.strip()
+    low = s.lower()
+    if len(s) < 25:
+        return False
+    # A leftover mid-sentence fragment: begins lowercase (a continuation) — after reflow
+    # these are near-always noise, and a genuine obligation starts with a capital/subject.
+    if s[:1].islower():
+        return False
+    # Buyer-side / descriptive prose — the authority talking about itself or the process.
+    if any(low.startswith(op) for op in _BUYER_SIDE_OPENERS):
+        return False
+    # Cut-off fragment: ends on a dangling function word (no terminal punctuation either).
+    last = low.rstrip(".;:").split()[-1] if low.rstrip(".;:").split() else ""
+    if last in _FRAGMENT_TAIL:
         return False
     return (
         any(s in low for s in MANDATORY_SIGNALS)
@@ -117,7 +168,8 @@ class HeuristicExtractor:
     def extract_chunk(self, chunk: Chunk) -> list[dict]:
         out: list[dict] = []
         seq = 0
-        for raw_sentence in _SENT_SPLIT.split(chunk.text):
+        reflowed = _SOFT_WRAP.sub(" ", chunk.text)
+        for raw_sentence in _SENT_SPLIT.split(reflowed):
             sentence = " ".join(raw_sentence.split())
             if not _looks_like_requirement(sentence):
                 continue
@@ -132,7 +184,10 @@ class HeuristicExtractor:
             if gating:
                 conf += 0.1
             conf = min(conf, 0.8)
-            start = chunk.text.find(raw_sentence.strip()[:40])
+            # Locate the sentence in the ORIGINAL (un-reflowed) chunk text for an accurate
+            # page. Reflow collapsed soft-wrap newlines to spaces + shifted offsets, so
+            # match the first few words whitespace-flexibly rather than an exact substring.
+            start = _find_in_original(chunk.text, sentence)
             page = chunk.page_at(start) if start >= 0 else chunk.page_start
             out.append(
                 {
@@ -170,7 +225,12 @@ _LLM_SYSTEM = (
     "deadline). Most mandatory requirements are NOT gating; when unsure, set "
     "is_gating=false. Do NOT extract background/scope description, definitions, the "
     "buyer's own statements, headings, or explanatory notes as requirements - that "
-    "noise tanks precision. One obligation = one object: split only genuinely separate "
+    "noise tanks precision. SUBJECT TEST: extract only obligations ON THE BIDDER (the "
+    "Tenderer/Contractor/Supplier must/shall...). Do NOT extract sentences whose subject "
+    "is the BUYER describing itself or the process (e.g. 'The Authority/MAC/Client will "
+    "select/reserves the right/may instruct/is entitled') - that is context, not a bidder "
+    "obligation. Every source_excerpt must be a complete sentence, never a mid-sentence "
+    "fragment. One obligation = one object: split only genuinely separate "
     "obligations; never fragment one into overlapping pieces or emit it twice/at two "
     "granularities; each distinct obligation once per chunk. In TABLES, extract only "
     "rows that state an obligation or a minimum/threshold - skip header rows, column "

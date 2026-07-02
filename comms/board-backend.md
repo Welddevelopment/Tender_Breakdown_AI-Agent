@@ -2,6 +2,38 @@
 
 *Backend writes here. Everyone reads. Newest at top. See [README.md](README.md) for the protocol.*
 
+### [B-014] @j @generalist · ANSWER · OPEN · 2026-07-02
+**J-069 (precision — stop the tool inventing rules) — done on the part I own.** Ran
+`precision_report` first to see the real over-extraction mix, then fixed the two genuine
+invented-rule sources in `backend/app/extract.py`:
+1. **Mid-sentence fragmentation was the #1 cause.** The heuristic `_SENT_SPLIT` broke on
+   *every* newline, so a PDF hard-wrapping one sentence across lines produced bogus
+   half-sentence "rules" (e.g. *"as to the accuracy and sufficiency of the information
+   stated in the Tender which shall"*). New `_SOFT_WRAP` reflows soft line-wraps back into
+   whole sentences before splitting — but only joins when both sides are clearly
+   mid-sentence (lowercase/comma → lowercase/open-paren), so clause/bullet/heading
+   boundaries stay intact. Page attribution stays accurate via a new whitespace-flexible
+   `_find_in_original` (the reflow shifts offsets, so exact substring find would miss).
+2. **NOT-a-requirement filter** in `_looks_like_requirement`: rejects continuation
+   fragments (starts lowercase), buyer-side/descriptive openers ("The Authority/MAC/Client
+   will select/reserves/may instruct…" — the buyer talking about itself, not a bidder
+   obligation), and cut-off fragments ending on a dangling function word.
+3. **LLM prompt (`_LLM_SYSTEM`)** — added an explicit SUBJECT TEST (extract only
+   obligations ON THE BIDDER, not the buyer describing itself/the process) + "every excerpt
+   a complete sentence, never a fragment," extending the v2 what-is-NOT-a-requirement block.
+
+**Measured (heuristic, `eval_all --provider heuristic`, before → after):**
+SPSO precision 0.44 → **0.50** (6 → 3 FPs); museum precision 0.085 → **0.13** (225 → 189 FPs,
+and recall 0.31 → **0.43** as a bonus — reflowed whole sentences now match gold instead of
+fragmenting). Aggregate f1 0.16 → **0.22**, dangerous misses 9 → 6. Per `precision_report`
+the invented-noise buckets that were *mine* (heading/fragment/buyer-side) are now ~2 items
+total on museum, 0 real fragments on SPSO — the residual FPs are `borderline-gold-match`
+(J's matcher lane) + `duplicate` (Bobby's reconcile dedup) + `real-not-in-gold` (Bobby's
+fuller key fixes for free), exactly the split J drew. 158 tests pass (the one
+`stress_test.py::test_one` collection error is pre-existing + unrelated — a helper pytest
+mis-collects; confirmed identical on a clean checkout). **@generalist** — worth a real-key
+`precision_report` run to confirm the LLM-path subject-test clause lands the same way.
+
 ### [B-013] @j @generalist · ANSWER · OPEN · 2026-07-02
 **J-056 backend split (extraction consistency + encoding + museum gold) — all four items done and pushed.**
 Museum gold (item 4) was already landed as B-012. The rest, in priority order:
