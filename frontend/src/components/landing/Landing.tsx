@@ -261,9 +261,9 @@ export function Landing() {
             <PineBranch className="h-56 w-auto rotate-[11deg] text-paper/[0.08]" />
           </DrawOn>
           <div className={`${CONTAINER} relative z-10 py-28 sm:py-36`}>
-            <div className="grid gap-10 border-y border-paper/20 py-10 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1fr)] lg:items-end lg:gap-16">
-              <div className="max-w-[48ch]">
-                <Head tone="dark" size="poster">
+            <div className="grid gap-10 border-y border-paper/20 py-10 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,0.35fr)] lg:items-end lg:gap-16">
+              <div className="max-w-[48ch] lg:max-w-none">
+                <Head tone="dark" size="poster" singleLine>
                   Measured on a real tender
                 </Head>
                 <p className="mt-5 text-lg leading-relaxed text-paper/70">
@@ -533,6 +533,7 @@ function Head({
   tone = "light",
   size,
   align = "left",
+  singleLine = false,
 }: {
   children: React.ReactNode;
   tone?: "light" | "dark";
@@ -541,6 +542,7 @@ function Head({
   // column instead of breaking to three.
   size?: "poster" | "poster-snug";
   align?: "left" | "center";
+  singleLine?: boolean;
 }) {
   const scale =
     size === "poster"
@@ -549,9 +551,10 @@ function Head({
         ? "text-balance text-4xl leading-[1.05] sm:text-5xl md:text-6xl"
         : "text-balance text-3xl leading-tight sm:text-4xl";
   const centred = align === "center";
+  const width = singleLine ? "max-w-none lg:whitespace-nowrap" : "max-w-[20ch]";
   return (
     <h2
-      className={`max-w-[20ch] font-serif font-semibold tracking-tight ${scale} ${
+      className={`${width} font-serif font-semibold tracking-tight ${scale} ${
         tone === "dark" ? "text-paper" : "text-ink"
       } ${centred ? "mx-auto text-center" : ""}`}
     >
