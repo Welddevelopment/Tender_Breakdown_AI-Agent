@@ -1,37 +1,51 @@
 const STEPS: { n: string; title: string; body: string }[] = [
   {
-    n: "1",
+    n: "01",
     title: "Upload the tender",
     body: "Drop in the PDF. Bidframe reads it and finds every requirement, with its source.",
   },
   {
-    n: "2",
+    n: "02",
     title: "Review the worklist",
     body: "Each requirement comes with its confidence and its clause reference. The deal-breakers and the uncertain ones are flagged. You approve, edit, or flag each one.",
   },
   {
-    n: "3",
+    n: "03",
     title: "Draft your answers",
     body: "Bidframe drafts each answer from your own documents and shows where it came from. It asks you only what it cannot find.",
   },
 ];
 
+// The method as one ruled ledger row: a single continuous rule across the top
+// of the three steps (not three broken segments), a forest node where each step
+// begins, hairline dividers between the columns, and the step number set as a
+// two-digit register numeral. On mobile the steps stack and each carries its
+// own rule, so the node still has a line to sit on.
 export function HowItWorks() {
   return (
-    <ol className="grid grid-cols-1 gap-x-10 gap-y-10 sm:grid-cols-3">
-      {STEPS.map(({ n, title, body }) => (
-        <li key={n} className="relative pt-6">
-          {/* Ledger through-line: a thin rule across the top of the columns,
-              tying the three steps into one ruled ledger row. */}
+    <ol className="grid grid-cols-1 sm:grid-cols-3 sm:divide-x sm:divide-hairline sm:border-t sm:border-hairline">
+      {STEPS.map(({ n, title, body }, i) => (
+        <li
+          key={n}
+          className={`relative border-t border-hairline pt-7 pb-8 sm:border-t-0 sm:pb-0 ${
+            i === 0 ? "sm:pr-10" : i === STEPS.length - 1 ? "sm:pl-10" : "sm:px-10"
+          }`}
+        >
+          {/* The node: a small forest point sitting on the through-line,
+              marking where this step's column begins. */}
           <span
             aria-hidden
-            className="absolute left-0 top-0 h-px w-full bg-hairline"
+            className="absolute -top-[3.5px] left-0 h-[7px] w-[7px] rounded-full bg-forest"
           />
-          <span className="font-mono text-xs text-ink-muted">{n}</span>
+          <span className="font-mono text-sm font-medium tracking-[0.08em] text-forest">
+            {n}
+          </span>
           <h3 className="mt-3 font-serif text-xl font-semibold leading-tight tracking-tight text-ink">
             {title}
           </h3>
-          <p className="mt-3 text-lg leading-relaxed text-ink-muted">{body}</p>
+          <p className="mt-3 max-w-[38ch] text-base leading-relaxed text-ink-muted sm:text-lg">
+            {body}
+          </p>
         </li>
       ))}
     </ol>

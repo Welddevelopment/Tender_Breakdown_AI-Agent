@@ -123,8 +123,9 @@ export function Landing() {
         {/* The catch: the hero feature, given weight. Text left, the oxblood
             deal-breaker lifted off the page on the right. The point of tension. */}
         <SplitBand visual={<DealBreakerCard />}>
-          <Head eyebrow="The catch" size="poster">
-            The one that loses you the bid, first
+          <Head eyebrow="The catch" size="poster-snug">
+            <span className="block sm:whitespace-nowrap">The one that loses</span>
+            <span className="block sm:whitespace-nowrap">you the bid, first</span>
           </Head>
           <p className="mt-5 text-lg leading-relaxed text-ink-muted">
             Public tenders have hard pass or fail gates. Bidframe puts the
@@ -201,16 +202,18 @@ export function Landing() {
             visual. The payoff column stands on moss behind a full-strength
             forest rule, so the ledger carries a visible verdict. */}
         <Band space="air">
-          <Head eyebrow="The ledger">Before, and with Bidframe</Head>
-          <Reveal className="mt-7 overflow-x-auto">
-            <table className="w-full max-w-[760px] border-collapse text-left">
+          <Head eyebrow="The ledger" align="center">
+            Before, and with Bidframe
+          </Head>
+          <Reveal className="mt-9 overflow-x-auto">
+            <table className="mx-auto w-full max-w-[820px] border-collapse text-left [&>tbody>tr:last-child]:border-b-2 [&>tbody>tr:last-child]:border-ink">
               <thead>
                 <tr className="border-b border-ink">
-                  <th className="w-[24%] py-3 pr-6" />
-                  <th className="py-3 pr-6 font-serif text-base font-medium text-ink-muted">
+                  <th className="w-[20%] py-3.5 pr-6" />
+                  <th className="w-[40%] py-3.5 pr-6 font-serif text-base font-medium text-ink-muted">
                     Before
                   </th>
-                  <th className="border-l-2 border-forest bg-moss py-3 pl-6 font-serif text-base font-medium text-forest">
+                  <th className="border-l-2 border-forest bg-moss py-3.5 pl-6 font-serif text-base font-medium text-forest">
                     With Bidframe
                   </th>
                 </tr>
@@ -420,23 +423,31 @@ function Head({
   tone = "light",
   eyebrow,
   size,
+  align = "left",
 }: {
   children: React.ReactNode;
   tone?: "light" | "dark";
   eyebrow?: string;
-  size?: "poster";
+  // "poster" is the full poster scale (the proof band); "poster-snug" steps the
+  // top end down one notch so a two-line head holds two lines inside a split
+  // column instead of breaking to three.
+  size?: "poster" | "poster-snug";
+  align?: "left" | "center";
 }) {
   const scale =
     size === "poster"
       ? "text-balance text-4xl leading-[1.02] sm:text-6xl md:text-7xl"
-      : "text-balance text-3xl leading-tight sm:text-4xl";
+      : size === "poster-snug"
+        ? "text-balance text-4xl leading-[1.05] sm:text-5xl md:text-6xl"
+        : "text-balance text-3xl leading-tight sm:text-4xl";
+  const centred = align === "center";
   return (
     <>
       {eyebrow && (
         <p
           className={`mb-3 font-mono text-[11px] uppercase tracking-[0.22em] ${
             tone === "dark" ? "text-moss" : "text-forest"
-          }`}
+          } ${centred ? "text-center" : ""}`}
         >
           {eyebrow}
         </p>
@@ -444,7 +455,7 @@ function Head({
       <h2
         className={`max-w-[20ch] font-serif font-semibold tracking-tight ${scale} ${
           tone === "dark" ? "text-paper" : "text-ink"
-        }`}
+        } ${centred ? "mx-auto text-center" : ""}`}
       >
         {children}
       </h2>
@@ -465,13 +476,36 @@ function Row({
     <tr className="border-b border-hairline align-top transition-colors hover:bg-paper-raised">
       <th
         scope="row"
-        className="py-3 pr-6 text-left font-mono text-xs font-normal uppercase tracking-wide text-ink-muted"
+        className="py-3.5 pr-6 pt-4 text-left font-mono text-xs font-normal uppercase tracking-wide text-ink-muted"
       >
         {label}
       </th>
-      <td className="py-3 pr-6 text-ink-muted">{before}</td>
-      <td className="border-l-2 border-forest bg-moss py-3 pl-6 text-ink">
-        {after}
+      <td className="py-3.5 pr-6 text-ink-muted">
+        {/* An empty before-cell still reads as a ledger entry, not a gap. */}
+        {before || <span aria-hidden>—</span>}
+      </td>
+      <td className="border-l-2 border-forest bg-moss py-3.5 pl-6 text-ink">
+        <span className="inline-flex items-start gap-2">
+          {/* The forest tick from the matrix status word: the verdict column
+              carries its mark, not colour alone. */}
+          <svg
+            width="11"
+            height="11"
+            viewBox="0 0 14 14"
+            fill="none"
+            aria-hidden="true"
+            className="mt-[0.4em] shrink-0 text-forest"
+          >
+            <path
+              d="M2.5 7.5l3 3 6-7"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          {after}
+        </span>
       </td>
     </tr>
   );
