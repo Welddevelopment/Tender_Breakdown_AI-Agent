@@ -108,6 +108,50 @@ HELD_OUT_GATES = [
 ]
 
 
+# PROACTIVE mega-bank: enumerate the deal-breaker phrasing space UP FRONT (every consequence
+# synonym, obligation form, trigger) so an unseen tender can't drop us to ~70% by using a word we
+# never listed. Recall-first — being generous here is correct: a missed deal-breaker costs far more
+# than a needs_review false flag. Every line must match; a future edit that narrows a pattern fails.
+MEGABANK_GATES = [
+    # consequence synonyms — "the bid is out"
+    "The tender will be rejected.", "The bid shall be excluded from the competition.",
+    "The supplier will be disqualified.", "The submission will be eliminated.",
+    "The economic operator will be debarred.", "The tenderer may be precluded from award.",
+    "The bid will be set aside.", "The proposal will be passed over.", "The response will be ruled out.",
+    "Late submissions will be disregarded.", "The tenderer will be removed from the process.",
+    "The bidder will be stood down.", "The bid will not be accepted.", "The tender will not be considered.",
+    "The submission will not be evaluated.", "The tender will not proceed.",
+    "The bid will not progress to the next stage.", "The submission will not be scored.",
+    "The tenderer will not be shortlisted.", "The bid will not be entertained.",
+    "The response will not be taken forward.", "The bid will be deemed non-compliant.",
+    "The tenderer will be deemed ineligible.", "The bid will be rendered void.",
+    "The bidder is barred from participating.", "The bid will be thrown out.",
+    "Bids received late will be returned unopened.", "The tender will be refused.",
+    "The submission will be declined.", "The bid will be withdrawn from the process.",
+    "The tenderer will automatically fail the selection stage.", "The bid cannot be awarded the contract.",
+    # obligations / holdings / minimums / returns / deadline / integrity / triggers
+    "The tenderer must hold public liability insurance of £5 million.",
+    "The contractor must be CHAS accredited.", "Bidders must have a minimum annual turnover of £500,000.",
+    "A tender that does not reach the quality threshold will not proceed.",
+    "The pricing schedule must be completed and returned.",
+    "Failure to submit the required documents will result in exclusion.",
+    "Tenders must be received no later than 12:00 on the closing date.",
+    "Submissions must be lodged before the cut-off time.", "Late tenders will not be accepted.",
+    "Any tenderer engaged in collusive tendering will be disqualified.",
+    "No variant bids will be accepted.", "Any attempt to influence the evaluation will lead to disqualification.",
+    "If a tenderer does not meet the selection criteria, the bid will be rejected.",
+    "A supplier subject to a ground for exclusion is ineligible.",
+    "Bidders unable to evidence the requisite cover will be stood down.",
+]
+
+
+def test_megabank_full_phrasing_space_is_covered():
+    """Proactive generosity guard: the scanner must recognise the whole enumerated deal-breaker
+    phrasing space, not just words seen in a real tender so far."""
+    misses = [g for g in MEGABANK_GATES if not _STRONG.search(g)]
+    assert not misses, f"mega-bank misses (narrow a pattern and this fails): {misses}"
+
+
 def test_net_catches_held_out_bradwell_phrasings():
     """Regression guard for the 3 deal-breakers the Bradwell held-out gold caught us missing
     (variant-bid rejection, must-satisfy-mandatory-criteria, failure-to-confirm removal)."""

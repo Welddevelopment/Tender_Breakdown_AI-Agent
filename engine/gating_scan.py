@@ -53,7 +53,8 @@ _STRONG = re.compile(
     r"\bcqc\b|care\s+quality\s+commission|\bdbs\b|disclosure\s+and\s+barring|enhanced\s+(disclosure|check)|"
     r"(security|dbs)\s+clearance|food\s+hygiene\s+rating|"
     # 5. mandatory returns / completeness
-    r"must\s+(complete|submit|return|provide|be\s+(returned|completed|submitted|received|provided))|"
+    r"must\s+(complete|submit|return|provide|confirm|acknowledge|sign|be\s+(returned|completed|"
+    r"submitted|received|provided))|"
     r"failure\s+to\s+(complete|submit|return|provide|comply|meet|confirm|sign|acknowledge|accept)|"
     # 6. submission deadline / late / incomplete
     r"(receiv(e|ed)|submit(ted)?|return(ed)?|lodg(e|ed)|upload(ed)?|arriv(e|ed|es)|reach(es|ed)?)"
@@ -67,7 +68,24 @@ _STRONG = re.compile(
     r"turnover\s+of\s+(at\s+least|no\s+less\s+than|not\s+less\s+than|£|gbp|\d)|"
     r"financial\s+standing|member\s+of\s+.{0,25}(scheme|register|body|association)|"
     r"pass\s+mark|(quality|score|scoring)\s+threshold|"
-    r"mandatory\s+.{0,20}(site\s+visit|attendance|briefing)|condition\s+of\s+(bidding|tender))",
+    r"mandatory\s+.{0,20}(site\s+visit|attendance|briefing)|condition\s+of\s+(bidding|tender)|"
+    # 8. GENEROUS consequence net (recall-first: a missed deal-breaker costs FAR more than a
+    #    needs_review false flag). A broad negative-modal + action, plus the full "the bid is out"
+    #    synonym set — ambiguous verbs (discount/withdraw/refuse) anchored to a bid noun to stay sane.
+    r"(cannot|can\s?not|will\s+not|shall\s+not|won'?t|would\s+not|may\s+not|must\s+not)\s+(be\s+)?"
+    r"(consider|accept|award|evaluat|assess|progress|proceed|scor|short[-\s]?list|shortlist|open|"
+    r"entertain|qualif|succeed|advanc|participat)\w*|"
+    r"\bnot\s+be\s+(consider|accept|award|evaluat|assess|progress|scor|open|entertain|short[-\s]?list)\w*|"
+    r"preclud\w*|rescind\w*|annul\w*|struck\s+out|\bbarred\b|st(oo|an)d\s+down|"
+    r"automatic\w*\s+.{0,15}(fail|reject|exclu|disqualif)|fail\w*\s+.{0,10}(the\s+)?"
+    r"(selection|assessment|evaluation)|"
+    r"(bid|bidder|tender|tenderer|submission|proposal|response|offer|application|supplier|contractor)s?"
+    r"\b.{0,30}\b(set\s+aside|passed?\s+over|ruled?\s+out|stood\s+down|thrown\s+out|returned\s+unopened|"
+    r"withdrawn|discount\w*|disregard\w*|refus\w*|declin\w*|not\s+opened)|"
+    r"(set\s+aside|passed?\s+over|ruled?\s+out|stood\s+down|thrown\s+out|withdrawn|disregard\w*|refus\w*|"
+    r"declin\w*)\b.{0,30}(bid|tender|submission|proposal|response|offer|application)|"
+    r"deemed?\s+.{0,20}(non[-\s]?compliant|ineligible|invalid|variant|unacceptable)|"
+    r"(before|by)\s+the\s+(cut[-\s]?off|closing|deadline)|cut[-\s]?off\s+(time|date|point))",
     re.IGNORECASE,
 )
 

@@ -43,7 +43,17 @@ FAMILIES: dict[str, re.Pattern] = {
         r"submission|proposal|response|offer)s?\b.{0,25}\b(void|invalid)\b|(is|are|deemed|considered)"
         r"\s+(void|invalid)\b|set\s+aside|pass(ed)?\s+over|ruled?\s+out|(will\s+)?not\s+"
         r"(proceed|progress)\b|non[-\s]?conform\w*|\bnot\s+be\s+accepted\b|variant\s+bids?|"
-        r"remov\w*\s+.{0,25}(consideration|the\s+process|evaluation|participation)", re.I),
+        r"remov\w*\s+.{0,25}(consideration|the\s+process|evaluation|participation)|"
+        # generous consequence net (group 8)
+        r"(cannot|can\s?not|will\s+not|shall\s+not|won'?t|would\s+not|may\s+not|must\s+not)\s+(be\s+)?"
+        r"(consider|accept|award|evaluat|assess|progress|proceed|scor|short[-\s]?list|shortlist|open|"
+        r"entertain|qualif|succeed|advanc|participat)\w*|\bnot\s+be\s+(consider|accept|award|evaluat|"
+        r"assess|progress|scor|open|entertain|short[-\s]?list)\w*|preclud\w*|rescind\w*|annul\w*|"
+        r"struck\s+out|\bbarred\b|st(oo|an)d\s+down|automatic\w*\s+.{0,15}(fail|reject|exclu|disqualif)|"
+        r"fail\w*\s+.{0,10}(the\s+)?(selection|assessment|evaluation)|deemed?\s+.{0,20}(non[-\s]?"
+        r"compliant|ineligible|invalid|variant|unacceptable)|(bid|bidder|tender|tenderer|submission|"
+        r"proposal|response|offer|application|supplier|contractor)s?\b.{0,30}\b(thrown\s+out|"
+        r"returned\s+unopened|withdrawn|discount\w*|refus\w*|declin\w*|not\s+opened)", re.I),
     "passfail": re.compile(
         r"pass\s*[-/]?\s*fail|pass\s+or\s+fail|\bpqq\b|\bsq\b|selection\s+questionnaire|"
         r"deemed\s+.{0,25}fail|fail(ure|ed|s)?\s+.{0,40}(reject|exclu|disqualif|eliminat|"
@@ -72,8 +82,8 @@ FAMILIES: dict[str, re.Pattern] = {
     "deadline": re.compile(
         r"(receiv(e|ed)|submit(ted)?|return(ed)?|lodg(e|ed)|upload(ed)?|arriv(e|ed|es)|reach(es|ed)?)"
         r"\b.{0,70}no\s+later\s+than|closing\s+(date|time)|\bdeadline\b|"
-        r"late\s+(tender|bid|submission|response)s?|"
-        r"incomplete\s+(tender|bid|submission|response)s?", re.I),
+        r"late\s+(tender|bid|submission|response)s?|(before|by)\s+the\s+(cut[-\s]?off|closing|deadline)|"
+        r"cut[-\s]?off\s+(time|date|point)|incomplete\s+(tender|bid|submission|response)s?", re.I),
 }
 
 # Weaker "is this family genuinely present in the document at all?" probes — so a family that
