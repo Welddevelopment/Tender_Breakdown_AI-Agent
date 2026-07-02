@@ -1,0 +1,23 @@
+id,text,type,is_gating,source_page,source_clause,notes
+# ANSWER KEY — WLWA Acton Infrastructure ITT  (data/tenders/WLWA-ACTON-INFRASTUCTURE-ITT_010324.pdf)
+# Owner: Jawad (see comms J-072).  MUST be filled in BY HAND from reading the PDF — not from the
+# tool's output, not from ChatGPT/Claude. This is the human answer key our "100% deal-breakers"
+# claim is measured against; if it comes from any AI it measures the tool against itself.
+#
+# HOW TO FILL IN:
+#   - Add ONE ROW per DEAL-BREAKER you find (a rule that DISQUALIFIES a bid if missed/failed).
+#   - Lines starting with # are ignored — add your real rows BELOW, with NO leading #.
+#   - Columns: id,text,type,is_gating,source_page,source_clause,notes
+#       id           = g1, g2, g3 ...            (just number them)
+#       text         = the rule (your words or a short quote)
+#       type         = mandatory
+#       is_gating    = yes                       (every row in this file is a deal-breaker)
+#       source_page  = the PDF page you saw it on
+#       source_clause= the section/heading, e.g. "6.3 Submission"  (or leave blank)
+#       notes        = one line: why it's a deal-breaker
+#   - Quote text containing commas in "double quotes" (like the example below).
+#
+# FORMAT EXAMPLE (from a DIFFERENT tender — do NOT keep it; write WLWA's real ones):
+#   g1,"Tenders must be received no later than 12:00 on the closing date; late tenders are rejected.",mandatory,yes,6,"Submission",submission deadline
+#
+# ---- your rows below this line (no leading #) ----

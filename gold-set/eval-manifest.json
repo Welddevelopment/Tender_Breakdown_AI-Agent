@@ -15,6 +15,15 @@
       "pdf": "data/tenders/museum-cleaning-itt.pdf",
       "max_page": 41,
       "note": "RE-LABELLED 2026-07-02 (J-055 item 3) — the old 92-row CSV was mis-sourced (SPSO-2013 content bolted onto the MAC/Belfast PDF, 88/92 falsely is_gating=true) and was quarantined draft:true (see comms G-014/B-002). Replaced with a fresh 75-row hand-label read directly from the real 41pp data/tenders/museum-cleaning-itt.pdf, page/clause-referenced, mandatory/optional enum, is_gating=true reserved for explicit disqualification/elimination/Pass-Fail language only (10/75 = 13.3% gating, vs the old 96%). draft:true removed — included in the scored aggregate. See comms board-backend B-011/B-012."
+    },
+    {
+      "tender_id": "wlwa",
+      "title": "WLWA Acton Infrastructure ITT",
+      "gold": "gold-set/wlwa-acton.labels.csv",
+      "pdf": "data/tenders/WLWA-ACTON-INFRASTUCTURE-ITT_010324.pdf",
+      "max_page": 22,
+      "draft": true,
+      "note": "IN PROGRESS — Jawad hand-labelling the deal-breakers (J-072). draft:true so eval_all skips it until the answer key is filled in; flip to false (or ping J) when done."
     }
   ]
 }

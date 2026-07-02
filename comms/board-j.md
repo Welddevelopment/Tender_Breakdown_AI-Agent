@@ -4,7 +4,51 @@
 
 ---
 
-### [J-071] @backend @generalist · REQUEST · OPEN · 2026-07-02 · Pranav please make the answer keys for the held-out tenders (critical path)
+### [J-072] @frontend · REQUEST · OPEN · 2026-07-02 · Jawad: hand-make ONE answer key (the last piece for our "100% deal-breakers" claim)
+**Why you, plainly:** We say the tool catches 100% of *deal-breakers* — the pass/fail rules that
+sink a bid if missed. To PROVE that on a tender we haven't touched, we need a human-made "answer key":
+a person's list of the real deal-breakers in a tender, to check the tool against. It must come from
+someone who ISN'T the tool — so a fresh pair of eyes (you) is exactly right. **~1–2 hours of careful
+reading, zero coding.** Joel reassigned this to you.
+
+**Do exactly ONE tender:** `data/tenders/WLWA-ACTON-INFRASTUCTURE-ITT_010324.pdf` (22 pages — the
+shortest genuinely-meaningful public-sector one). Open it in any PDF viewer.
+
+**Your job — read it like a bid manager and list every DEAL-BREAKER** (a rule where, if a bidder
+gets it wrong or misses it, their bid is thrown out). They cluster in a few spots:
+ • "grounds for exclusion" / "your bid will be rejected or excluded" statements
+ • selection questions marked **Pass/Fail** (SQ / PQQ)
+ • **minimum** turnover / insurance / certificates you MUST have
+ • documents or forms you MUST return
+ • the submission **DEADLINE** (late = out)
+ • collusion / canvassing bans
+Ordinary "nice to have" or descriptive lines are NOT deal-breakers — skip them. Quality over quantity;
+every row should be a real one.
+
+**⚠️ CRITICAL — it must be 100% your own reading, by hand:**
+ • Do **NOT** run our tool and copy what it flags. Do **NOT** paste the PDF into ChatGPT/Claude and let
+   it list them. If the answer key comes from any AI, we'd be grading the tool against itself and the
+   100% becomes meaningless. This only works as your independent human judgement. (I've deliberately
+   NOT sent you the tool's picks.)
+
+**Where to write it — I set the file up for you:** open `gold-set/wlwa-acton.labels.csv`. It has the
+column headers + a worked example + fill-in notes at the top. Add ONE ROW per deal-breaker, no leading
+`#`:
+```
+g1,"Tenders must be received by 12:00 on 1 March 2024; late tenders are rejected.",mandatory,yes,14,"6.3 Submission",submission deadline
+```
+id = g1,g2,g3… · text = the rule (your words or a quote) · type = mandatory · is_gating = yes ·
+source_page = the PDF page you saw it on · source_clause = section/heading (or blank) · notes = why
+it's a deal-breaker. Wrap any text containing commas in "double quotes".
+
+**Save it and ping me** — I run the scoring (you don't touch Python) and we see the real number
+together. Unsure if something's a deal-breaker? Put it in and add a "?" in notes; I'll review with you.
+
+### [J-071] @backend @generalist · ~~REQUEST~~ **SUPERSEDED by J-072** · 2026-07-02 · ⚠️ @backend STAND DOWN — reassigned to frontend
+**Superseded — Pranav, you're OFF this, thanks; stay on your track.** Joel reassigned the held-out
+answer-key work to Jawad (a fresh pair of eyes = cleaner independence for a 100% claim, and one small
+well-chosen tender beats none). Original ask kept below for context.
+
 **Plain English:** The one thing between us and *proving* our deal-breaker catch across the whole
 domain is an "answer key" for the tenders we haven't marked up yet — a human list of the real
 deal-breakers in each. It's been the generalist's job but hasn't started, and it's the release
