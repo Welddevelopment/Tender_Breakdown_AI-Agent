@@ -1,4 +1,4 @@
-# Extraction Prompt — v3
+# Extraction Prompt — v4
 
 > **Owner: J.** Provider-agnostic. The backend calls this **per chunk** and gets back raw requirement
 > objects (see [raw-extraction-format.md](raw-extraction-format.md)). Recall is the priority:
@@ -81,7 +81,9 @@ CLASSIFICATION (first pass — a later step may refine)
   is to, will) or sits under a mandatory/selection heading; "optional" for should, may,
   desirable, preferred, ideally, where appropriate.
 - is_gating: **DEFAULT FALSE.** Set true ONLY for a genuine disqualifier — failing it removes the
-  bid from consideration. Real triggers: explicit pass/fail gates ("compliance is mandatory");
+  bid from consideration. Real triggers: explicit pass/fail gates ("compliance is mandatory"; a
+  selection/PQQ question or criterion explicitly marked "(Pass/Fail)", e.g. "Q3.2.1 Previous Relevant
+  Experience (Pass/Fail)" — these sit in the selection stage and a fail removes the bid);
   "failure to … will result in rejection / exclusion / disqualification", "shall be excluded if",
   "bids that do not … will not be evaluated"; or a hard eligibility/minimum threshold that must be
   **met at submission** (minimum turnover, a certification/insurance you must already hold, a
@@ -164,6 +166,8 @@ obligation per object, honest confidence, and check tables row by row.
 - [ ] Genuinely non-requirement prose (background, definitions) NOT over-extracted into noise.
 
 ### Changelog
+- **2026-07-02 (J)** — **v4: PQQ Pass/Fail gating.** A selection/PQQ question marked "(Pass/Fail)" is now
+  explicitly gating (museum g61-63 were extracted but under-flagged). Synced into `_LLM_SYSTEM`. Evidence: J-061.
 - **2026-07-02 (J)** — **v3: table precision.** Added a rule to skip table header/label/unit/descriptive
   cells (extract only obligation/threshold rows) — tables are a known false-positive source. Recall rule
   for real table requirements unchanged. **Synced into `_LLM_SYSTEM` (`extract.py`) directly this time
