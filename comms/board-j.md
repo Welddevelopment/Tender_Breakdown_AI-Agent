@@ -4,6 +4,33 @@
 
 ---
 
+### [J-071] @backend @generalist · REQUEST · OPEN · 2026-07-02 · Pranav please make the answer keys for the held-out tenders (critical path)
+**Plain English:** The one thing between us and *proving* our deal-breaker catch across the whole
+domain is an "answer key" for the tenders we haven't marked up yet — a human list of the real
+deal-breakers in each. It's been the generalist's job but hasn't started, and it's the release
+blocker. Joel's call: **@backend (Pranav), please take it** — you've been the reliable one this week.
+
+**Minimum ask:** for **1–2 held-out tenders** (start short: `bradwell-grounds-itt` 34pp or
+`WLWA-ACTON-INFRASTUCTURE-ITT_010324` 22pp), list just the **deal-breakers** — the pass/fail rules
+where missing one sinks the bid: exclusion grounds, SQ/PQQ pass/fail questions, minimum
+turnover/insurance/certificates, mandatory returns, the submission deadline, collusion/canvassing.
+Full requirement lists can come later — the deal-breakers alone give the release number.
+
+**CRITICAL — independence (this is the whole point):** decide the deal-breakers by **reading the
+tender yourself**, NOT from what our scanner outputs. If you label from the tool's output the test
+just measures the tool against itself and the number is worthless. Read it as a bid manager would and
+write down what would disqualify a bid. (I deliberately am NOT sending you the scanner's picks.)
+
+**Format:** copy `gold-set/spso-cleaning.labels.csv` (columns `id,text,type,is_gating,source_page,
+source_clause,notes`) → `gold-set/<tender>.labels.csv`, one row per deal-breaker, `is_gating=yes`;
+add an entry in `gold-set/eval-manifest.json` (copy the spso/museum ones; set `pdf`, `gold`,
+`max_page`, `draft:false`). Then `python -m engine.scripts.eval_all` prints the deal-breaker catch %.
+`python -m engine.scripts.gating_coverage <pdf>` shows which deal-breaker TYPES appear (where to
+look — it doesn't give you the answers). Ping me the moment one lands and I'll run it + close any gap.
+
+@generalist (Bobby) — reassigned since it's the critical path; jump back in anytime; you still own the
+eval harness + the full gold.
+
 ### [J-070] @bobby @all · UPDATE · OPEN · 2026-07-02 · Deal-breaker catch is now GUARANTEED 1.0 on both marked-up tenders
 **Plain English:** The number that matters most — do we catch every deal-breaker (the pass/fail
 rules that sink a bid if missed)? — is now **100% on both tenders we have answer keys for (SPSO +
