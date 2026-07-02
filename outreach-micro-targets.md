@@ -449,5 +449,53 @@ Dropped: **Yates Jetting Ltd** — duplicate of existing **L-0360** (same domain
 >
 > Joel, Bidframe
 
+### Wave 1c (cont.) — M&E/gas straggler
+*1 verified from the M&E sub-sweep (that seam is otherwise heavily covered in the CRM).*
+
+#### MT-28 · One Stop Gas and Plumbing Limited · to: enq@onestopgasandplumbing.co.uk · GOOD
+*Small family gas/heating firm (Hards family), Orpington/Bromley (Greater London). Own "current contracts" page names HA clients: Housing For Women, Metropolitan (MTVH), Cyron, Brockley Tenants Co-op, Lewisham Family Self-Help. Source: onestopgasandplumbing.co.uk/current_contracts.asp*
+**Subject:** Your HA gas-servicing frameworks — what would disqualify the bid?
+> Hi David,
+>
+> You already run gas-servicing and heating contracts for London housing associations like Housing For Women and Metropolitan — so you're bidding HA/council gas frameworks where one missed pass/fail requirement (a Gas Safe scope, an insurance level, a response KPI) voids the whole submission.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its exact clause, then drafts each answer from your own Gas Safe and method docs — a citation on every claim, nothing invented.
+>
+> Free 15-minute live reads today and tomorrow — send me an HA gas framework you're bidding or renewing and I'll show you what would disqualify it, live. Paid pilot after this week.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
+#### MT-29 · P.J. Barwick Electrical Services Ltd · to: paul@pjb-electrical.co.uk · GOOD
+*One-man NICEIC electrician (Paul Barwick, 30+ yrs), Wallington/Sutton (Greater London). Own /projects page names London state schools: Stratford School Academy (E7), Granton Primary (Streatham). Source: pjb-electrical.co.uk/projects*
+**Subject:** London school electrical bids — without a bid team
+> Hi Paul,
+>
+> You've delivered electrical and lighting works inside London state schools like Stratford School Academy and Granton Primary — so you're bidding school/academy work where one missed pass/fail requirement (an NICEIC scope, a DBS/safeguarding clause, an insurance level) voids the whole bid.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its exact clause, then drafts each answer from your own certifications and project record — a citation on every claim, nothing invented.
+>
+> Free 15-minute live reads today and tomorrow — send me a school tender you're bidding and I'll show you what would disqualify it, live. Paid pilot after this week.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
+#### MT-30 · Atlantic Fire Ltd · to: info@atlanticfireltd.com · GOOD
+*Single-director fire-alarm/emergency-lighting firm (Jimride "Jimmy" Robinson, sole director per Companies House 10541267), Edmonton/Enfield (Greater London). Homepage names Islington, Redbridge & Reading Borough Councils. Source: atlanticfireltd.com*
+**Subject:** Borough fire-safety tenders — the pass/fail gates
+> Hi Jimmy,
+>
+> You already work for boroughs like Islington and Redbridge on fire alarms and emergency lighting — so you're bidding borough fire-safety work where one missed pass/fail requirement (a BAFE/accreditation scope, a response KPI, an insurance level) voids the whole submission.
+>
+> Bidframe reads the tender and surfaces those deal-breakers first, each linked to its exact clause, then drafts each answer from your own accreditations and method docs — a citation on every claim, nothing invented.
+>
+> Free 15-minute live reads today and tomorrow — send me a borough fire-safety tender you're bidding and I'll show you what would disqualify it, live. Paid pilot after this week.
+>
+> Free slot → https://cal.com/joel-jeon-o29lfr/bidframe  ·  or reply with a tender and a time.
+>
+> Joel, Bidframe
+
 <!-- next waves appended below -->
 
