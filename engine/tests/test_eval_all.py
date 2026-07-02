@@ -21,3 +21,22 @@ def test_aggregate_empty():
     assert a["tenders"] == 0
     assert a["recall"] == 0.0
     assert a["dangerous_misses"] == 0
+
+
+def test_aggregate_semantic_gating_absent_is_none():
+    # No sem fields (offline / no key) -> semantic gating aggregate is None, not a fake 0.
+    rows = [{"tp": 1, "fn": 0, "fp": 0, "gating_gold": 1, "gating_caught": 1,
+             "dangerous_misses": 0, "recall": 1.0}]
+    assert aggregate(rows)["sem_gating_recall"] is None
+
+
+def test_aggregate_semantic_gating_micro_average():
+    rows = [
+        {"tp": 1, "fn": 0, "fp": 0, "gating_gold": 2, "gating_caught": 2, "dangerous_misses": 0,
+         "recall": 1.0, "sem_gating_gold": 2, "sem_gating_caught": 2, "sem_gating_recall": 1.0},
+        {"tp": 1, "fn": 0, "fp": 0, "gating_gold": 10, "gating_caught": 4, "dangerous_misses": 6,
+         "recall": 1.0, "sem_gating_gold": 10, "sem_gating_caught": 7, "sem_gating_recall": 0.7},
+    ]
+    a = aggregate(rows)
+    assert a["sem_gating_caught"] == 9 and a["sem_gating_gold"] == 12
+    assert a["sem_gating_recall"] == round(9 / 12, 4)   # micro-average, not (1.0+0.7)/2

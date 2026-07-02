@@ -113,6 +113,70 @@ def score(gold: dict, output: dict) -> dict:
     }
 
 
+def semantic_gating_recall(gold: dict, output: dict, embed_index, threshold: float = 0.68,
+                           page_tol: int = 1) -> dict | None:
+    """Region-anchored, deterministic semantic gating recall (the release-gate metric).
+
+    The lexical `gating_recall` understates catches on real tenders: a disqualifier the
+    tool DID surface as gating can score < 0.60 against a verbose human gold row (same
+    gate, different words). This credits a gold GATING row as CAUGHT when a surfaced
+    GATING requirement on the SAME PAGE (within ±page_tol) is within embedding cosine
+    >= threshold. Two guards make it trustworthy as a release gate:
+
+      * greedy ONE-TO-ONE — each surfaced req credits at most one gold, so a single
+        generic requirement can't be counted as catching several distinct disqualifiers
+        (the granularity trap J-064 flagged for the museum Q3.2.x rows);
+      * the page anchor blocks a cross-page cosine coincidence from false-crediting and
+        steadies the number run-to-run (raw best-cosine flip-flops at the margin).
+
+    It NEVER manufactures a credit for a disqualifier that isn't surfaced — an unsurfaced
+    gate stays a MISS (an honest number, not a gamed 1.0). Every credit is returned in
+    `audit` (gold_id, cosine, matched text + page) so a human can reject a bad threshold.
+
+    Returns {caught, total, recall, threshold, audit:[...]}, or None when embed_index is
+    None (embeddings unavailable -> the lexical gating_recall stays the offline default).
+    """
+    if embed_index is None:
+        return None
+    gold_gating = [g for g in gold.get("requirements", []) if g.get("is_gating")]
+    out_gating = [r for r in output.get("requirements", []) if r.get("is_gating")]
+
+    pairs: list[tuple[float, int, int]] = []
+    for gi, g in enumerate(gold_gating):
+        gp = g.get("source_page")
+        for ri, r in enumerate(out_gating):
+            rp = r.get("source_page")
+            if gp is not None and rp is not None and abs(gp - rp) > page_tol:
+                continue
+            c = embed_index.cosine(g.get("text", ""), r.get("text", ""))
+            if c >= threshold:
+                pairs.append((c, gi, ri))
+    pairs.sort(key=lambda p: (-p[0], p[1], p[2]))  # deterministic: cosine desc, then indices
+
+    credit: dict[int, tuple[float, int]] = {}
+    used_r: set[int] = set()
+    for c, gi, ri in pairs:
+        if gi in credit or ri in used_r:
+            continue
+        credit[gi] = (c, ri)
+        used_r.add(ri)
+
+    audit = []
+    for gi, g in enumerate(gold_gating):
+        gid = g.get("gold_id") or g.get("id")
+        if gi in credit:
+            c, ri = credit[gi]
+            r = out_gating[ri]
+            audit.append({"gold_id": gid, "caught": True, "cosine": round(c, 3),
+                          "page": r.get("source_page"), "matched": (r.get("text") or "")[:80]})
+        else:
+            audit.append({"gold_id": gid, "caught": False, "cosine": None,
+                          "page": g.get("source_page"), "matched": None})
+    total = len(gold_gating)
+    return {"caught": len(credit), "total": total, "threshold": threshold,
+            "recall": round(len(credit) / total, 4) if total else 1.0, "audit": audit}
+
+
 def format_report(gold: dict, output: dict) -> dict:
     """Score plus the misses (dangerous = missed gating req) and false positives."""
     _matches, unmatched_gold, unmatched_output = match_requirements(gold, output)

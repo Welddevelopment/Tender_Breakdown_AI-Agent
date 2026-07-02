@@ -32,6 +32,9 @@ def aggregate(rows: list[dict]) -> dict:
     gg = sum(r["gating_gold"] for r in rows)
     gc = sum(r["gating_caught"] for r in rows)
     dm = sum(r["dangerous_misses"] for r in rows)
+    has_sem = any("sem_gating_recall" in r for r in rows)
+    sgg = sum(r.get("sem_gating_gold", 0) for r in rows)
+    sgc = sum(r.get("sem_gating_caught", 0) for r in rows)
     return {
         "tenders": len(rows),
         "recall": _ratio(tp, tp + fn),
@@ -41,6 +44,9 @@ def aggregate(rows: list[dict]) -> dict:
         "gating_gold": gg,
         "gating_caught": gc,
         "dangerous_misses": dm,
+        "sem_gating_recall": _ratio(sgc, sgg) if has_sem else None,
+        "sem_gating_gold": sgg,
+        "sem_gating_caught": sgc,
         "macro_recall": round(sum(r["recall"] for r in rows) / len(rows), 4) if rows else 0.0,
     }
 
@@ -62,6 +68,19 @@ def _score_one(entry: dict, extractor_box: list) -> dict:
         reqs = [r for r in reqs if r["source_page"] and 1 <= r["source_page"] <= mp]
     s = score(gold, {**final, "requirements": reqs})
     s["tender_id"] = entry["tender_id"]
+    # Semantic (region-anchored) gating recall — the release-gate metric. Opt-in via key
+    # (independent of RECONCILE_SEMANTIC); None offline -> the lexical gating_recall stands.
+    from engine.eval import semantic_gating_recall
+    gate_idx = build_index(
+        list({*(g["text"] for g in gold["requirements"] if g.get("is_gating")),
+              *(r.get("text", "") for r in reqs if r.get("is_gating"))}),
+        enabled=bool(os.environ.get("OPENAI_API_KEY")))
+    sg = semantic_gating_recall(gold, {"requirements": reqs}, gate_idx)
+    if sg is not None:
+        s["sem_gating_caught"] = sg["caught"]
+        s["sem_gating_gold"] = sg["total"]
+        s["sem_gating_recall"] = sg["recall"]
+        s["sem_gating_audit"] = sg["audit"]
     return s
 
 
@@ -99,6 +118,19 @@ def main(argv) -> int:
           f"({agg['gating_caught']}/{agg['gating_gold']} disqualifiers caught & flagged)  "
           f"dangerous misses: {agg['dangerous_misses']}")
     print(f"  macro recall {agg['macro_recall']}")
+    if agg.get("sem_gating_recall") is not None:
+        print(f"\nSEMANTIC gating recall (region-anchored, opt-in via key) "
+              f"{agg['sem_gating_recall']} ({agg['sem_gating_caught']}/{agg['sem_gating_gold']}) "
+              f"— credits a disqualifier caught when a surfaced GATING req covers its region "
+              f"(same page ± strong-signal), not only lexical text ≥0.60. Misses shown below:")
+        for r in rows:
+            if "sem_gating_recall" not in r:
+                continue
+            misses = [a for a in r.get("sem_gating_audit", []) if not a["caught"]]
+            tag = "all caught" if not misses else ", ".join(
+                f"{a['gold_id']}(p{a['page']})" for a in misses)
+            print(f"  {r['tender_id']:<10} {r['sem_gating_caught']}/{r['sem_gating_gold']}"
+                  f" = {r['sem_gating_recall']}   misses: {tag}")
     if drafts:
         print(f"\n  ({len(drafts)} tender(s) awaiting human gold: "
               f"{', '.join(e['tender_id'] for e in drafts)})")
