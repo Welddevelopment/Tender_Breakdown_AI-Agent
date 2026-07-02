@@ -103,22 +103,22 @@ export function Landing() {
             <TreelineDivider className="hero-ridge absolute inset-x-0 bottom-0 h-24 w-full text-moss sm:h-32" />
             <TreelineDivider
               flip
-              className="hero-canopy absolute -top-10 inset-x-0 hidden h-32 w-full rotate-180 text-forest/[0.08] lg:block"
+              className="hero-canopy absolute -top-10 inset-x-0 hidden h-28 w-full rotate-180 text-forest/[0.08] md:block lg:h-32"
             />
-            <FernFrond className="art-draw absolute -right-20 top-14 hidden h-[620px] w-auto rotate-[7deg] text-forest/[0.22] lg:block" />
-            <FernFrond className="art-draw absolute -left-24 top-20 hidden h-[600px] w-auto origin-center -scale-x-100 -rotate-[6deg] text-forest/[0.18] lg:block" />
+            <FernFrond className="art-draw absolute -right-28 top-24 hidden h-[430px] w-auto rotate-[7deg] text-forest/[0.16] md:block lg:-right-20 lg:top-14 lg:h-[620px] lg:text-forest/[0.22]" />
+            <FernFrond className="art-draw absolute -left-32 top-28 hidden h-[420px] w-auto origin-center -scale-x-100 -rotate-[6deg] text-forest/[0.13] md:block lg:-left-24 lg:top-20 lg:h-[600px] lg:text-forest/[0.18]" />
             <FernFrond className="art-draw absolute -right-10 top-[360px] hidden h-[360px] w-auto rotate-[18deg] text-pine/[0.08] xl:block" />
-            <PineBranch className="art-draw absolute -left-20 bottom-24 hidden h-64 w-auto -rotate-[5deg] text-forest/[0.18] lg:block" />
+            <PineBranch className="art-draw absolute -left-24 bottom-24 hidden h-48 w-auto -rotate-[5deg] text-forest/[0.14] md:block lg:-left-20 lg:h-64 lg:text-forest/[0.18]" />
             <PineBranch className="art-draw absolute left-8 top-28 hidden h-36 w-auto rotate-[9deg] text-pine/[0.08] xl:block" />
             <Seal
               id="seal-hero"
-              className="absolute left-[7%] top-[44%] hidden h-40 w-40 -translate-y-1/2 -rotate-[8deg] text-forest/[0.06] lg:block"
+              className="absolute left-[5%] top-[48%] hidden h-32 w-32 -translate-y-1/2 -rotate-[8deg] text-forest/[0.045] md:block lg:left-[7%] lg:top-[44%] lg:h-40 lg:w-40 lg:text-forest/[0.06]"
             />
           </div>
 
           {/* Hero: a centred two-line headline, a single supporting line, then
               the product sheet. The one symmetric moment, earned. */}
-          <section className={`${CONTAINER} relative z-10 pt-16 pb-8 text-center sm:pt-24 sm:pb-12`}>
+          <section className={`${CONTAINER} relative z-10 pt-12 pb-4 text-center sm:pt-[4.5rem] sm:pb-6 lg:pt-20`}>
             <h1 className="hero-enter font-serif font-semibold tracking-tight text-ink">
               <span className="block text-balance text-6xl leading-[0.98] sm:whitespace-nowrap sm:text-7xl md:text-[5.75rem] lg:text-[7rem] xl:text-[8rem]">
                 Never lose a bid
@@ -137,7 +137,7 @@ export function Landing() {
             </div>
           </section>
 
-          <section className={`${CONTAINER} relative z-10 pb-28 sm:pb-36`}>
+          <section className={`${CONTAINER} relative z-10 -mt-4 pb-28 sm:-mt-8 sm:pb-36`}>
             <HeroResolve />
           </section>
         </div>
@@ -298,18 +298,20 @@ export function Landing() {
             id="seal-closing"
             className="absolute right-[6%] top-1/2 hidden h-52 w-52 -translate-y-1/2 rotate-[7deg] text-paper/25 lg:block"
           />
-          <div className="surface-grain relative z-10 mx-auto max-w-[600px] rounded-lg border border-hairline bg-paper-raised p-8 text-center shadow-[var(--depth-sheet)] sm:p-10">
-            <h2 className="mx-auto max-w-[20ch] text-balance font-serif text-3xl font-semibold leading-tight tracking-tight text-ink sm:text-4xl">
-              See it on a tender you already know
-            </h2>
-            <p className="mx-auto mt-4 max-w-[46ch] leading-relaxed text-ink-muted">
-              The quickest way to judge Bidframe is to watch it read a tender you
-              have already bid. Book fifteen minutes and bring one.
-            </p>
-            <div className="mt-7 flex justify-center">
-              <BookDemoButton location="closing" />
+          <Reveal>
+            <div className="surface-grain closing-card relative z-10 mx-auto max-w-[600px] rounded-lg border border-hairline bg-paper-raised p-8 text-center shadow-[var(--depth-sheet)] sm:p-10">
+              <h2 className="mx-auto max-w-[20ch] text-balance font-serif text-3xl font-semibold leading-tight tracking-tight text-ink sm:text-4xl">
+                See it on a tender you already know
+              </h2>
+              <p className="mx-auto mt-4 max-w-[46ch] leading-relaxed text-ink-muted">
+                The quickest way to judge Bidframe is to watch it read a tender you
+                have already bid. Book fifteen minutes and bring one.
+              </p>
+              <div className="mt-7 flex justify-center">
+                <BookDemoButton location="closing" />
+              </div>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
@@ -419,9 +421,9 @@ function FeatureSection({
           {copy}
         </p>
       </div>
-      <PanelFrame tilt={tilt} className={`mx-auto mt-12 ${maxWidth}`}>
-        {panel}
-      </PanelFrame>
+      <Reveal className={`mx-auto mt-12 ${maxWidth}`}>
+        <PanelFrame tilt={tilt}>{panel}</PanelFrame>
+      </Reveal>
     </Band>
   );
 }

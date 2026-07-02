@@ -90,13 +90,14 @@ export function HeroResolve() {
       <Link
         href="/demo"
         aria-label="Open the worked example on the demo tender"
-        className="hero-product-halo group relative block [perspective:1600px] rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-forest focus-visible:ring-offset-4 focus-visible:ring-offset-paper"
+        className="hero-product-halo group relative isolate block [perspective:1600px] rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-forest focus-visible:ring-offset-4 focus-visible:ring-offset-paper"
       >
         <div
           ref={cardRef}
           aria-hidden="true"
-          className="hero-sheet surface-grain mx-auto max-w-[1100px] overflow-hidden rounded-xl border border-forest/55 bg-paper-raised p-5 shadow-[var(--depth-hero-sheet)] transition-shadow group-hover:shadow-[0_30px_70px_-30px_rgba(22,48,31,0.54)] sm:p-7 lg:p-8"
+          className="hero-sheet surface-grain relative mx-auto max-w-[1100px] overflow-hidden rounded-xl border border-forest/55 bg-paper-raised p-5 shadow-[var(--depth-hero-sheet)] transition-shadow group-hover:shadow-[0_30px_70px_-30px_rgba(22,48,31,0.54)] sm:p-7 lg:p-8"
         >
+          <span aria-hidden="true" className="hero-resolve-scan" />
           {/* The deal-breaker callout sits on top but settles last (longer delay). */}
           <div className="hr-settle" style={{ animationDelay: "560ms" }}>
             <GatingHero />

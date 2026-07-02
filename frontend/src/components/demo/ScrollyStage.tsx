@@ -47,46 +47,118 @@ function WallDocument({
 }) {
   const lit = phase !== "read";
   return (
-    <div className="relative w-full max-w-[30rem] overflow-hidden rounded-lg border border-hairline bg-paper-raised p-6 shadow-[var(--depth-sheet)]">
-      {/* The read-pass: a quiet highlight bar sweeping the sheet once. Mounted
-          only while resolving so the one-shot keyframe replays on re-entry. */}
+    <div className="wall-cinema relative w-full max-w-[31rem]">
+      <span aria-hidden className="wall-evidence-sheet wall-evidence-sheet-a" />
+      <span aria-hidden className="wall-evidence-sheet wall-evidence-sheet-b" />
+      <div className="wall-document relative overflow-hidden rounded-lg border border-hairline bg-paper-raised p-6 shadow-[var(--depth-sheet)]">
+        {/* The read-pass: a quiet highlight bar sweeping the sheet once. Mounted
+            only while resolving so the one-shot keyframe replays on re-entry. */}
+        {phase === "resolving" && (
+          <>
+            <span
+              aria-hidden
+              className="wall-scan pointer-events-none absolute inset-x-0 top-0 h-1/5 border-b border-forest/40 bg-forest/10"
+            />
+            <span
+              aria-hidden
+              className="wall-crosshair pointer-events-none absolute left-0 right-0 top-[41%] border-t border-signal-oxblood/35"
+            />
+          </>
+        )}
+        <p className="font-mono text-[11px] uppercase tracking-wide text-ink-muted">
+          One tender · {DEMO_FACTS.pages} pages · {DEMO_FACTS.requirements}{" "}
+          requirements inside
+        </p>
+        <div className="mt-4 columns-2 gap-5 text-justify font-serif text-[7px] leading-[11px] text-ink/70 [hyphens:auto]">
+          {WALL_PARAGRAPHS.map((para, i) => (
+            <p key={i} className="mb-2">
+              {para.lead}
+              {para.catch && (
+                <>
+                  {" "}
+                  <span
+                    data-wall-catch
+                    className={`rounded-[2px] px-0.5 [box-decoration-break:clone] transition-colors duration-500 ${
+                      lit
+                        ? "bg-signal-oxblood/15 text-signal-oxblood delay-500"
+                        : "bg-transparent text-ink/70 delay-0"
+                    }`}
+                  >
+                    {para.catch}
+                  </span>
+                </>
+              )}
+              {para.tail && <> {para.tail}</>}
+            </p>
+          ))}
+        </div>
+        <p className="mt-3 flex items-baseline justify-between border-t border-hairline pt-2 font-mono text-[9px] text-ink-muted">
+          <span>{DEMO_FACTS.docTitle}</span>
+          <span>p.7 of {DEMO_FACTS.pages}</span>
+        </p>
+      </div>
       {phase === "resolving" && (
         <span
           aria-hidden
-          className="wall-scan pointer-events-none absolute inset-x-0 top-0 h-1/5 border-b border-forest/40 bg-forest/10"
-        />
+          className="wall-readout surface-grain absolute -right-4 bottom-5 hidden rounded-md border border-accent/25 bg-paper-raised px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-accent shadow-[var(--depth-row)] sm:block"
+        >
+          Clause locked · 4.2.1
+        </span>
       )}
-      <p className="font-mono text-[11px] uppercase tracking-wide text-ink-muted">
-        One tender · {DEMO_FACTS.pages} pages · {DEMO_FACTS.requirements}{" "}
-        requirements inside
-      </p>
-      <div className="mt-4 columns-2 gap-5 text-justify font-serif text-[7px] leading-[11px] text-ink/70 [hyphens:auto]">
-        {WALL_PARAGRAPHS.map((para, i) => (
-          <p key={i} className="mb-2">
-            {para.lead}
-            {para.catch && (
-              <>
-                {" "}
-                <span
-                  data-wall-catch
-                  className={`rounded-[2px] px-0.5 [box-decoration-break:clone] transition-colors duration-500 ${
-                    lit
-                      ? "bg-signal-oxblood/15 text-signal-oxblood delay-500"
-                      : "bg-transparent text-ink/70 delay-0"
-                  }`}
-                >
-                  {para.catch}
-                </span>
-              </>
-            )}
-            {para.tail && <> {para.tail}</>}
-          </p>
-        ))}
+    </div>
+  );
+}
+
+function ExtractionThread({ active }: { active: boolean }) {
+  return (
+    <svg
+      aria-hidden
+      className={`extraction-thread pointer-events-none absolute inset-0 h-full w-full text-accent/55 transition-opacity duration-500 ${
+        active ? "opacity-100 delay-[450ms]" : "opacity-0 delay-0"
+      }`}
+      viewBox="0 0 520 420"
+      preserveAspectRatio="none"
+    >
+      <path
+        d="M72 146 C 180 122, 224 120, 286 134 S 406 154, 470 122"
+        fill="none"
+        pathLength={1}
+        stroke="currentColor"
+        strokeDasharray="1"
+        strokeWidth="1.4"
+      />
+      <path
+        d="M84 190 C 190 198, 226 190, 292 198 S 408 218, 474 208"
+        fill="none"
+        opacity="0.7"
+        pathLength={1}
+        stroke="currentColor"
+        strokeDasharray="1"
+        strokeWidth="1"
+      />
+    </svg>
+  );
+}
+
+function ExtractionLedger({ active }: { active: boolean }) {
+  return (
+    <div
+      className={`extraction-ledger absolute right-3 top-5 hidden w-36 rounded-md border border-hairline bg-paper-raised p-3 font-mono text-[9px] uppercase tracking-[0.11em] text-ink-muted shadow-[var(--depth-row)] transition-[opacity,transform] duration-500 lg:block ${
+        active
+          ? "translate-x-0 opacity-100 delay-[1050ms]"
+          : "translate-x-4 opacity-0 delay-0"
+      }`}
+      aria-hidden
+    >
+      <div className="flex items-center justify-between border-b border-hairline pb-2">
+        <span>Read pass</span>
+        <span className="text-forest">live</span>
       </div>
-      <p className="mt-3 flex items-baseline justify-between border-t border-hairline pt-2 font-mono text-[9px] text-ink-muted">
-        <span>{DEMO_FACTS.docTitle}</span>
-        <span>p.7 of {DEMO_FACTS.pages}</span>
-      </p>
+      <div className="mt-2 space-y-1.5">
+        <span className="block h-1.5 w-full rounded-sm bg-forest/25" />
+        <span className="block h-1.5 w-5/6 rounded-sm bg-signal-oxblood/25" />
+        <span className="block h-1.5 w-3/4 rounded-sm bg-accent/20" />
+      </div>
     </div>
   );
 }
@@ -560,10 +632,12 @@ export function BeatVisual({ step }: { step: number }) {
 export function ScrollyStage({ step }: { step: number }) {
   return (
     <div
-      className="relative h-[min(36rem,calc(100vh-6rem))] w-full"
+      className="demo-stage-frame relative h-[min(36rem,calc(100vh-6rem))] w-full"
       aria-hidden
       inert
     >
+      <ExtractionThread active={step === 1} />
+      <ExtractionLedger active={step === 1} />
       <WallLayer step={step} />
       <RegisterLayer step={step} />
       <DealBreakerLayer step={step} />

@@ -110,9 +110,13 @@ a raw tender resolves into the ruled register, and the deal-breaker settles firs
   register**, rows landing into place on the shared grid with their clause references appearing down the
   mono left margin. Then the **oxblood deal-breaker row settles last and heaviest** (2px oxblood edge,
   more room, oxblood dot), drawing the eye. That settle is the catch.
-- **Everything else on the page stays still.** No parallax, no scroll-jacking, no floating decoration. A
-  page that holds still while one thing resolves is itself the credibility signal. This is the anti-slop
-  posture made visible, and it matches the product's "calm and still almost everywhere" rule.
+- **The landing page stays selective.** The hero can carry the cinematic resolve, and lower proof
+  surfaces may settle in as placed documents, but the page must not add a second reading-pass section.
+  The heavier end-to-end motion belongs on `/demo`, where the visitor has chosen to watch the product
+  run.
+- **The `/demo` reading pass may go further.** Its pinned stage can show the tender being scanned,
+  clauses locking, requirement rows forming, the deal-breaker lifting out, answers receiving receipts,
+  and the graph drawing. Keep it tied to real product states, never a decorative animation reel.
 - **Timing** belongs to the motion pass (not specced here), but the transition is named so it is not
   invented from scratch. Keep it under ~2.5s, ease to a settle, play once on load, do not loop.
 - **Reduced motion and no-JS fallback:** when `prefers-reduced-motion: reduce` is set, or before/without

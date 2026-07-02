@@ -148,18 +148,73 @@ body {
   content: "";
   position: absolute;
   inset: 7% 2% -9%;
-  z-index: -1;
+  z-index: -2;
   border: 1px solid rgba(44, 86, 64, 0.14);
   border-radius: 1rem;
   background: rgba(232, 235, 221, 0.32);
   box-shadow: inset 0 0 0 1px rgba(246, 242, 233, 0.44);
   transform: rotateX(5deg) rotateY(-6deg) translateY(10px);
 }
+.hero-resolve-scan {
+  position: absolute;
+  inset-inline: -12%;
+  top: 0;
+  z-index: 5;
+  height: 22%;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      to bottom,
+      transparent,
+      rgba(47, 93, 99, 0.08) 42%,
+      rgba(47, 93, 99, 0.24) 50%,
+      rgba(47, 93, 99, 0.08) 58%,
+      transparent
+    );
+  opacity: 0;
+  transform: translateY(-120%);
+}
 .hero-sheet {
   --rx: 5deg;
   --ry: -6deg;
   transform: rotateX(var(--rx)) rotateY(var(--ry));
   transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-sheet {
+    animation: hero-sheet-file 1.05s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+  }
+  .hero-resolve-scan {
+    animation: hero-resolve-scan 1.15s cubic-bezier(0.4, 0, 0.2, 1) 0.72s both;
+  }
+}
+
+@keyframes hero-sheet-file {
+  from {
+    opacity: 0;
+    transform: rotateX(calc(var(--rx) + 8deg)) rotateY(calc(var(--ry) - 8deg))
+      translate3d(34px, 38px, -120px) scale(0.965);
+  }
+  to {
+    opacity: 1;
+    transform: rotateX(var(--rx)) rotateY(var(--ry));
+  }
+}
+
+@keyframes hero-resolve-scan {
+  0% {
+    opacity: 0;
+    transform: translateY(-120%);
+  }
+  18%,
+  72% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(470%);
+  }
 }
 
 @media (max-width: 640px) {
@@ -183,6 +238,12 @@ body {
   .hero-matrix input {
     padding: 0.45rem 0.6rem;
     font-size: 0.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-resolve-scan {
+    display: none;
   }
 }
 
@@ -213,11 +274,97 @@ body {
   .wall-scan {
     animation: wall-scan 0.9s cubic-bezier(0.4, 0, 0.2, 1) both;
   }
+  .wall-crosshair {
+    animation: wall-crosshair 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.45s both;
+  }
+  .wall-readout {
+    animation: wall-readout 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.62s both;
+  }
+  .extraction-thread path {
+    animation: extraction-thread 0.95s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
   .stamp-emphasis .stamp-settle {
     animation: stamp-settle-lg 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
   }
   .stamp-emphasis .font-mono.text-ink-muted {
     animation: audit-type 0.9s steps(22, end) 0.45s both;
+  }
+}
+
+.demo-stage-frame {
+  isolation: isolate;
+}
+.demo-stage-frame::before {
+  content: "";
+  position: absolute;
+  inset: 3rem 1rem;
+  z-index: 0;
+  border: 1px solid rgba(44, 86, 64, 0.08);
+  border-radius: 1rem;
+  background-image:
+    linear-gradient(to right, rgba(33, 29, 23, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(33, 29, 23, 0.035) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+.wall-cinema {
+  perspective: 1100px;
+}
+.wall-evidence-sheet {
+  position: absolute;
+  inset: 12px;
+  z-index: -1;
+  border: 1px solid rgba(44, 86, 64, 0.12);
+  border-radius: 0.75rem;
+  background: rgba(232, 235, 221, 0.5);
+  box-shadow: 0 10px 30px -24px rgba(33, 29, 23, 0.34);
+}
+.wall-evidence-sheet-a {
+  transform: rotate(-4deg) translate(-18px, 18px);
+}
+.wall-evidence-sheet-b {
+  transform: rotate(3deg) translate(20px, 10px);
+}
+.wall-document {
+  transform: rotateX(0deg) rotateY(0deg);
+}
+.wall-readout {
+  z-index: 4;
+}
+.extraction-thread {
+  z-index: 15;
+}
+.extraction-ledger {
+  z-index: 35;
+}
+
+@keyframes wall-crosshair {
+  from {
+    opacity: 0;
+    transform: scaleX(0.2);
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+@keyframes wall-readout {
+  from {
+    opacity: 0;
+    transform: translate(10px, 8px) rotate(-2deg);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0) rotate(-2deg);
+  }
+}
+
+@keyframes extraction-thread {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
   }
 }
 
