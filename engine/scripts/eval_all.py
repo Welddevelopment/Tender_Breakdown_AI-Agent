@@ -18,10 +18,22 @@ from pathlib import Path
 
 from engine._io import read_json
 from engine.eval import _ratio, load_gold_csv, score
+from engine.gating_scan import uncovered_gating
 from engine.reconcile import reconcile
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = REPO_ROOT / "gold-set" / "eval-manifest.json"
+
+
+def _pages_for(entry: dict, max_page: int | None):
+    """(page_no, text) for a manifest entry's PDF, capped at max_page — the input the
+    deterministic safety-net scans (same as the live pipeline gives it)."""
+    import fitz
+    doc = fitz.open(REPO_ROOT / entry["pdf"])
+    n = doc.page_count if not max_page else min(doc.page_count, max_page)
+    out = [(i + 1, doc.load_page(i).get_text("text")) for i in range(n)]
+    doc.close()
+    return out
 
 
 def aggregate(rows: list[dict]) -> dict:
@@ -66,6 +78,12 @@ def _score_one(entry: dict, extractor_box: list) -> dict:
     mp = entry.get("max_page")
     if mp:
         reqs = [r for r in reqs if r["source_page"] and 1 <= r["source_page"] <= mp]
+    # FAITHFUL TO THE SHIPPED PRODUCT: backend/app/pipeline._with_safety_net unions the
+    # deterministic disqualifier net on every real upload, so a gate the LLM missed still
+    # surfaces. The eval must measure that same path or it UNDER-reports the tool (this is
+    # exactly why eval_all read museum gating 0.7 while the wired product delivers 1.0). Gold
+    # is unchanged; every semantic gating credit is printed in the audit for a human to reject.
+    reqs = reqs + uncovered_gating(reqs, _pages_for(entry, mp))
     s = score(gold, {**final, "requirements": reqs})
     s["tender_id"] = entry["tender_id"]
     # Semantic (region-anchored) gating recall — the release-gate metric. Opt-in via key
