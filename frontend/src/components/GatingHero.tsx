@@ -82,7 +82,7 @@ export function GatingHero({
       </div>
 
       <div className="p-5">
-        <div className="flex items-start justify-between gap-4">
+        <div className="flex flex-col items-start gap-3 sm:flex-row sm:justify-between sm:gap-4">
           <h2 className="font-serif text-lg font-semibold leading-snug text-ink">
             {gating.length} requirement{many ? "s" : ""} that would disqualify
             the bid if missed

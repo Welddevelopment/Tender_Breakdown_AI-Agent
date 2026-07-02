@@ -26,7 +26,7 @@ export function SiteFooter() {
       <TreelineDivider
         flip
         className="-mb-px block h-14 w-full bg-pine text-pine-deep sm:h-24"
-        />
+      />
       <div className="relative bg-pine-deep">
         <PineBranch
           className="pointer-events-none absolute -right-16 top-8 hidden h-56 w-auto rotate-[16deg] text-paper/[0.07] lg:block"
@@ -36,9 +36,6 @@ export function SiteFooter() {
           className="pointer-events-none absolute left-[7%] bottom-8 hidden h-44 w-44 -rotate-[9deg] text-paper/[0.05] lg:block"
         />
         <div className={`${CONTAINER} relative py-14 sm:py-16`}>
-          <p className="mb-7 border-b border-paper/15 pb-4 font-mono text-[11px] uppercase tracking-[0.24em] text-paper/55">
-            Final register
-          </p>
           <div className="flex flex-wrap items-start justify-between gap-x-12 gap-y-10">
             <div>
               <BrandLogo reversed className="h-10 w-auto sm:h-12" />

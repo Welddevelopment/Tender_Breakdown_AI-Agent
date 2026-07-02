@@ -22,12 +22,11 @@ import { Seal } from "./art/Seal";
 //
 // The page carries the forest identity end to end. The hero stands on its own
 // fading graph paper with two engraved botanicals bleeding in from the edges
-// (a fern off the right, a pine branch off the left), each band opens with a
-// small mono eyebrow so the argument reads as a numbered case, the honesty
-// band rests on the moss surface, and a treeline seam drops the page onto two
-// pine grounds: the proof band and the closing, where the civic seal sits
-// beside the response card. The deal-breaker head is the one poster-scale
-// moment before the giant proof figures.
+// (a fern off the right, a pine branch off the left), the honesty band rests on
+// the moss surface, and a treeline seam drops the page onto two pine grounds:
+// the proof band and the closing, where the civic seal sits beside the response
+// card. The deal-breaker head is the one poster-scale moment before the giant
+// proof figures.
 //
 // Layout follows layout.md and SLOP-CHECK: the content-bearing bands run a real
 // two-column split (prose one side, the section's card the other) and alternate
@@ -38,6 +37,35 @@ import { Seal } from "./art/Seal";
 // giant proof numbers are the climax, held back to just before the closing CTA.
 
 const CONTAINER = "mx-auto w-full max-w-[1160px] px-6";
+
+const COMPARISON_ROWS = [
+  { label: "Time", before: "Weeks of expert reading", after: "Minutes" },
+  {
+    label: "The deal-breaker",
+    before: "A missed gate voids the whole bid",
+    after: "Caught and shown first",
+  },
+  {
+    label: "Trust",
+    before: "You hope the checklist is complete",
+    after: "Every requirement links to its clause",
+  },
+  {
+    label: "Uncertainty",
+    before: "Invisible",
+    after: "Flagged for you to check",
+  },
+  {
+    label: "Your response",
+    before: "A blank page",
+    after: "Drafted from your own documents",
+  },
+  {
+    label: "Control",
+    before: "",
+    after: "You approve, edit, or flag every line",
+  },
+];
 
 export function Landing() {
   return (
@@ -78,6 +106,7 @@ export function Landing() {
               className="hero-canopy absolute -top-10 inset-x-0 hidden h-32 w-full rotate-180 text-forest/[0.08] lg:block"
             />
             <FernFrond className="art-draw absolute -right-20 top-14 hidden h-[620px] w-auto rotate-[7deg] text-forest/[0.22] lg:block" />
+            <FernFrond className="art-draw absolute -left-24 top-20 hidden h-[600px] w-auto origin-center -scale-x-100 -rotate-[6deg] text-forest/[0.18] lg:block" />
             <FernFrond className="art-draw absolute -right-10 top-[360px] hidden h-[360px] w-auto rotate-[18deg] text-pine/[0.08] xl:block" />
             <PineBranch className="art-draw absolute -left-20 bottom-24 hidden h-64 w-auto -rotate-[5deg] text-forest/[0.18] lg:block" />
             <PineBranch className="art-draw absolute left-8 top-28 hidden h-36 w-auto rotate-[9deg] text-pine/[0.08] xl:block" />
@@ -99,17 +128,13 @@ export function Landing() {
               </span>
             </h1>
             <p className="hero-enter-2 mx-auto mt-6 max-w-[58ch] text-balance text-lg leading-relaxed text-ink-muted sm:text-xl">
-              Bidframe reads a public-sector tender, finds every requirement, and
-              flags the ones that would disqualify you. Each links back to the exact
-              clause, so you can check it yourself.
+              Bidframe reads the tender, catches disqualifying requirements, and
+              links every flag to its exact clause.
             </p>
             <div className="hero-enter-3 mt-10 flex flex-wrap items-center justify-center gap-x-7 gap-y-4">
               <BookDemoButton location="hero" size="lg" />
               <SeeItRunLink size="lg" />
             </div>
-            <p className="hero-enter-3 mx-auto mt-5 font-mono text-xs text-ink-muted">
-              Fifteen minutes. Bring a tender you have already bid.
-            </p>
           </section>
 
           <section className={`${CONTAINER} relative z-10 pb-28 sm:pb-36`}>
@@ -117,147 +142,94 @@ export function Landing() {
           </section>
         </div>
 
-        {/* The before: calm, left-aligned, low weight. A quiet single-column
-            opener, no visual, so the two-column bands below land with rhythm. */}
+        {/* The before: calm opener before the repeated centred product panels. */}
         <Band>
-          <Head eyebrow="The cost">
+          <Head align="center">
             Three weeks of reading, and one missed line voids it
           </Head>
-          <p className="mt-5 max-w-[56ch] text-lg leading-relaxed text-ink-muted">
+          <p className="mx-auto mt-5 max-w-[58ch] text-center text-lg leading-relaxed text-ink-muted">
             A bid writer spends weeks reading a public-sector tender by hand. The
             requirements are scattered across a hundred pages, and the ones that
             disqualify you look just like the ones that do not.
           </p>
         </Band>
 
-        {/* The catch: the hero feature, given weight. Text left, the oxblood
-            deal-breaker lifted off the page on the right. The point of tension. */}
-        <SplitBand visual={<DealBreakerCard />}>
-          <Head eyebrow="The catch" size="poster-snug">
-            <span className="block sm:whitespace-nowrap">The one that loses</span>
-            <span className="block sm:whitespace-nowrap">you the bid, first</span>
-          </Head>
-          <p className="mt-5 text-lg leading-relaxed text-ink-muted">
-            Public tenders have hard pass or fail gates. Bidframe puts the
-            deal-breakers at the top, not buried on page 61, so you see the
-            bid-killer before you read anything else.
-          </p>
-        </SplitBand>
+        <FeatureSection
+          title={
+            <>
+              <span className="block sm:whitespace-nowrap">The one that loses </span>
+              <span className="block sm:whitespace-nowrap">you the bid, first</span>
+            </>
+          }
+          copy="Public tenders have hard pass or fail gates. Bidframe puts the deal-breakers at the top, not buried on page 61."
+          panel={<DealBreakerCard />}
+          size="poster-snug"
+          tilt="right"
+        />
 
-        {/* How it works: three numbered steps joined by a ruled through-line. Full
-            width, its own three columns, so it reads as a ledger row. */}
-        <Band>
-          <Head eyebrow="The method">Three steps, and you stay in control</Head>
-          <div className="mt-9">
-            <HowItWorks />
-          </div>
-        </Band>
-
-        {/* Trust: the ruled margin and a pressed evidence block. Card left, prose
-            right, so the visual flips side from the band above. */}
-        <SplitBand visual={<ClauseCard />} reverse surface="recessed">
-          <Head eyebrow="Traceability">Every line, back to its clause</Head>
-          <p className="mt-5 text-lg leading-relaxed text-ink-muted">
-            We pulled these from the tender. One click shows the exact sentence on
-            the exact page, so you never take our word for it.
-          </p>
-        </SplitBand>
-
-        {/* Honesty: the four-tier confidence scale as dimensional beads on the
-            moss ground, the one band that rests on the landing's third surface.
-            Text left, the scale on the right. */}
-        <SplitBand
-          surface="moss"
-          visual={
-            <div className="card-live surface-grain w-full rounded-lg border border-moss-line bg-paper-raised p-7 shadow-[var(--depth-row)]">
-              <div className="flex flex-col gap-4">
-                <ConfidenceBead
-                  confidence={0.3}
-                  unanswerable
-                  example="No source found for this"
-                />
-                <ConfidenceBead confidence={0.5} example="The clause is ambiguous" />
-                <ConfidenceBead
-                  confidence={0.7}
-                  example="Likely, but check the date"
-                />
-                <ConfidenceBead
-                  confidence={0.92}
-                  example="Matches a clause word for word"
-                />
-              </div>
+        <FeatureSection
+          title="Three steps, and you stay in control"
+          copy="Upload the tender, review the worklist, then approve the answers. Nothing leaves the record without you."
+          panel={
+            <div className="surface-grain rounded-lg border border-hairline bg-paper-raised p-6 shadow-[var(--depth-sheet)] sm:p-7">
+              <HowItWorks />
             </div>
           }
-          visualWidth="lg:w-[360px]"
-        >
-          <Head eyebrow="Honesty">It tells you when it is not sure</Head>
-          <p className="mt-5 text-lg leading-relaxed text-ink-muted">
-            Where the tool is unsure, it says so and flags it for you to check. It
-            does not guess, and it does not dress a rough draft up as a finished
-            one.
-          </p>
-        </SplitBand>
+          tilt="left"
+          maxWidth="max-w-[1040px]"
+        />
 
-        {/* Answers, with receipts: the autofill payoff and the approval stamp.
-            Card left, prose right, flipping side again. */}
-        <SplitBand visual={<AnswerCard />} reverse>
-          <Head eyebrow="Receipts">Answers, with receipts</Head>
-          <p className="mt-5 text-lg leading-relaxed text-ink-muted">
-            Bidframe drafts each answer from your own documents and shows which one
-            it came from. You approve every line before it goes in the bid.
-          </p>
-        </SplitBand>
+        <FeatureSection
+          title="Every line, back to its clause"
+          copy="One click shows the exact sentence on the exact page, so you never have to take our word for it."
+          panel={<ClauseCard />}
+          surface="recessed"
+          tilt="right"
+        />
+
+        <FeatureSection
+          title="It tells you when it is not sure"
+          copy="Where the tool is unsure, it says so and flags it for you to check. It does not guess."
+          panel={<ConfidenceDocket />}
+          surface="moss"
+          tilt="left"
+          maxWidth="max-w-[1040px]"
+        />
+
+        <FeatureSection
+          title="Answers, with receipts"
+          copy="Bidframe drafts from your own documents and shows which one each line came from. You approve every line."
+          panel={<AnswerCard />}
+          tilt="right"
+        />
 
         {/* Before and after: a ruled ledger, full width, the table is the
             visual. The payoff column stands on moss behind a full-strength
             forest rule, so the ledger carries a visible verdict. */}
         <Band space="air">
-          <Head eyebrow="The ledger" align="center">
+          <Head align="center">
             Before, and with Bidframe
           </Head>
-          <Reveal className="mt-9 overflow-x-auto">
-            <table className="mx-auto w-full max-w-[820px] border-collapse text-left [&>tbody>tr:last-child]:border-b-2 [&>tbody>tr:last-child]:border-ink">
+          <div className="mt-9 overflow-x-auto">
+            <table className="comparison-table mx-auto w-full max-w-[980px] border-collapse text-left">
               <thead>
-                <tr className="border-b border-ink">
-                  <th className="w-[20%] py-3.5 pr-6" />
-                  <th className="w-[40%] py-3.5 pr-6 font-serif text-base font-medium text-ink-muted">
+                <tr>
+                  <th className="w-[18%] border-b border-ink py-4 pr-6" />
+                  <th className="w-[38%] border-b border-ink py-4 pr-6 text-base font-medium text-ink-muted">
                     Before
                   </th>
-                  <th className="border-l-2 border-forest bg-moss py-3.5 pl-6 font-serif text-base font-medium text-forest">
+                  <th className="border-b border-ink py-4 pl-6 text-base font-semibold text-forest">
                     With Bidframe
                   </th>
                 </tr>
               </thead>
               <tbody>
-                <Row label="Time" before="Weeks of expert reading" after="Minutes" />
-                <Row
-                  label="The deal-breaker"
-                  before="A missed gate voids the whole bid"
-                  after="Caught and shown first"
-                />
-                <Row
-                  label="Trust"
-                  before="You hope the checklist is complete"
-                  after="Every requirement links to its clause"
-                />
-                <Row
-                  label="Uncertainty"
-                  before="Invisible"
-                  after="Flagged for you to check"
-                />
-                <Row
-                  label="Your response"
-                  before="A blank page"
-                  after="Drafted from your own documents"
-                />
-                <Row
-                  label="Control"
-                  before=""
-                  after="You approve, edit, or flag every line"
-                />
+                {COMPARISON_ROWS.map((row) => (
+                  <Row key={row.label} {...row} />
+                ))}
               </tbody>
             </table>
-          </Reveal>
+          </div>
         </Band>
 
         {/* Credibility: where the counts come from, in plain provisional terms.
@@ -288,7 +260,7 @@ export function Landing() {
           <div className={`${CONTAINER} relative z-10 py-28 sm:py-36`}>
             <div className="grid gap-10 border-y border-paper/20 py-10 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1fr)] lg:items-end lg:gap-16">
               <div className="max-w-[48ch]">
-                <Head tone="dark" eyebrow="The proof" size="poster">
+                <Head tone="dark" size="poster">
                   Measured on a real tender
                 </Head>
                 <p className="mt-5 text-lg leading-relaxed text-paper/70">
@@ -296,9 +268,9 @@ export function Landing() {
                   checked every line against the source.
                 </p>
               </div>
-              <p className="max-w-[32ch] font-mono text-xs uppercase leading-relaxed tracking-[0.2em] text-moss/75 lg:justify-self-end lg:text-right">
-                Source-checked register / public-sector cleaning contract /
-                preserved against the tender record.
+              <p className="max-w-[34ch] text-lg leading-relaxed text-paper/60 lg:justify-self-end lg:text-right">
+                Source-checked against a public-sector cleaning contract and
+                kept tied to the tender record.
               </p>
             </div>
             <Reveal className="mt-12 sm:mt-16">
@@ -350,14 +322,17 @@ function ForestThreshold() {
   return (
     <section className="relative overflow-hidden border-t border-moss-line bg-moss">
       <div className={`${CONTAINER} relative z-10 py-12 sm:py-16`}>
-        <div className="max-w-[46ch]">
-          <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-forest">
-            Into the record
-          </p>
-          <p className="mt-3 text-lg leading-relaxed text-ink-muted">
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,0.62fr)_minmax(0,1fr)] lg:items-end">
+          <p className="max-w-[46ch] text-lg leading-relaxed text-ink-muted">
             The proof comes after the reading: hard gates, requirements, and
             source checks, held together in one record.
           </p>
+          <div className="grid gap-2 sm:grid-cols-4">
+            <TrailStep label="Gate found" detail="ISO 9001" />
+            <TrailStep label="Clause traced" detail="4.2.1 / p.14" />
+            <TrailStep label="Source checked" detail="answer key" />
+            <TrailStep label="Answer approved" detail="14:32" />
+          </div>
         </div>
       </div>
       <DrawOn className="pointer-events-none absolute -right-10 top-2 hidden sm:block">
@@ -369,6 +344,17 @@ function ForestThreshold() {
         className="-mt-12 -mb-px block h-20 w-full text-pine sm:-mt-16 sm:h-28"
       />
     </section>
+  );
+}
+
+function TrailStep({ label, detail }: { label: string; detail: string }) {
+  return (
+    <div className="border-l border-moss-line bg-paper/35 px-3 py-2">
+      <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-forest">
+        {label}
+      </p>
+      <p className="mt-1 text-sm text-ink-muted">{detail}</p>
+    </div>
   );
 }
 
@@ -406,83 +392,139 @@ function Band({
   );
 }
 
-// One confidence bead paired with a short plain example, so the four-tier scale
+function FeatureSection({
+  title,
+  copy,
+  panel,
+  surface = "paper",
+  tilt,
+  size,
+  maxWidth = "max-w-[920px]",
+}: {
+  title: React.ReactNode;
+  copy: string;
+  panel: React.ReactNode;
+  surface?: "paper" | "recessed" | "moss";
+  tilt: "left" | "right";
+  size?: "poster-snug";
+  maxWidth?: string;
+}) {
+  return (
+    <Band surface={surface} space="air">
+      <div className="mx-auto max-w-[760px] text-center">
+        <Head align="center" size={size}>
+          {title}
+        </Head>
+        <p className="mx-auto mt-5 max-w-[58ch] text-lg leading-relaxed text-ink-muted sm:text-xl">
+          {copy}
+        </p>
+      </div>
+      <PanelFrame tilt={tilt} className={`mx-auto mt-12 ${maxWidth}`}>
+        {panel}
+      </PanelFrame>
+    </Band>
+  );
+}
+
+function PanelFrame({
+  children,
+  tilt,
+  className = "",
+}: {
+  children: React.ReactNode;
+  tilt: "left" | "right";
+  className?: string;
+}) {
+  return (
+    <div className={`section-panel section-panel-${tilt} ${className}`}>
+      {children}
+    </div>
+  );
+}
+
+function ConfidenceDocket() {
+  return (
+    <div className="card-live surface-grain w-full overflow-hidden rounded-lg border border-moss-line bg-paper-raised shadow-[var(--depth-sheet)]">
+      <div className="flex items-center justify-between border-b border-hairline bg-paper px-5 py-3">
+        <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-muted">
+          Risk register
+        </span>
+        <span className="font-mono text-[11px] text-ink-muted">draft evidence</span>
+      </div>
+      <div className="divide-y divide-hairline">
+        <ConfidenceStampRow
+          confidence={0.3}
+          unanswerable
+          label="Can't answer this"
+          example="No source found for this"
+        />
+        <ConfidenceStampRow
+          confidence={0.5}
+          label="Low confidence"
+          example="The clause is ambiguous"
+        />
+        <ConfidenceStampRow
+          confidence={0.7}
+          label="Fairly sure"
+          example="Likely, but check the date"
+        />
+        <ConfidenceStampRow
+          confidence={0.92}
+          label="Confident"
+          example="Matches the clause exactly"
+        />
+      </div>
+      <div className="border-t border-hairline bg-paper px-5 py-3">
+        <p className="font-mono text-[11px] leading-relaxed text-ink-muted">
+          Nothing enters the answer unchecked when the source is weak.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// One confidence stamp paired with a short plain example, so the four-tier scale
 // teaches what each level means rather than only decorating. The example sits in
 // the mono record voice and stays greyscale-safe (no colour, no percentage).
-function ConfidenceBead({
+function ConfidenceStampRow({
   confidence,
   unanswerable = false,
+  label,
   example,
 }: {
   confidence: number;
   unanswerable?: boolean;
+  label: string;
   example: string;
 }) {
   return (
-    <div className="flex flex-col gap-1">
-      <ConfidenceIndicator
-        confidence={confidence}
-        unanswerable={unanswerable}
-        variant="word"
-      />
-      <span className="pl-[30px] font-mono text-xs text-ink-muted">
+    <div className="grid gap-3 px-5 py-4 sm:grid-cols-[176px_1fr] sm:items-center sm:gap-5">
+      <div className="flex min-w-0 items-center gap-2.5">
+        <ConfidenceIndicator
+          confidence={confidence}
+          unanswerable={unanswerable}
+          variant="dot"
+        />
+        <span className="text-sm font-medium text-ink">{label}</span>
+      </div>
+      <span className="border-l border-hairline pl-3 font-mono text-xs leading-relaxed text-ink-muted">
         {example}
       </span>
     </div>
   );
 }
 
-// A content-bearing band with a real two-column split: prose on one side, the
-// section's card on the other. `reverse` flips which side the card sits on from
-// band to band so the page has rhythm; the DOM keeps prose first so that on
-// mobile everything stacks in source order (text before visual).
-function SplitBand({
-  children,
-  visual,
-  reverse = false,
-  visualWidth = "lg:w-[440px]",
-  surface = "paper",
-}: {
-  children: React.ReactNode;
-  visual: React.ReactNode;
-  reverse?: boolean;
-  visualWidth?: string;
-  surface?: "paper" | "recessed" | "moss";
-}) {
-  return (
-    <Band surface={surface}>
-      <div
-        className={`grid gap-8 lg:items-center lg:gap-16 ${
-          reverse ? "lg:grid-cols-[auto_1fr]" : "lg:grid-cols-[1fr_auto]"
-        }`}
-      >
-        <div className={`max-w-[46ch] ${reverse ? "lg:order-2" : ""}`}>
-          {children}
-        </div>
-        <div className={`w-full ${visualWidth} ${reverse ? "lg:order-1" : ""}`}>
-          {visual}
-        </div>
-      </div>
-    </Band>
-  );
-}
-
-// A section head with an optional mono eyebrow, so each band opens like an
-// entry in a case file rather than a bare title. The eyebrow renders as a
-// sibling above the h2 (heading semantics stay on the h2 alone), forest on
-// paper and moss on the dark grounds. `size="poster"` steps the head up to
-// poster scale, reserved for the deal-breaker band and the proof band, the
-// two moments the page raises its voice.
+// A section head. `size="poster"` steps the head up to poster scale, reserved
+// for the deal-breaker band and the proof band, the two moments the page raises
+// its voice.
 function Head({
   children,
   tone = "light",
-  eyebrow,
   size,
   align = "left",
 }: {
   children: React.ReactNode;
   tone?: "light" | "dark";
-  eyebrow?: string;
   // "poster" is the full poster scale (the proof band); "poster-snug" steps the
   // top end down one notch so a two-line head holds two lines inside a split
   // column instead of breaking to three.
@@ -497,24 +539,13 @@ function Head({
         : "text-balance text-3xl leading-tight sm:text-4xl";
   const centred = align === "center";
   return (
-    <>
-      {eyebrow && (
-        <p
-          className={`mb-3 font-mono text-[11px] uppercase tracking-[0.22em] ${
-            tone === "dark" ? "text-moss" : "text-forest"
-          } ${centred ? "text-center" : ""}`}
-        >
-          {eyebrow}
-        </p>
-      )}
-      <h2
-        className={`max-w-[20ch] font-serif font-semibold tracking-tight ${scale} ${
-          tone === "dark" ? "text-paper" : "text-ink"
-        } ${centred ? "mx-auto text-center" : ""}`}
-      >
-        {children}
-      </h2>
-    </>
+    <h2
+      className={`max-w-[20ch] font-serif font-semibold tracking-tight ${scale} ${
+        tone === "dark" ? "text-paper" : "text-ink"
+      } ${centred ? "mx-auto text-center" : ""}`}
+    >
+      {children}
+    </h2>
   );
 }
 
@@ -528,37 +559,44 @@ function Row({
   after: string;
 }) {
   return (
-    <tr className="border-b border-hairline align-top transition-colors hover:bg-paper-raised">
+    <tr className="border-b border-hairline align-top last:border-b-0">
       <th
         scope="row"
-        className="py-3.5 pr-6 pt-4 text-left font-mono text-xs font-normal uppercase tracking-wide text-ink-muted"
+        className="py-5 pr-6 text-left text-base font-medium text-ink"
       >
         {label}
       </th>
-      <td className="py-3.5 pr-6 text-ink-muted">
+      <td
+        data-label="Before"
+        className="py-5 pr-6 text-lg leading-relaxed text-ink-muted"
+      >
         {/* An empty before-cell still reads as a ledger entry, not a gap. */}
         {before || <span aria-hidden>—</span>}
       </td>
-      <td className="border-l-2 border-forest bg-moss py-3.5 pl-6 text-ink">
-        <span className="inline-flex items-start gap-2">
+      <td
+        data-label="With Bidframe"
+        className="py-5 pl-6 text-lg leading-relaxed text-ink"
+      >
+        <span className="inline-flex items-start gap-3">
           {/* The forest tick from the matrix status word: the verdict column
               carries its mark, not colour alone. */}
-          <svg
-            width="11"
-            height="11"
-            viewBox="0 0 14 14"
-            fill="none"
-            aria-hidden="true"
-            className="mt-[0.4em] shrink-0 text-forest"
-          >
-            <path
-              d="M2.5 7.5l3 3 6-7"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <span className="mt-[0.35em] inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-forest/35 bg-moss text-forest">
+            <svg
+              width="11"
+              height="11"
+              viewBox="0 0 14 14"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M2.5 7.5l3 3 6-7"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </span>
           {after}
         </span>
       </td>

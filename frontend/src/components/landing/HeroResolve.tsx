@@ -101,19 +101,18 @@ export function HeroResolve() {
           <div className="hr-settle" style={{ animationDelay: "560ms" }}>
             <GatingHero />
           </div>
-          {/* The register fills in first. Below sm the matrix composes at a
-              fixed 560px and the sheet crops its right edge: this is an inert
-              illustration, so a clean crop under the sheet edge beats the row
-              grid collapsing and the category tags colliding with the status
-              words at phone widths. */}
+          {/* The register fills in first. It now composes to the available width
+              on phones, with the row status dropping under the requirement
+              text instead of relying on a cropped fixed-width sheet. */}
           <div className="hr-settle mt-6" style={{ animationDelay: "140ms" }}>
-            <div className="min-w-[560px] sm:min-w-0">
+            <div className="hero-matrix">
               <ComplianceMatrix
                 groups={groups}
                 selectedId={null}
                 onSelect={noop}
                 onApprove={noop}
                 activeFilter={null}
+                density="compact"
               />
             </div>
           </div>

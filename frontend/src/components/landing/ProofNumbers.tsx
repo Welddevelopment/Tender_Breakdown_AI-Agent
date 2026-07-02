@@ -20,15 +20,12 @@ const PROOF_ROWS: { figure: string; label: string }[] = [
 export function ProofNumbers() {
   return (
     <dl className="proof-register overflow-hidden border-y border-paper/20">
-      {PROOF_ROWS.map(({ figure, label }, index) => (
+      {PROOF_ROWS.map(({ figure, label }) => (
         <div
           key={figure}
           className="grid grid-cols-1 gap-x-8 gap-y-4 border-b border-paper/15 py-9 last:border-b-0 md:grid-cols-[minmax(0,auto)_1fr] md:items-end md:gap-x-12 md:py-11"
         >
           <dt>
-            <span className="mb-3 block font-mono text-[10px] uppercase tracking-[0.28em] text-moss/75">
-              Register {String(index + 1).padStart(2, "0")}
-            </span>
             <span className="block whitespace-nowrap font-mono text-6xl font-medium leading-[0.85] tracking-tight text-paper md:text-8xl lg:text-9xl">
               {figure}
             </span>

@@ -162,6 +162,30 @@ body {
   transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+@media (max-width: 640px) {
+  .hero-product-halo::before {
+    inset: 5% 3% -5%;
+    transform: rotateX(2deg) rotateY(-1deg) translateY(6px);
+  }
+  .hero-sheet {
+    --rx: 2deg;
+    --ry: -1deg;
+  }
+  .hero-matrix > .flex {
+    gap: 1.25rem;
+  }
+  .hero-matrix .sticky {
+    position: static;
+  }
+  .hero-matrix h3 {
+    font-size: 0.7rem;
+  }
+  .hero-matrix input {
+    padding: 0.45rem 0.6rem;
+    font-size: 0.75rem;
+  }
+}
+
 /* Calm motion only (SLOP-CHECK bans fade-up-on-everything). One staggered hero
    entrance on load, and the approval-stamp settle. Both reduced-motion safe. */
 @media (prefers-reduced-motion: no-preference) {
@@ -327,6 +351,42 @@ body {
   box-shadow: 0 12px 30px -14px rgba(33, 29, 23, 0.32);
 }
 
+/* Landing feature panels: the hero keeps the dramatic 3D sheet, while lower
+   product panels get only a quiet editorial tilt. Direction alternates by
+   section so the page breathes without feeling animated or gimmicky. */
+.section-panel {
+  position: relative;
+  transform: rotate(var(--panel-tilt));
+  transform-origin: center;
+  filter: drop-shadow(0 18px 28px rgba(33, 29, 23, 0.12));
+}
+.section-panel::before {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  z-index: -1;
+  border: 1px solid rgba(44, 86, 64, 0.1);
+  border-radius: 0.75rem;
+  background: rgba(232, 235, 221, 0.28);
+  transform: rotate(calc(var(--panel-tilt) * -0.55)) translateY(8px);
+}
+.section-panel-left {
+  --panel-tilt: -0.75deg;
+}
+.section-panel-right {
+  --panel-tilt: 0.75deg;
+}
+
+@media (max-width: 720px) {
+  .section-panel {
+    transform: none;
+    filter: drop-shadow(0 10px 18px rgba(33, 29, 23, 0.1));
+  }
+  .section-panel::before {
+    display: none;
+  }
+}
+
 /* A faint ledger grid across the page, for texture (a graph-paper nod to the
    civic record). It sits under the warm paper; the raised sheets and the ink
    bands paint over it, so it never touches a working surface. */
@@ -433,6 +493,94 @@ body {
   box-shadow:
     inset 0 1px 0 rgba(246, 242, 233, 0.08),
     inset 0 -1px 0 rgba(246, 242, 233, 0.08);
+}
+
+/* Landing comparison table: still a real table, but it reads as a compact
+   comparison record rather than a spreadsheet. The moss column marks the
+   outcome without flooding the whole section in a flat green slab. */
+.comparison-table {
+  border-top: 2px solid var(--color-ink);
+  border-bottom: 2px solid var(--color-ink);
+}
+.comparison-table th,
+.comparison-table td {
+  vertical-align: top;
+}
+.comparison-table thead th:last-child,
+.comparison-table tbody td:last-child {
+  background:
+    linear-gradient(
+      to right,
+      rgba(44, 86, 64, 0.16) 0,
+      rgba(44, 86, 64, 0.16) 2px,
+      transparent 2px
+    ),
+    rgba(232, 235, 221, 0.6);
+}
+.comparison-table tbody tr:hover td,
+.comparison-table tbody tr:hover th {
+  background-color: rgba(251, 248, 241, 0.72);
+}
+.comparison-table tbody tr:hover td:last-child {
+  background:
+    linear-gradient(
+      to right,
+      rgba(44, 86, 64, 0.24) 0,
+      rgba(44, 86, 64, 0.24) 2px,
+      transparent 2px
+    ),
+    rgba(232, 235, 221, 0.76);
+}
+
+@media (max-width: 720px) {
+  .comparison-table {
+    min-width: 0;
+    border-bottom: 0;
+  }
+  .comparison-table thead {
+    display: none;
+  }
+  .comparison-table tbody,
+  .comparison-table tr,
+  .comparison-table th,
+  .comparison-table td {
+    display: block;
+    width: 100%;
+  }
+  .comparison-table tbody tr {
+    border-bottom: 2px solid var(--color-ink);
+    padding: 1rem 0;
+  }
+  .comparison-table tbody th {
+    padding: 0 0 0.75rem;
+    font-size: 1.05rem;
+  }
+  .comparison-table tbody td {
+    padding: 0.7rem 0 !important;
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+  .comparison-table tbody td::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 0.35rem;
+    font-family: var(--font-mono-ibm), monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+  .comparison-table thead th:last-child,
+  .comparison-table tbody td:last-child,
+  .comparison-table tbody tr:hover td:last-child {
+    border-left: 2px solid rgba(44, 86, 64, 0.24);
+    background: rgba(232, 235, 221, 0.72);
+    padding: 0.85rem 0.9rem !important;
+  }
+  .comparison-table tbody tr:hover td,
+  .comparison-table tbody tr:hover th {
+    background-color: transparent;
+  }
 }
 
 /* The confidence bead: a larger, dimensional status dot (the honesty section).

@@ -1,15 +1,11 @@
 // The confidence indicator (DESIGN-SYSTEM section 4, axis 1). Four tiers, worst
-// to best, carried in greyscale by a fill LEVEL and by a hue, never a number.
+// to best, carried by an evidence stamp rather than a number.
 //
-// The level reads as an instrument, not a dot: a 4-segment meter that fills to
-// the tier, so "how sure" is legible at a glance and in greyscale (the count of
-// lit segments carries it, the hue only reinforces). The bottom tier is the one
-// exception: "can't answer this" is an ALARM, not the empty end of a ramp, so it
-// takes a distinct SHAPE, an oxblood warning mark, rather than an empty meter
-// that would read as "low battery". Shape (not hue) separates the alarm, so it
-// still stops the eye with colour switched off. Shared everywhere: the matrix,
-// the spine, the panel, and the hero (which renders the real matrix). The word
-// beside it uses the fixed four-tier lexicon (copywriting.md).
+// The stamp reads as source quality: a missing-source slash, then one/two/three
+// proof strokes. The count makes the level greyscale-legible, while the hue only
+// reinforces the status. Shared everywhere: the matrix, the spine, the panel,
+// and the landing examples. The word beside it uses the fixed four-tier lexicon
+// (copywriting.md).
 
 export type ConfidenceTier = "oxblood" | "amber" | "yellow" | "light-green";
 
@@ -31,7 +27,7 @@ const TIER_DESCRIPTION: Record<ConfidenceTier, string> = {
   "light-green": "Confident. Matched to the tender.",
 };
 
-// The hue for the lit segments (and the alarm mark).
+// The hue for the stamp.
 const TIER_HEX: Record<ConfidenceTier, string> = {
   oxblood: "#b42d24",
   amber: "#bc6b2e",
@@ -39,16 +35,13 @@ const TIER_HEX: Record<ConfidenceTier, string> = {
   "light-green": "#6f9a57",
 };
 
-// How many of the four segments light up. The ramp is amber 2, yellow 3,
-// confident 4, so the level is honest and greyscale-legible. Oxblood does not
-// use the meter at all (it is the alarm shape below), so it has no entry here.
-const TIER_SEGMENTS: Record<Exclude<ConfidenceTier, "oxblood">, number> = {
-  amber: 2,
-  yellow: 3,
-  "light-green": 4,
+const TIER_PROOF_LINES: Record<Exclude<ConfidenceTier, "oxblood">, number> = {
+  amber: 1,
+  yellow: 2,
+  "light-green": 3,
 };
 
-// confidence -> tier, the single source both the meter and the row wash read
+// confidence -> tier, the single source both the stamp and the row wash read
 // from. An explicit unanswerable case (a gating item with no good answer) forces
 // oxblood regardless of the raw number. needs_review never reads better than
 // amber: a flagged-for-review item is at most a rough draft.
@@ -72,62 +65,60 @@ export function confidenceTier(
     : raw;
 }
 
-// The lit/unlit level meter: four rounded bars, the first `filled` in the tier
-// hue, the rest a recessed track. A hairline ink ring keeps every segment
-// defined on paper and legible in greyscale.
-function LevelMeter({
-  filled,
+function EvidenceStamp({
+  tier,
   hex,
   size,
 }: {
-  filled: number;
+  tier: ConfidenceTier;
   hex: string;
   size: "sm" | "md";
 }) {
-  const w = size === "sm" ? 4 : 5;
-  const h = size === "sm" ? 11 : 13;
-  const gap = size === "sm" ? 1.5 : 2;
-  return (
-    <span className="inline-flex items-end" style={{ gap }} aria-hidden>
-      {[0, 1, 2, 3].map((i) => {
-        const lit = i < filled;
-        return (
-          <span
-            key={i}
-            style={{
-              width: w,
-              height: h,
-              borderRadius: 2,
-              background: lit
-                ? `linear-gradient(to top, ${hex}, color-mix(in oklab, ${hex} 82%, white))`
-                : "var(--paper-recessed)",
-              boxShadow: lit
-                ? "0 0 0 0.5px rgba(33,29,23,0.45), inset 0 1px 0.5px rgba(255,255,255,0.4)"
-                : "0 0 0 0.5px rgba(33,29,23,0.16)",
-            }}
-          />
-        );
-      })}
-    </span>
-  );
-}
+  const s = size === "sm" ? 18 : 22;
+  const lines =
+    tier === "oxblood" ? 0 : TIER_PROOF_LINES[tier as Exclude<ConfidenceTier, "oxblood">];
+  const fill = `color-mix(in oklab, ${hex} 12%, var(--color-paper-raised))`;
 
-// The alarm mark: an oxblood warning triangle carrying a paper "!". A distinct
-// SHAPE (never confused with a full meter), so "can't answer this" reads as
-// stop-and-look at a glance and with colour switched off.
-function AlarmMark({ hex, size }: { hex: string; size: "sm" | "md" }) {
-  const s = size === "sm" ? 15 : 18;
   return (
-    <svg width={s} height={s} viewBox="0 0 20 20" fill="none" aria-hidden>
-      <path
-        d="M10 2.4 18.4 17 H1.6 Z"
-        fill={hex}
-        stroke="rgba(33,29,23,0.5)"
-        strokeWidth="1"
-        strokeLinejoin="round"
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none" aria-hidden>
+      <rect
+        x="3.75"
+        y="3.75"
+        width="16.5"
+        height="16.5"
+        rx="3.25"
+        fill={fill}
+        stroke={hex}
+        strokeWidth="1.6"
       />
-      <rect x="9.1" y="7.4" width="1.8" height="5" rx="0.9" fill="var(--paper)" />
-      <circle cx="10" cy="14.6" r="1.05" fill="var(--paper)" />
+      <rect
+        x="6.35"
+        y="6.35"
+        width="11.3"
+        height="11.3"
+        rx="2"
+        stroke={hex}
+        strokeWidth="0.9"
+        opacity="0.38"
+      />
+      {tier === "oxblood" ? (
+        <path
+          d="M8 16 16 8"
+          stroke={hex}
+          strokeWidth="2.2"
+          strokeLinecap="round"
+        />
+      ) : (
+        Array.from({ length: lines }).map((_, i) => (
+          <path
+            key={i}
+            d={`M8 ${9.2 + i * 3.05}h8`}
+            stroke={hex}
+            strokeWidth={i === lines - 1 ? 2 : 1.45}
+            strokeLinecap="round"
+          />
+        ))
+      )}
     </svg>
   );
 }
@@ -151,12 +142,7 @@ export function ConfidenceIndicator({
   const description = TIER_DESCRIPTION[tier];
   const hex = TIER_HEX[tier];
 
-  const glyph =
-    tier === "oxblood" ? (
-      <AlarmMark hex={hex} size={size} />
-    ) : (
-      <LevelMeter filled={TIER_SEGMENTS[tier]} hex={hex} size={size} />
-    );
+  const glyph = <EvidenceStamp tier={tier} hex={hex} size={size} />;
 
   if (variant === "dot") {
     return (
@@ -173,7 +159,7 @@ export function ConfidenceIndicator({
 
   return (
     <span
-      className="inline-flex items-center gap-2.5 text-sm text-ink-muted"
+      className="inline-flex items-center gap-2.5 whitespace-nowrap text-sm text-ink-muted"
       title={description}
     >
       {glyph}

@@ -106,8 +106,10 @@ export interface MatrixSelection {
 // The row grid. With selection live, the ref margin widens to make room for the
 // checkbox; without it the original geometry is untouched. Full literal strings.
 const ROW_GRID: Record<"plain" | "selectable", string> = {
-  plain: "grid-cols-[46px_30px_1fr_auto]",
-  selectable: "grid-cols-[68px_30px_1fr_auto]",
+  plain:
+    "grid-cols-[42px_24px_minmax(0,1fr)] sm:grid-cols-[46px_30px_1fr_auto]",
+  selectable:
+    "grid-cols-[58px_24px_minmax(0,1fr)] sm:grid-cols-[68px_30px_1fr_auto]",
 };
 
 // The resting row wash, keyed to the confidence tier so the worklist carries a
@@ -254,7 +256,7 @@ function MatrixRow({
       }}
       className={`group grid w-full cursor-pointer ${
         ROW_GRID[selection ? "selectable" : "plain"]
-      } items-start gap-x-3 px-2.5 ${ROW_PADDING[density]} text-left transition-[background-color,box-shadow] focus:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ink/40 ${shape} ${state}`}
+      } items-start gap-x-2 gap-y-1 px-2.5 ${ROW_PADDING[density]} text-left transition-[background-color,box-shadow] focus:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ink/40 sm:gap-x-3 ${shape} ${state}`}
     >
       {/* The register margin: the selection checkbox (when selection is live),
           a gating pennant, then the clause ref, right-aligned in mono. The
@@ -349,7 +351,7 @@ function MatrixRow({
 
       {/* The status word, or for confident non-gating items a single quiet
           Approve revealed on hover or focus. One affordance only. */}
-      <div className="flex shrink-0 items-start justify-end pt-0.5">
+      <div className="col-start-3 flex shrink-0 items-start justify-start pt-0 sm:col-start-auto sm:justify-end sm:pt-0.5">
         {canApproveInline ? (
           <>
             <span className="group-hover:hidden group-focus-within:hidden">
