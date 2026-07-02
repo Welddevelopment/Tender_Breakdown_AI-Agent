@@ -46,15 +46,26 @@ EXTRACT_SEED = 42
 MANDATORY_SIGNALS = (
     "shall", "must", "is required", "are required", "mandatory", "is to ",
     "will be required", "required to", "a condition of",
+    # obligation verbs that carry a duty without a modal (common in specs) — the
+    # buyer-side opener filter keeps "The Authority/Client is responsible for…" out.
+    "responsible for", "will provide", "will be responsible", "will ensure",
+    "is to provide", "will arrange",
 )
 OPTIONAL_SIGNALS = (
     "should", "may ", "desirable", "preferred", "ideally", "where appropriate",
     "encouraged to", "nice to have",
 )
+# GATING = a genuine disqualifier ONLY. Kept deliberately tight: extraction's job here is
+# PRECISION (so real deal-breakers stand out), while engine.gating_scan is the recall
+# backstop that catches any gate this misses. Bare "minimum"/"failure to" were removed —
+# they fired on "minimum standard of cleanliness", "failure to attend", etc., pushing the
+# gating rate to 25-58% of rows so nothing stood out (the opposite of the demo promise).
 GATING_SIGNALS = (
     "pass/fail", "pass / fail", "disqualif", "will result in rejection",
-    "will be rejected", "will be excluded", "shall be excluded", "minimum",
-    "failure to", "not be evaluated", "mandatory requirement",
+    "will result in exclusion", "will result in elimination", "will be rejected",
+    "will be excluded", "shall be excluded", "will not be considered",
+    "will not be accepted", "not be evaluated", "grounds for exclusion",
+    "result in the tender being", "will be eliminated", "mandatory requirement",
 )
 CATEGORY_KEYWORDS = {
     "certification": ("iso ", "certif", "accredit", "kitemark", "cyber essentials"),

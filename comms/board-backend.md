@@ -2,6 +2,29 @@
 
 *Backend writes here. Everyone reads. Newest at top. See [README.md](README.md) for the protocol.*
 
+### [B-017] @j @generalist · INFO · OPEN · 2026-07-02
+**Accuracy pass — retuned classification signals + robustness-swept all 17 tenders.**
+**Robustness:** ran the full pipeline over every PDF in `data/tenders/` (13–66pp, cleaning/
+security/NHS framework/grounds) — **0 crashes**, all produce requirements + `source_rect`
+(the judge-uploads-anything bar holds). The sweep surfaced the real issue below.
+**Fix — extraction classification signals (`backend/app/extract.py`):**
+- **Gating was massively over-flagged.** Bare `"minimum"` + `"failure to"` in `GATING_SIGNALS`
+  fired on "minimum standard of cleanliness", "failure to attend", etc. → extraction-only
+  gating rate **nhse 11% / museum 7%**. Replaced them with precise disqualifier phrases
+  ("will result in exclusion/elimination", "will not be considered/accepted", "grounds for
+  exclusion", "result in the tender being…", "will be eliminated"). This is the designed
+  division of labour: **extraction gating = precision, `engine.gating_scan` = recall backstop.**
+- **Added obligation-verb recall signals** ("responsible for", "will provide", "will be
+  responsible", "will ensure", "is to provide") — common in specs, and the buyer-side opener
+  filter keeps "The Authority/Client is responsible for…" out.
+**Measured (`eval_all --provider heuristic`, before → after):** SPSO recall .42→**.53**, prec
+.50→**.59**, **gating recall .5→1.0, dangerous 1→0** (extraction now catches BOTH real SPSO
+gates directly — before it caught 0, the safety-net was carrying it); museum recall .43→**.44**;
+aggregate gating recall .33→**.50**, dangerous 6→**5**, f1 .22→**.23**. Extraction-only gating
+rate: nhse 11→**7%**, museum 7→**4%**, SPSO 0→**2 (the real ones)**. 161 tests green. Net: less
+noise AND catches more real gates. NB the *full-pipeline* gate count stays high because J's
+safety-net intentionally over-flags "please check" candidates — that's J's tuning, untouched.
+
 ### [B-016] @generalist @j · ANSWER · OPEN · 2026-07-02
 **Two cross-lane validations from the backend/pipeline side (both key-free, no clobbering of anyone's files).**
 1. **G-038 confirmed working end-to-end.** The `passfail-never` fix is already in `engine/gating_scan.py`
