@@ -1,4 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import type { AwardCriterion, Requirement } from "@/types/requirement";
 import {
   isConfidentNonGating,
@@ -29,6 +31,36 @@ const ROW_PADDING: Record<Density, string> = {
   comfortable: "py-2",
   compact: "py-1",
 };
+
+// ---- Motion / virtualization reconciliation (Batch E policy) ---------------
+// Layout animation and windowing conflict, so a group runs exactly one of two
+// row paths, chosen by its visible representative count:
+//   <= VIRTUALIZE_THRESHOLD  rows render as motion.div with layout animations
+//                            inside AnimatePresence (approve/flag rows slide
+//                            between groups; exits fade-collapse).
+//   >  VIRTUALIZE_THRESHOLD  rows render through @tanstack/react-virtual in a
+//                            scrollable body — plain divs, cheap CSS
+//                            transitions only. AnimatePresence and layout
+//                            animation NEVER wrap a virtualized row.
+// Reduced motion collapses the first path to plain divs too.
+const VIRTUALIZE_THRESHOLD = 80;
+
+// Virtualized row height estimates per density; measureElement corrects rows
+// whose hover reveals extra lines.
+const ROW_ESTIMATE: Record<Density, number> = {
+  comfortable: 40,
+  compact: 30,
+};
+
+// Staged reveal: only the first N rows of a group stagger in; the rest appear
+// instantly so a long tender never queues behind its own choreography.
+const REVEAL_ROW_COUNT = 12;
+
+// Reveal keys already played this session. Module scope on purpose: the matrix
+// unmounts when the split (or focus mode) takes over, and remounting for the
+// same tender must not replay the entrance — only a new tender identity does.
+// Only mutated from an effect, so it stays empty during SSR.
+const seenRevealKeys = new Set<string>();
 
 // The multi-select contract. The matrix only reports "this row was toggled,
 // shift held or not" — the owner keeps the anchor and resolves shift into a
@@ -434,6 +466,79 @@ function Chevron({ expanded }: { expanded: boolean }) {
   );
 }
 
+// The virtualized row path (representatives.length > VIRTUALIZE_THRESHOLD):
+// the group body becomes its own scroller (the sticky group header stays
+// outside it), rows are windowed and absolutely positioned, and measureElement
+// keeps rows honest when hover reveals the preview/low-confidence lines or the
+// inline question form unfolds. No motion wrappers in here, by policy.
+function VirtualizedRows({
+  id,
+  representatives,
+  meta,
+  density,
+  selectedId,
+  onSelect,
+  onApprove,
+  selection,
+  onAnswerQuestion,
+}: {
+  id: string;
+  representatives: Requirement[];
+  meta: VisibleGroup["meta"];
+  density: Density;
+  selectedId: string | null;
+  onSelect: (id: string) => void;
+  onApprove: (id: string) => void;
+  selection?: MatrixSelection;
+  onAnswerQuestion?: (reqId: string, questionId: string, text: string) => void;
+}) {
+  const parentRef = useRef<HTMLDivElement | null>(null);
+  const virtualizer = useVirtualizer({
+    count: representatives.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => ROW_ESTIMATE[density],
+    overscan: 10,
+    getItemKey: (index) => representatives[index].id,
+  });
+
+  return (
+    <div
+      ref={parentRef}
+      id={id}
+      className="mt-2 max-h-[70vh] overflow-auto overscroll-contain"
+    >
+      <div
+        className="relative w-full"
+        style={{ height: virtualizer.getTotalSize() }}
+      >
+        {virtualizer.getVirtualItems().map((item) => {
+          const req = representatives[item.index];
+          return (
+            <div
+              key={item.key}
+              data-index={item.index}
+              ref={virtualizer.measureElement}
+              className="absolute left-0 top-0 w-full pb-0.5"
+              style={{ transform: `translateY(${item.start}px)` }}
+            >
+              <MatrixRow
+                req={req}
+                isSelected={req.id === selectedId}
+                alsoCitedOn={meta.get(req.id)?.alsoCitedOn ?? []}
+                density={density}
+                onSelect={onSelect}
+                onApprove={onApprove}
+                selection={selection}
+                onAnswerQuestion={onAnswerQuestion}
+              />
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function MatrixGroup({
   group,
   expanded,
@@ -447,6 +552,10 @@ function MatrixGroup({
   showCoverage,
   selection,
   onAnswerQuestion,
+  reduced,
+  reveal,
+  groupIndex,
+  getExitDelay,
 }: {
   // A visible group with its display dedupe precomputed by deriveVisibleGroups
   // (one collapseDuplicates pass per group, shared with the shown counter).
@@ -465,6 +574,14 @@ function MatrixGroup({
   showCoverage?: boolean;
   selection?: MatrixSelection;
   onAnswerQuestion?: (reqId: string, questionId: string, text: string) => void;
+  // Motion policy inputs: reduced motion renders plain divs; reveal marks the
+  // one-time staged entrance (a fresh tender, never a decision re-render); the
+  // group's index paces the top-down stagger; getExitDelay supplies the
+  // bulk-approve cascade delay for an exiting row (0 outside a cascade).
+  reduced: boolean;
+  reveal: boolean;
+  groupIndex: number;
+  getExitDelay?: (id: string) => number;
 }) {
   // Near-duplicate rows arrive already collapsed (display only — nothing is
   // dropped; each representative carries the pages its duplicates were cited on).
@@ -478,7 +595,18 @@ function MatrixGroup({
   ).length;
 
   return (
-    <section>
+    // Staged reveal only: initial={false} outside the one-time entrance, so a
+    // decision re-render, a filter change, or a frozen surface never animates
+    // the group in (no fade-up-on-everything).
+    <motion.section
+      initial={reveal ? { opacity: 0, y: 10 } : false}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.3,
+        delay: groupIndex * 0.06,
+        ease: [0.22, 1, 0.36, 1],
+      }}
+    >
       {/* The group header stays with its rows: sticky to the top of the scroll
           so the label and count remain legible while the section runs long. A
           paper ground and a hairline keep it reading as a register rule, not a
@@ -540,24 +668,100 @@ function MatrixGroup({
           </div>
         )}
       </div>
-      {expanded && (
-        <div id={rowsId} className="mt-2 flex flex-col gap-0.5">
-          {representatives.map((req) => (
-            <MatrixRow
-              key={req.id}
-              req={req}
-              isSelected={req.id === selectedId}
-              alsoCitedOn={meta.get(req.id)?.alsoCitedOn ?? []}
-              density={density}
-              onSelect={onSelect}
-              onApprove={onApprove}
-              selection={selection}
-              onAnswerQuestion={onAnswerQuestion}
-            />
-          ))}
-        </div>
-      )}
-    </section>
+      {expanded &&
+        // The reconciliation policy: over the threshold the group windows its
+        // rows (plain divs, own scroller); under it — and with motion allowed —
+        // rows are motion.divs that layout-spring between groups on approve /
+        // flag and exit as a quick fade-collapse. Reduced motion gets the same
+        // plain divs the frozen surfaces would.
+        (representatives.length > VIRTUALIZE_THRESHOLD ? (
+          <VirtualizedRows
+            id={rowsId}
+            representatives={representatives}
+            meta={meta}
+            density={density}
+            selectedId={selectedId}
+            onSelect={onSelect}
+            onApprove={onApprove}
+            selection={selection}
+            onAnswerQuestion={onAnswerQuestion}
+          />
+        ) : reduced ? (
+          <div id={rowsId} className="mt-2 flex flex-col gap-0.5">
+            {representatives.map((req) => (
+              <MatrixRow
+                key={req.id}
+                req={req}
+                isSelected={req.id === selectedId}
+                alsoCitedOn={meta.get(req.id)?.alsoCitedOn ?? []}
+                density={density}
+                onSelect={onSelect}
+                onApprove={onApprove}
+                selection={selection}
+                onAnswerQuestion={onAnswerQuestion}
+              />
+            ))}
+          </div>
+        ) : (
+          <div id={rowsId} className="mt-2 flex flex-col gap-0.5">
+            {/* initial={reveal}: row entrances exist ONLY during the staged
+                reveal. A row arriving later (a decision moving it between
+                groups) appears in place instantly; the layout spring on its
+                peers carries the movement. */}
+            <AnimatePresence initial={reveal}>
+              {representatives.map((req, i) => {
+                const revealed = reveal && i < REVEAL_ROW_COUNT;
+                const revealDelay = groupIndex * 0.06 + 0.08 + i * 0.03;
+                return (
+                  <motion.div
+                    key={req.id}
+                    layout
+                    initial={revealed ? { opacity: 0, y: 6 } : false}
+                    animate={{ opacity: 1, y: 0 }}
+                    // Dynamic exit variant: resolved when the exit starts, so
+                    // the bulk-approve cascade delay (written in the click
+                    // handler, read through a ref) is current, not the value
+                    // from the row's last render.
+                    exit="exit"
+                    variants={{
+                      exit: () => ({
+                        opacity: 0,
+                        height: 0,
+                        overflow: "hidden",
+                        transition: {
+                          duration: 0.15,
+                          ease: "easeOut",
+                          delay: getExitDelay?.(req.id) ?? 0,
+                        },
+                      }),
+                    }}
+                    transition={{
+                      layout: { type: "spring", stiffness: 550, damping: 40 },
+                      ...(revealed
+                        ? {
+                            opacity: { duration: 0.25, delay: revealDelay },
+                            y: { duration: 0.25, delay: revealDelay },
+                          }
+                        : undefined),
+                    }}
+                  >
+                    <MatrixRow
+                      req={req}
+                      isSelected={req.id === selectedId}
+                      alsoCitedOn={meta.get(req.id)?.alsoCitedOn ?? []}
+                      density={density}
+                      onSelect={onSelect}
+                      onApprove={onApprove}
+                      selection={selection}
+                      onAnswerQuestion={onAnswerQuestion}
+                    />
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
+          </div>
+        ))}
+    </motion.section>
   );
 }
 
@@ -580,6 +784,8 @@ export function ComplianceMatrix({
   onApproveMany,
   onAnswerQuestion,
   onEnterFocus,
+  revealKey,
+  getExitDelay,
 }: {
   groups: TriageGroup[];
   selectedId: string | null;
@@ -623,8 +829,33 @@ export function ComplianceMatrix({
   // Entry into focus mode (the full-screen one-at-a-time review). Optional so
   // the frozen demo/hero surfaces render no affordance at all.
   onEnterFocus?: () => void;
+  // The tender's identity (tender id / seed). When it CHANGES, the matrix plays
+  // its one-time staged reveal: groups enter top-down, the first rows of each
+  // group stagger in. Omitted (the frozen demo/hero surfaces) = no entrance,
+  // ever. Decision re-renders and filter changes never replay it — the key is
+  // remembered at module scope, surviving the matrix unmounting into the split.
+  revealKey?: string;
+  // Bulk-approve cascade: the owner's per-row exit delay (~40ms steps across
+  // the affected rows). Omitted = every exit is immediate.
+  getExitDelay?: (id: string) => number;
 }) {
   const [query, setQuery] = useState("");
+  // Reduced motion (motion/react's media-query hook, no render-time
+  // window reads of our own): when set, every animated path in the matrix
+  // renders static.
+  const reduced = useReducedMotion() ?? false;
+  // The staged reveal plays only while the key is unseen; the effect below
+  // retires it after the first paint, so decision re-renders and filter
+  // changes render with reveal=false. The seen set lives at module scope (not
+  // a ref) because the matrix unmounts whenever the split opens — a remount
+  // for the SAME tender must not replay the entrance. The effect never runs on
+  // the server, so SSR always renders reveal=true markup and hydration stays
+  // consistent with the client's first render.
+  const reveal =
+    !reduced && revealKey !== undefined && !seenRevealKeys.has(revealKey);
+  useEffect(() => {
+    if (revealKey !== undefined) seenRevealKeys.add(revealKey);
+  });
   const normalisedQuery = query.trim().toLowerCase();
   // Whether any category filtering is live (for the empty-state copy below).
   const categoryFilterActive =
@@ -689,7 +920,7 @@ export function ComplianceMatrix({
         </div>
       </div>
 
-      {visible.map((group) => {
+      {visible.map((group, groupIndex) => {
         const collapsible = onToggleGroup !== undefined;
         // Force a group open when its rows must be seen regardless of the fold:
         // while searching (never hide a hit), when the triage filter points at
@@ -704,7 +935,9 @@ export function ComplianceMatrix({
           !(collapsed?.has(group.key) ?? false);
         return (
           <MatrixGroup
-            key={group.key}
+            // Keyed by the reveal identity too, so a new tender remounts the
+            // groups and the entrance choreography replays exactly once.
+            key={revealKey !== undefined ? `${revealKey}:${group.key}` : group.key}
             group={group}
             expanded={expanded}
             collapsible={collapsible}
@@ -717,6 +950,10 @@ export function ComplianceMatrix({
             showCoverage={lens === "criteria"}
             selection={selection}
             onAnswerQuestion={onAnswerQuestion}
+            reduced={reduced}
+            reveal={reveal}
+            groupIndex={groupIndex}
+            getExitDelay={getExitDelay}
           />
         );
       })}

@@ -5,6 +5,7 @@ import type { GroupKey, SortKey } from "@/lib/triage";
 import { categoryStyle } from "@/lib/categoryStyle";
 import { useRequirements } from "@/context/RequirementsContext";
 import { AccountMenu } from "./AccountMenu";
+import { AnimatedNumber } from "./AnimatedNumber";
 import { BrandLogo } from "./BrandLogo";
 import { SectionNav } from "./SectionNav";
 
@@ -35,6 +36,11 @@ interface TriageHeader {
   onToggleCategory?: (category: string) => void;
   sortBy?: SortKey;
   onSortChange?: (sort: SortKey) => void;
+  // When present, the triage counts render as spring-ticking AnimatedNumbers,
+  // keyed by this value: they tick 0 → real once per tender (the staged
+  // reveal) and then tick between values as decisions land. Omitted (the hero
+  // embed, the demo, the frozen example) = plain static numbers, unchanged.
+  counterKey?: string;
 }
 
 export function DocumentHeader({
@@ -116,6 +122,7 @@ export function DocumentHeader({
               groupKey="needs-you"
               activeFilter={triage.activeFilter}
               onFilter={triage.onFilter}
+              counterKey={triage.counterKey}
             />
             <span aria-hidden className="text-ink-muted">
               ·
@@ -126,6 +133,7 @@ export function DocumentHeader({
               groupKey="to-verify"
               activeFilter={triage.activeFilter}
               onFilter={triage.onFilter}
+              counterKey={triage.counterKey}
             />
             <span aria-hidden className="text-ink-muted">
               ·
@@ -136,6 +144,7 @@ export function DocumentHeader({
               groupKey="ready"
               activeFilter={triage.activeFilter}
               onFilter={triage.onFilter}
+              counterKey={triage.counterKey}
             />
             <span aria-hidden className="text-ink-muted">
               ·
@@ -146,6 +155,7 @@ export function DocumentHeader({
               groupKey="decided"
               activeFilter={triage.activeFilter}
               onFilter={triage.onFilter}
+              counterKey={triage.counterKey}
             />
           </nav>
         )}
@@ -268,12 +278,14 @@ function TriageFilter({
   groupKey,
   activeFilter,
   onFilter,
+  counterKey,
 }: {
   count: number;
   label: string;
   groupKey: GroupKey;
   activeFilter: GroupKey | null;
   onFilter: (key: GroupKey | null) => void;
+  counterKey?: string;
 }) {
   const isActive = activeFilter === groupKey;
   return (
@@ -287,7 +299,15 @@ function TriageFilter({
           : "text-ink-muted hover:text-ink"
       }`}
     >
-      {count} {label}
+      {counterKey !== undefined ? (
+        // Keyed by the tender identity: the count ticks up from 0 exactly once
+        // per tender, then springs between values as decisions land. Reduced
+        // motion (inside AnimatedNumber) jumps straight to the value.
+        <AnimatedNumber key={counterKey} value={count} from={0} />
+      ) : (
+        count
+      )}{" "}
+      {label}
     </button>
   );
 }

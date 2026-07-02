@@ -7,6 +7,7 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
+import { motion, useReducedMotion } from "motion/react";
 import { toast } from "sonner";
 import { useRequirements } from "@/context/RequirementsContext";
 import { isApiEnabled } from "@/lib/api";
@@ -22,6 +23,7 @@ import {
 import { deriveVisibleGroups, type MatrixLens } from "@/lib/matrix-derive";
 import { requirementPdfUrl, sourceRefLabel } from "@/lib/source-doc";
 import { exportMatrixXlsx } from "@/lib/export-matrix-xlsx";
+import { AnimatedNumber } from "./AnimatedNumber";
 import { AppMain } from "./AppMain";
 import { ApprovalStamp } from "./ApprovalStamp";
 import { BulkActionBar } from "./BulkActionBar";
@@ -214,6 +216,27 @@ export function MatrixView({ title }: { title: string }) {
   // worklist shortcuts stand down — cmdk owns the keyboard.
   const [paletteOpen, setPaletteOpen] = useState(false);
   const isWide = useIsWide();
+  // Batch E motion wiring. `reduced` gates every animation this view owns
+  // (motion/react's hook — no render-time window reads of our own).
+  const reduced = useReducedMotion() ?? false;
+  // The tender's identity, for the one-time entrance choreography: keys the
+  // matrix's staged reveal and the header/summary counters ticking 0 → real.
+  // The mock showcase has no tender id, so it gets one stable seed.
+  const revealSeed = tenderId ?? "sample-tender";
+  // Whether the split has ever been open: the resting view cross-fades back in
+  // when returning from the split, but NOT on first load (entrance animation
+  // belongs to the staged reveal alone). A one-way latch, set by the effect
+  // below the handlers — state, not a ref, because the render reads it.
+  const [splitSeen, setSplitSeen] = useState(false);
+  // Bulk-approve cascade: written just before a batch decision commits, read
+  // through ComplianceMatrix's getExitDelay as each affected row's exit starts
+  // — a ~40ms stagger down the group, capped so a big sweep never queues for
+  // seconds, cleared soon after so later single decisions exit immediately.
+  const cascadeDelays = useRef<Map<string, number>>(new Map());
+  const getExitDelay = useCallback(
+    (id: string) => cascadeDelays.current.get(id) ?? 0,
+    []
+  );
 
   const triage = deriveTriage(requirements);
 
@@ -316,6 +339,12 @@ export function MatrixView({ title }: { title: string }) {
     (ids: string[]) => {
       if (ids.length === 0) return;
       const action = undoAction(ids);
+      // Stage the exit cascade BEFORE the state commits: the rows read their
+      // delay as their exit variant resolves, right after this render.
+      cascadeDelays.current = new Map(
+        ids.map((id, index) => [id, Math.min(index * 0.04, 0.6)])
+      );
+      window.setTimeout(() => cascadeDelays.current.clear(), 2000);
       approveMany(ids);
       const label =
         ids.length === 1
@@ -499,6 +528,18 @@ export function MatrixView({ title }: { title: string }) {
     return () => document.removeEventListener("keydown", onKey);
   }, [triage.groups, selectedId, approveWithUndo, focusMode, paletteOpen]);
 
+  // Remember that the split has been open, so the resting view knows a return
+  // from the split (cross-fade) from a first paint (staged reveal only). The
+  // latch flips once per session, after the split's first paint.
+  const splitOpen = isWide && selected !== null && !focusMode;
+  useEffect(() => {
+    if (splitOpen) {
+      // One-way latch, not a render-time derive.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setSplitSeen(true);
+    }
+  }, [splitOpen]);
+
   // Live product, no tender loaded → the onboarding empty state (after all hooks).
   if (noTenderLoaded) {
     return (
@@ -526,6 +567,7 @@ export function MatrixView({ title }: { title: string }) {
           onToggleCategory: toggleCategory,
           sortBy,
           onSortChange: setSortBy,
+          counterKey: revealSeed,
         }}
       />
 
@@ -535,7 +577,12 @@ export function MatrixView({ title }: { title: string }) {
           // persistent evidence pane (the tender page itself, excerpt highlighted)
           // as a third column while it is shown. The matrix grid is hidden; the
           // spine is the matrix in miniature.
-          <div
+          <motion.div
+            // Split open: a quick cross-fade in (the drawer's CSS twin lives
+            // in RequirementDrawer). Static under reduced motion.
+            initial={reduced ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.12, ease: "easeOut" }}
             className={
               evidenceOpen
                 ? "grid min-h-[70vh] grid-cols-[280px_minmax(0,1fr)_minmax(340px,42%)] gap-0 divide-x divide-hairline"
@@ -587,11 +634,17 @@ export function MatrixView({ title }: { title: string }) {
                 </div>
               </aside>
             )}
-          </div>
+          </motion.div>
         ) : (
-          // RESTING, plus the narrow-viewport open state: the matrix stays put and
-          // the panel arrives as a drawer over it (rendered below).
-          <>
+          // RESTING, plus the narrow-viewport open state: the matrix stays put
+          // and the panel arrives as a drawer over it (rendered below). The
+          // wrapper cross-fades ONLY when returning from the split (the ref
+          // below) — first load stays with the staged reveal, nothing else.
+          <motion.div
+            initial={reduced || !splitSeen ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.12, ease: "easeOut" }}
+          >
             <GatingHero onSelect={setSelectedId} />
             {priorityId === null && requirements.length > 0 && (
               <CompletionSummary
@@ -607,10 +660,30 @@ export function MatrixView({ title }: { title: string }) {
             {priorityId !== null && requirements.length > 0 && (
               <div className="mb-3">
                 <p className="font-mono text-xs text-ink-muted">
+                  {/* Keyed by the tender identity: the counts tick 0 → real
+                      once per tender, then spring between values as decisions
+                      land (AnimatedNumber; reduced motion jumps). */}
                   <span className="text-ink">
-                    Bidframe handled {handledCount} of {requirements.length}
+                    Bidframe handled{" "}
+                    <AnimatedNumber
+                      key={`handled-${revealSeed}`}
+                      value={handledCount}
+                      from={0}
+                    />{" "}
+                    of{" "}
+                    <AnimatedNumber
+                      key={`total-${revealSeed}`}
+                      value={requirements.length}
+                      from={0}
+                    />
                   </span>{" "}
-                  — {needInput} still need your input.
+                  —{" "}
+                  <AnimatedNumber
+                    key={`need-${revealSeed}`}
+                    value={needInput}
+                    from={0}
+                  />{" "}
+                  still need your input.
                 </p>
                 {/* A slim derived progress track: forest fill on a hairline
                     rule, showing how much Bidframe has already carried. No new
@@ -655,12 +728,14 @@ export function MatrixView({ title }: { title: string }) {
               selection={{ ids: selectedIds, onToggle: toggleSelected }}
               onAnswerQuestion={answerOpenQuestion}
               onEnterFocus={() => setFocusMode(true)}
+              revealKey={revealSeed}
+              getExitDelay={getExitDelay}
             />
             <p className="mt-6 font-mono text-[11px] text-ink-muted/70">
               Keys: j / k to move, a to approve a confident item, Shift+F to
               focus.
             </p>
-          </>
+          </motion.div>
         )}
       </AppMain>
 
@@ -752,6 +827,10 @@ function CompletionSummary({
 }) {
   const clean = flagged === 0;
   const noun = total === 1 ? "requirement" : "requirements";
+  // The stamp lands with a motion spring (settle={false} keeps ApprovalStamp's
+  // own CSS entrance off — one entrance, not two). Under reduced motion the
+  // default CSS path takes over, which globals.css already renders static.
+  const reduced = useReducedMotion() ?? false;
 
   return (
     <section className="surface-grain mb-8 rounded-lg border border-hairline bg-paper-raised px-6 py-6 shadow-[var(--depth-sheet)]">
@@ -769,7 +848,26 @@ function CompletionSummary({
           </p>
           {clean ? (
             <div className="mt-4">
-              <ApprovalStamp time={time} />
+              {reduced ? (
+                <ApprovalStamp time={time} />
+              ) : (
+                // The landing thud: oversized, faded, over-rotated, then a
+                // springy settle — the motion twin of the CSS stamp-settle
+                // cubic-bezier(0.34,1.56,0.64,1) in globals.css.
+                <motion.div
+                  className="inline-block origin-left"
+                  initial={{ scale: 1.4, opacity: 0, rotate: -6 }}
+                  animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 320,
+                    damping: 17,
+                    mass: 0.9,
+                  }}
+                >
+                  <ApprovalStamp time={time} settle={false} />
+                </motion.div>
+              )}
             </div>
           ) : (
             <p className="mt-3 max-w-[52ch] text-sm leading-relaxed text-ink-muted">

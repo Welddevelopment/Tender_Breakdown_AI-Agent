@@ -5,11 +5,22 @@
 // angle under reduced motion (the inline transform is the static base). Shared:
 // the landing's approval moment and the real decision zone use the one device.
 
-export function ApprovalStamp({ time = "14:32" }: { time?: string }) {
+// `settle` (default true, so every existing surface is unchanged) applies the
+// CSS stamp-settle entrance. The completion summary passes settle={false}
+// because it wraps the stamp in its own motion spring — one entrance, not two.
+export function ApprovalStamp({
+  time = "14:32",
+  settle = true,
+}: {
+  time?: string;
+  settle?: boolean;
+}) {
   return (
     <span className="inline-flex items-center gap-3">
       <span
-        className="stamp-settle inline-flex items-center gap-1.5 rounded-md border-2 border-forest px-2.5 py-1 text-forest [transform:rotate(-3deg)]"
+        className={`${
+          settle ? "stamp-settle" : ""
+        } inline-flex items-center gap-1.5 rounded-md border-2 border-forest px-2.5 py-1 text-forest [transform:rotate(-3deg)]`}
         aria-hidden="true"
       >
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
