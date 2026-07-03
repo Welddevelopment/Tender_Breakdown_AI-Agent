@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
-import { motion, useScroll, useTransform, type MotionValue } from "motion/react";
+import { useEffect, useRef, useState } from "react";
+import { motion, useScroll, useSpring, useTransform } from "motion/react";
 import { TreelineDivider } from "@/components/landing/art/TreelineDivider";
 import { DEMO_FACTS } from "./sample";
 
@@ -28,46 +28,29 @@ function useTitleCardEnhancement() {
   return enhanced;
 }
 
-function TitleLine({
-  children,
-  initial = false,
-  progress,
-  range,
-}: {
-  children: ReactNode;
-  initial?: boolean;
-  progress: MotionValue<number>;
-  range: [number, number, number, number];
-}) {
-  const opacity = useTransform(
-    progress,
-    range,
-    initial ? [1, 1, 1, 0] : [0, 1, 1, 0],
-  );
-  const y = useTransform(
-    progress,
-    [range[0], range[1]],
-    initial ? [0, 0] : [12, 0],
-  );
-  return (
-    <motion.p
-      className="font-mono text-2xl uppercase tracking-[0.18em] text-paper sm:text-4xl"
-      style={{ opacity, y }}
-    >
-      {children}
-    </motion.p>
-  );
-}
-
+// The demo's opening title card. The four lines appear on LOAD (a mount
+// stagger — never gated behind scroll, so the fold is never an empty pine
+// band); scrolling through the short sticky section drifts the card up and
+// fades it out into the treeline. Static/mobile/reduced-motion get a plain
+// pine band with all lines visible.
 export function DemoTitleCard() {
   const wrapperRef = useRef<HTMLElement>(null);
   const enhanced = useTitleCardEnhancement();
   const { scrollY } = useScroll();
   const [range, setRange] = useState({ start: 0, end: 1 });
-  const progress = useTransform(scrollY, [range.start, range.end], [0, 1], {
+  const rawProgress = useTransform(scrollY, [range.start, range.end], [0, 1], {
     clamp: true,
   });
-  const contentOpacity = useTransform(progress, [0, 0.78, 1], [1, 1, 0]);
+  // Same light damping as the scrolly's beat, so the title card and the film
+  // below it share one camera feel.
+  const progress = useSpring(rawProgress, {
+    stiffness: 160,
+    damping: 27,
+    mass: 0.4,
+    restDelta: 0.001,
+  });
+  const contentOpacity = useTransform(progress, [0, 0.55, 1], [1, 1, 0]);
+  const contentY = useTransform(progress, [0.45, 1], [0, -48]);
 
   const pageWord = PAGE_WORDS[DEMO_FACTS.pages] ?? String(DEMO_FACTS.pages);
   const lines = [
@@ -117,24 +100,21 @@ export function DemoTitleCard() {
   }
 
   return (
-    <section ref={wrapperRef} className="relative h-[170vh] bg-pine">
+    <section ref={wrapperRef} className="relative h-[150vh] bg-pine">
       <div className="sticky top-0 flex h-screen items-center justify-center overflow-hidden px-6">
         <motion.div
           className="flex flex-col items-center gap-5 text-center"
-          style={{ opacity: contentOpacity }}
+          style={{ opacity: contentOpacity, y: contentY }}
         >
-          <TitleLine initial progress={progress} range={[0, 0.12, 0.2, 0.28]}>
-            {lines[0]}
-          </TitleLine>
-          <TitleLine progress={progress} range={[0.2, 0.32, 0.4, 0.48]}>
-            {lines[1]}
-          </TitleLine>
-          <TitleLine progress={progress} range={[0.4, 0.52, 0.6, 0.68]}>
-            {lines[2]}
-          </TitleLine>
-          <TitleLine progress={progress} range={[0.6, 0.72, 0.82, 0.9]}>
-            {lines[3]}
-          </TitleLine>
+          {lines.map((line, i) => (
+            <p
+              key={line}
+              className="hero-enter font-mono text-2xl uppercase tracking-[0.18em] text-paper sm:text-4xl"
+              style={{ animationDelay: `${i * 320}ms` }}
+            >
+              {line}
+            </p>
+          ))}
         </motion.div>
       </div>
       <TreelineDivider className="absolute bottom-0 h-16 w-full text-paper sm:h-24" />

@@ -33,8 +33,8 @@ import { BrandLogo } from "@/components/BrandLogo";
 // graph, NON-INTERACTIVE (no-op handlers + pointer-events-none) except one
 // scripted proof — "see a deal-breaker in the document" opens the real SPSO
 // page. Dressed in the Civic Record language and, since the forest uplift, the
-// landing's woodland palette: forest kickers, a drawn fern by the worked
-// example, a pine closing band under a treeline, and the shared SiteFooter.
+// landing's woodland palette: a pine title card, forest kickers, a drawn fern
+// by the worked example, the shared ClosingArrival clearing, and SiteFooter.
 
 const noop = () => {};
 

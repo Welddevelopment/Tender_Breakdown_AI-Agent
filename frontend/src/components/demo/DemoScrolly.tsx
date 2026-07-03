@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { STEPS, type Step } from "./steps";
 import { BeatVisual, ScrollyStage } from "./ScrollyStage";
 import { MountOnView } from "./MountOnView";
-import { TrailRail } from "./TrailRail";
 import { useBeatStep, useScrollTimeline } from "./useScrollTimeline";
 import { BookDemoButton } from "@/components/landing/BookDemoButton";
 
@@ -14,12 +13,14 @@ import { BookDemoButton } from "@/components/landing/BookDemoButton";
 // readable stacked renderer.
 //
 // Accessible + robust by construction, the Reveal.tsx way: the markup renders
-// the readable STACKED fallback by default (SSR, no-JS, reduced motion, and
-// mobile all get it). Only on the client, and only when the viewport is wide
-// AND motion is allowed, do we ENHANCE into the pinned split. That one flag also
-// covers both required fallbacks (mobile < lg OR reduced motion) with a single
-// stacked renderer. The stage is illustrative (aria-hidden); the narrative copy
-// is the a11y source of truth.
+// the readable STACKED fallback by default (SSR, no-JS, and reduced motion get
+// it as-is). On the client one three-way mode picks the path: "static"
+// (reduced motion — today's composed states, zero motion), "mobile" (motion OK
+// below lg — stacked layout, but each beat visual mounts on scroll-into-view
+// so its one-shots replay, with a sticky progress pill), or "scrub" (motion OK
+// at lg+ — the pinned split, driven by the spring-damped scroll timeline). The
+// stage is illustrative (aria-hidden); the narrative copy is the a11y source
+// of truth in every mode.
 
 const EASE = "ease-[cubic-bezier(0.22,1,0.36,1)]";
 const FINALE_STEP = STEPS.length;
@@ -120,7 +121,7 @@ export function DemoScrolly({ intro }: { intro?: React.ReactNode }) {
   const [activeStep, setActiveStep] = useState(0);
   const [mode, setMode] = useState<ScrollyMode>("static");
   const narrativeRef = useRef<HTMLDivElement>(null);
-  const { beat } = useScrollTimeline(narrativeRef, STORY_BEATS);
+  const { beat, smoothBeat } = useScrollTimeline(narrativeRef, STORY_BEATS);
 
   // Decide whether to enhance: wide viewport AND motion allowed. Read on the
   // client only, and keep it live so resizing or toggling reduced motion in
@@ -195,22 +196,12 @@ export function DemoScrolly({ intro }: { intro?: React.ReactNode }) {
     );
   }
 
-  // Enhanced (wide + motion): a split layout. Tall narrative steps scroll in
-  // the middle; the stage stays pinned and centred on the right, transforming
-  // as the active step changes. At lg a third, leftmost column appears: a
-  // trail rail, pinned like the stage. Below lg the rail is display:none, so
-  // the grid collapses back to the two-column split.
+  // Enhanced (wide + motion): a split layout. Tall narrative steps scroll on
+  // the left; the stage stays pinned and centred on the right, transforming
+  // as the active step changes.
   return (
     <div className="mx-auto max-w-[1160px] px-6">
-      <div className="grid grid-cols-[minmax(18rem,24rem)_1fr] gap-12 lg:grid-cols-[7.5rem_minmax(17rem,22rem)_1fr] lg:gap-8 xl:grid-cols-[8.5rem_minmax(18rem,22rem)_1fr] xl:gap-16">
-        <div className="hidden lg:block">
-          <div className="sticky top-0 flex h-screen items-center">
-            <TrailRail
-              active={Math.min(activeStep, STEPS.length - 1)}
-              beat={beat}
-            />
-          </div>
-        </div>
+      <div className="grid grid-cols-[minmax(18rem,24rem)_1fr] gap-12 xl:gap-16">
         <div ref={narrativeRef} className="relative">
           {intro ? (
             <div className="flex min-h-[calc(100vh-8rem)] flex-col justify-center">
@@ -235,7 +226,7 @@ export function DemoScrolly({ intro }: { intro?: React.ReactNode }) {
         </div>
         <div>
           <div className="sticky top-0 flex h-screen items-center justify-center">
-            <ScrollyStage step={activeStep} beat={beat} />
+            <ScrollyStage step={activeStep} beat={smoothBeat} />
           </div>
         </div>
       </div>

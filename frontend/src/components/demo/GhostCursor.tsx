@@ -65,8 +65,22 @@ export function GhostCursor({ beat }: GhostCursorProps) {
       <PressRing beat={beat} at={2} />
       <PressRing beat={beat} at={4.32} />
       <PressRing beat={beat} at={4.98} />
-      <span className="absolute left-0 top-0 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-paper bg-accent shadow-[0_0_0_3px_rgba(47,93,99,0.16),0_5px_18px_rgba(33,29,23,0.22)]" />
-      <span className="absolute left-1 top-1 h-8 w-px origin-top -rotate-45 bg-accent/70" />
+      {/* A real pointer arrow, tip at the layer origin so presses land where
+          the rings bloom. Paper fill on an ink edge reads on every backdrop
+          the descent passes through. */}
+      <svg
+        className="absolute left-0 top-0 h-[19px] w-[13px] drop-shadow-[0_2px_6px_rgba(33,29,23,0.35)]"
+        viewBox="0 0 13 19"
+        fill="none"
+      >
+        <path
+          d="M1 1 L1 15.4 L4.6 12.2 L6.9 17.6 L9.5 16.5 L7.2 11.2 L11.9 10.7 Z"
+          fill="var(--color-paper-raised)"
+          stroke="var(--color-ink)"
+          strokeWidth="1.1"
+          strokeLinejoin="round"
+        />
+      </svg>
     </motion.div>
   );
 }

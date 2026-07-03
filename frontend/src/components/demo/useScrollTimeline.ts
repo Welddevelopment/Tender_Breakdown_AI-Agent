@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState, type RefObject } from "react";
 import {
   useMotionValueEvent,
   useScroll,
+  useSpring,
   useTransform,
   type MotionValue,
 } from "motion/react";
@@ -76,8 +77,19 @@ export function useScrollTimeline(
     ? anchors
     : fallbackAnchors(stepCount);
   const beat = useTransform(scrollY, input, output, { clamp: true });
+  // The stage reads a lightly spring-damped copy of the beat, so trackpad
+  // notches and wheel steps land as one continuous camera move instead of
+  // frame-perfect stutter. Near-critically damped: it settles fast and any
+  // small overshoot is absorbed by the clamped useTransform ranges downstream.
+  // Discrete consumers (the rounded step, one-shot re-arms) keep the raw beat.
+  const smoothBeat = useSpring(beat, {
+    stiffness: 160,
+    damping: 27,
+    mass: 0.4,
+    restDelta: 0.001,
+  });
 
-  return { beat, scrollY, anchors };
+  return { beat, smoothBeat, scrollY, anchors };
 }
 
 export function useBeatStep(

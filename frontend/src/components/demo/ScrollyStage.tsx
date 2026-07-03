@@ -20,15 +20,16 @@ import {
 import { STEPS } from "./steps";
 
 // The pinned "stage" for the /demo cinematic scroll — a persistent scene, not a
-// slideshow. Five layers are mounted ONCE and each derives a phase from the
-// active step (pure functions of `step`: no effects, no state, no timers), so
-// scrolling transforms one continuous scene: the document wall is scanned and
-// resolves into the requirement register, the two gating rows flare and compose
-// into the deal-breaker dossier, confidence beads pop onto the SAME rows, the
-// answer earns its stamp, and the relationship map draws itself on. All
-// sequencing is CSS transition-delays and one-shot animations on class change.
-// The stage is illustrative only (aria-hidden + inert); the narrative copy is
-// the a11y source of truth. BeatVisual renders the composed FINAL state of each
+// slideshow. Layers are mounted ONCE and driven by the continuous, spring-
+// damped `beat` MotionValue (see useScrollTimeline): each layer binds its
+// opacity/y/scale to a window of the beat, so scrolling physically transforms
+// one continuous scene — the document wall recedes as the register rises, the
+// gating row lifts out (LiftProxy) and lands as the dossier, the answer earns
+// its stamp, the real GraphView appears, and the finale stamp slams over a
+// pine wash. Discrete one-shots (wall scan, stamp settle, wire draw, frame
+// jolt) still key off the rounded `step`, so they replay on re-entry. The
+// stage is illustrative only (aria-hidden + inert); the narrative copy is the
+// a11y source of truth. BeatVisual renders the composed FINAL state of each
 // beat for the stacked fallback (SSR / no-JS / reduced motion / mobile), so
 // that path never depends on choreography.
 
@@ -450,10 +451,6 @@ function SourcePagePanel() {
           each anniversary of the contract.
         </p>
       </div>
-      <span
-        aria-hidden
-        className="absolute right-5 top-[5.25rem] h-8 w-24 rounded-sm border border-forest/35 bg-forest/10"
-      />
     </div>
   );
 }
@@ -844,7 +841,7 @@ function FinaleLayer({ beat }: { beat: MotionValue<number> }) {
         style={{ opacity: washOpacity }}
       />
       <motion.div
-        className="relative z-10 flex aspect-[1.55/1] w-[min(34rem,82%)] items-center justify-center border-4 border-signal-oxblood bg-paper-raised/95 shadow-[var(--depth-sheet)]"
+        className="finale-stamp relative z-10 flex aspect-[1.55/1] w-[min(34rem,82%)] items-center justify-center border-4 border-signal-oxblood bg-paper-raised/95 shadow-[var(--depth-sheet)]"
         style={{
           rotate: stampRotate,
           scale: stampScale,
