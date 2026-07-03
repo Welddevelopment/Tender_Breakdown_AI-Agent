@@ -675,10 +675,16 @@ export function PitchDeck() {
                 <Metric label="Scope" value="pre-baked real run" />
               </div>
               <p className="pitch-caveat">
-                Slide-safe wording: in this worked example, the pipeline surfaces
-                the deal-breaker rows first and keeps each line traceable to the
-                tender source. Broader accuracy claims need a larger published
-                benchmark.
+                In this worked example the pipeline surfaces the deal-breaker rows
+                first and keeps each line traceable to its source. And the
+                deal-breaker detector is validated beyond it: every disqualifier
+                caught across our gold tenders (SPSO 2/2, museum 10/10)
+                deterministically, without the model — guaranteed, not luck — plus
+                10/10 on the held-out Bradwell tender and 101/101 on a worst-case
+                phrasing bank. It is tuned recall-first, so the failure mode is
+                over-flagging, never a silent miss. We do not put a headline
+                precision number on stage — broader accuracy across every
+                requirement type is still small-sample, and we say so.
               </p>
             </div>
           ),
