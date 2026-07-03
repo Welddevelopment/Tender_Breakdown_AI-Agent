@@ -74,7 +74,10 @@ except ImportError:  # pragma: no cover - deploy without engine/ on path
 # (scope-of-work, boilerplate, nav) — it can only REMOVE from the net's set, so the recall floor is
 # preserved. OFF unless GATING_FILTER is set + a key is present; fail-open (keeps all on any error).
 try:
-    from engine.gating_filter import filter_gating_candidates as _engine_filter_gating
+    from engine.gating_filter import (
+        filter_gating_candidates as _engine_filter_gating,
+        filter_enabled as _gating_filter_enabled,
+    )
     _HAVE_GATING_FILTER = True
 except ImportError:  # pragma: no cover - deploy without engine/ on path
     _HAVE_GATING_FILTER = False
@@ -174,13 +177,15 @@ def _with_safety_net(reconciled: list[dict], pages) -> list[dict]:
         return reconciled
     try:
         extra = _engine_uncovered_gating(reconciled, [(p.number, p.text) for p in pages])
-        # Recall-safe precision pass (deterministic): drop structural non-gates + collapse
-        # near-duplicate fragments. Verified to hold gating recall 10/10 on the gold tenders.
-        extra = _engine_consolidate(extra)
-        # Stage 2: model precision filter drops obvious false flags (opt-in via GATING_FILTER +
-        # key). Fail-open — on any error it returns `extra` unchanged, so the recall floor holds.
-        if _HAVE_GATING_FILTER and extra:
-            extra = _engine_filter_gating(extra)
+        use_filter = _HAVE_GATING_FILTER and _gating_filter_enabled()
+        # Recall-safe precision pass (deterministic): always drop structural non-gates. Collapse
+        # near-duplicate fragments ONLY when the model filter is OFF — when it's on, the filter does
+        # context-aware de-dup and the lexical dedup would degrade a gate's best candidate first.
+        extra = _engine_consolidate(extra, dedup=not use_filter)
+        # Stage 2: model precision filter drops obvious false flags, judging each with FULL-PAGE
+        # context. Fail-open — on any error it returns `extra` unchanged, so the recall floor holds.
+        if use_filter and extra:
+            extra = _engine_filter_gating(extra, pages=[(p.number, p.text) for p in pages])
         return reconciled + extra
     except Exception as exc:  # safety-net is additive — never let it break the upload
         print(f"[pipeline] safety-net skipped ({exc})")

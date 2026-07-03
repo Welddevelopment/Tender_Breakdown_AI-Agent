@@ -207,7 +207,7 @@ def _is_structural_nongate(text: str) -> bool:
 
 
 def consolidate_candidates(candidates: list[dict], dedup_overlap: float = 0.90,
-                           min_len_ratio: float = 0.6) -> list[dict]:
+                           min_len_ratio: float = 0.6, dedup: bool = True) -> list[dict]:
     """Recall-safe precision pass on the generous net's output (deterministic, no LLM): drop
     structural non-gates (TOC leaders, contact blocks, digit/symbol lines, tiny fragments) and
     collapse same-page near-duplicate fragments (>= dedup_overlap token overlap), keeping the
@@ -222,6 +222,8 @@ def consolidate_candidates(candidates: list[dict], dedup_overlap: float = 0.90,
         (SPSO 2/2 -> 0/2). Only merge when the two lines are within min_len_ratio in length.
     Verified to hold gating recall on ALL THREE gold tenders: museum 10/10, bradwell 10/10, SPSO 2/2."""
     kept = [c for c in candidates if not _is_structural_nongate(c.get("text", ""))]
+    if not dedup:  # structural drop only — the model filter (stage 2) does context-aware de-dup, and
+        return kept  # the lexical dedup can degrade a gate's best candidate (rubric-prefixed variant)
     reps: list[tuple[set, object, dict]] = []
     for c in sorted(kept, key=lambda x: -len(x.get("text", ""))):  # longest first -> representative
         ct = content_tokens(c.get("text", "")); pg = c.get("source_page"); lc = len(c.get("text", ""))
