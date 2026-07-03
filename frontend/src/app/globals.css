@@ -1397,7 +1397,9 @@ body {
       rgba(8, 24, 15, 0.12) 0%,
       rgba(246, 242, 233, 0.58) 30%,
       rgba(239, 235, 222, 0.6) 56%,
-      rgba(18, 48, 30, 0.88) 100%
+      rgba(18, 48, 30, 0.88) 76%,
+      rgba(61, 91, 66, 0.52) 88%,
+      rgba(246, 242, 233, 0.94) 100%
     ),
     url("/landing/forest/hero-woodland-v2.webp") center top / cover no-repeat,
     #16301f;
@@ -1411,55 +1413,70 @@ body {
   pointer-events: none;
 }
 .forest-hero::before {
-  opacity: 0.62;
-  mix-blend-mode: multiply;
+  z-index: 7;
+  opacity: 1;
+  mix-blend-mode: normal;
   background-image:
-    radial-gradient(circle, rgba(33, 29, 23, 0.085) 0 0.56px, transparent 0.76px),
-    linear-gradient(to right, rgba(44, 86, 64, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(44, 86, 64, 0.032) 1px, transparent 1px);
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      transparent 74%,
+      rgba(246, 242, 233, 0.36) 84%,
+      rgba(246, 242, 233, 0.88) 94%,
+      rgba(246, 242, 233, 1) 100%
+    ),
+    radial-gradient(circle, rgba(33, 29, 23, 0.05) 0 0.56px, transparent 0.76px),
+    linear-gradient(to right, rgba(44, 86, 64, 0.026) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(44, 86, 64, 0.022) 1px, transparent 1px);
   background-size:
+    100% 100%,
     7px 7px,
     42px 42px,
     42px 42px;
-  mask-image: linear-gradient(to bottom, black 0%, black 66%, transparent 100%);
+  mask-image: none;
 }
-/* The forest floor extends the fern photo downward instead of switching to a
-   separate dark slab. This keeps the grass edge continuous behind the product
-   sheet and avoids the horizontal cut through the hero. */
+/* The forest floor extends one continuous photo behind the product sheet. The
+   old fern-edge strip was too panel-like here and left visible horizontal and
+   vertical seams at desktop widths. */
 .forest-hero::after {
-  inset: 31% -4% 0;
-  opacity: 0.82;
+  inset: 24% -4% -8%;
+  opacity: 0.84;
   background:
     linear-gradient(
       to bottom,
       rgba(22, 48, 31, 0) 0%,
-      rgba(66, 96, 68, 0.28) 16%,
-      rgba(34, 74, 46, 0.5) 44%,
+      rgba(77, 103, 73, 0.18) 18%,
+      rgba(43, 82, 52, 0.42) 48%,
       rgba(12, 34, 22, 0.72) 100%
     ),
     linear-gradient(
       90deg,
-      rgba(6, 18, 11, 0.34),
-      rgba(22, 48, 31, 0.04) 32%,
-      rgba(22, 48, 31, 0.04) 68%,
-      rgba(6, 18, 11, 0.38)
+      rgba(6, 18, 11, 0.3),
+      rgba(22, 48, 31, 0.02) 34%,
+      rgba(22, 48, 31, 0.02) 66%,
+      rgba(6, 18, 11, 0.32)
     ),
-    url("/landing/forest/fern-edge-overlay.webp") center top / 100% auto repeat-y,
-    url("/landing/forest/hero-foreground.webp") center bottom / cover no-repeat;
-  filter: brightness(0.92) saturate(0.9);
+    url("/landing/forest/hero-foreground.webp") center center / cover no-repeat;
+  filter: brightness(0.98) saturate(0.94);
   -webkit-mask-image: linear-gradient(
     to bottom,
     transparent 0%,
-    rgba(0, 0, 0, 0.36) 14%,
-    black 36%,
-    black 100%
+    rgba(0, 0, 0, 0.08) 10%,
+    rgba(0, 0, 0, 0.46) 24%,
+    black 46%,
+    black 78%,
+    rgba(0, 0, 0, 0.42) 91%,
+    transparent 100%
   );
   mask-image: linear-gradient(
     to bottom,
     transparent 0%,
-    rgba(0, 0, 0, 0.36) 14%,
-    black 36%,
-    black 100%
+    rgba(0, 0, 0, 0.08) 10%,
+    rgba(0, 0, 0, 0.46) 24%,
+    black 46%,
+    black 78%,
+    rgba(0, 0, 0, 0.42) 91%,
+    transparent 100%
   );
 }
 .forest-hero__woodland {
@@ -1526,56 +1543,86 @@ body {
     no-repeat;
   mask-image: linear-gradient(to bottom, black 0%, rgba(0, 0, 0, 0.7) 46%, transparent 100%);
 }
-/* No border-radius arch and no elliptical mask edge here — both used to draw
-   a visible curved seam across the ferns at the hero's foot. The layer now
-   fades on a straight vertical, full width. */
+/* Continuous near-ground texture behind the product; fades in slowly from the
+   reading band so there is no horizontal photo edge. */
 .forest-hero__foreground {
   z-index: 4;
-  opacity: 0.92;
+  height: 74% !important;
+  opacity: 0.78;
   background:
-    linear-gradient(to top, rgba(6, 18, 11, 0.82), rgba(22, 48, 31, 0.36) 54%, rgba(22, 48, 31, 0)),
+    linear-gradient(to top, rgba(6, 18, 11, 0.78), rgba(22, 48, 31, 0.38) 48%, rgba(22, 48, 31, 0)),
     url("/landing/forest/hero-foreground.webp") center bottom / cover no-repeat;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.16) 14%,
+    rgba(0, 0, 0, 0.58) 30%,
+    black 52%,
+    black 76%,
+    rgba(0, 0, 0, 0.44) 90%,
+    transparent 100%
+  );
   mask-image: linear-gradient(
-    to top,
-    black 0%,
-    black 58%,
-    rgba(0, 0, 0, 0.55) 80%,
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.16) 14%,
+    rgba(0, 0, 0, 0.58) 30%,
+    black 52%,
+    black 76%,
+    rgba(0, 0, 0, 0.44) 90%,
     transparent 100%
   );
 }
-/* The framing ferns: two upright clusters in the near ground. They sit below
-   the CTA line and dissolve upward, so they frame the product sheet without
-   making a hard grass border across the reading band. The right piece is
-   mirrored in the JSX so the two don't read as copies. */
+/* The side fern panels are deliberately disabled in the hero. Their source art
+   has transparent edges, but Safari still exposed rectangular cuts as the
+   mirrored layers moved. */
+.forest-hero__fern {
+  display: none;
+}
 .forest-hero__fern {
   position: absolute;
   z-index: 5;
   width: min(40vw, 590px);
   height: 52svh;
   pointer-events: none;
-  opacity: 0.88;
+  opacity: 0.76;
   background: url("/landing/forest/fern-edge-overlay.webp") center bottom /
     cover no-repeat;
   filter: brightness(0.9) saturate(0.92);
 }
 .forest-hero__fern--l,
 .forest-hero__fern--r {
-  /* Safari applies the single vertical fade reliably; multi-mask composites
-     left a visible rectangular photo edge in the hero. */
+  /* Kept for any future re-enable: both sides fade toward the centre. */
+}
+.forest-hero__fern--l {
   -webkit-mask-image: linear-gradient(
-    to bottom,
-    transparent 0%,
-    black 14%,
-    black 68%,
-    rgba(0, 0, 0, 0.38) 88%,
+    to right,
+    black 0%,
+    black 46%,
+    rgba(0, 0, 0, 0.28) 70%,
     transparent 100%
   );
   mask-image: linear-gradient(
-    to bottom,
-    transparent 0%,
-    black 14%,
-    black 68%,
-    rgba(0, 0, 0, 0.38) 88%,
+    to right,
+    black 0%,
+    black 46%,
+    rgba(0, 0, 0, 0.28) 70%,
+    transparent 100%
+  );
+}
+.forest-hero__fern--r {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    black 0%,
+    black 46%,
+    rgba(0, 0, 0, 0.28) 70%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    black 0%,
+    black 46%,
+    rgba(0, 0, 0, 0.28) 70%,
     transparent 100%
   );
 }
@@ -1588,33 +1635,25 @@ body {
   top: 12svh;
 }
 
-/* The fern understory: a photographic fringe rising from the hero's floor,
-   nearer than the foreground arch, so the product sheet stands in the ferns.
-   The image's own alpha fades the fronds out at the top; the mask only blends
-   the sides into the vignette. */
+/* Bottom paper lift: this span used to carry the alpha fern strip. It now only
+   fades the continuous forest floor back into the page before the hero ends. */
 .forest-hero__botanicals {
+  display: block;
   z-index: 5;
-  height: 74% !important;
-  opacity: 0.56;
-  background: url("/landing/forest/fern-edge-overlay.webp") center bottom / cover
-    no-repeat;
-  filter: brightness(0.88) saturate(0.9);
-  -webkit-mask-image: linear-gradient(
+  bottom: -1px !important;
+  height: 44% !important;
+  opacity: 1;
+  background: linear-gradient(
     to bottom,
     transparent 0%,
-    rgba(0, 0, 0, 0.28) 18%,
-    black 42%,
-    black 82%,
-    transparent 100%
+    transparent 32%,
+    rgba(246, 242, 233, 0.24) 56%,
+    rgba(246, 242, 233, 0.78) 82%,
+    rgba(246, 242, 233, 1) 100%
   );
-  mask-image: linear-gradient(
-    to bottom,
-    transparent 0%,
-    rgba(0, 0, 0, 0.28) 18%,
-    black 42%,
-    black 82%,
-    transparent 100%
-  );
+  filter: none;
+  -webkit-mask-image: none;
+  mask-image: none;
 }
 /* Dawn: the hero opens a stop darker and the light rises over ~2s. The base
    state is full daylight (opacity 0), so SSR, no-JS, and reduced motion never
@@ -1687,7 +1726,7 @@ body {
   left: 50%;
   bottom: -3.25rem;
   z-index: 3;
-  display: block;
+  display: none;
   width: min(138%, 1440px);
   height: clamp(10rem, 18vw, 14rem);
   border: 0;
