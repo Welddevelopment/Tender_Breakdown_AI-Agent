@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 292 64" width="292" height="64" role="img" aria-label="Bidframe">
+  <title>Bidframe</title>
+  <g>
+    <rect x="7" y="7" width="50" height="50" fill="none" stroke="#211d17" stroke-width="6" stroke-linejoin="miter"></rect>
+    <path d="M18 27H44M18 38H48" fill="none" stroke="#211d17" stroke-width="5" stroke-linecap="square"></path>
+  </g>
+  <text x="78" y="44" font-family="Fraunces, Georgia, 'Times New Roman', serif" font-weight="600" font-size="40" letter-spacing="0" fill="#211d17">Bidframe</text>
+</svg>

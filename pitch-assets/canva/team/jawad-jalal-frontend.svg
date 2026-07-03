@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" width="320" height="320" role="img" aria-label="Illustrative frontend team portrait">
+  <title>Illustrative frontend team portrait</title>
+  <rect width="320" height="320" rx="24" fill="#f6f2e9"/>
+  <circle cx="160" cy="112" r="48" fill="#fbf8f1" stroke="#211d17" stroke-width="4"/>
+  <path d="M116 114c16-32 72-32 88 0" fill="none" stroke="#2c5640" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="143" cy="111" r="5" fill="#211d17"/>
+  <circle cx="177" cy="111" r="5" fill="#211d17"/>
+  <path d="M144 133c11 8 22 8 33 0" fill="none" stroke="#211d17" stroke-width="4" stroke-linecap="round"/>
+  <path d="M80 248c12-54 45-78 80-78s68 24 80 78" fill="#e8ebdd" stroke="#211d17" stroke-width="4"/>
+  <rect x="90" y="204" width="140" height="68" rx="6" fill="#fbf8f1" stroke="#211d17" stroke-width="4"/>
+  <path d="M112 226h42M112 244h84" stroke="#2f5d63" stroke-width="5" stroke-linecap="square"/>
+  <path d="M214 220l14 18-14 18" fill="none" stroke="#b42d24" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M68 64h56M68 84h32M226 68h38M226 88h24" stroke="#e4ddce" stroke-width="5" stroke-linecap="round"/>
+</svg>

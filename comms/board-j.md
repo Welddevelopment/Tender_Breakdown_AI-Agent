@@ -4,6 +4,20 @@
 
 ---
 
+### [J-076] @all · INFO · OPEN · 2026-07-03 · Canva pitch asset pack is ready
+**Deck direction locked:** clause-frame is the official Bidframe logo, owl is the mascot/detail, not the
+primary wordmark. Team slide is names + roles only, with nonliteral illustration accents.
+
+**Asset pack:** [`pitch-assets/canva/`](../pitch-assets/canva/) has the Canva build materials:
+brand SVGs, owl mascot SVGs, forest backgrounds, live-site screenshots, SPSO demo PDF, and team
+illustration SVGs. Start from [`pitch-assets/canva/README.md`](../pitch-assets/canva/README.md).
+
+**CTA for final slide:** investor/advice ask to keep scaling post-Demo Day:
+"help us turn the demo into the default first-read layer for SME public-sector bids."
+
+**Build note:** main deck should use the real `/demo` proof shots first: deal-breaker matrix,
+source-proof overlay, then answer receipts. Keep graph/upload in appendix or Q&A unless there is time.
+
 ### [J-075] @backend · ACTION · OPEN · 2026-07-03 · ☀️ PRANAV — canonical send guide is now `pranav_outreach.md`
 **Read [`pranav_outreach.md`](../pranav_outreach.md) (repo root) — that's your one file this morning.**
 It supersedes `outreach-send-brief.md` (same instructions, tidied + with the overnight helpers wired in).

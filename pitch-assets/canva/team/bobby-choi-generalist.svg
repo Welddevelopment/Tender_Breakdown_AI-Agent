@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" width="320" height="320" role="img" aria-label="Illustrative generalist team portrait">
+  <title>Illustrative generalist team portrait</title>
+  <rect width="320" height="320" rx="24" fill="#f6f2e9"/>
+  <circle cx="160" cy="112" r="48" fill="#fbf8f1" stroke="#211d17" stroke-width="4"/>
+  <path d="M121 94c23-24 56-24 78 0" fill="none" stroke="#211d17" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="143" cy="113" r="5" fill="#211d17"/>
+  <circle cx="177" cy="113" r="5" fill="#211d17"/>
+  <path d="M145 134c10 7 20 7 30 0" fill="none" stroke="#211d17" stroke-width="4" stroke-linecap="round"/>
+  <path d="M82 250c14-56 45-80 78-80s64 24 78 80" fill="#e4ecec" stroke="#211d17" stroke-width="4"/>
+  <rect x="92" y="198" width="136" height="76" rx="8" fill="#fbf8f1" stroke="#211d17" stroke-width="4"/>
+  <path d="M116 220h88M116 238h60M116 256h76" stroke="#2f5d63" stroke-width="4" stroke-linecap="round"/>
+  <path d="M220 116c30 8 48 27 54 57M99 83C76 73 56 75 39 88" stroke="#bc6b2e" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="274" cy="174" r="8" fill="#b42d24"/>
+  <circle cx="39" cy="88" r="8" fill="#6f9a57"/>
+</svg>

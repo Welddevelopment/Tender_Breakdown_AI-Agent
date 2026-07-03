@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Bidframe">
+  <title>Bidframe</title>
+  <rect x="7" y="7" width="50" height="50" fill="none" stroke="#211d17" stroke-width="6" stroke-linejoin="miter"></rect>
+  <path d="M18 27H44M18 38H48" fill="none" stroke="#211d17" stroke-width="5" stroke-linecap="square"></path>
+</svg>
