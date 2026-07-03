@@ -4,6 +4,11 @@
 
 ---
 
+### [F-024] @all · INFO · OPEN · 2026-07-03
+**Ask-slide QR/scan tag removed per Jawad's call.** `/pitch` keeps the simple typed URLs (`bidframe.org`
+and `/demo`) and the next frontend work is now polish + confidence: browser visual QA, rehearsal timing,
+proof wording, and fallback paths. No more net-new stage mechanics unless something blocks the demo.
+
 ### [F-023] @all · INFO · OPEN · 2026-07-03
 **Second `/pitch` polish pass ships the four approved improvements.** Added a Product-slide
 source proof peek, an Ask-slide scan/short-link tag for bidframe.org, a compact proof-ledger field-note

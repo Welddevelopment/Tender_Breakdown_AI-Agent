@@ -216,73 +216,6 @@ function SourceCard({
   );
 }
 
-function AskScanMark() {
-  const dots = [
-    [1, 1, 5, 5],
-    [23, 1, 5, 5],
-    [1, 23, 5, 5],
-    [8, 2, 2, 1],
-    [12, 2, 1, 1],
-    [16, 2, 2, 1],
-    [9, 5, 1, 2],
-    [13, 5, 3, 1],
-    [18, 5, 1, 3],
-    [7, 8, 1, 2],
-    [11, 8, 3, 1],
-    [16, 9, 2, 1],
-    [20, 9, 1, 2],
-    [3, 10, 1, 1],
-    [8, 11, 2, 1],
-    [12, 11, 1, 3],
-    [15, 12, 3, 1],
-    [21, 12, 2, 1],
-    [6, 14, 1, 3],
-    [9, 14, 1, 1],
-    [11, 15, 2, 1],
-    [16, 15, 1, 2],
-    [19, 15, 4, 1],
-    [8, 17, 1, 2],
-    [13, 18, 3, 1],
-    [18, 18, 1, 3],
-    [21, 19, 2, 1],
-    [7, 21, 2, 1],
-    [11, 21, 1, 2],
-    [15, 22, 2, 1],
-    [19, 23, 1, 2],
-    [23, 23, 1, 1],
-  ];
-
-  return (
-    <svg
-      className="pitch-qr-mark"
-      viewBox="0 0 29 29"
-      aria-hidden="true"
-      shapeRendering="crispEdges"
-    >
-      <rect width="29" height="29" />
-      {dots.map(([x, y, width, height]) => (
-        <rect
-          key={`${x}-${y}-${width}-${height}`}
-          x={x}
-          y={y}
-          width={width}
-          height={height}
-        />
-      ))}
-      {[1, 23, 1].map((x, index) => (
-        <rect
-          key={`finder-${index}`}
-          x={x}
-          y={index === 2 ? 23 : 1}
-          width="5"
-          height="5"
-          className="pitch-qr-mark__finder"
-        />
-      ))}
-    </svg>
-  );
-}
-
 function TeamCard({
   name,
   role,
@@ -965,18 +898,6 @@ export function PitchDeck() {
                 <a href="https://bidframe.org">bidframe.org</a>
                 <Link href="/demo">bidframe.org/demo</Link>
               </div>
-              <a
-                className="pitch-ask-tag"
-                href="https://bidframe.org"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <AskScanMark />
-                <span>
-                  <small>Scan or type after the demo</small>
-                  <strong>bidframe.org</strong>
-                </span>
-              </a>
             </div>
           ),
         },

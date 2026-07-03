@@ -3716,64 +3716,6 @@ body {
   border-color: var(--color-paper);
 }
 
-.pitch-ask-tag {
-  display: inline-grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: center;
-  gap: clamp(0.65rem, 1vw, 1rem);
-  margin-top: clamp(1.1rem, 1.8vw, 1.7rem);
-  border: 1px solid rgba(246, 242, 233, 0.34);
-  background: rgba(251, 248, 241, 0.9);
-  padding: clamp(0.45rem, 0.75vw, 0.7rem);
-  color: var(--color-ink);
-  text-align: left;
-  text-decoration: none;
-  box-shadow:
-    0 20px 40px rgba(6, 18, 11, 0.22),
-    0 0 0 1px rgba(33, 29, 23, 0.04) inset;
-}
-
-.pitch-ask-tag span,
-.pitch-ask-tag small,
-.pitch-ask-tag strong {
-  display: block;
-}
-
-.pitch-ask-tag small {
-  font-family: var(--font-mono-ibm), monospace;
-  font-size: clamp(0.56rem, 0.68vw, 0.74rem);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--color-ink-muted);
-}
-
-.pitch-ask-tag strong {
-  margin-top: 0.18rem;
-  font-family: var(--font-head), Georgia, serif;
-  font-size: clamp(1.15rem, 1.6vw, 1.72rem);
-  line-height: 1;
-}
-
-.pitch-qr-mark {
-  width: clamp(4.4rem, 6.2vw, 6.2rem);
-  border: 1px solid rgba(33, 29, 23, 0.24);
-  background: var(--color-paper);
-}
-
-.pitch-qr-mark rect:first-child {
-  fill: var(--color-paper);
-}
-
-.pitch-qr-mark rect:not(:first-child) {
-  fill: var(--color-ink);
-}
-
-.pitch-qr-mark__finder {
-  fill: none !important;
-  stroke: var(--color-ink);
-  stroke-width: 1;
-}
-
 .pitch-ask-card {
   background: rgba(251, 248, 241, 0.9);
   color: var(--color-ink);

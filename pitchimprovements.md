@@ -8,23 +8,21 @@
 If time is tight, take this cut first:
 
 1. **Survive a refresh** - persist the current slide and beat in `sessionStorage` and mirror it in the URL hash.
-2. **Add a QR code on the Ask slide** - make the room act while attention is highest.
+2. **Keep the Ask slide simple** - QR was removed on 2026-07-03; leave the visible `bidframe.org` and `/demo` links as the CTA.
 3. **Retune autoplay and add an elapsed timer** - the shorter copy needs shorter holds, and the speaker needs a quiet clock.
 4. **Auto-hide the cursor in fullscreen** - small stage detail, big perceived polish.
 5. **Animate the GBP 341bn proof figure and draw the trail** - make the room look exactly where the story wants them to look.
 6. **Add a product proof click** - tap a deal-breaker row on the Product slide and reveal the source excerpt.
 7. **Create an eval field-note appendix** - give Q&A a clean proof slide for the validated deal-breaker numbers.
 
-Best major swing before demo day: **walk into the product** from inside the deck. It has the highest room impact while staying low-risk if it uses cached data.
-
-Best visual swing: **a cinematography pass** over the woodland scenes: shared grade, grain, vignette, focal blur, and one consistent light source.
+Next work should be **polish and confidence only**: visual QA, rehearsal timing, proof wording, and recovery paths. Avoid new stage mechanics before demo day.
 
 ## Priority Triage
 
 | Priority | Idea | Why it matters | Effort | Risk | Best owner |
 | --- | --- | --- | --- | --- | --- |
 | P0 | Refresh survival | Accidental refresh should resume at the same slide and beat. | Low | Low | Frontend |
-| P0 | Ask-slide QR code | Converts attention without asking people to type a URL. | Low | Low | Frontend/J |
+| P0 | Ask CTA simplification | QR removed; keep typed URLs legible and uncluttered. | Low | Low | Frontend/J |
 | P0 | Autoplay retune + elapsed timer | Keeps the pitch inside 3 minutes and helps handoffs. | Low | Low | Frontend/J |
 | P0 | Cursor auto-hide | Removes a common projector distraction. | Low | Low | Frontend |
 | P0 | Stop-sign rehearsal note | The pause is now speaker-controlled, so it needs muscle memory. | None | Low | All speakers |
@@ -97,14 +95,14 @@ Add this to the pre-show routine:
 
 These are the visible improvements most likely to change the room's reaction.
 
-### 1. QR Code on the Ask Slide
+### 1. Ask CTA Simplification
 
-The Ask slide should turn attention into action.
+The Ask slide should stay calm and easy to read.
 
-- Add a small QR styled as a field tag, seal label, or paper specimen tag.
-- Link to the booking URL or `bidframe.org`, depending on the final call-to-action.
-- Keep it visible but not corporate. It should feel like part of the clearing, not a pasted marketing square.
-- Add the short URL in mono text beside it for accessibility and screen-photo clarity.
+- Do not re-add a QR code before demo day.
+- Keep `bidframe.org` and `bidframe.org/demo` visible as the action.
+- Make sure the URLs are legible from the back of the room.
+- Leave enough pause on the Ask slide for people to photograph or type the URL.
 
 ### 2. Product Source Peek
 
@@ -373,7 +371,7 @@ Watch for:
 - Dead air on the stop-sign pause.
 - Slides that land before the line is spoken.
 - Any animation that steals attention from the speaker.
-- Whether the Ask slide remains visible long enough for QR scanning.
+- Whether the Ask slide remains visible long enough for the URL to be photographed or typed.
 
 ### "Stuck Key" Recovery
 
@@ -391,7 +389,7 @@ Export a PDF after every pitch change and keep it in the stage folder.
 The PDF should:
 
 - Show final/resolved states.
-- Include the QR and source appendix.
+- Include the source appendix and visible URLs.
 - Avoid animation-dependent proof.
 - Preserve screenshots sharply.
 
@@ -410,7 +408,7 @@ This prevents accidental overclaiming when adrenaline hits.
 ### Before Demo Day
 
 1. Refresh/hash persistence.
-2. Ask QR and short URL.
+2. Ask CTA simplification.
 3. Timer and autoplay retune.
 4. Cursor auto-hide.
 5. Stop-sign rehearsal plus PDF fallback.
