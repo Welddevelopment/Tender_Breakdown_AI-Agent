@@ -177,6 +177,17 @@ def test_buyer_org_subject_is_dropped():
         "The Council may send these clarifications to all parties.") is False
 
 
+def test_glossary_definition_is_dropped():
+    # a Definitions-section entry, not an obligation (even though it contains "shall")
+    assert extract._looks_like_requirement(
+        "Award | The process by which the Council shall determine to whom the Contract is awarded.") is False
+    assert extract._looks_like_requirement(
+        "Pesticides means chemicals and proprietary products for the control of pests.") is False
+    # a real form/pricing row ("… | Confirm/Decline") must NOT be caught as glossary
+    assert extract._looks_like_requirement(
+        "All costs must be provided in pounds sterling exclusive of VAT.") is True
+
+
 # ---- determinism knobs are present ------------------------------------------
 
 def test_extract_seed_is_fixed():

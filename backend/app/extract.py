@@ -81,6 +81,16 @@ CATEGORY_KEYWORDS = {
 _SENT_SPLIT = re.compile(r"(?<=[.;:])\s+(?=[A-Z0-9])|\n")
 _CLAUSE_RE = re.compile(r"\b(Section|Clause|Para(?:graph)?|Appendix)\s+[\w.]+", re.IGNORECASE)
 
+# Glossary / definitions rows ("Award | The process by which…", "Pesticides means …") —
+# a Definitions section is not a list of obligations, but its entries often contain "shall"
+# and get over-extracted. Matches a SHORT title-case term followed by a table-cell "|" or
+# "means/includes" and an article — deliberately narrow so real form rows ("… | Confirm/
+# Decline") and pricing tables are NOT caught.
+_GLOSSARY_RE = re.compile(
+    r"^[A-Z][A-Za-z&'/ ]{1,34}(\|\s*(the|a|an|this|means|including|includes)\b|\s+means\b)",
+    re.IGNORECASE,
+)
+
 # A PDF hard-wraps one sentence across several lines. This joins a newline back into a
 # space ONLY when both sides are clearly mid-sentence (lowercase/comma before, lowercase/
 # open-paren after), so a real requirement isn't fragmented into bogus half-sentence rows
@@ -173,6 +183,9 @@ def _looks_like_requirement(sentence: str) -> bool:
         return False
     # Buyer-side / descriptive prose — the authority talking about itself or the process.
     if any(low.startswith(op) for op in _BUYER_SIDE_OPENERS):
+        return False
+    # Glossary / definition entry, not an obligation.
+    if _GLOSSARY_RE.match(s):
         return False
     # Cut-off fragment: ends on a dangling function word (no terminal punctuation either).
     last = low.rstrip(".;:").split()[-1] if low.rstrip(".;:").split() else ""
