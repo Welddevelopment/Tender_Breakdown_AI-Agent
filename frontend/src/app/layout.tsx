@@ -5,6 +5,7 @@ import { Toaster } from "sonner";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { RequirementsProvider } from "@/context/RequirementsContext";
+import { SITE_URL } from "@/lib/site";
 
 // Bidframe type system (DESIGN-SYSTEM.md §11): Fraunces headings, Chillax body,
 // IBM Plex Mono for evidence and source references.
@@ -41,6 +42,8 @@ const chillax = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  applicationName: "Bidframe",
   title: "Bidframe · Compliance Matrix",
   description:
     "Extract and review tender requirements. Deal-breakers flagged, uncertainty surfaced.",
