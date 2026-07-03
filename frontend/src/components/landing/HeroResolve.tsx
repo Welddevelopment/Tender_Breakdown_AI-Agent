@@ -10,15 +10,27 @@ import { GatingHero } from "@/components/GatingHero";
 // The hero showpiece (landing-page-brief §6): the real product resolving, not a
 // faked graphic, presented as a tilted sheet filed into the register (the
 // supabase-style product tilt, on our warm paper). The actual GatingHero and
-// ComplianceMatrix render over the demo tender; the register settles on load and
-// the oxblood deal-breaker settles last and heaviest.
+// ComplianceMatrix render over the demo tender.
+//
+// The scan is causal: a conductor below measures each register row's position
+// in the sheet and writes it as a --scan-delay, so rows resolve from raw
+// blurred text to the structured record exactly as the light beam passes them,
+// confidence beads pop in its wake, and the beam then snaps back and "catches"
+// on the deal-breaker, which settles last and heaviest in oxblood. The whole
+// sequence re-arms when the sheet re-enters the viewport, so scroll-back
+// visitors see the resolve too.
 //
 // The card is inert (non-interactive, out of the tab order and the a11y tree)
 // with a plain text description for screen readers, because here it is an
 // illustration, not the working worklist. Reduced motion and no-JS both land on
-// the composed resting tilt.
+// the composed resting tilt (the raw state only exists under data-scan="run").
 
 const noop = () => {};
+
+// The beam travels the sheet over ~1.5s of the sweep keyframe; a row at
+// vertical fraction f of the sheet resolves at SCAN_START + f * SCAN_TRAVEL.
+const SCAN_START_MS = 150;
+const SCAN_TRAVEL_MS = 1500;
 
 export function HeroResolve() {
   const { requirements } = useRequirements();
@@ -27,6 +39,64 @@ export function HeroResolve() {
   // Remove the illustration from the tab order and the a11y tree once mounted.
   useEffect(() => {
     if (cardRef.current) cardRef.current.inert = true;
+  }, []);
+
+  // The scan conductor: measure the rows, hand each its beam-crossing time,
+  // and run the scan — on load, and again whenever the sheet re-enters the
+  // viewport after fully leaving it.
+  useEffect(() => {
+    const sheet = cardRef.current;
+    if (!sheet) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const run = () => {
+      const rect = sheet.getBoundingClientRect();
+      if (rect.height === 0) return;
+      const rows = sheet.querySelectorAll<HTMLElement>(
+        '.hero-matrix div[role="button"]',
+      );
+      rows.forEach((el) => {
+        const r = el.getBoundingClientRect();
+        const frac = Math.min(
+          Math.max((r.top + r.height / 2 - rect.top) / rect.height, 0),
+          1,
+        );
+        el.style.setProperty(
+          "--scan-delay",
+          `${Math.round(SCAN_START_MS + frac * SCAN_TRAVEL_MS)}ms`,
+        );
+        el.classList.add("hero-scan-item");
+      });
+      // Re-trigger cleanly: drop the attribute, force a reflow so the
+      // animations reset, then re-arm.
+      sheet.removeAttribute("data-scan");
+      void sheet.offsetWidth;
+      sheet.setAttribute("data-scan", "run");
+    };
+
+    // First run starts just before the sheet-file entrance makes the card
+    // visible, so no composed rows flash before the raw state lands.
+    const timer = window.setTimeout(run, 200);
+
+    let wasOut = false;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) {
+            wasOut = true;
+          } else if (wasOut) {
+            wasOut = false;
+            run();
+          }
+        }
+      },
+      { threshold: 0.35 },
+    );
+    io.observe(sheet);
+    return () => {
+      window.clearTimeout(timer);
+      io.disconnect();
+    };
   }, []);
 
   const triage = deriveTriage(requirements);
@@ -57,14 +127,17 @@ export function HeroResolve() {
           className="hero-sheet surface-grain relative mx-auto max-w-[1100px] overflow-hidden rounded-xl border border-forest/55 bg-paper-raised p-5 shadow-[var(--depth-hero-sheet)] sm:p-7 lg:p-8"
         >
           <span aria-hidden="true" className="hero-resolve-scan" />
-          {/* The deal-breaker callout sits on top but settles last (longer delay). */}
-          <div className="hr-settle" style={{ animationDelay: "560ms" }}>
+          {/* The deal-breaker callout sits on top but settles last: the beam
+              catches on it after the sweep and it lands under the oxblood
+              flash (hero-gate-settle). */}
+          <div data-scan-gate>
             <GatingHero />
           </div>
-          {/* The register fills in first. It now composes to the available width
-              on phones, with the row status dropping under the requirement
-              text instead of relying on a cropped fixed-width sheet. */}
-          <div className="hr-settle mt-6" style={{ animationDelay: "140ms" }}>
+          {/* The register resolves row by row under the beam. It composes to
+              the available width on phones, with the row status dropping under
+              the requirement text instead of relying on a cropped fixed-width
+              sheet. */}
+          <div className="mt-6">
             <div className="hero-matrix">
               <ComplianceMatrix
                 groups={groups}
