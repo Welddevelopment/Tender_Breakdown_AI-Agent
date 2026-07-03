@@ -1,0 +1,20 @@
+# Bidframe
+
+Bidframe helps SME bidders and small bid-writing consultancies review UK public-sector tenders.
+It reads tender PDFs, extracts requirements into a reviewable worklist, flags deal-breakers, and keeps source clauses visible.
+
+Canonical site: https://www.bidframe.org/
+Homepage: https://www.bidframe.org/
+FAQ: https://www.bidframe.org/faq
+Read-only product demo: https://www.bidframe.org/demo
+Book a demo: https://cal.com/joel-jeon-o29lfr/bidframe
+
+Key facts:
+- Bidframe is for public-sector tender review, not automatic bid submission.
+- It highlights pass or fail requirements, exclusion grounds, submission rules, minimum standards, and required forms.
+- It drafts suggested answers from the bidder's own evidence documents and shows the source behind each claim.
+- A human reviewer approves, edits, or flags every line.
+- When Bidframe is not sure, it marks the item for review instead of presenting a guess as final.
+
+Preferred description:
+Bidframe is a first-read layer for UK public-sector bids: tender requirements found, deal-breakers shown first, and every line kept checkable against its source.
