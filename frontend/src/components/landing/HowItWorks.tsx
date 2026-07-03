@@ -23,12 +23,16 @@ const STEPS: { n: string; title: string; body: string }[] = [
 // own rule, so the node still has a line to sit on.
 export function HowItWorks() {
   return (
-    <ol className="grid grid-cols-1 sm:grid-cols-3 sm:divide-x sm:divide-hairline sm:border-t sm:border-hairline">
+    <ol className="grid grid-cols-1 lg:grid-cols-3 lg:divide-x lg:divide-hairline lg:border-t lg:border-hairline">
       {STEPS.map(({ n, title, body }, i) => (
         <li
           key={n}
-          className={`relative border-t border-hairline pt-7 pb-8 sm:border-t-0 sm:pb-0 ${
-            i === 0 ? "sm:pr-10" : i === STEPS.length - 1 ? "sm:pl-10" : "sm:px-10"
+          className={`relative border-t border-hairline pt-6 pb-7 lg:border-t-0 lg:pb-0 ${
+            i === 0
+              ? "lg:pr-8 xl:pr-10"
+              : i === STEPS.length - 1
+                ? "lg:pl-8 xl:pl-10"
+                : "lg:px-8 xl:px-10"
           }`}
         >
           {/* The node: a small forest point sitting on the through-line,
@@ -40,10 +44,10 @@ export function HowItWorks() {
           <span className="font-mono text-sm font-medium tracking-[0.08em] text-forest">
             {n}
           </span>
-          <h3 className="mt-3 font-serif text-xl font-semibold leading-tight tracking-tight text-ink">
+          <h3 className="mt-3 font-serif text-lg font-semibold leading-tight tracking-tight text-ink sm:text-xl">
             {title}
           </h3>
-          <p className="mt-3 max-w-[38ch] text-base leading-relaxed text-ink-muted sm:text-lg">
+          <p className="mt-3 max-w-[42ch] text-base leading-relaxed text-ink-muted lg:text-lg">
             {body}
           </p>
         </li>

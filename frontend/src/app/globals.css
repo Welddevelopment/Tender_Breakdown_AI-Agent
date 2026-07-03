@@ -1348,20 +1348,6 @@ body {
   .forest-product-object::after {
     opacity: 0.12;
   }
-  .landing-product-card > .grid:first-child {
-    grid-template-columns: 52px minmax(0, 1fr);
-  }
-  .landing-product-card > .grid:first-child > div:first-child {
-    padding-inline: 0.65rem;
-  }
-  .landing-product-card > .grid:first-child > div:last-child {
-    min-width: 0;
-    flex-wrap: wrap;
-    padding-inline: 0.9rem;
-  }
-  .landing-product-card > .grid:first-child span {
-    min-width: 0;
-  }
 }
 
 /* A faint ledger grid across the page, for texture (a graph-paper nod to the

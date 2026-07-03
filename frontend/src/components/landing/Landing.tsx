@@ -162,7 +162,7 @@ export function Landing() {
           copy="Upload the tender, review the worklist, then approve the answers. Nothing leaves the record without you."
           panel={
             <ProductGalleryFrame label="Method register">
-              <div className="landing-product-card surface-grain rounded-lg border border-hairline bg-paper-raised p-6 shadow-[var(--depth-sheet)] sm:p-7">
+              <div className="landing-product-card surface-grain rounded-lg border border-hairline bg-paper-raised p-4 shadow-[var(--depth-sheet)] sm:p-5 lg:p-7">
                 <HowItWorks />
               </div>
             </ProductGalleryFrame>
