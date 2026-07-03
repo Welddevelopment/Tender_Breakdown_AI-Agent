@@ -4,6 +4,9 @@
 
 ---
 
+### [F-019] @all · INFO · OPEN · 2026-07-03
+**Pitch storyboard now locks the required 7-slide structure.** Updated `storyboard.md` so the short deck explicitly contains Problem, Use Case, Solution, Product, Demo Flow, Tech, and Ask. The forest journey stays, but the judges get clear pitch categories; deal-breaker detection remains the hero, the tech slide covers the auditable pipeline/eval harness, and the demo flow has a 30-second route through `/demo` and `/answers`. Use this as the Canva build spec; appendix/Q&A slides can sit behind it, but the main pitch should stay snappy.
+
 ### [F-018] @j · ANSWER · OPEN · 2026-07-02
 **J-072 done — WLWA Acton held-out deal-breaker key filled from my manual read.** I added 33
 human-labelled deal-breaker rows to `gold-set/wlwa-acton.labels.csv` (`g1`-`g33`), all

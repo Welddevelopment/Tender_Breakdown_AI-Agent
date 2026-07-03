@@ -1,7 +1,7 @@
-# Bidframe Demo Day Storyboard
+# Bidframe Pitch Deck Storyboard
 
-> 3-minute investor presentation for Conduct "Make Legacy Move" Demo Day.
-> Goal: make non-procurement judges understand the tender workflow quickly, show the market is large enough to matter, then make the product feel like a guided path through a dense tender forest.
+> 3-minute investor presentation for Bidframe.
+> Goal: make non-procurement judges understand the tender workflow quickly, show that deal-breaker detection is the sharpest wedge, then make the product feel like a guided path through a dense tender forest.
 
 ## Core Pitch
 
@@ -89,39 +89,53 @@ Do not leave Wikipedia as the final slide source if there is time to chase the H
 7. Answers are drafted only when backed by evidence.
 8. The user's decisions become reusable context for the next bid.
 
+## Required 7-Slide Structure
+
+This is the locked main deck. The forest journey is the visual language, but the slide jobs must stay explicit for the judges: Problem, Use Case, Solution, Product, Demo Flow, Tech, Ask.
+
+| Slide | Required Bucket | Short Title | Job In The Pitch | Core Visual |
+|---|---|---|---|---|
+| 1 | Problem | One missed deal-breaker kills the bid | Define tenders and the disqualification risk | Dark forest trailhead, clause-frame logo, oxblood warning marker |
+| 2 | Use Case | The bid manager's first read | Show the real workflow before Bidframe | Tender PDF turning into a manual checklist |
+| 3 | Solution | A marked trail through the tender | Explain Bidframe in one sentence | Forest path resolving into a compliance matrix |
+| 4 | Product | Deal-breakers first, every line checkable | Show the power features and credibility | Product screenshot with `GatingHero`, source proof, answer receipts |
+| 5 | Demo Flow | PDF to matrix to proof to answer | Choreograph the live or recorded demo | Four-step path with screenshots from `/demo` and `/answers` |
+| 6 | Tech | A trust layer, not a PDF chatbot | Explain why it is accurate, auditable, and defensible | Pipeline diagram plus eval proof ledger |
+| 7 | Ask | Help us scale the first-read layer | Close with investor/adviser ask and pilots | Summit view, Bidframe URL, owl mascot as guide |
+
 ## 3-Minute Timing
 
-| Time | Beat | Screen / Slide | Owner |
+| Time | Required Bucket | Screen / Slide | Owner |
 |---|---|---|---|
-| 0:00-0:20 | Trailhead: define tender and stakes | Slide 1: "Never lose a bid to a deal-breaker you missed" | Joel |
-| 0:20-0:45 | Dense woods: tender 101 + market stat | Slide 2: Tender to bid workflow | Joel |
-| 0:45-1:20 | Product demo: matrix | Slide 3 or live app: compliance matrix + deal-breaker hero | Jawad |
-| 1:20-1:50 | Clearing: source proof + metrics | Slide 4 or live app: source panel + proof ledger | Bobby |
-| 1:50-2:20 | Evidence trail: autofill with receipts | Slide 5 or live app: answer citations + gap questions | Jawad / Bobby |
-| 2:20-2:45 | Canopy view: market and wedge | Slide 6: SME public-sector bidders and bid consultancies | Joel |
-| 2:45-3:00 | Summit: ask | Final line and pilot ask | Joel |
+| 0:00-0:20 | Problem | Slide 1: "One missed deal-breaker kills the bid" | Joel |
+| 0:20-0:42 | Use Case | Slide 2: tender PDF -> manual compliance matrix | Bobby |
+| 0:42-1:02 | Solution | Slide 3: Bidframe as the marked trail | Joel |
+| 1:02-1:32 | Product | Slide 4: deal-breaker-first matrix and proof surface | Jawad |
+| 1:32-2:06 | Demo Flow | Slide 5: PDF -> matrix -> source proof -> answer receipts | Jawad / Bobby |
+| 2:06-2:36 | Tech | Slide 6: pipeline, eval harness, no-bluff answer drafting | Pranav |
+| 2:36-3:00 | Ask | Slide 7: invest/advice, pilots, and scaling after Demo Day | Joel / all |
 
 ## Slide-by-Slide Storyboard
 
-### Slide 1 - Trailhead / Hook
+### Slide 1 - Problem / Trailhead
 
-**Title:** Never lose a bid to a deal-breaker you missed.
+**Title:** One missed deal-breaker kills the bid.
 
-**Subtitle:** Bidframe reads public-sector tenders, finds the mandatory requirements, and links every line to its source.
+**Subtitle:** Public-sector bids can be rejected before the buyer reads the good parts.
 
-**Visual:** A woodland trailhead over warm paper: pine-dark top band, faint clause text as the "forest floor", Bidframe clause-frame logo, one oxblood trail marker.
+**Visual:** Woodland trailhead over warm paper: pine-dark top band, faint clause text as the "forest floor", Bidframe clause-frame logo, one oxblood trail marker. Keep the owl small as a guide, not the main logo.
 
 **Speaker note:**
 
 > "A tender is how a council, NHS trust, or school buys services. Suppliers respond with a bid. Miss one mandatory rule, and the bid can be rejected before anyone reads the good parts."
 
-**Purpose:** Teach the stakes in one sentence before showing software.
+**Purpose:** Teach the tender definition and the stakes in one sentence before showing software.
 
 **Forest cue:** The viewer has arrived at the edge of the forest. The tender looks dense but navigable.
 
-### Slide 2 - Dense Woods / Tender 101
+### Slide 2 - Use Case / The Bid Manager's First Read
 
-**Title:** What happens before a supplier can bid?
+**Title:** Before a supplier can bid, someone has to read the forest.
 
 **Visual flow:**
 
@@ -145,11 +159,11 @@ Add one small market figure in the corner:
 
 **Forest cue:** This is the dense part of the forest: many paths, hidden deadlines, forms, certificates, and scoring rules.
 
-### Slide 3 - The Marked Path / Bidframe Builds The Matrix
+### Slide 3 - Solution / The Marked Path
 
-**Title:** Bidframe turns the tender into a worklist.
+**Title:** Bidframe turns the tender into a verified worklist.
 
-**Visual:** Product screenshot or live `/demo` showing the pre-baked SPSO compliance matrix and `GatingHero`.
+**Visual:** Forest path resolving into the product. Use a screenshot from `/demo` showing the pre-baked SPSO compliance matrix and the deal-breaker hero.
 
 **On-screen callouts:**
 
@@ -160,17 +174,25 @@ Add one small market figure in the corner:
 
 **Speaker note:**
 
-> "We upload a real public-sector tender. Bidframe reads it into a compliance matrix: every requirement, its source, its confidence, and its status. The deal-breaker is not buried in row 84. It is the first thing you see."
+> "Bidframe reads a tender into a compliance matrix: every requirement, its source, its confidence, and its status. The deal-breaker is not buried in row 84. It is the first thing you see."
 
 **Purpose:** Deliver the hero moment quickly.
 
 **Forest cue:** The confusing forest becomes a marked path. The oxblood deal-breaker is the red trail warning.
 
-### Slide 4 - The Clearing / Source-Linked And Measured
+### Slide 4 - Product / Deal-Breakers First
 
-**Title:** Do not trust the AI. Check the record.
+**Title:** Deal-breakers first. Every line checkable.
 
-**Visual:** Requirement drawer or source verification overlay showing the exact page and clause. Add a small proof ledger.
+**Visual:** Product collage with three real surfaces: the matrix `GatingHero`, the source panel, and the answer receipt card. Keep one main screenshot large and use two smaller detail crops.
+
+**Power features:**
+
+- Deal-breaker detection is the hero feature.
+- Source-linked requirements show exact page, clause, and excerpt.
+- Confidence appears as a glanceable signal, not a raw score.
+- Answer drafts cite supplier evidence or ask questions when evidence is missing.
+- Human decisions stay in the record.
 
 **Proof ledger:**
 
@@ -181,68 +203,68 @@ Add one small market figure in the corner:
 
 **Speaker note:**
 
-> "The important difference is auditability. One click shows the exact sentence and page. We also built an eval harness, because the bid manager's real fear is not a prettier answer. It is a missed disqualifier."
+> "The point is not to make the AI sound confident. The point is to make the bid manager confident. One click shows the exact sentence and page, and the product is built around the fear that matters most: a missed disqualifier."
 
 **Honesty note:** If asked, do not overclaim a broad benchmark. Say the strongest numbers are from measured worked examples and the validation set is expanding.
 
 **Forest cue:** The product opens a clearing around the clause. The viewer can finally see the exact line, page, and evidence without pushing through the document.
 
-### Slide 5 - Evidence Trail / Autofill With Receipts
+### Slide 5 - Demo Flow / PDF To Proof
 
-**Title:** Answers, with receipts.
+**Title:** PDF to matrix to proof to answer.
 
-**Visual:** `/answers` screen with an answer card, evidence citation, and open questions.
+**Visual:** Four-step horizontal trail using the Canva asset screenshots:
 
-**On-screen callouts:**
+1. Upload tender PDF.
+2. See deal-breakers and requirements in the matrix.
+3. Open the source proof for exact page and clause.
+4. Draft answers with evidence receipts and gap questions.
 
-- Drafted from your capability documents.
-- Evidence citation: document, page, excerpt.
-- If evidence is missing, Bidframe asks a question.
-- Human signs off every answer.
+**Demo script:**
 
-**Speaker note:**
-
-> "Bidframe does draft answers, but not as a black-box bid writer. It drafts only from the supplier's own documents and cites the evidence. Where the evidence is missing, it asks a question. That is why we call it auditable autofill."
-
-**Purpose:** Pre-empt the "is this just AutogenAI?" objection.
-
-**Forest cue:** The trail continues from tender requirement to bidder evidence. Every answer has a visible footprint.
-
-### Slide 6 - Canopy View / Wedge And Market
-
-**Title:** Built for SME public-sector bidders.
-
-**Visual:** Two-column wedge.
-
-| Incumbent tools | Bidframe |
-|---|---|
-| Enterprise bid-writing suites | SME-scale compliance control |
-| Generate prose | Build a verifiable requirement record |
-| Black-box reading step | Every requirement links to source |
-| Requires trust | Lets the bid manager verify |
-
-**Target users:**
-
-- Small public-sector bidders in care, cleaning, security, catering, IT, training, grounds, and FM.
-- Small bid-writing consultancies that handle many tenders and need repeatable first-pass review.
-
-**Market proof options:**
-
-- Public procurement is a GBP 300bn-plus annual market in the UK.
-- SMEs are a major supplier base on public-sector frameworks.
-- The first outreach list already targets bid consultancies and SME bidders across care, cleaning, security, catering, IT, training, grounds, and FM.
+- Start on the live trusted demo link.
+- Open the deal-breaker first.
+- Show the source excerpt.
+- Jump to answer receipts.
+- End by saying the bid manager approves every step.
 
 **Speaker note:**
 
-> "AutogenAI writes bids for large firms. Bidframe gives the SME bidder a source-linked compliance matrix and evidence-backed drafts, so they can trust the work before they submit."
+> "The demo is deliberately simple: tender in, matrix out, source proof one click away, answer receipts only where evidence exists. If evidence is missing, Bidframe asks instead of bluffing."
 
-**Forest cue:** Zoom out above the canopy. The single path through one tender becomes repeatable infrastructure for a market.
+**Purpose:** Give the team a clear 30-second live demo route if the deck becomes too abstract.
 
-### Slide 7 - Summit / Ask
+**Forest cue:** The trail has visible waymarks: upload, red marker, clearing, evidence footprint.
 
-**Title:** Bring us a tender.
+### Slide 6 - Tech / Trust Layer
 
-**Visual:** Pine closing band, warm paper record, Bidframe URL and booking link. This should feel like reaching the top of the trail and seeing the route clearly behind you.
+**Title:** A trust layer, not a PDF chatbot.
+
+**Visual:** Simple pipeline diagram:
+
+`PDF ingest -> requirement extraction -> reconcile/dedupe -> deal-breaker classification -> source-linked matrix -> evidence-backed answers -> eval harness`
+
+**Tech proof points:**
+
+- Python/FastAPI backend for ingest, extraction, and API.
+- Python engine for reconcile/dedupe, confidence routing, and evals.
+- Next.js product surface for the compliance matrix, source panel, graph, and answer receipts.
+- Demo-safe data path for stage reliability.
+- Eval harness measures dangerous misses, especially missed deal-breakers.
+
+**Speaker note:**
+
+> "The technical bet is structured extraction plus auditability. We parse the tender, reconcile duplicates, classify deal-breakers, attach source evidence, and only draft answers from supplier documents. The eval does not just reward plausible text. It punishes dangerous misses."
+
+**Purpose:** Show credibility without turning the pitch into an engineering walkthrough.
+
+**Forest cue:** The forest trail becomes a map legend. The audience sees the system underneath the journey.
+
+### Slide 7 - Ask / Summit
+
+**Title:** Help us scale the first-read layer for public-sector bids.
+
+**Visual:** Pine closing band, warm paper record, Bidframe URL, clause-frame logo, and the owl mascot as the guide at the edge of the map. This should feel like reaching the top of the trail and seeing the route clearly behind you.
 
 **Close line:**
 
@@ -250,8 +272,9 @@ Add one small market figure in the corner:
 
 **Ask:**
 
-- Free pilots with real SME bidders and bid consultancies.
-- Bring a public-sector tender, and Bidframe will prepare the deal-breaker checklist before the call.
+- Investment or advice to keep scaling after Demo Day.
+- Warm intros to SME public-sector bidders and bid consultancies.
+- Bring us a public-sector tender and we will prepare the deal-breaker checklist before the call.
 
 **Forest cue:** The audience leaves with a clear next path: bring a tender, get the map.
 
