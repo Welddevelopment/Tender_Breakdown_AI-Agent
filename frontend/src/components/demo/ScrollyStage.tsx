@@ -3,9 +3,12 @@ import { ConfidenceIndicator } from "@/components/ConfidenceIndicator";
 import { ApprovalStamp } from "@/components/ApprovalStamp";
 import { GatingHero } from "@/components/GatingHero";
 import { CategoryTag } from "@/components/CategoryTag";
+import { GraphView } from "@/components/GraphView";
 import { motion, useTransform, type MotionValue } from "motion/react";
+import { StageChrome } from "./StageChrome";
 import {
   SAMPLE,
+  SAMPLE_EXTENDED,
   SAMPLE_GATING,
   SAMPLE_ANSWERED,
   DEMO_FACTS,
@@ -291,11 +294,13 @@ function RegisterSheet({
   composed = false,
   composedBeads = false,
   beat,
+  rows = SAMPLE,
 }: {
   step: number;
   composed?: boolean;
   composedBeads?: boolean;
   beat?: MotionValue<number>;
+  rows?: typeof SAMPLE;
 }) {
   const rowsShown = composed || step >= 1;
   const staggerRows = !composed && step === 1;
@@ -306,11 +311,11 @@ function RegisterSheet({
     <div className="w-full max-w-[32rem] rounded-lg border border-hairline bg-paper-raised p-5 shadow-[var(--depth-row)]">
       <p className="mb-2 font-mono text-[11px] uppercase tracking-wide text-ink-muted">
         {beadsShown
-          ? `Read, with confidence shown · five of ${DEMO_FACTS.requirements}`
-          : `Every requirement, pulled out · five of ${DEMO_FACTS.requirements} shown`}
+          ? `Read, with confidence shown · ${rows.length} of ${DEMO_FACTS.requirements}`
+          : `Every requirement, pulled out · ${rows.length} of ${DEMO_FACTS.requirements} shown`}
       </p>
       <ul>
-        {SAMPLE.map((r, i) => {
+        {rows.map((r, i) => {
           const props: RowProps = {
             index: i,
             text: r.text,
@@ -331,7 +336,7 @@ function RegisterSheet({
               key={r.id}
               {...props}
               beat={beat}
-              rowStart={0.72 + i * 0.06}
+              rowStart={0.72 + i * 0.045}
             />
           ) : (
             <Row key={r.id} {...props} />
@@ -385,6 +390,67 @@ function AnswerCard({
           <span className="block h-7" aria-hidden />
         )}
       </div>
+    </div>
+  );
+}
+
+function SourceThread({ beat }: { beat: MotionValue<number> }) {
+  const opacity = useTransform(beat, [4.05, 4.25, 4.85, 5.2], [0, 1, 1, 0]);
+  const pathLength = useTransform(beat, [4.15, 4.75], [0, 1]);
+  return (
+    <motion.svg
+      aria-hidden
+      className="pointer-events-none absolute inset-0 z-20 h-full w-full text-forest/60"
+      viewBox="0 0 620 340"
+      preserveAspectRatio="none"
+      style={{ opacity }}
+    >
+      <motion.path
+        d="M240 210 C 300 210, 324 142, 386 142 S 488 136, 548 106"
+        fill="none"
+        stroke="currentColor"
+        strokeDasharray="1"
+        strokeWidth="1.3"
+        style={{ pathLength }}
+      />
+    </motion.svg>
+  );
+}
+
+function SourcePagePanel() {
+  const req = SAMPLE_ANSWERED;
+  const excerpt = req.source_excerpt;
+  const [lead, tail] = excerpt.includes(req.text)
+    ? excerpt.split(req.text)
+    : [excerpt, ""];
+
+  return (
+    <div className="relative min-h-[18rem] rounded-md border border-hairline bg-paper-raised p-4 shadow-[var(--depth-row)]">
+      <p className="flex items-baseline justify-between border-b border-hairline pb-2 font-mono text-[10px] uppercase tracking-wide text-ink-muted">
+        <span>{req.source_clause}</span>
+        <span>p.{req.source_page}</span>
+      </p>
+      <div className="mt-4 space-y-3 font-serif text-[10px] leading-[17px] text-ink/70">
+        <p>
+          {lead}
+          <span className="rounded-[2px] bg-forest/15 px-1 text-forest ring-1 ring-forest/40 [box-decoration-break:clone]">
+            {req.text}
+          </span>
+          {tail}
+        </p>
+        <p>
+          Certificates shall be provided as part of the tender response and
+          shall name the bidding entity rather than a parent company.
+        </p>
+        <p>
+          The Authority may request renewal evidence during mobilisation and at
+          each anniversary of the contract.
+        </p>
+      </div>
+      <span
+        aria-hidden
+        className="absolute right-5 top-[5.25rem] h-8 w-24 rounded-sm border border-forest/35 bg-forest/10"
+      />
     </div>
   );
 }
@@ -593,7 +659,15 @@ function RegisterLayer({
   const scale = useTransform(beat, [0.55, 1, 2.2, 3, 4], [0.98, 1, 0.98, 1, 0.98]);
   return (
     <motion.div className={`${LAYER_BASE} z-20`} style={{ opacity, y, scale }}>
-      <RegisterSheet step={step} beat={beat} />
+      <div className="w-full max-w-[36rem]">
+        <StageChrome url="bidframe.app/review">
+          <div className="h-[28rem] overflow-hidden px-4 py-3">
+            <div className="origin-top scale-[0.82]">
+              <RegisterSheet step={step} beat={beat} rows={SAMPLE_EXTENDED} />
+            </div>
+          </div>
+        </StageChrome>
+      </div>
     </motion.div>
   );
 }
@@ -664,7 +738,19 @@ function AnswerLayer({
   const y = useTransform(beat, [3.55, 4, 6.15], [48, 0, -48]);
   return (
     <motion.div className={`${LAYER_BASE} z-20`} style={{ opacity, y }}>
-      <AnswerCard withStamp={step >= 5} emphasis />
+      <div className="w-full max-w-[40rem]">
+        <StageChrome url="bidframe.app/answers/iso-9001">
+          <div className="relative grid min-h-[24rem] gap-4 p-4 md:grid-cols-[1.12fr_0.88fr]">
+            <SourceThread beat={beat} />
+            <div className="relative z-10 flex items-center">
+              <AnswerCard withStamp={step >= 5} emphasis />
+            </div>
+            <div className="relative z-10 hidden md:block">
+              <SourcePagePanel />
+            </div>
+          </div>
+        </StageChrome>
+      </div>
     </motion.div>
   );
 }
@@ -673,18 +759,23 @@ function AnswerLayer({
 // wrapper hidden→shown and the wires draw; scrolling back re-arms it (the
 // un-draw is masked by the layer fading out). The attribute itself is always
 // rendered — removing it once shown would snap the strokes.
-function GraphLayer({
-  step,
-  beat,
-}: {
-  step: number;
-  beat: MotionValue<number>;
-}) {
+function GraphLayer({ beat }: { beat: MotionValue<number> }) {
   const opacity = useTransform(beat, [5.55, 6, 6.55, 6.85], [0, 1, 1, 0]);
   const y = useTransform(beat, [5.55, 6, 6.85], [34, 0, -24]);
   return (
     <motion.div className={`${LAYER_BASE} z-20`} style={{ opacity, y }}>
-      <GraphVisual drawn={step >= 6} />
+      <div className="w-full max-w-[34rem]">
+        <StageChrome url="bidframe.app/graph">
+          <div className="pointer-events-none h-[22rem] select-none">
+            <GraphView
+              interactive={false}
+              embedded
+              chrome="min"
+              filter={(r) => r.is_gating}
+            />
+          </div>
+        </StageChrome>
+      </div>
     </motion.div>
   );
 }
@@ -790,7 +881,7 @@ export function ScrollyStage({
       <LiftProxy beat={beat} />
       <DealBreakerLayer step={step} beat={beat} />
       <AnswerLayer step={step} beat={beat} />
-      <GraphLayer step={step} beat={beat} />
+      <GraphLayer beat={beat} />
       <FinaleLayer beat={beat} />
     </div>
   );

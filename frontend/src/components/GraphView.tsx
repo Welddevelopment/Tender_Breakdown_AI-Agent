@@ -332,6 +332,7 @@ interface GraphViewProps {
   onSelectCrit?: (key: string | null) => void;
   // Drop the standalone header/description; fill the parent pane's height.
   embedded?: boolean;
+  chrome?: "full" | "min";
 }
 
 export function GraphView({
@@ -344,6 +345,7 @@ export function GraphView({
   onHoverRequirement,
   onSelectCrit,
   embedded = false,
+  chrome = "full",
 }: GraphViewProps) {
   const { requirements: allRequirements, tenderId } = useRequirements();
   const router = useRouter();
@@ -640,29 +642,33 @@ export function GraphView({
             size={1}
             color="rgba(33,29,23,0.06)"
           />
-          <GraphControls />
-          <GraphKey />
-          <MiniMap
-            pannable
-            zoomable
-            ariaLabel="Map overview"
-            nodeStrokeWidth={2}
-            maskColor="rgba(33,29,23,0.06)"
-            style={{
-              background: "var(--color-paper-raised)",
-              border: "1px solid var(--color-hairline)",
-              borderRadius: 8,
-              height: 96,
-              width: 148,
-            }}
-            nodeColor={(n) => {
-              if (n.type === "lane") return "transparent";
-              if (n.type === "criterion") return "#cfc3ab";
-              const r = (n.data as { req?: Requirement })?.req;
-              return r?.is_gating ? INK_OXBLOOD : "#d8cdb6";
-            }}
-          />
-          {embedded && (
+          {chrome === "full" && (
+            <>
+              <GraphControls />
+              <GraphKey />
+              <MiniMap
+                pannable
+                zoomable
+                ariaLabel="Map overview"
+                nodeStrokeWidth={2}
+                maskColor="rgba(33,29,23,0.06)"
+                style={{
+                  background: "var(--color-paper-raised)",
+                  border: "1px solid var(--color-hairline)",
+                  borderRadius: 8,
+                  height: 96,
+                  width: 148,
+                }}
+                nodeColor={(n) => {
+                  if (n.type === "lane") return "transparent";
+                  if (n.type === "criterion") return "#cfc3ab";
+                  const r = (n.data as { req?: Requirement })?.req;
+                  return r?.is_gating ? INK_OXBLOOD : "#d8cdb6";
+                }}
+              />
+            </>
+          )}
+          {embedded && chrome === "full" && (
             <Panel position="top-left">
               <p className="rounded-md border border-hairline bg-paper-raised/90 px-2.5 py-1 font-mono text-[11px] text-ink-muted shadow-[var(--depth-row)]">
                 {counts.reqs} req · {counts.crits} criteria · {counts.deps} deps
