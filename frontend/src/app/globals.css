@@ -1381,6 +1381,49 @@ body {
   transform: translateX(-50%);
   mask-image: radial-gradient(ellipse at 50% 100%, black 0 58%, rgba(0, 0, 0, 0.82) 74%, transparent 100%);
 }
+/* The fern understory: a photographic fringe rising from the hero's floor,
+   nearer than the foreground arch, so the product sheet stands in the ferns.
+   The image's own alpha fades the fronds out at the top; the mask only blends
+   the sides into the vignette. */
+.forest-hero__botanicals {
+  z-index: 5;
+  opacity: 0.9;
+  background: url("/landing/forest/fern-edge-overlay.webp") center bottom / cover
+    no-repeat;
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    black 10%,
+    black 90%,
+    transparent
+  );
+}
+/* Dawn: the hero opens a stop darker and the light rises over ~2s. The base
+   state is full daylight (opacity 0), so SSR, no-JS, and reduced motion never
+   see the dark wash. */
+.forest-hero__dawn {
+  z-index: 6;
+  opacity: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(6, 18, 11, 0.42),
+    rgba(22, 48, 31, 0.2) 55%,
+    rgba(6, 18, 11, 0.12)
+  );
+}
+@media (prefers-reduced-motion: no-preference) {
+  .forest-hero__dawn {
+    animation: hero-dawn 2.2s ease-out both;
+  }
+}
+@keyframes hero-dawn {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
 .forest-hero-title {
   font-family: var(--font-body), system-ui, sans-serif;
   letter-spacing: 0;

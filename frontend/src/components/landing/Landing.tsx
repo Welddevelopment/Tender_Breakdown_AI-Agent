@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BookDemoButton, SeeItRunLink } from "./BookDemoButton";
+import { ForestHeroLayers } from "./ForestHeroLayers";
 import { HeroResolve } from "./HeroResolve";
 import { Reveal } from "./Reveal";
 import { DrawOn } from "./DrawOn";
@@ -102,20 +103,7 @@ export function Landing() {
         {/* The hero fold: a forest-tinted record backdrop, with the real product
             demo kept as the foreground sheet below the headline. */}
         <div className="forest-hero relative overflow-hidden">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 z-0"
-          >
-            <span className="forest-hero__woodland absolute inset-0" />
-            <span className="forest-hero__scrim absolute inset-0" />
-            <span className="forest-hero__grid absolute inset-0" />
-            <span className="forest-hero__leaf-shadow absolute inset-x-0 top-0 h-[58%]" />
-            <span className="forest-hero__foreground absolute inset-x-0 bottom-0 h-[34%]" />
-            <Seal
-              id="seal-hero"
-              className="absolute left-[6%] top-[43%] hidden h-32 w-32 -translate-y-1/2 -rotate-[8deg] text-paper/[0.14] md:block lg:h-44 lg:w-44"
-            />
-          </div>
+          <ForestHeroLayers />
 
           {/* Hero: a centred two-line headline, a single supporting line, then
               the product sheet. The one symmetric moment, earned. */}
