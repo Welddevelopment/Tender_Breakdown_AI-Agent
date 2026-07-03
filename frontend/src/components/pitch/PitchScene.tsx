@@ -59,9 +59,12 @@ export function PitchScene({
   const [stepping, setStepping] = useState(false);
 
   useEffect(() => {
-    setStepping(true);
+    const raf = requestAnimationFrame(() => setStepping(true));
     const timeout = window.setTimeout(() => setStepping(false), 1000);
-    return () => window.clearTimeout(timeout);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.clearTimeout(timeout);
+    };
   }, [step]);
 
   // Decode every plate up front so the first advance into each zone

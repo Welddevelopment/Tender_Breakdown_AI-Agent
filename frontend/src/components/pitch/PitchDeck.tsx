@@ -16,6 +16,7 @@ import {
   type PitchZone,
 } from "@/components/pitch/PitchScene";
 import { TrailMap } from "@/components/pitch/TrailMap";
+import { TrailSteps } from "@/components/pitch/TrailSteps";
 import {
   TenderGlyph,
   TENDER_STAGES,
@@ -79,36 +80,6 @@ function pickEvidenceRequirement(requirements: Requirement[]) {
     ) ??
     requirements.find((req) => (req.answer?.evidence_refs.length ?? 0) > 0) ??
     requirements[0]
-  );
-}
-
-function StepIcon({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="pitch-step-icon" aria-hidden="true">
-      {children}
-    </span>
-  );
-}
-
-function ProductShell({
-  label,
-  title,
-  children,
-  className = "",
-}: {
-  label: string;
-  title: string;
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <div className={`pitch-product-shell ${className}`}>
-      <div className="pitch-product-caption">
-        <span>{label}</span>
-        <strong>{title}</strong>
-      </div>
-      {children}
-    </div>
   );
 }
 
@@ -356,24 +327,19 @@ export function PitchDeck() {
             "Hand to Bobby on the workflow, not a feature list.",
           ],
           body: (
-            <div className="pitch-grid pitch-grid--hero">
-              <div className="pitch-copy pitch-copy--large">
-                <p className="pitch-kicker">A tender, in plain English</p>
-                <h1>One missed deal-breaker kills the bid</h1>
-                <p>Somewhere in the pack is a clause that ends it.</p>
-                <div className="pitch-term-row">
-                  <span>Requirement</span>
-                  <span>Evidence</span>
-                  <span>Compliance matrix</span>
-                  <span>Deal-breaker</span>
-                </div>
-              </div>
-              <div className="pitch-forest-card">
-                <BrandLogo reversed className="h-16 w-auto" />
-                <p>
-                  Bidframe marks the path before a team commits days to writing.
-                </p>
-              </div>
+            <div className="pitch-poster">
+              <p className="pitch-kicker">A tender, in plain English</p>
+              <h1>
+                One missed deal&#8209;breaker
+                <br />
+                kills the bid
+              </h1>
+              <p className="pitch-poster__line">
+                Somewhere in the pack is a clause that ends it.
+              </p>
+              <p className="pitch-poster__terms">
+                Requirement · Evidence · Compliance matrix · Deal-breaker
+              </p>
             </div>
           ),
         },
@@ -390,30 +356,31 @@ export function PitchDeck() {
             "Make the journey feel operational: read, sort, prove, decide.",
           ],
           body: (
-            <div className="pitch-grid pitch-grid--journey">
-              <div className="pitch-copy">
+            <div className="pitch-journey">
+              <div className="pitch-journey__head">
                 <p className="pitch-kicker">The use case</p>
                 <h2>The first read decides what happens next</h2>
-                <p>Before anyone writes a word.</p>
               </div>
-              <div className="pitch-trail">
-                {[
-                  ["1", "Open tender", "PDF pack lands with legal wording"],
-                  ["2", "Find risks", "Gating clauses rise first"],
-                  ["3", "Build matrix", "Every line gets a source"],
-                  ["4", "Draft safely", "Answers carry evidence receipts"],
-                ].map(([num, label, copy]) => (
-                  <div className="pitch-trail-step" key={num}>
-                    <StepIcon>{num}</StepIcon>
-                    <strong>{label}</strong>
-                    <span>{copy}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="pitch-stat-band">
-                <Metric label="UK public procurement" value="GBP341bn" />
-                <Metric label="Workflow" value="about a third of spend" />
-                <Metric label="Timing" value="new rules live since 24 Feb 2025" />
+              <TrailSteps
+                steps={[
+                  {
+                    title: "Open tender",
+                    copy: "PDF pack lands with legal wording",
+                  },
+                  { title: "Find risks", copy: "Gating clauses rise first" },
+                  { title: "Build matrix", copy: "Every line gets a source" },
+                  {
+                    title: "Draft safely",
+                    copy: "Answers carry evidence receipts",
+                  },
+                ]}
+              />
+              <div className="pitch-journey__stat">
+                <span className="pitch-journey__figure">£341bn</span>
+                <span className="pitch-journey__note">
+                  UK public procurement, 2023/24 · about a third of public
+                  spend · new rules live since 24 Feb 2025
+                </span>
               </div>
             </div>
           ),
@@ -431,18 +398,9 @@ export function PitchDeck() {
             "Avoid claiming universal accuracy. This is a real pre-baked run.",
           ],
           body: (
-            <div className="pitch-grid pitch-grid--product">
-              <div className="pitch-copy">
-                <p className="pitch-kicker">The solution</p>
-                <h2>Find the clause that can void the bid</h2>
-                <p>Deal-breakers rise first. Everything else follows.</p>
-                <div className="pitch-proof-list">
-                  <span>Extract</span>
-                  <span>Classify</span>
-                  <span>Reconcile</span>
-                  <span>Trace</span>
-                </div>
-              </div>
+            <div className="pitch-moment">
+              <p className="pitch-kicker">The solution</p>
+              <h2>Find the clause that can void the bid</h2>
               <div className="pitch-stopsign">
                 <span className="pitch-stopsign__blaze" aria-hidden="true" />
                 <p className="pitch-stopsign__caption">
@@ -475,7 +433,7 @@ export function PitchDeck() {
             "Use worked-example language for the numbers.",
           ],
           body: (
-            <div className="pitch-grid pitch-grid--product">
+            <div className="pitch-spread">
               <div className="pitch-copy">
                 <p className="pitch-kicker">The product</p>
                 <h2>The tender becomes a checkable map</h2>
@@ -501,18 +459,24 @@ export function PitchDeck() {
                   />
                 </div>
               </div>
-              <div className="pitch-product-stack">
-                <ProductShell label="First screen" title="The risk is visible">
-                  <div className="pitch-crop pitch-crop--hero">
-                    <GatingHero requirements={requirements} />
-                  </div>
-                </ProductShell>
+              <div className="pitch-sheet">
+                <div className="pitch-sheet__caption">
+                  <span>First screen</span>
+                  <strong>The risk is visible</strong>
+                </div>
+                <div className="pitch-sheet__window">
+                  <GatingHero requirements={requirements} />
+                </div>
                 {evidenceReq && (
-                  <ProductShell label="Answer layer" title="Draft with receipts">
-                    <ul className="pitch-answer-preview">
+                  <>
+                    <div className="pitch-sheet__caption">
+                      <span>Answer layer</span>
+                      <strong>Draft with receipts</strong>
+                    </div>
+                    <ul className="pitch-sheet__window pitch-answer-preview">
                       <AnswerCard requirement={evidenceReq} />
                     </ul>
-                  </ProductShell>
+                  </>
                 )}
               </div>
             </div>
@@ -531,31 +495,35 @@ export function PitchDeck() {
             "Use bidframe.org/demo as the secondary CTA after the pitch.",
           ],
           body: (
-            <div className="pitch-grid pitch-grid--demo">
+            <div className="pitch-spread">
               <div className="pitch-copy">
                 <p className="pitch-kicker">Demo flow</p>
                 <h2>PDF to matrix to proof to answer</h2>
                 <p>A real tender, cached. Nothing on stage is staged.</p>
+                <ol className="pitch-flow-list">
+                  {[
+                    ["PDF", "tender pack"],
+                    ["Matrix", "requirements grouped"],
+                    ["Proof", "source line and clause"],
+                    ["Answer", "evidence receipts"],
+                  ].map(([label, copy], i) => (
+                    <li key={label}>
+                      <span>0{i + 1}</span>
+                      <strong>{label}</strong> — {copy}
+                    </li>
+                  ))}
+                </ol>
                 <div className="pitch-demo-links">
                   <a href="https://bidframe.org">bidframe.org</a>
                   <Link href="/demo">bidframe.org/demo</Link>
                 </div>
               </div>
-              <div className="pitch-flow-board">
-                {[
-                  ["PDF", "Tender pack"],
-                  ["Matrix", "Requirements grouped"],
-                  ["Proof", "Source line and clause"],
-                  ["Answer", "Evidence receipts"],
-                ].map(([label, copy]) => (
-                  <div className="pitch-flow-card" key={label}>
-                    <strong>{label}</strong>
-                    <span>{copy}</span>
-                  </div>
-                ))}
-              </div>
-              <ProductShell label="Read-only stage" title="Live product surface">
-                <div className="pitch-matrix-window">
+              <div className="pitch-sheet">
+                <div className="pitch-sheet__caption">
+                  <span>Read-only stage</span>
+                  <strong>Live product surface</strong>
+                </div>
+                <div className="pitch-sheet__window pitch-sheet__window--fill">
                   <ComplianceMatrix
                     groups={triage.groups}
                     selectedId={null}
@@ -567,7 +535,7 @@ export function PitchDeck() {
                     density="compact"
                   />
                 </div>
-              </ProductShell>
+              </div>
             </div>
           ),
         },
@@ -584,35 +552,32 @@ export function PitchDeck() {
             "Point at the graph as traceability and dependency structure.",
           ],
           body: (
-            <div className="pitch-grid pitch-grid--tech">
+            <div className="pitch-spread">
               <div className="pitch-copy">
                 <p className="pitch-kicker">The tech</p>
                 <h2>A trust layer, not a PDF chatbot</h2>
                 <p>Structured records, with receipts.</p>
-                <div className="pitch-stack">
-                  <span>FastAPI</span>
-                  <span>Python engine</span>
-                  <span>Next.js</span>
-                  <span>Eval harness</span>
+                <p className="pitch-poster__terms">
+                  FastAPI · Python engine · Next.js · Eval harness
+                </p>
+              </div>
+              <div className="pitch-sheet pitch-sheet--tech">
+                <div className="pitch-pipeline">
+                  {[
+                    "PDF ingest",
+                    "Requirement extraction",
+                    "Dedupe and routing",
+                    "Deal-breaker detection",
+                    "Source matrix",
+                    "Answer receipts",
+                  ].map((step) => (
+                    <span key={step}>{step}</span>
+                  ))}
                 </div>
-              </div>
-              <div className="pitch-tech-pipeline">
-                {[
-                  "PDF ingest",
-                  "Requirement extraction",
-                  "Dedupe and routing",
-                  "Deal-breaker detection",
-                  "Source matrix",
-                  "Answer receipts",
-                ].map((step) => (
-                  <span key={step}>{step}</span>
-                ))}
-              </div>
-              <ProductShell label="Structure" title="Where the marks live">
-                <div className="pitch-graph-frame">
+                <div className="pitch-sheet__window pitch-sheet__window--fill">
                   <GraphView interactive={false} embedded />
                 </div>
-              </ProductShell>
+              </div>
             </div>
           ),
         },
@@ -629,22 +594,15 @@ export function PitchDeck() {
             "Leave space for investor/advisor questions on procurement, accuracy and distribution.",
           ],
           body: (
-            <div className="pitch-grid pitch-grid--ask">
-              <div className="pitch-copy pitch-copy--large">
-                <p className="pitch-kicker">The ask</p>
-                <h2>Help us scale the first-read layer</h2>
-                <p>Invest, advise, or introduce us.</p>
-                <div className="pitch-cta-row">
-                  <a href="https://bidframe.org">bidframe.org</a>
-                  <Link href="/demo">bidframe.org/demo</Link>
-                </div>
-              </div>
-              <div className="pitch-ask-card">
-                <BrandLogo className="h-14 w-auto" />
-                <p>
-                  Invest, advise or introduce us to teams who need a safer first
-                  read on public-sector work.
-                </p>
+            <div className="pitch-poster pitch-poster--center">
+              <p className="pitch-kicker">The ask</p>
+              <h2>Help us scale the first&#8209;read layer</h2>
+              <p className="pitch-poster__line">
+                Invest, advise, or introduce us.
+              </p>
+              <div className="pitch-cta-row">
+                <a href="https://bidframe.org">bidframe.org</a>
+                <Link href="/demo">bidframe.org/demo</Link>
               </div>
             </div>
           ),
@@ -906,13 +864,9 @@ export function PitchDeck() {
                 />
                 <div>
                   <span>{slide.bucket}</span>
-                  <strong>{slide.speaker}</strong>
                 </div>
               </div>
               <div className="pitch-slide-body">{slide.body}</div>
-              <div className="pitch-slide-number" aria-hidden="true">
-                {index + 1 < 10 ? `0${index + 1}` : index + 1}
-              </div>
             </section>
           ))}
 

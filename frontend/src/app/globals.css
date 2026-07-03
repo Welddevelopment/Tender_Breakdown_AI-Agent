@@ -3043,11 +3043,6 @@ body {
 
 .pitch-slide-topline,
 .pitch-slide-body,
-.pitch-slide-number {
-  position: relative;
-  z-index: 2;
-}
-
 .pitch-slide-topline {
   display: flex;
   align-items: flex-start;
@@ -3096,36 +3091,296 @@ body {
   overflow: hidden;
 }
 
-.pitch-grid {
+/* === The hybrid layout system: three deliberate shapes.
+   Poster — one focal element, enormous type (Problem, Ask, the stop-sign).
+   Spread — a field-guide double page: copy on the scene left, a full-height
+   paper sheet right where product UI lives at readable scale (Product, Demo,
+   Tech).
+   Journey — a drawn trail crossing the body with steps hung off it, closed
+   by one giant proof figure (Use case). */
+
+.pitch-poster {
   display: grid;
+  align-content: center;
+  justify-items: start;
+  height: 100%;
   min-height: 0;
-  gap: clamp(1rem, 2vw, 2rem);
 }
 
-.pitch-grid--hero,
-.pitch-grid--ask {
-  grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.48fr);
+.pitch-poster--center {
+  justify-items: center;
+  text-align: center;
+}
+
+.pitch-poster h1,
+.pitch-poster h2 {
+  margin: 0;
+  max-width: none;
+  font-family: var(--font-head), Georgia, serif;
+  font-size: clamp(2.6rem, 6.6vw, 7rem);
+  font-weight: 650;
+  line-height: 0.96;
+  letter-spacing: -0.01em;
+}
+
+.pitch-poster--center h2 {
+  font-size: clamp(2.3rem, 5.4vw, 5.6rem);
+  max-width: 15ch;
+}
+
+.pitch-poster__line {
+  margin: clamp(1rem, 1.9vw, 1.7rem) 0 0;
+  font-size: clamp(1.05rem, 1.6vw, 1.65rem);
+  line-height: 1.35;
+  opacity: 0.84;
+}
+
+.pitch-poster__terms {
+  margin: clamp(1.1rem, 2vw, 1.9rem) 0 0;
+  font-family: var(--font-mono-ibm), monospace;
+  font-size: clamp(0.66rem, 0.82vw, 0.92rem);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.55;
+}
+
+.pitch-moment {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  text-align: center;
+  gap: clamp(0.7rem, 1.2vw, 1.2rem);
+  height: 100%;
+  min-height: 0;
+}
+
+.pitch-moment h2 {
+  margin: 0;
+  max-width: 18ch;
+  font-family: var(--font-head), Georgia, serif;
+  font-size: clamp(2.1rem, 4.4vw, 4.6rem);
+  font-weight: 650;
+  line-height: 1;
+}
+
+.pitch-moment .pitch-stopsign {
+  margin-top: clamp(0.6rem, 1.2vw, 1.2rem);
+}
+
+/* The field-guide spread. The sheet bleeds to the stage's right edge so the
+   seam reads as a page fold, not a floating card. */
+.pitch-spread {
+  display: grid;
+  grid-template-columns: minmax(0, 0.42fr) minmax(0, 0.58fr);
+  gap: clamp(1.2rem, 2.4vw, 2.6rem);
   align-items: center;
+  height: 100%;
+  min-height: 0;
 }
 
-.pitch-grid--journey {
-  grid-template-columns: minmax(0, 0.82fr) minmax(22rem, 1fr);
-  align-items: center;
+.pitch-sheet {
+  align-self: stretch;
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.5rem, 0.9vw, 0.9rem);
+  margin-right: calc(-1 * clamp(1.05rem, 1.75vw, 2rem));
+  border: 1px solid rgba(33, 29, 23, 0.16);
+  border-right: 0;
+  background: var(--color-paper-raised);
+  color: var(--color-ink);
+  padding: clamp(0.9rem, 1.5vw, 1.5rem);
+  box-shadow: -22px 0 48px rgba(6, 18, 11, 0.32);
+  overflow: hidden;
 }
 
-.pitch-grid--product {
-  grid-template-columns: minmax(16rem, 0.52fr) minmax(0, 1fr);
-  align-items: center;
+.pitch-sheet__caption {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--color-hairline);
+  padding-bottom: 0.4rem;
+  font-family: var(--font-mono-ibm), monospace;
+  font-size: clamp(0.56rem, 0.68vw, 0.74rem);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
 }
 
-.pitch-grid--demo {
-  grid-template-columns: minmax(14rem, 0.44fr) minmax(13rem, 0.5fr) minmax(0, 1fr);
+.pitch-sheet__caption strong {
+  color: var(--color-ink);
+}
+
+.pitch-sheet__window {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.pitch-sheet--tech {
+  display: grid;
+  grid-template-columns: minmax(11rem, 0.34fr) minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
   align-items: stretch;
+  column-gap: clamp(0.9rem, 1.4vw, 1.4rem);
 }
 
-.pitch-grid--tech {
-  grid-template-columns: minmax(14rem, 0.43fr) minmax(11rem, 0.34fr) minmax(0, 1fr);
-  align-items: center;
+/* The pipeline as a vertical trail down the sheet's gutter. */
+.pitch-pipeline {
+  position: relative;
+  display: grid;
+  align-content: space-evenly;
+  gap: 0.4rem;
+  padding-left: 1.15rem;
+  border-left: 1px dashed rgba(33, 29, 23, 0.4);
+}
+
+.pitch-pipeline span {
+  position: relative;
+  font-family: var(--font-mono-ibm), monospace;
+  font-size: clamp(0.62rem, 0.78vw, 0.86rem);
+  letter-spacing: 0.05em;
+  color: var(--color-ink);
+}
+
+.pitch-pipeline span::before {
+  content: "";
+  position: absolute;
+  left: calc(-1.15rem - 0.24rem);
+  top: 0.28em;
+  width: 0.46rem;
+  height: 0.46rem;
+  rotate: 45deg;
+  border: 1px solid var(--color-forest);
+  background: var(--color-paper);
+}
+
+/* The demo route as a numbered mono list, not a card sidebar. */
+.pitch-flow-list {
+  display: grid;
+  gap: clamp(0.45rem, 0.8vw, 0.8rem);
+  margin: clamp(1rem, 1.7vw, 1.55rem) 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: clamp(0.86rem, 1.05vw, 1.1rem);
+}
+
+.pitch-flow-list span {
+  margin-right: 0.6rem;
+  font-family: var(--font-mono-ibm), monospace;
+  font-size: 0.78em;
+  opacity: 0.55;
+}
+
+.pitch-flow-list strong {
+  font-family: var(--font-head), Georgia, serif;
+  font-size: 1.08em;
+}
+
+/* The journey: headline, the trail with steps, one giant proof figure. */
+.pitch-journey {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: clamp(0.4rem, 0.9vw, 0.9rem);
+  height: 100%;
+  min-height: 0;
+}
+
+.pitch-journey__head h2 {
+  margin: 0;
+  max-width: none;
+  font-family: var(--font-head), Georgia, serif;
+  font-size: clamp(2rem, 4.2vw, 4.4rem);
+  font-weight: 650;
+  line-height: 1;
+}
+
+.pitch-trailsteps {
+  position: relative;
+  min-height: 0;
+  margin: 0 clamp(0.5rem, 2vw, 2.5rem);
+}
+
+.pitch-trailsteps svg {
+  position: absolute;
+  inset: 12% 0;
+  width: 100%;
+  height: 76%;
+  overflow: visible;
+}
+
+.pitch-trailsteps__step {
+  position: absolute;
+  width: max-content;
+  max-width: 15rem;
+}
+
+.pitch-trailsteps__blaze {
+  position: absolute;
+  left: 0;
+  width: 0.62rem;
+  height: 0.62rem;
+  rotate: 45deg;
+  border: 1px solid var(--color-signal-amber);
+  background: rgba(210, 164, 53, 0.85);
+}
+
+.pitch-trailsteps__step.is-above .pitch-trailsteps__blaze {
+  bottom: -0.31rem;
+}
+
+.pitch-trailsteps__step.is-below .pitch-trailsteps__blaze {
+  top: -0.31rem;
+}
+
+.pitch-trailsteps__step.is-above {
+  transform: translate(-0.31rem, calc(-100% - 0.75rem));
+}
+
+.pitch-trailsteps__step.is-below {
+  transform: translate(-0.31rem, 0.9rem);
+}
+
+.pitch-trailsteps__step strong {
+  display: block;
+  font-family: var(--font-head), Georgia, serif;
+  font-size: clamp(1.05rem, 1.5vw, 1.55rem);
+  line-height: 1.1;
+}
+
+.pitch-trailsteps__step > div > span {
+  display: block;
+  margin-top: 0.18rem;
+  font-size: clamp(0.78rem, 0.95vw, 1rem);
+  opacity: 0.72;
+}
+
+.pitch-journey__stat {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(0.9rem, 1.6vw, 1.6rem);
+}
+
+.pitch-journey__figure {
+  font-family: var(--font-head), Georgia, serif;
+  font-size: clamp(3rem, 6.2vw, 6.4rem);
+  font-weight: 650;
+  line-height: 0.9;
+}
+
+.pitch-journey__note {
+  max-width: 34rem;
+  font-family: var(--font-mono-ibm), monospace;
+  font-size: clamp(0.6rem, 0.74vw, 0.8rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.6;
+  opacity: 0.66;
 }
 
 .pitch-copy {
@@ -3179,34 +3434,12 @@ body {
   color: var(--color-ink);
 }
 
-.pitch-term-row,
-.pitch-proof-list,
-.pitch-stack,
 .pitch-demo-links,
 .pitch-cta-row {
   display: flex;
   flex-wrap: wrap;
   gap: 0.55rem;
   margin-top: clamp(1rem, 1.7vw, 1.55rem);
-}
-
-.pitch-term-row span,
-.pitch-proof-list span,
-.pitch-stack span {
-  border: 1px solid rgba(246, 242, 233, 0.32);
-  background: rgba(246, 242, 233, 0.08);
-  padding: 0.52rem 0.72rem;
-  font-family: var(--font-mono-ibm), monospace;
-  font-size: clamp(0.64rem, 0.72vw, 0.78rem);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.pitch-slide--onlight .pitch-term-row span,
-.pitch-slide--onlight .pitch-proof-list span,
-.pitch-slide--onlight .pitch-stack span {
-  border-color: var(--color-hairline);
-  background: var(--color-paper-raised);
 }
 
 .pitch-cta-row a,
@@ -3227,30 +3460,6 @@ body {
   background: var(--color-paper);
   color: var(--color-ink);
   border-color: var(--color-paper);
-}
-
-.pitch-forest-card,
-.pitch-ask-card {
-  justify-self: end;
-  display: grid;
-  justify-items: center;
-  gap: 0.8rem;
-  width: min(100%, 21rem);
-  border: 1px solid rgba(246, 242, 233, 0.22);
-  background: rgba(17, 26, 19, 0.58);
-  padding: clamp(0.85rem, 1.45vw, 1.25rem);
-  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.32);
-  backdrop-filter: blur(8px);
-}
-
-.pitch-forest-card p,
-.pitch-ask-card p {
-  margin: 0;
-  max-width: 24ch;
-  text-align: center;
-  font-size: clamp(0.84rem, 0.98vw, 1rem);
-  line-height: 1.42;
-  color: rgba(246, 242, 233, 0.78);
 }
 
 .pitch-ask-card {
@@ -3398,63 +3607,7 @@ body {
   color: var(--color-signal-light-green);
 }
 
-.pitch-trail {
-  position: relative;
-  display: grid;
-  gap: 0.85rem;
-}
 
-.pitch-trail::before {
-  content: "";
-  position: absolute;
-  left: 1.1rem;
-  top: 1.25rem;
-  bottom: 1.25rem;
-  width: 2px;
-  background: var(--color-forest);
-  opacity: 0.36;
-}
-
-.pitch-trail-step {
-  position: relative;
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  grid-template-areas:
-    "icon title"
-    "icon copy";
-  align-items: start;
-  gap: 0.12rem 0.95rem;
-  border: 1px solid var(--color-hairline);
-  background: rgba(251, 248, 241, 0.86);
-  padding: clamp(0.75rem, 1vw, 1rem);
-}
-
-.pitch-step-icon {
-  grid-area: icon;
-  display: grid;
-  place-items: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  border: 2px solid var(--color-ink);
-  background: var(--color-paper);
-  font-family: var(--font-mono-ibm), monospace;
-  font-weight: 700;
-}
-
-.pitch-trail-step strong {
-  grid-area: title;
-  font-size: clamp(0.96rem, 1.18vw, 1.18rem);
-  color: var(--color-ink);
-}
-
-.pitch-trail-step span:last-child {
-  grid-area: copy;
-  font-size: clamp(0.82rem, 0.94vw, 1rem);
-  line-height: 1.36;
-  color: var(--color-ink-muted);
-}
-
-.pitch-stat-band,
 .pitch-mini-metrics,
 .pitch-ledger-grid {
   display: grid;
@@ -3462,16 +3615,8 @@ body {
   gap: 0.75rem;
 }
 
-.pitch-stat-band {
-  grid-column: 1 / -1;
-}
-
 .pitch-metric {
-  border: 1px solid rgba(33, 29, 23, 0.18);
-  background: rgba(251, 248, 241, 0.84);
-  padding: clamp(0.72rem, 0.9vw, 0.95rem);
-  color: var(--color-ink);
-  box-shadow: var(--depth-row);
+  color: currentColor;
 }
 
 .pitch-metric span {
@@ -3492,63 +3637,6 @@ body {
   line-height: 1;
 }
 
-.pitch-product-shell {
-  min-width: 0;
-  min-height: 0;
-  border: 1px solid rgba(33, 29, 23, 0.18);
-  background: rgba(251, 248, 241, 0.92);
-  color: var(--color-ink);
-  box-shadow:
-    0 18px 44px rgba(33, 29, 23, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5);
-  padding: clamp(0.65rem, 0.95vw, 1rem);
-  overflow: hidden;
-  max-height: 100%;
-}
-
-.pitch-product-caption {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  border-bottom: 1px solid var(--color-hairline);
-  padding-bottom: 0.55rem;
-  margin-bottom: 0.65rem;
-  font-family: var(--font-mono-ibm), monospace;
-  font-size: clamp(0.55rem, 0.66vw, 0.72rem);
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--color-ink-muted);
-}
-
-.pitch-product-caption strong {
-  color: var(--color-ink);
-  text-align: right;
-}
-
-.pitch-live-dealbreakers {
-  max-height: min(54vh, 29rem);
-}
-
-.pitch-product-stack {
-  min-height: 0;
-  display: grid;
-  grid-template-rows: minmax(0, 1fr) minmax(0, 0.82fr);
-  gap: clamp(0.7rem, 1vw, 1rem);
-  max-height: min(64vh, 35rem);
-}
-
-.pitch-crop,
-.pitch-matrix-window,
-.pitch-answer-preview,
-.pitch-graph-frame {
-  overflow: hidden;
-}
-
-.pitch-crop--hero {
-  max-height: 18rem;
-}
-
 .pitch-answer-preview {
   max-height: 15rem;
   padding: 0;
@@ -3560,51 +3648,11 @@ body {
   padding-top: 0;
 }
 
-.pitch-matrix-window {
-  height: min(50vh, 28rem);
-  font-size: 0.84rem;
-}
-
-.pitch-matrix-window > div {
-  gap: 1.25rem;
-}
-
-.pitch-flow-board {
-  display: grid;
-  gap: 0.7rem;
-  align-self: center;
-}
-
-.pitch-flow-card {
-  border-left: 4px solid var(--color-forest);
-  background: rgba(251, 248, 241, 0.9);
-  padding: clamp(0.8rem, 1vw, 1rem);
-  color: var(--color-ink);
-  box-shadow: var(--depth-row);
-}
-
-.pitch-flow-card strong,
-.pitch-flow-card span {
-  display: block;
-}
-
-.pitch-flow-card strong {
-  font-family: var(--font-head), Georgia, serif;
-  font-size: clamp(1rem, 1.25vw, 1.35rem);
-}
-
-.pitch-flow-card span {
-  margin-top: 0.22rem;
-  color: var(--color-ink-muted);
-}
-
-.pitch-tech-pipeline,
 .pitch-reliability-list {
   display: grid;
   gap: 0.55rem;
 }
 
-.pitch-tech-pipeline span,
 .pitch-reliability-list span {
   border: 1px solid rgba(33, 29, 23, 0.16);
   background: rgba(251, 248, 241, 0.9);
@@ -3612,21 +3660,6 @@ body {
   font-family: var(--font-mono-ibm), monospace;
   font-size: clamp(0.7rem, 0.82vw, 0.9rem);
   color: var(--color-ink);
-}
-
-.pitch-graph-frame {
-  height: min(54vh, 30rem);
-}
-
-.pitch-slide-number {
-  position: absolute;
-  right: clamp(1.2rem, 2vw, 2.4rem);
-  bottom: clamp(3.8rem, 5vw, 4.6rem);
-  font-family: var(--font-head), Georgia, serif;
-  font-size: clamp(3rem, 7vw, 7.5rem);
-  line-height: 0.8;
-  color: currentColor;
-  opacity: 0.08;
 }
 
 /* Appendix slides are field notes: a dashed paper sheet laid on the ground,
@@ -3861,9 +3894,10 @@ body {
 
 @media (prefers-reduced-motion: no-preference) {
   .pitch-slide.is-active .pitch-copy,
-  .pitch-slide.is-active .pitch-product-shell,
-  .pitch-slide.is-active .pitch-trail-step,
-  .pitch-slide.is-active .pitch-flow-card,
+  .pitch-slide.is-active .pitch-poster > *,
+  .pitch-slide.is-active .pitch-moment > *,
+  .pitch-slide.is-active .pitch-journey > *,
+  .pitch-slide.is-active .pitch-sheet,
   .pitch-slide.is-active .pitch-team-card,
   .pitch-slide.is-active .pitch-source-card,
   .pitch-slide.is-active .pitch-wedge-grid div,
@@ -3871,24 +3905,24 @@ body {
     animation: pitch-rise 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
-  .pitch-slide.is-active .pitch-product-shell:nth-of-type(2),
-  .pitch-slide.is-active .pitch-trail-step:nth-child(2),
-  .pitch-slide.is-active .pitch-flow-card:nth-child(2),
+  .pitch-slide.is-active :is(.pitch-poster, .pitch-moment, .pitch-journey) > *:nth-child(2),
   .pitch-slide.is-active .pitch-team-card:nth-child(2),
   .pitch-slide.is-active .pitch-source-card:nth-child(2),
   .pitch-slide.is-active .pitch-wedge-grid div:nth-child(2),
   .pitch-slide.is-active .pitch-metric:nth-child(2) {
-    animation-delay: 80ms;
+    animation-delay: 90ms;
   }
 
-  .pitch-slide.is-active .pitch-product-shell:nth-of-type(3),
-  .pitch-slide.is-active .pitch-trail-step:nth-child(3),
-  .pitch-slide.is-active .pitch-flow-card:nth-child(3),
+  .pitch-slide.is-active :is(.pitch-poster, .pitch-moment, .pitch-journey) > *:nth-child(3),
   .pitch-slide.is-active .pitch-team-card:nth-child(3),
   .pitch-slide.is-active .pitch-source-card:nth-child(3),
   .pitch-slide.is-active .pitch-wedge-grid div:nth-child(3),
   .pitch-slide.is-active .pitch-metric:nth-child(3) {
-    animation-delay: 150ms;
+    animation-delay: 160ms;
+  }
+
+  .pitch-slide.is-active :is(.pitch-poster, .pitch-moment) > *:nth-child(4) {
+    animation-delay: 230ms;
   }
 }
 
@@ -3936,17 +3970,44 @@ body {
     padding-bottom: 5.5rem;
   }
 
-  .pitch-grid,
-  .pitch-grid--hero,
-  .pitch-grid--ask,
-  .pitch-grid--journey,
-  .pitch-grid--product,
-  .pitch-grid--demo,
-  .pitch-grid--tech,
+  .pitch-spread,
+  .pitch-sheet--tech,
   .pitch-appendix,
   .pitch-appendix--split,
   .pitch-appendix--wedge {
     grid-template-columns: 1fr;
+  }
+
+  .pitch-sheet {
+    margin-right: 0;
+    border-right: 1px solid rgba(33, 29, 23, 0.16);
+  }
+
+  /* the journey path can't hang steps on a phone: list them instead */
+  .pitch-trailsteps {
+    margin: 1rem 0;
+  }
+
+  .pitch-trailsteps svg,
+  .pitch-trailsteps__blaze {
+    display: none;
+  }
+
+  .pitch-trailsteps__step {
+    position: static;
+    transform: none;
+    max-width: none;
+    margin-bottom: 0.9rem;
+  }
+
+  .pitch-poster h1,
+  .pitch-poster h2 {
+    font-size: clamp(2.4rem, 12vw, 4.4rem);
+  }
+
+  .pitch-journey__stat {
+    flex-direction: column;
+    gap: 0.5rem;
   }
 
   .pitch-copy h1,
@@ -3959,7 +4020,6 @@ body {
     font-size: 1rem;
   }
 
-  .pitch-stat-band,
   .pitch-mini-metrics,
   .pitch-ledger-grid,
   .pitch-team-grid,
@@ -3968,17 +4028,8 @@ body {
     grid-template-columns: 1fr;
   }
 
-  .pitch-product-shell,
-  .pitch-product-stack,
-  .pitch-live-dealbreakers,
-  .pitch-graph-frame,
-  .pitch-matrix-window {
-    max-height: none;
-    height: auto;
-  }
-
-  .pitch-graph-frame {
-    min-height: 26rem;
+  .pitch-sheet__window--fill {
+    min-height: 24rem;
   }
 
   .pitch-click-zone {
@@ -3991,8 +4042,10 @@ body {
     position: fixed;
   }
 
-  /* No room for the trail band on a phone: hide it and float the controls. */
-  .pitch-trailmap {
+  /* No room for the trail band or the story emblem on a phone: hide them
+     and float the controls. */
+  .pitch-trailmap,
+  .pitch-story {
     display: none;
   }
 
