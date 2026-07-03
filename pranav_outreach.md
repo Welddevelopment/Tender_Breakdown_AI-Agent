@@ -52,15 +52,19 @@ named public-sector client we verified** — that combination is why these 39 ar
   through Bidframe so the call is a polished walkthrough of their **real document** — that's the whole
   strategy. Don't sit on it.
 
-## 6. Overnight helper files (will be on `main` by morning)
-- **`outreach-priority-ranking.md`** — the 39 sorted into 🔥 fire-first / high / standard tiers, with a
-  short "why" per tier and a ⭐ shortlist worth an extra hand-tailored touch. **Send in this order.**
-- **`crm/best-contact-review.md`** — for each lead, whether the current send-to email is the best way to
-  reach the decision-maker, and a better *publicly-listed* direct email where one exists. If it
-  recommends a better address for a lead, **use that one** instead of the one in the draft heading.
-- **`outreach-new-leads-overnight.md`** — extra PERFECT/GOOD leads found overnight (beyond the 39). If
-  they're personalised into drafts by morning they'll be in `crm/perfect_drafts/` too; otherwise treat
-  this file as a warm backlog once the 39 are out.
+## 6. Overnight helper files
+- **`outreach-priority-ranking.md`** — ✅ **DONE, on `main` now.** The 39 sorted into 🔥 fire-first (13,
+  in send order) / high / standard tiers, with a "why" per tier and a ⭐ 6-lead shortlist worth an extra
+  hand-tailored touch. **Send in this order** — start with the Fire-first 13, top to bottom.
+- **`crm/best-contact-review.md`** — ⏳ *may be late* (the research agent hit an overnight usage cap; being
+  finished after the reset). When present, it says whether a better *publicly-listed* direct email exists
+  per lead — if so, use that address instead of the draft heading. **Don't wait for it:** if it's not
+  there, send to the address already in each draft heading. It's a refinement, not a blocker.
+- **`outreach-new-leads-overnight.md`** — ⏳ *may be late* (same cap). Extra leads beyond the 39, a warm
+  backlog for **after** the 39 are out. Not needed to start.
+
+> **Bottom line: you can send all 39 right now with just the drafts + the ranking. The other two files
+> only refine/extend — never block on them.**
 
 ## 7. Tone note
 Deliberately understated — a founder being helpful, with a light "worth booking today" nudge (Joel
