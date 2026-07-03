@@ -318,6 +318,7 @@ export function PitchDeck() {
           light: 0.05,
           notes: [
             "Open with the plain-language definition: a tender is the buyer's official request to bid, with pass/fail requirements and evidence asks.",
+            "Say the full thought out loud: hidden inside are pass/fail clauses, scored requirements and evidence asks — miss one gate and the answer is no.",
             "Make the pain concrete: the first read is where teams hunt for disqualifiers.",
             "Hand to Bobby on the workflow, not a feature list.",
           ],
@@ -326,10 +327,7 @@ export function PitchDeck() {
               <div className="pitch-copy pitch-copy--large">
                 <p className="pitch-kicker">A tender, in plain English</p>
                 <h1>One missed deal-breaker kills the bid</h1>
-                <p>
-                  A tender is the buyer&apos;s request to bid. Hidden inside are
-                  pass/fail clauses, scored requirements and evidence asks.
-                </p>
+                <p>Somewhere in the pack is a clause that ends it.</p>
                 <div className="pitch-term-row">
                   <span>Requirement</span>
                   <span>Evidence</span>
@@ -354,6 +352,7 @@ export function PitchDeck() {
           light: 0.3,
           notes: [
             "Frame the user: a bid manager opens a public-sector tender and needs a fast, defensible first read.",
+            "Say it in full: the first job is not writing — it is finding the pass/fail clauses and the proof needed to answer safely.",
             "Use the market size as context, not a top-down TAM claim.",
             "Make the journey feel operational: read, sort, prove, decide.",
           ],
@@ -362,10 +361,7 @@ export function PitchDeck() {
               <div className="pitch-copy">
                 <p className="pitch-kicker">The use case</p>
                 <h2>The first read decides what happens next</h2>
-                <p>
-                  The first job is not writing. It is finding the pass/fail
-                  clauses and the proof needed to answer safely.
-                </p>
+                <p>Before anyone writes a word.</p>
               </div>
               <div className="pitch-trail">
                 {[
@@ -397,6 +393,7 @@ export function PitchDeck() {
           light: 0.2,
           notes: [
             "Describe the product as a marked trail: extract requirements, classify them, dedupe them, then put the risky ones in front.",
+            "Say it in full: Bidframe turns the tender into a reviewable matrix — deal-breakers first, uncertainty visible, sources attached.",
             "Point at the real deal-breaker dossier. This is where the room should understand the wedge.",
             "Avoid claiming universal accuracy. This is a real pre-baked SPSO run.",
           ],
@@ -404,11 +401,8 @@ export function PitchDeck() {
             <div className="pitch-grid pitch-grid--product">
               <div className="pitch-copy">
                 <p className="pitch-kicker">The solution</p>
-                <h2>A marked trail through the tender</h2>
-                <p>
-                  Bidframe turns a tender into a reviewable matrix:
-                  deal-breakers first, uncertainty visible, sources attached.
-                </p>
+                <h2>Find the clause that can void the bid</h2>
+                <p>Deal-breakers rise first. Everything else follows.</p>
                 <div className="pitch-proof-list">
                   <span>Extract</span>
                   <span>Classify</span>
@@ -434,6 +428,7 @@ export function PitchDeck() {
           light: 0.6,
           notes: [
             "Lead with the product proof: the first screen tells a bid team what can disqualify them.",
+            "Say it in full: the product shows the requirement, why it matters, where it came from, and what evidence backs the draft answer.",
             "Then show evidence-backed answer drafting as the second layer, not the first claim.",
             "Use worked-example language for the numbers.",
           ],
@@ -441,11 +436,8 @@ export function PitchDeck() {
             <div className="pitch-grid pitch-grid--product">
               <div className="pitch-copy">
                 <p className="pitch-kicker">The product</p>
-                <h2>Deal-breakers first. Every line checkable.</h2>
-                <p>
-                  The product shows the requirement, why it matters, where it
-                  came from and what evidence backs the draft answer.
-                </p>
+                <h2>The tender becomes a checkable map</h2>
+                <p>Every line shows where it came from.</p>
                 <div className="pitch-mini-metrics">
                   <Metric label="Worked example" value={`${requirements.length} rows`} />
                   <Metric label="Deal-breaker hits" value={`${dealBreakers.length} surfaced`} />
@@ -477,6 +469,7 @@ export function PitchDeck() {
           light: 0.75,
           notes: [
             "Keep this as a quick route map for the live demo.",
+            "Say it in full: the trusted demo path is a cached real SPSO run, ready on stage without backend or model variance.",
             "Joel: PDF to matrix and deal-breaker view. Bobby: proof, answer receipts and demo reliability.",
             "Use bidframe.org/demo as the secondary CTA after the pitch.",
           ],
@@ -485,10 +478,7 @@ export function PitchDeck() {
               <div className="pitch-copy">
                 <p className="pitch-kicker">Demo flow</p>
                 <h2>PDF to matrix to proof to answer</h2>
-                <p>
-                  The trusted demo path is a cached real SPSO run, ready on
-                  stage without backend or model variance.
-                </p>
+                <p>A real tender, cached. Nothing on stage is staged.</p>
                 <div className="pitch-demo-links">
                   <a href="https://bidframe.org">bidframe.org</a>
                   <Link href="/demo">bidframe.org/demo</Link>
@@ -532,6 +522,7 @@ export function PitchDeck() {
           light: 0.5,
           notes: [
             "Make the architecture understandable: ingest, extract, reconcile, route, cite and evaluate.",
+            "Say it in full: it creates structured records — extracted requirements, conservative reconciliation, source citations and answer receipts.",
             "Contrast with a PDF chatbot without naming competitors. Bidframe produces a structured review layer.",
             "Point at the graph as traceability and dependency structure.",
           ],
@@ -540,11 +531,7 @@ export function PitchDeck() {
               <div className="pitch-copy">
                 <p className="pitch-kicker">The tech</p>
                 <h2>A trust layer, not a PDF chatbot</h2>
-                <p>
-                  It creates structured records: extracted requirements,
-                  conservative reconciliation, source citations and answer
-                  receipts.
-                </p>
+                <p>Structured records, with receipts.</p>
                 <div className="pitch-stack">
                   <span>FastAPI</span>
                   <span>Python engine</span>
@@ -580,6 +567,7 @@ export function PitchDeck() {
           light: 1,
           notes: [
             "Close with confidence and invite a conversation, not a generic fundraising line.",
+            `Say it in full: ${CTA}`,
             "Primary CTA is bidframe.org. Secondary CTA is bidframe.org/demo.",
             "Leave space for investor/advisor questions on procurement, accuracy and distribution.",
           ],
@@ -588,7 +576,7 @@ export function PitchDeck() {
               <div className="pitch-copy pitch-copy--large">
                 <p className="pitch-kicker">The ask</p>
                 <h2>Help us scale the first-read layer</h2>
-                <p>{CTA}</p>
+                <p>Invest, advise, or introduce us.</p>
                 <div className="pitch-cta-row">
                   <a href="https://bidframe.org">bidframe.org</a>
                   <Link href="/demo">bidframe.org/demo</Link>
