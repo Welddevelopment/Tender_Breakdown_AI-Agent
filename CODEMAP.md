@@ -4,7 +4,7 @@
 >
 > **Interactive graph:** [`frontend/public/codemap.html`](frontend/public/codemap.html) — drag / zoom / click-to-focus; served at `/codemap.html` on the Vercel deploy. (The diagrams below render right here on GitHub.)
 >
-> Map of commit `35aa930` · 2026-07-03T11:04:47Z
+> Map of commit `02104ed` · 2026-07-03T12:14:15+01:00
 
 **Read this first** for a current picture of the codebase — what lives where, and what imports what. It is the fast path to context for both humans and agents. If it looks wrong, it is stale: re-run the generator and push.
 
@@ -12,7 +12,7 @@
 
 | Area | Files | Lines | What it is |
 |------|-------|-------|------------|
-| **frontend** | 138 | 50,256 | Frontend — Next.js 16 / React 19 / Tailwind (compliance matrix UI) |
+| **frontend** | 138 | 50,233 | Frontend — Next.js 16 / React 19 / Tailwind (compliance matrix UI) |
 | **backend** | 20 | 3,159 | Backend — FastAPI (PDF ingest, extraction, REST API) |
 | **engine** | 71 | 5,908 | Engine — reconcile / eval / answer-draft pipeline + tests |
 | **prompts** | 6 | 713 | Prompts — LLM prompt specs (extraction, classification, answers, gaps) |
@@ -406,7 +406,7 @@ graph LR
 - `frontend/src/components/ApprovalStamp.tsx` — The approval stamp (design-language.md, device 6): a clean forest mark set
 - `frontend/src/components/AuthGate.tsx` — exports `AuthGate`
 - `frontend/src/components/AutofillButton.tsx` — exports `AutofillButton`
-- `frontend/src/components/BrandLogo.tsx` — The Bidframe lockup: a friendlier forest owl plus the Fraunces wordmark,
+- `frontend/src/components/BrandLogo.tsx` — The Bidframe lockup: a crisp clause frame plus the Fraunces wordmark,
 - `frontend/src/components/BulkActionBar.tsx` — exports `BulkActionBar`
 - `frontend/src/components/CapabilityUpload.tsx` — exports `CapabilityUpload`
 - `frontend/src/components/CategoryTag.tsx` — exports `CategoryDot`
