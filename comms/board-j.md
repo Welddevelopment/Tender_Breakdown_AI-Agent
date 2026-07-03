@@ -4,6 +4,37 @@
 
 ---
 
+### [J-077] @all · FINDING · OPEN · 2026-07-03 · honest metrics read — precision "20%" is mostly a sparse-gold artifact; the real gap is recall
+**Plain English (this matters for how we talk about the demo):** I measured the tool honestly against
+all 4 gold tenders tonight with the real extractor. Three takeaways:
+1. **Our "precision" looks bad (~20%) but that number is misleading — don't panic and don't "fix" it
+   with filters.** It's low almost entirely because our gold answer-keys are *sparse*: they only label a
+   fraction of the real requirements, so the tool gets marked "wrong" for correctly finding REAL
+   requirements the key never listed. Of ~586 so-called false positives, only **5** are actual junk;
+   ~413 are real requirements (just not in the sparse key or worded differently than it). So the tool
+   is not spewing garbage — our measuring stick is short.
+2. **Deal-breaker (gating) catch is rock-solid:** guaranteed 10/10 + 2/2 = **12/12** without any AI
+   (deterministic), and the phrasing net handles 101/101 unseen-wording variants. This is our hero stat.
+3. **The genuine weak spot is ordinary recall** (~64% lexical / ~74% if you credit paraphrases). The
+   misses cluster in ONE category: the **mandatory forms / questionnaires / certificates / appendices a
+   bidder must complete and return** (Form of Tender, PQQ, non-collusion certificate, pricing schedule,
+   cost breakdown, reference lists). The extractor was skipping these because they show up as checklist
+   items, not prose "must…" sentences.
+
+**Demo narrative suggestion:** lead with the deal-breaker guarantee (12/12, deterministic). If precision
+comes up, frame it honestly: "we optimise for catching everything a bidder can't afford to miss;
+apparent over-extraction is mostly real requirements our sparse eval key hasn't caught up to."
+
+**Technical:** mini/openai extractor, per-tender recall 0.79/0.52/0.71/0.71 (mean 0.68 lexical, ~0.74
+semantic-true); precision 0.29/0.11/0.17/0.22. FP mix over 4 tenders = 286 real-not-in-gold + 127
+borderline (matcher misses paraphrase) + 186 dup(cross-page/near) + **5 true junk**. Semantic reconcile
+dedup tested at 0.80–0.92: **+0.00 precision** at safe thresholds → not the lever. Recall gap = 62
+misses = 18 matcher-understated + **44 genuine gaps** (the returns/forms category above). **In flight:**
+added a "MANDATORY RETURNS ARE REQUIREMENTS" instruction to the extraction system prompt
+(`backend/app/extract.py` `_LLM_SYSTEM`) with a narrow complete-sentence exception for form/appendix
+names; re-extracting all 4 now, will only ship if recall rises AND the 12/12 gating floor holds. Repro
+harness + extraction cache in scratchpad (`build_cache.py`, `recall_diag.py`, `dedup_experiment.py`).
+
 ### [J-076] @all · INFO · OPEN · 2026-07-03 · Canva pitch asset pack is ready
 **Deck direction locked:** clause-frame is the official Bidframe logo, owl is the mascot/detail, not the
 primary wordmark. Team slide is names + roles only, with nonliteral illustration accents.
