@@ -30,15 +30,25 @@ function useTitleCardEnhancement() {
 
 function TitleLine({
   children,
+  initial = false,
   progress,
   range,
 }: {
   children: ReactNode;
+  initial?: boolean;
   progress: MotionValue<number>;
   range: [number, number, number, number];
 }) {
-  const opacity = useTransform(progress, range, [0, 1, 1, 0]);
-  const y = useTransform(progress, [range[0], range[1]], [12, 0]);
+  const opacity = useTransform(
+    progress,
+    range,
+    initial ? [1, 1, 1, 0] : [0, 1, 1, 0],
+  );
+  const y = useTransform(
+    progress,
+    [range[0], range[1]],
+    initial ? [0, 0] : [12, 0],
+  );
   return (
     <motion.p
       className="font-mono text-2xl uppercase tracking-[0.18em] text-paper sm:text-4xl"
@@ -113,7 +123,7 @@ export function DemoTitleCard() {
           className="flex flex-col items-center gap-5 text-center"
           style={{ opacity: contentOpacity }}
         >
-          <TitleLine progress={progress} range={[0, 0.12, 0.2, 0.28]}>
+          <TitleLine initial progress={progress} range={[0, 0.12, 0.2, 0.28]}>
             {lines[0]}
           </TitleLine>
           <TitleLine progress={progress} range={[0.2, 0.32, 0.4, 0.48]}>
