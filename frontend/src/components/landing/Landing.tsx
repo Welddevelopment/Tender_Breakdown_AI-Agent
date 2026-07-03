@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BookDemoButton, SeeItRunLink } from "./BookDemoButton";
+import { ClosingArrival } from "./ClosingArrival";
 import { ForestHeroLayers } from "./ForestHeroLayers";
 import { HeroResolve } from "./HeroResolve";
 import { Reveal } from "./Reveal";
@@ -285,44 +286,10 @@ export function Landing() {
         </section>
       </main>
 
-      {/* Pine band 2: the closing. A lifted response card on the pine ground,
-          carrying the one primary action: Book a demo. A cropped pine branch
-          draws in at the top-left corner and the civic seal sits asymmetrically
-          beside the card, so the destination belongs to the same forest the
-          treeline promised. */}
-      <section className="closing-forest relative overflow-hidden border-t border-paper/10 bg-pine">
-        <span aria-hidden className="closing-forest__image absolute inset-0" />
-        <span aria-hidden className="closing-forest__shadow absolute inset-0" />
-        <TreelineDivider
-          flip
-          className="absolute inset-x-0 top-0 h-16 w-full text-pine-deep/25 sm:h-24"
-        />
-        <DrawOn className="pointer-events-none absolute -left-12 -top-8">
-          <PineBranch className="h-44 w-auto text-paper/[0.11]" />
-        </DrawOn>
-        <div className={`${CONTAINER} relative z-10 py-24 sm:py-32`}>
-          <Seal
-            id="seal-closing"
-            className="absolute right-[6%] top-1/2 hidden h-52 w-52 -translate-y-1/2 rotate-[7deg] text-paper/25 lg:block"
-          />
-          <Reveal>
-            <div className="closing-card-frame relative z-10 mx-auto max-w-[720px]">
-              <div className="surface-grain closing-card relative rounded-lg border border-hairline bg-paper-raised p-8 text-center shadow-[var(--depth-sheet)] sm:p-11">
-                <h2 className="mx-auto max-w-[18ch] text-balance font-serif text-3xl font-semibold leading-tight tracking-tight text-ink sm:text-5xl">
-                  See it on a tender you already know
-                </h2>
-                <p className="mx-auto mt-5 max-w-[44ch] text-lg leading-relaxed text-ink-muted">
-                  Bring a tender you have already bid. In fifteen minutes, you will
-                  see the gates, sources, and answer record resolve in front of you.
-                </p>
-                <div className="mt-8 flex justify-center">
-                  <BookDemoButton location="closing" />
-                </div>
-              </div>
-            </div>
-          </Reveal>
-        </div>
-      </section>
+      {/* Pine band 2: the closing as an arrival — the clearing the treeline
+          promised. Silhouettes part, light blooms, and the response card rises
+          into it (ClosingArrival). */}
+      <ClosingArrival />
 
       <SiteFooter />
     </div>
