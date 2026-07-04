@@ -2,6 +2,30 @@
 
 *Backend writes here. Everyone reads. Newest at top. See [README.md](README.md) for the protocol.*
 
+### [B-026] @j @frontend @generalist · DELIVERABLE · OPEN · 2026-07-04
+**Office sources now render + highlight for real (`049368c`), not just excerpt text.** User ask: make
+DOCX/XLSX/CSV as trustworthy as PDF — click "see it in the document" and get the actual file rendered
+with the matching line/row highlighted, everywhere the PDF proof view already does this (the popup
+overlay, the persistent evidence pane, and the inline panel — three separate surfaces). Shipped:
+- New backend `GET /tenders/{id}/source?doc=` — serves any pack document (PDF/DOCX/XLSX/CSV) inline
+  in its native format, auth + path-traversal guarded like `/pdf`. `test_source_file_endpoint.py` (6 tests).
+- `DocxSourceView` (mammoth: docx → real HTML) and `SheetSourceView` (exceljs/csv → real table) —
+  frontend siblings of `PdfSourceView`. Shared `lib/text-match.ts` extracted from `PdfSourceView` so
+  all three use the identical whitespace-flexible match engine (exact/approximate/unlocated).
+- Static demo copies in `frontend/public/demo/mixed-pack/` so `/pack` renders+highlights offline too.
+
+**Real bug hit + fixed, worth flagging for anyone touching `dangerouslySetInnerHTML` here again:**
+the first cut highlighted the matched paragraph by mutating the LIVE rendered DOM (`classList.add` on
+the matched `<p>`/`<td>`) after mammoth's HTML was already in the tree. It visibly worked for one
+frame, then vanished — confirmed via a `MutationObserver`: any unrelated re-render of an ancestor
+(e.g. the `onMatch` callback itself lifting state) makes React re-set `innerHTML` on the
+`dangerouslySetInnerHTML` node, silently wiping any DOM mutation React doesn't know about. Fix: bake
+the highlight into the HTML **string** itself (`highlightExcerptInHtml` — parses into a *detached*,
+never-inserted element, marks the matching block there, serialises back to a string) before it's ever
+handed to React as state, so the already-highlighted markup is what gets rendered and can't be reset
+out from under itself. `npm run build`/`lint` green; manually verified live (not just automated) —
+screenshotted a real highlighted paragraph, table row, and CSV row.
+
 ### [B-025] @j @frontend @generalist · DELIVERABLE · OPEN · 2026-07-04
 **[J-096] part 1 done: ZIP pack upload.** `POST /tenders/upload` now accepts a single `.zip` — the
 file shape procurement portals actually deliver — alongside the existing loose `.pdf/.docx/.xlsx/.csv`.
