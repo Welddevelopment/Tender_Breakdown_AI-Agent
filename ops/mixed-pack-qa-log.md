@@ -3,8 +3,9 @@
 Living doc for the release owner. Brief: [`mixed-pack-04-release-qa.md`](mixed-pack-04-release-qa.md).
 Product wording: **"Upload the tender pack."** Never "Office / Microsoft integration."
 
-## Status: hour-0 groundwork done ✅
-Fixtures built, baseline green, gate + cut lines below. Backend / generalist / frontend can start.
+## Status: backend (01) + frontend (03) landed, gate GREEN ✅ — awaiting generalist (02)
+End-to-end works at ingest+net: backend `ingest_document` reads DOCX/XLSX/CSV, the deterministic net
+catches every planted gate, engine suite 230 pass. Frontend gates the PDF highlight to PDF sources.
 
 **One-command gate:** `python -m engine.scripts.mixed_pack_smoke` — Phase A (format-neutral net over all
 4 fixtures) is green now; Phase B (backend reads the pack) auto-activates when lane 01 exposes a non-PDF
@@ -27,7 +28,10 @@ Verified: all three re-open cleanly and the deterministic net (`engine.gating_sc
 | Hour 0 (baseline) | `python -m pytest engine/tests` | **223 passed, 1 skipped** ✅ |
 | Hour 0 (baseline) | `cd frontend && npm run build` | ✅ compiled, 18/18 routes, TS clean |
 | Hour 0 (baseline) | `cd frontend && npm run lint` | 0 errors, 2 pre-existing warnings (unused `Link` in MatrixView) |
-| — | *(lanes append their runs here)* | |
+| Frontend lane 03 landed (`ec5545f`) | `npm run build` + smoke | ✅ FE build green; `source-doc.ts` gates the PDF highlight to `kind==="pdf"` (no fake highlight on Office rows) |
+| **Backend lane 01 landed (`b74ff42`)** | `python -m engine.scripts.mixed_pack_smoke` | ✅ **Phase B GREEN** — backend `ingest_document` reads DOCX/XLSX/CSV; net catches **28 / 10 / 4** gates |
+| Backend lane 01 landed (`b74ff42`) | `python -m pytest engine/tests` | ✅ **230 pass / 2 skip** (+7 backend tests: `test_ingest_office`, `test_upload_mixed_pack`) |
+| — | *(generalist lane 02 pending)* | |
 
 ## Release gate — ship only if ALL true (from brief 04)
 - [ ] PDF-only path remains green (baseline: engine 223 pass, FE build green — **compare against this**).
