@@ -20,6 +20,7 @@ pytest.importorskip("openpyxl")
 from fastapi.testclient import TestClient
 
 from backend.app import main as api
+from backend.app.schema import SourceDoc, TenderResponse
 from backend.app import store
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -79,6 +80,52 @@ def test_xlsx_and_csv_only_upload_reaches_extraction(client):
     full = client.get(f"/tenders/{tid}/requirements").json()
     filenames = {d["filename"] for d in full["source_docs"]}
     assert filenames == {"sample-pricing-schedule.xlsx", "sample-compliance.csv"}
+
+
+def test_async_job_reports_per_file_progress(client, monkeypatch):
+    def fake_run_pipeline_multi(docs, tender_id, title, on_progress=None):
+        if on_progress:
+            for idx, (_doc_id, _path, filename) in enumerate(docs, start=1):
+                on_progress(
+                    stage="reading",
+                    message=f"Reading {filename}",
+                    progress=0.05,
+                    doc_index=idx,
+                    doc_total=len(docs),
+                )
+            on_progress(stage="chunking", message="Splitting", progress=0.15)
+        return TenderResponse(
+            tender_id=tender_id,
+            title=title,
+            requirements=[],
+            source_docs=[
+                SourceDoc(doc_id=doc_id, filename=filename, page_count=1)
+                for doc_id, _path, filename in docs
+            ],
+            capability_docs=[],
+            award_criteria=[],
+        )
+
+    monkeypatch.setattr(api, "run_pipeline_multi", fake_run_pipeline_multi)
+    files = [
+        ("files", (DOCX_FIXTURE.name, DOCX_FIXTURE.open("rb"), "application/octet-stream")),
+        ("files", (CSV_FIXTURE.name, CSV_FIXTURE.open("rb"), "text/csv")),
+    ]
+    try:
+        resp = client.post("/tenders/upload", files=files)
+    finally:
+        for _, (_, fh, _) in files:
+            fh.close()
+    assert resp.status_code == 200, resp.text
+
+    job = client.get(f"/tenders/jobs/{resp.json()['job_id']}").json()
+    assert job["files_total"] == 2
+    assert job["files_done"] == 2
+    assert [d["filename"] for d in job["docs"]] == [
+        "sample-return-forms.docx",
+        "sample-compliance.csv",
+    ]
+    assert {d["stage"] for d in job["docs"]} == {"done"}
 
 
 @pytest.mark.skipif(not _PDF_FIXTURES, reason="no real PDF fixture available in data/tenders/")

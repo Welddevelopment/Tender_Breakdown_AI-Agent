@@ -179,6 +179,9 @@ export interface JobStatus {
   chunkTotal?: number;
   pageCount?: number;
   sectionCount?: number;
+  filesTotal?: number;
+  filesDone?: number;
+  docs?: { docId: string; filename: string; stage: string }[];
   detail?: string; // on error
 }
 
@@ -256,6 +259,15 @@ export async function getJob(jobId: string): Promise<JobStatus> {
     chunkTotal: j.total as number | undefined,
     pageCount: j.page_count as number | undefined,
     sectionCount: j.section_count as number | undefined,
+    filesTotal: j.files_total as number | undefined,
+    filesDone: j.files_done as number | undefined,
+    docs: Array.isArray(j.docs)
+      ? j.docs.map((d) => ({
+          docId: String((d as { doc_id?: unknown }).doc_id ?? ""),
+          filename: String((d as { filename?: unknown }).filename ?? ""),
+          stage: String((d as { stage?: unknown }).stage ?? ""),
+        }))
+      : undefined,
     detail: j.detail as string | undefined,
   };
 }

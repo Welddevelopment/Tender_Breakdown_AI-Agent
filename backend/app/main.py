@@ -170,13 +170,45 @@ def _set_job(job_id: str, **patch) -> None:
                 JOBS.pop(jid, None)
 
 
+def _doc_progress_snapshot(docs, stage: str, active_index: int | None = None) -> list[dict]:
+    """Per-file job progress for the upload UI. `active_index` is 1-based."""
+    out = []
+    for idx, (doc_id, _path, filename) in enumerate(docs, start=1):
+        if active_index is None:
+            doc_stage = stage
+        elif idx < active_index:
+            doc_stage = "done"
+        elif idx == active_index:
+            doc_stage = stage
+        else:
+            doc_stage = "queued"
+        out.append({"doc_id": doc_id, "filename": filename, "stage": doc_stage})
+    return out
+
+
 def _run_extract_job(job_id: str, docs, tender_id: str, title: str, filename: str,
                      owner: str) -> None:
     """Run the pipeline over a tender pack on a background thread, streaming progress
     into JOBS. `docs` is a list of (doc_id, path, filename). The result is persisted
     under `owner`; the UI polls GET /tenders/jobs/{job_id} until status=done."""
     def on_progress(**ev) -> None:
-        _set_job(job_id, status="processing", **ev)
+        patch = dict(ev)
+        stage = str(ev.get("stage") or "processing")
+        doc_total = len(docs)
+        doc_index = ev.get("doc_index")
+        if isinstance(doc_index, int):
+            patch["files_total"] = doc_total
+            patch["files_done"] = max(0, min(doc_total, doc_index - 1))
+            patch["docs"] = _doc_progress_snapshot(docs, stage, doc_index)
+        elif stage == "reading" and ev.get("doc_total"):
+            patch["files_total"] = doc_total
+            patch["files_done"] = doc_total
+            patch["docs"] = _doc_progress_snapshot(docs, "read")
+        elif stage in {"chunking", "extract", "reconcile", "graph", "autofill"}:
+            patch["files_total"] = doc_total
+            patch["files_done"] = doc_total
+            patch["docs"] = _doc_progress_snapshot(docs, stage)
+        _set_job(job_id, status="processing", **patch)
 
     try:
         resp = run_pipeline_multi(docs, tender_id=tender_id, title=title, on_progress=on_progress)
@@ -190,6 +222,9 @@ def _run_extract_job(job_id: str, docs, tender_id: str, title: str, filename: st
             tender_id=tender_id,
             requirement_count=len(resp.requirements),
             deal_breaker_count=sum(1 for r in resp.requirements if r.is_gating),
+            files_total=len(docs),
+            files_done=len(docs),
+            docs=_doc_progress_snapshot(docs, "done"),
         )
     except PDFIngestError as exc:
         _set_job(job_id, status="error", stage="error", code=422, detail=str(exc))
@@ -331,6 +366,7 @@ async def upload_tender(
     _set_job(
         job_id, status="processing", stage="queued",
         message="Starting", progress=0.02, tender_id=tender_id, owner=user["id"],
+        files_total=len(docs), files_done=0, docs=_doc_progress_snapshot(docs, "queued"),
     )
     threading.Thread(
         target=_run_extract_job,
