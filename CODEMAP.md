@@ -707,7 +707,6 @@ graph LR
 - `AGENTS.md`
 - `CLAUDE.md`
 - `CONTRIBUTING.md`
-- `Jawad's progress day 1.md`
 - `LICENSE`
 - `README.md`
 - `START-HERE.md`
@@ -1133,14 +1132,17 @@ graph LR
 - `demo-scrolly-design-pack.md`
 - `demoimprovement.md`
 - `features.md`
-- `fetch-agent-scope.md`
 - `fire_first_manual_send.md`
-- `frontend-integration.md`
-- `frontend-ux-audit.md`
 - `go-live-runbook.md`
-- `graph-and-verification-deep-plan.md`
-- `handoff-backend.md`
 - `live-read-call-script.md`
+- `ops/Jawad's progress day 1.md`
+- `ops/fetch-agent-scope.md`
+- `ops/frontend-integration.md`
+- `ops/frontend-ux-audit.md`
+- `ops/graph-and-verification-deep-plan.md`
+- `ops/handoff-backend.md`
+- `ops/standup-day1.md`
+- `ops/tracks-decision.md`
 - `outreach-batch-personalised.md`
 - `outreach-demo-day.md`
 - `outreach-final-polished.md`
@@ -1164,11 +1166,9 @@ graph LR
 - `role-frontend.md`
 - `role-generalist.md`
 - `sourcing-playbook.md`
-- `standup-day1.md`
 - `storyboard.md`
 - `tender-master-plan.md`
 - `tenders.md`
-- `tracks-decision.md`
 - `traction-outreach.md`
 - `traction-research.md`
 - *(+32 binary/asset file(s))*

@@ -27,17 +27,17 @@ contract**: [`tender-master-plan.md`](tender-master-plan.md) + the schema in [`A
 
 ## Markdown index (what each area's docs are for)
 **Process / source-of-truth:** `AGENTS.md`, `CLAUDE.md`, `CONTRIBUTING.md`, `CODEMAP.md`,
-`STATUS.md`, `progress.md`, `tender-master-plan.md`, `tracks-decision.md`, `standup-day1.md`,
+`STATUS.md`, `progress.md`, `tender-master-plan.md`, `ops/tracks-decision.md`, `ops/standup-day1.md`,
 `README.md`. Roles: `role-J.md`, `role-backend.md`, `role-frontend.md`, `role-generalist.md`.
 Comms: `comms/README.md` + `comms/board-*.md`.
 
 **Frontend** (`/frontend`): `frontend/AGENTS.md`, `frontend/CLAUDE.md`, `frontend/README.md`,
 `frontend/DESIGN-SYSTEM.md`, `frontend/design-language.md`, `frontend/layout.md`,
 `frontend/copywriting.md`, `frontend/SLOP-CHECK.md` (anti-slop bar), `frontend/landing-page-brief.md`,
-`frontend/public/brand/README.md` (logo kit), `frontend-integration.md`.
+`frontend/public/brand/README.md` (logo kit), `ops/frontend-integration.md`.
 
 **Backend** (`/backend`): `backend/README.md` (API + error codes), `backend/DEPLOY.md`,
-`handoff-backend.md`.
+`ops/handoff-backend.md`.
 
 **Engine** (`/engine`): `engine/README.md`, `docs/superpowers/plans/*` + `docs/superpowers/specs/*`
 (reconcile/dedupe + eval-harness plans), `gold-set/labelling-guide.md`.
@@ -49,8 +49,8 @@ Comms: `comms/README.md` + `comms/board-*.md`.
 never-fake-a-contact rule), `crm/lead-gen-plan.md` (hit-rate strategy), `crm/leads.csv` (the data),
 `crm/drafts/*.md` (one outreach draft per lead). Strategy/narrative: `traction-research.md`,
 `traction-outreach.md`, `positioning-and-traction.md`, `sourcing-playbook.md`, `demo-narrative.md`,
-`prior-art.md`, `fetch-agent-scope.md`, `autofill-scope-decision.md`. Misc: `tenders.md`,
-`archive/waitlist/` (removed feature, kept for re-add), `Jawad's progress day 1.md`.
+`prior-art.md`, `ops/fetch-agent-scope.md`, `autofill-scope-decision.md`. Misc: `tenders.md`,
+`archive/waitlist/` (removed feature, kept for re-add), `ops/Jawad's progress day 1.md`.
 
 ## Current situation (2026-06-30 snapshot — verify against STATUS.md/comms)
 - **Frontend:** hi-fi public **landing** + a read-only **/demo** showcase + the product **compliance
