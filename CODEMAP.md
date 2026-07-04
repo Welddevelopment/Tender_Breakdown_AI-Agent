@@ -4,7 +4,7 @@
 >
 > **Interactive graph:** [`frontend/public/codemap.html`](frontend/public/codemap.html) — drag / zoom / click-to-focus; served at `/codemap.html` on the Vercel deploy. (The diagrams below render right here on GitHub.)
 >
-> Map of commit `ed1772f` · 2026-07-04T11:04:59Z
+> Map of commit `6386a9e` · 2026-07-04T12:11:46+01:00
 
 **Read this first** for a current picture of the codebase — what lives where, and what imports what. It is the fast path to context for both humans and agents. If it looks wrong, it is stale: re-run the generator and push.
 
@@ -12,7 +12,7 @@
 
 | Area | Files | Lines | What it is |
 |------|-------|-------|------------|
-| **frontend** | 178 | 60,439 | Frontend — Next.js 16 / React 19 / Tailwind (compliance matrix UI) |
+| **frontend** | 178 | 60,726 | Frontend — Next.js 16 / React 19 / Tailwind (compliance matrix UI) |
 | **backend** | 20 | 3,159 | Backend — FastAPI (PDF ingest, extraction, REST API) |
 | **engine** | 72 | 5,987 | Engine — reconcile / eval / answer-draft pipeline + tests |
 | **prompts** | 6 | 713 | Prompts — LLM prompt specs (extraction, classification, answers, gaps) |
@@ -294,9 +294,11 @@ graph LR
   n95[Seal.tsx] --> n66[BotanicalSprig.tsx]
   n23[PitchDeck.tsx] --> n58[AnimatedNumber.tsx]
   n23[PitchDeck.tsx] --> n11[BrandLogo.tsx]
+  n23[PitchDeck.tsx] --> n55[ComplianceMatrix.tsx]
   n23[PitchDeck.tsx] --> n59[GatingHero.tsx]
   n23[PitchDeck.tsx] --> n60[GraphView.tsx]
   n23[PitchDeck.tsx] --> n25[MatrixView.tsx]
+  n23[PitchDeck.tsx] --> n100[ProductShots.tsx]
   n23[PitchDeck.tsx] --> n105[PitchScene.tsx]
   n23[PitchDeck.tsx] --> n106[TenderGlyph.tsx]
   n23[PitchDeck.tsx] --> n107[TenderPageFacsimile.tsx]
@@ -304,6 +306,7 @@ graph LR
   n23[PitchDeck.tsx] --> n109[TrailSteps.tsx]
   n23[PitchDeck.tsx] --> n7[RequirementsContext.tsx]
   n23[PitchDeck.tsx] --> n42[answers.ts]
+  n23[PitchDeck.tsx] --> n54[triage.ts]
   n105[PitchScene.tsx] --> n71[FernFrond.tsx]
   n105[PitchScene.tsx] --> n94[PineBranch.tsx]
   n105[PitchScene.tsx] --> n95[Seal.tsx]
