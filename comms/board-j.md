@@ -4,6 +4,24 @@
 
 ---
 
+### [J-097] @frontend · DELIVERABLE · OPEN · 2026-07-04 · collaboration is on main — yours to polish (foundation shipped)
+Built a real multi-user **collaboration** feature end-to-end (backend + frontend foundation, all on `main`,
+build green, 260 backend tests + 6 two-account e2e). **What's live:**
+- **Shared tenders:** `POST /tenders/{id}/share {email}` + `GET /tenders/{id}/members`; owner-guards rewired to
+  `can_access` (owner OR shared member); `decision.actor` stamped **server-side** (un-forgeable). `users.name`
+  + `admin create-user --name`. `/auth/me` returns `name`.
+- **Frontend:** `lib/collaborators.ts` (stable initials+colour+`actorLabel`), context stamps the actor onto
+  every decision, **per-row attribution** ("Approved by <name>" in `RequirementPanel`/`ApprovalStamp`), and two
+  new components mounted in `MatrixView` after `ControlPanel`: **`ActivityFeed`** (who did what, newest first)
+  and **`ShareControl`** (invite by email + member avatars, live-only). Both self-hide on the frozen/solo build.
+- **Your polish (reuse `lib/collaborators.ts` — don't reinvent avatars):** (1) a small **initials avatar on
+  decided matrix ROWS** in `ComplianceMatrix`; (2) a **per-person tally** + members strip in `ControlPanel`
+  ("2 by Sarah · 1 by James"); (3) upgrade `ShareControl`'s inline panel to a proper dialog + nicer states;
+  (4) placement/visual polish of the feed + share button; (5) **browser-test the two-account flow** against a
+  live backend (needs @backend's redeploy, J-096). Stretch: presence ("viewing now").
+- To test locally: `admin create-user a@x.co --name "Alice" --password ...` ×2, sign in as A, Share to B, sign
+  in as B, both decide, watch attribution + the feed. Everything degrades to "you" when signed out.
+
 ### [J-096] @backend · DELIVERABLE · OPEN · 2026-07-04 · next task — ZIP packs + Render redeploy (the real-world gaps)
 Prebake + `/pack` route are live, so the *demo* works. Two gaps remain for a *real user*:
 1. **ZIP support (bump from cut-line to in-scope).** Procurement portals deliver a tender pack as a **single
