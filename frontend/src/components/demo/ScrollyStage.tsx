@@ -376,7 +376,7 @@ function AnswerCard({
       <div className="mt-4 rounded-md border-l-2 border-forest bg-paper p-3">
         <p className="leading-relaxed text-ink">{answer?.text}</p>
         <p className="mt-2 font-mono text-xs text-ink-muted">
-          Backed by your Capability Statement, p.
+          Backed by your Insurance Certificates, p.
           {answer?.evidence_refs[0]?.page ?? 4}.
         </p>
       </div>
@@ -443,11 +443,11 @@ function SourcePagePanel() {
           {tail}
         </p>
         <p>
-          Certificates shall be provided as part of the tender response and
-          shall name the bidding entity rather than a parent company.
+          Certificates shall name the tendering entity and remain valid for the
+          full contract term.
         </p>
         <p>
-          The Authority may request renewal evidence during mobilisation and at
+          The Council may request renewal evidence during mobilisation and at
           each anniversary of the contract.
         </p>
       </div>
@@ -528,16 +528,27 @@ function GraphVisual({ drawn }: { drawn: boolean }) {
         />
 
         {/* Left column — requirement register cards. */}
-        <RegisterCard y={18} label="ISO 9001" gating />
-        <RegisterCard y={76} label="Cyber Ess.+" gating />
-        <RegisterCard y={134} label="Case studies" />
+        <RegisterCard y={18} label="Insurance" gating />
+        <RegisterCard y={76} label="Pricing gate" gating />
+        <RegisterCard y={134} label="References" />
 
         {/* Right column — award-criterion tabs. */}
-        <CriterionTab y={44} label="Criterion 1" hasGating />
-        <CriterionTab y={122} label="Criterion 2" />
+        <CriterionTab y={44} label="Mandatory" hasGating />
+        <CriterionTab y={122} label="Quality" />
       </svg>
     </div>
   );
+}
+
+function MobileGraphVisual() {
+  const [drawn, setDrawn] = useState(false);
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setDrawn(true));
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
+  return <GraphVisual drawn={drawn} />;
 }
 
 function RegisterCard({
@@ -619,13 +630,13 @@ const LAYER_BASE = "absolute inset-0 flex items-center justify-center will-chang
 function StageAmbient({ beat }: { beat: MotionValue<number> }) {
   const backgroundColor = useTransform(
     beat,
-    [0, 4, 6, STEPS.length],
-    ["#f6f2e9", "#efe9db", "#dfe4d4", "#1d3a2b"],
+    [0, 1.4, 3.25, 5.35, STEPS.length],
+    ["#f6f2e9", "#efe7d6", "#e8ebdd", "#d7dec9", "#16301f"],
   );
   return (
     <motion.div
       aria-hidden
-      className="absolute inset-4 z-0 rounded-2xl"
+      className="absolute inset-4 z-0 rounded-2xl shadow-[inset_0_0_0_1px_rgba(44,86,64,0.08)]"
       style={{ backgroundColor }}
     />
   );
@@ -880,7 +891,10 @@ export function BeatVisual({
     case "dealbreaker":
       return (
         <div className="w-full max-w-[34rem]">
-          <GatingHero requirements={SAMPLE_GATING} />
+          <GatingHero
+            requirements={SAMPLE_GATING}
+            className={animate ? "mobile-dealbreaker-pop" : undefined}
+          />
         </div>
       );
     case "honesty":
@@ -894,7 +908,7 @@ export function BeatVisual({
     case "approval":
       return <AnswerCard withStamp />;
     case "graph":
-      return <GraphVisual drawn />;
+      return animate ? <MobileGraphVisual /> : <GraphVisual drawn />;
     default:
       return null;
   }

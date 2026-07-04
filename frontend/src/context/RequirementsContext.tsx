@@ -8,6 +8,7 @@ import type {
   Requirement,
   RequirementDecision,
   RequirementStatus,
+  SourceDoc,
   Tender,
 } from "@/types/requirement";
 import { mockTender } from "@/data/mock-requirements";
@@ -38,6 +39,7 @@ export interface DecisionSnapshot {
 interface RequirementsContextValue {
   requirements: Requirement[];
   capabilityDocs: CapabilityDoc[];
+  sourceDocs: SourceDoc[];
   awardCriteria: AwardCriterion[];
   title: string;
   tenderId: string | null;
@@ -83,6 +85,9 @@ export function RequirementsProvider({
   const [capabilityDocs, setCapabilityDocs] = useState<CapabilityDoc[]>(
     () => seed.capability_docs ?? []
   );
+  const [sourceDocs, setSourceDocs] = useState<SourceDoc[]>(
+    () => seed.source_docs ?? []
+  );
   // The tender's published award criteria (name + weight, #27) — the matrix
   // lens and the graph both read real names + weights from here. Empty until
   // the tender publishes them; refreshed alongside requirements on load/draft.
@@ -116,6 +121,7 @@ export function RequirementsProvider({
       mergeStoreIntoRequirements(tender.requirements, loadAnswerStore(id))
     );
     setCapabilityDocs(tender.capability_docs ?? []);
+    setSourceDocs(tender.source_docs ?? []);
     setAwardCriteria(tender.award_criteria ?? []);
     setTenderId(id);
     try {
@@ -184,6 +190,7 @@ export function RequirementsProvider({
       const tender = await apiDraftAnswers(tenderId, { provider, files });
       setRequirements(tender.requirements);
       setCapabilityDocs(tender.capability_docs ?? []);
+      setSourceDocs(tender.source_docs ?? []);
       setAwardCriteria(tender.award_criteria ?? []);
     } finally {
       setDrafting(false);
@@ -371,6 +378,7 @@ export function RequirementsProvider({
       value={{
         requirements,
         capabilityDocs,
+        sourceDocs,
         awardCriteria,
         title: seed.title,
         tenderId,

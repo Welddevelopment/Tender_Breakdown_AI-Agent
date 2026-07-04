@@ -378,6 +378,9 @@ body {
   .demo-stage-frame[data-slam="true"] .finale-stamp {
     animation: finale-stamp-flash 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
+  .mobile-dealbreaker-pop {
+    animation: mobile-dealbreaker-pop 0.78s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
   .gating-flare-once {
     animation: gating-flare-once 1.25s cubic-bezier(0.22, 1, 0.36, 1) 0.22s both;
   }
@@ -394,6 +397,46 @@ body {
 
 .demo-stage-frame {
   isolation: isolate;
+}
+.demo-scrolly-chapter {
+  position: relative;
+  isolation: isolate;
+  overflow-x: clip;
+  background:
+    linear-gradient(
+      180deg,
+      var(--color-moss) 0%,
+      var(--color-paper) 38%,
+      var(--color-paper-recessed) 100%
+    );
+}
+.demo-scrolly-chapter::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.18;
+  mix-blend-mode: multiply;
+  background:
+    linear-gradient(rgba(246, 242, 233, 0.8), rgba(246, 242, 233, 0.9)),
+    url("/landing/forest/card-gallery-backdrop-v2.webp") center / cover no-repeat;
+}
+.demo-proof-band {
+  border-top: 1px solid rgba(246, 242, 233, 0.16);
+  border-bottom: 1px solid rgba(246, 242, 233, 0.14);
+}
+.demo-proof-ledger {
+  backdrop-filter: blur(8px);
+}
+.demo-worked-example {
+  background:
+    linear-gradient(
+      180deg,
+      var(--color-paper-recessed) 0%,
+      var(--color-paper) 13rem,
+      var(--color-paper) 100%
+    );
 }
 .stage-vignette {
   background:
@@ -546,6 +589,24 @@ body {
   }
   42% {
     transform: translateY(2px) rotate(-0.35deg);
+  }
+}
+
+@keyframes mobile-dealbreaker-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) rotate(-0.6deg) scale(0.985);
+    box-shadow: var(--depth-row), 0 0 0 0 rgba(180, 45, 36, 0);
+  }
+  52% {
+    opacity: 1;
+    transform: translateY(0) rotate(-0.25deg) scale(1);
+    box-shadow: var(--depth-sheet), 0 0 0 8px rgba(180, 45, 36, 0.08);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+    box-shadow: var(--depth-sheet), 0 0 0 0 rgba(180, 45, 36, 0);
   }
 }
 

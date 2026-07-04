@@ -7,6 +7,7 @@ import { DEMO_FACTS } from "./sample";
 
 const PAGE_WORDS: Record<number, string> = {
   13: "Thirteen",
+  34: "Thirty-four",
 };
 
 function useTitleCardEnhancement() {

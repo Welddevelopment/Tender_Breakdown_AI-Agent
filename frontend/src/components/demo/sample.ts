@@ -2,28 +2,26 @@ import type { Requirement } from "@/types/requirement";
 
 // Curated, scripted data for the /demo cinematic scroll (the pinned "stage").
 // The scrollytelling story is choreographed, not live, so it runs on a small,
-// hand-picked set rather than the frozen SPSO tender the hands-on section uses.
-// Five requirements chosen so each beat lands cleanly, and carrying VARIED
-// categories (certification, compliance, experience, service) and all four
-// confidence tiers so the redesigned category tags and segmented confidence
-// meter are all exercised:
-//   - TWO gating deal-breakers (SAMPLE_GATING) compose the real GatingHero (beat 3),
-//   - the flagged, needs_review row drops to the oxblood "can't answer this" alarm
-//     in the honesty beat (beat 4), with amber, yellow and confident rows around it,
-//   - one requirement carries a grounded answer + evidence receipt (beats 5-6).
+// hand-picked set from the same frozen Bradwell tender that the hands-on section
+// uses. Five requirements chosen so each beat lands cleanly, and carrying
+// varied categories plus all four confidence tiers:
+//   - THREE gating deal-breakers (SAMPLE_GATING) compose the real GatingHero,
+//   - the flagged, needs_review row drops to the oxblood "can't answer this"
+//     alarm in the honesty beat, with amber, yellow and confident rows around it,
+//   - the insurance gate carries a grounded answer + evidence receipt.
 // Shaped to the real Requirement type so the visuals reuse the real components.
 
 export const SAMPLE: Requirement[] = [
   {
-    id: "s-iso9001",
-    text: "The supplier must hold current ISO 9001 certification valid for the full contract term.",
-    source_page: 14,
-    source_clause: "Section 4.2.1",
+    id: "s-insurance-gate",
+    text: "The tenderer must hold Public Liability insurance of at least £5,000,000 and Employers Liability insurance of at least £10,000,000.",
+    source_page: 5,
+    source_clause: "3.3.2",
     source_excerpt:
-      "4.2.1 Quality Management. The supplier must hold current ISO 9001 certification valid for the full contract term. Failure to provide evidence at submission will result in automatic rejection.",
+      "Public Liability minimum £5,000,000. Employers Liability minimum £10,000,000.",
     type: "mandatory",
     is_gating: true,
-    category: "certification",
+    category: "insurance",
     confidence: 0.96,
     status: "pending",
     needs_review: false,
@@ -31,126 +29,136 @@ export const SAMPLE: Requirement[] = [
     criteria_ref: "award-criterion-1",
     depends_on: [],
     draft_answer:
-      "We hold ISO 9001:2015, certified by a UKAS-accredited body and valid for the full contract term.",
+      "AcmeGrounds Ltd holds Public Liability insurance of £5,000,000 and Employers Liability insurance of £10,000,000.",
     answer: {
-      text: "We hold ISO 9001:2015, certified by a UKAS-accredited body and valid for the full contract term.",
+      text: "AcmeGrounds Ltd meets this requirement. We hold Public Liability insurance of £5,000,000 and Employers Liability insurance of £10,000,000, both current.",
       state: "auto",
       evidence_refs: [
         {
-          doc_id: "cap-capability",
+          doc_id: "cap-002-insurance-certificates",
           excerpt:
-            "Quality accreditations: ISO 9001:2015, certified by a UKAS-accredited certification body.",
-          page: 4,
+            "Public Liability: £5,000,000. Employers Liability: £10,000,000. Insurer: Aviva. Renewal date: 01/04/2026.",
+          page: 1,
         },
       ],
-      confidence: 0.86,
+      confidence: 0.93,
     },
     open_questions: [],
   },
   {
-    id: "s-cyber",
-    text: "Bidder must be Cyber Essentials Plus certified at the date of submission.",
-    source_page: 22,
-    source_clause: "Section 6.1.3",
+    id: "s-auto-disqual",
+    text: "Any tenderer who cannot guarantee delivery of the Mandatory Requirements and/or the specification will automatically be disqualified from further evaluation.",
+    source_page: 5,
+    source_clause: "3.2",
     source_excerpt:
-      "6.1.3 Cyber Security. Bidder must be Cyber Essentials Plus certified at the date of submission. This is a pass/fail requirement.",
+      "Any tenderer who cannot guarantee delivery of the Mandatory Requirements and/or the specification will automatically be disqualified from further evaluation.",
     type: "mandatory",
     is_gating: true,
-    category: "compliance",
+    category: "eligibility",
     confidence: 0.94,
     status: "pending",
     needs_review: false,
     decision: null,
     criteria_ref: "award-criterion-1",
     depends_on: [],
-    draft_answer:
-      "We hold Cyber Essentials Plus, certified and valid at the date of submission.",
+    draft_answer: null,
     answer: {
-      text: "We hold Cyber Essentials Plus, certified and valid at the date of submission.",
-      state: "auto",
-      evidence_refs: [
-        {
-          doc_id: "cap-capability",
-          excerpt:
-            "Cyber Essentials Plus: certified (annual reassessment current); valid at submission date.",
-          page: 5,
-        },
-      ],
-      confidence: 0.82,
+      text: "",
+      state: "empty",
+      evidence_refs: [],
+      confidence: 0,
     },
     open_questions: [],
   },
   {
-    id: "s-casestudies",
-    text: "Provide at least three relevant public-sector case studies from the last five years.",
+    id: "s-pricing-statements",
+    text: "Tenderers must read and confirm the four mandatory pricing statements before submitting prices; failure to confirm acceptance will remove the tenderer from consideration and their bid will not be scored.",
     source_page: 31,
-    source_clause: "Section 8.2",
+    source_clause: "Response Pack 5.1",
     source_excerpt:
-      "8.2 Experience. Bidders shall provide at least three relevant case studies from the public sector within the last five years, demonstrating comparable scope and scale.",
+      "Failure to confirm acceptance of these statements will remove the Tenderer from consideration and their bid will not be scored.",
     type: "mandatory",
-    is_gating: false,
-    category: "experience",
+    is_gating: true,
+    category: "pricing",
     confidence: 0.72,
     status: "pending",
     needs_review: false,
-    decision: null,
-    criteria_ref: "award-criterion-2",
-    depends_on: ["s-iso9001"],
-    draft_answer: null,
-    answer: null,
-    open_questions: [],
-  },
-  {
-    id: "s-response",
-    text: "Priority-one incidents acknowledged within 30 minutes, at any hour.",
-    source_page: 44,
-    source_clause: "Section 9.5",
-    source_excerpt:
-      "9.5 Service Levels. Priority-one incidents shall be acknowledged within 30 minutes, at any hour, for the duration of the contract.",
-    type: "mandatory",
-    is_gating: false,
-    category: "service",
-    confidence: 0.34,
-    status: "pending",
-    needs_review: true,
     decision: null,
     criteria_ref: "award-criterion-3",
     depends_on: [],
     draft_answer: null,
     answer: {
-      text: "We operate a 24/7 service desk; confirming the 30-minute acknowledgement target with the delivery team.",
+      text: "",
+      state: "empty",
+      evidence_refs: [],
+      confidence: 0,
+    },
+    open_questions: [],
+  },
+  {
+    id: "s-references",
+    text: "Tenderers must provide two comparable contracts (grounds maintenance) with client contact details as references.",
+    source_page: 28,
+    source_clause: "Response Pack 3",
+    source_excerpt:
+      "Tenderers must provide two comparable contracts (grounds maintenance) with client contact details as references.",
+    type: "mandatory",
+    is_gating: false,
+    category: "experience",
+    confidence: 0.34,
+    status: "pending",
+    needs_review: true,
+    decision: null,
+    criteria_ref: "award-criterion-2",
+    depends_on: [],
+    draft_answer: null,
+    answer: {
+      text: "",
       state: "needs_input",
       evidence_refs: [],
-      confidence: 0.45,
+      confidence: 0.3,
     },
     open_questions: [
       {
-        id: "q-response-1",
+        id: "q-references-1",
         question:
-          "Can you commit to a 30-minute acknowledgement for priority-one incidents at any hour?",
+          "Which two comparable public-sector grounds-maintenance contracts should we cite as references, and who is the client contact at each?",
         answer: null,
         answered_at: null,
       },
     ],
   },
   {
-    id: "s-account",
-    text: "Provide a named account manager available during UK business hours.",
-    source_page: 38,
-    source_clause: "Section 9.4",
+    id: "s-waste-licence",
+    text: "Tenderers must hold a valid waste carrier licence for the removal of grass arisings and green waste.",
+    source_page: 12,
+    source_clause: "Spec 6.4",
     source_excerpt:
-      "9.4 Service Delivery. The supplier shall provide a named account manager available during UK business hours (09:00 to 17:00 GMT).",
+      "The Contractor shall remove grass arisings and green waste from site and must hold a valid waste carrier licence.",
     type: "mandatory",
     is_gating: false,
-    category: "service",
+    category: "licence",
     confidence: 0.55,
     status: "pending",
     needs_review: false,
     decision: null,
     criteria_ref: "award-criterion-2",
-    depends_on: ["s-cyber"],
-    draft_answer: null,
-    answer: null,
+    depends_on: ["s-insurance-gate"],
+    draft_answer:
+      "AcmeGrounds Ltd holds a valid Upper Tier waste carrier licence.",
+    answer: {
+      text: "AcmeGrounds Ltd holds a valid Upper Tier waste carrier licence (CBDU148820), attached.",
+      state: "auto",
+      evidence_refs: [
+        {
+          doc_id: "cap-006-waste-carrier-licence",
+          excerpt:
+            "Environment Agency Upper Tier Waste Carrier registration CBDU148820, valid to 2027.",
+          page: 1,
+        },
+      ],
+      confidence: 0.88,
+    },
     open_questions: [],
   },
 ];
@@ -158,15 +166,15 @@ export const SAMPLE: Requirement[] = [
 export const SAMPLE_EXTENDED: Requirement[] = [
   ...SAMPLE,
   {
-    id: "s-insurance",
-    text: "Maintain public liability insurance of at least five million pounds.",
-    source_page: 18,
-    source_clause: "Section 5.3",
+    id: "s-deadline",
+    text: "The tender must be returned by no later than 17:00hrs on Thursday 31 August to 21 Glovers Lane, Heelands, MK13 7LW.",
+    source_page: 4,
+    source_clause: "2.9",
     source_excerpt:
-      "5.3 Insurance. The supplier shall maintain public liability insurance of at least five million pounds for the full duration of the contract.",
+      "The tender must be returned by no later than 17:00hrs on Thursday 31 August to 21 Glovers Lane, Heelands, MK13 7LW.",
     type: "mandatory",
-    is_gating: false,
-    category: "insurance",
+    is_gating: true,
+    category: "submission deadline",
     confidence: 0.88,
     status: "pending",
     needs_review: false,
@@ -178,15 +186,15 @@ export const SAMPLE_EXTENDED: Requirement[] = [
     open_questions: [],
   },
   {
-    id: "s-tupecosts",
-    text: "Include all TUPE assumptions and staff-cost risks in the pricing schedule.",
-    source_page: 26,
-    source_clause: "Schedule 4",
+    id: "s-variant-bids",
+    text: "No variant bids will be accepted; any bid including proposed amendments to the terms and conditions of contract is deemed a variant bid and will not be accepted.",
+    source_page: 6,
+    source_clause: "4.1",
     source_excerpt:
-      "Schedule 4. Tenderers must include all TUPE assumptions and staff-cost risks in the pricing schedule submitted with their tender.",
+      "Any bid which includes proposed amendments to the terms and conditions of contract shall be deemed to be a variant bid and will not be accepted.",
     type: "mandatory",
-    is_gating: false,
-    category: "pricing",
+    is_gating: true,
+    category: "compliance",
     confidence: 0.79,
     status: "pending",
     needs_review: false,
@@ -198,15 +206,15 @@ export const SAMPLE_EXTENDED: Requirement[] = [
     open_questions: [],
   },
   {
-    id: "s-bcp",
-    text: "Provide a business continuity plan covering service disruption.",
-    source_page: 33,
-    source_clause: "Section 8.7",
+    id: "s-collusion",
+    text: "A Tender will be rejected if the tenderer engages in collusion, offers any inducement, or commits an offence under the Bribery Act 2010.",
+    source_page: 7,
+    source_clause: "4.6",
     source_excerpt:
-      "8.7 Continuity. The bidder shall provide a business continuity plan covering service disruption, staff absence and emergency escalation.",
+      "A Tender will be rejected if the Tenderer fixes or adjusts prices by agreement, offers an inducement, or commits an offence under the Bribery Act 2010.",
     type: "mandatory",
-    is_gating: false,
-    category: "compliance",
+    is_gating: true,
+    category: "integrity",
     confidence: 0.66,
     status: "pending",
     needs_review: false,
@@ -218,15 +226,15 @@ export const SAMPLE_EXTENDED: Requirement[] = [
     open_questions: [],
   },
   {
-    id: "s-safeguarding",
-    text: "Staff working on site must complete safeguarding training before mobilisation.",
-    source_page: 29,
-    source_clause: "Section 7.4",
+    id: "s-health-safety",
+    text: "Tenderers must provide a Health & Safety policy and evidence of a safety management system.",
+    source_page: 28,
+    source_clause: "Response Pack 2",
     source_excerpt:
-      "7.4 Staff Training. Staff working on site must complete safeguarding training before mobilisation and refresher training annually thereafter.",
+      "Tenderers must provide a Health & Safety policy and evidence of a safety management system.",
     type: "mandatory",
     is_gating: false,
-    category: "staffing",
+    category: "health and safety",
     confidence: 0.61,
     status: "pending",
     needs_review: true,
@@ -238,15 +246,15 @@ export const SAMPLE_EXTENDED: Requirement[] = [
     open_questions: [],
   },
   {
-    id: "s-carbon",
-    text: "Submit a carbon reduction plan with annual reporting commitments.",
-    source_page: 41,
-    source_clause: "Section 10.3",
+    id: "s-company-profile",
+    text: "Tenderers must provide a company profile describing relevant grounds-maintenance experience.",
+    source_page: 28,
+    source_clause: "Response Pack 1",
     source_excerpt:
-      "10.3 Sustainability. Tenderers should submit a carbon reduction plan with annual reporting commitments for the contract term.",
-    type: "optional",
+      "Tenderers must provide a company profile describing relevant grounds-maintenance experience.",
+    type: "mandatory",
     is_gating: false,
-    category: "sustainability",
+    category: "experience",
     confidence: 0.58,
     status: "pending",
     needs_review: false,
@@ -258,21 +266,21 @@ export const SAMPLE_EXTENDED: Requirement[] = [
     open_questions: [],
   },
   {
-    id: "s-references",
-    text: "Provide two client references for contracts of comparable size.",
-    source_page: 35,
-    source_clause: "Section 8.9",
+    id: "s-quality-score",
+    text: "Unsatisfactory scores (0 to 2) for any quality criterion will result in the tender being rejected.",
+    source_page: 25,
+    source_clause: "Appendix C",
     source_excerpt:
-      "8.9 References. Tenderers shall provide two client references for contracts of comparable size and operational complexity.",
+      "Unsatisfactory scores for any quality criteria will result in the tender being rejected.",
     type: "mandatory",
-    is_gating: false,
-    category: "experience",
+    is_gating: true,
+    category: "evaluation",
     confidence: 0.81,
     status: "pending",
     needs_review: false,
     decision: null,
     criteria_ref: "award-criterion-2",
-    depends_on: ["s-casestudies"],
+    depends_on: ["s-references"],
     draft_answer: null,
     answer: null,
     open_questions: [],
@@ -285,15 +293,17 @@ export const SAMPLE_GATING = SAMPLE.filter((r) => r.is_gating);
 // The requirement whose grounded answer + receipt drives the autofill beats.
 export const SAMPLE_ANSWERED = SAMPLE[0];
 
-// The honest headline numbers for the demo. Truth source: the frozen SPSO
-// tender the hands-on section runs on (src/data/spso-prebake.json) — 13 pages,
-// 183 extracted requirements, 9 gating deal-breakers. The wall document and the
-// register kicker quote these instead of inventing bigger ones.
+// The honest headline numbers for the demo. Truth source: the frozen Bradwell
+// tender the hands-on section runs on (src/data/bradwell-prebake.json) — 34
+// pages, 50 extracted requirements, 12 gating deal-breakers, 4 evidence-backed
+// answers and 1 open question.
 export const DEMO_FACTS = {
-  pages: 13,
-  requirements: 183,
-  dealBreakers: 9,
-  docTitle: "SPSO Cleaning Services ITT",
+  pages: 34,
+  requirements: 50,
+  dealBreakers: 12,
+  draftedAnswers: 4,
+  openQuestions: 1,
+  docTitle: "Bradwell Grounds Maintenance ITT",
 } as const;
 
 // One paragraph of the document wall. `lead` and `tail` are plain tender prose;
@@ -308,38 +318,39 @@ export type WallParagraph = {
 };
 
 // ~8 paragraphs of British procurement boilerplate for the wall beat. Several
-// reuse SAMPLE[i].source_excerpt VERBATIM, so the lines the register later pulls
+// reuse SAMPLE[i].source_excerpt verbatim, so the lines the register later pulls
 // out are genuinely on the page the reader just squinted at. The catch sentence
-// is SAMPLE[1]'s excerpt (Cyber Essentials Plus, pass/fail) — the same clause
-// the deal-breaker dossier lifts in beat 3.
+// is SAMPLE[1]'s excerpt — the same automatic-disqualification clause the
+// deal-breaker dossier lifts in beat 3.
 export const WALL_PARAGRAPHS: WallParagraph[] = [
   {
-    lead: "1.1 Introduction. The Authority invites tenders for the provision of cleaning services across its estate. Tenderers are advised to read this Invitation to Tender in full before preparing a response, as mandatory requirements appear throughout the document and its schedules. Failure to comply with the instructions set out herein may result in a tender being set aside without further evaluation.",
+    lead: "1.1 Introduction. Bradwell Parish Council invites tenders for the provision of grounds maintenance services across Bradwell Common and Heelands. Tenderers are advised to read this Invitation to Tender in full before preparing a response, as mandatory requirements appear throughout the document and its schedules.",
   },
   {
-    lead: "2.4 Submission of Tenders. Tenders shall be submitted through the Authority's e-procurement portal in the format prescribed at Schedule 2. Late submissions will not be accepted in any circumstances. Tenderers shall ensure that all mandatory fields are completed and that supporting evidence is uploaded against the correct schedule reference.",
+    lead: "2.9 Return of Tenders. Tenders must be returned in a sealed envelope to the Council office by the stated deadline. Tenderers shall ensure that all mandatory forms are completed and that supporting evidence is included against the correct response-pack reference.",
   },
   {
     lead: SAMPLE[0].source_excerpt,
     tail: "Certificates shall be provided as part of the tender response and shall name the bidding entity rather than a parent or group company.",
   },
   {
-    lead: "3.2 Evaluation. Tenders will be evaluated against the published award criteria on the basis of the most economically advantageous tender. Where a response fails a pass or fail question, the tender as a whole will be excluded from further consideration regardless of the marks achieved elsewhere in the evaluation.",
-  },
-  {
-    lead: "6.1 Information Security. The supplier shall comply with the Authority's information security policies as amended from time to time, and shall notify the Authority without undue delay of any actual or suspected security incident affecting the services.",
+    lead: "3.2 Mandatory Requirements. The Council will first check whether the tenderer can deliver the mandatory requirements and the specification.",
     catch: SAMPLE[1].source_excerpt,
-    tail: "The supplier shall maintain such certification for the duration of the contract and shall provide renewal evidence upon request.",
+    tail: "Only tenders passing that check will move to the scored quality and price evaluation.",
   },
   {
     lead: SAMPLE[2].source_excerpt,
-    tail: "Each case study shall identify the contracting authority, the contract value and the outcomes achieved, and shall be no longer than two sides of A4.",
+    tail: "Tenderers should check the pricing workbook before submission and confirm each statement before prices are entered.",
   },
   {
     lead: SAMPLE[4].source_excerpt,
-    tail: SAMPLE[3].source_excerpt,
+    tail: "The contractor shall remove arisings from site where specified and shall dispose of waste lawfully.",
   },
   {
-    lead: "10.1 Workforce Matters. The Transfer of Undertakings (Protection of Employment) Regulations may apply to this contract and tenderers shall satisfy themselves as to their application, and shall price accordingly. The supplier shall maintain employer's liability, public liability and professional indemnity insurance at the levels set out in Schedule 5 for the duration of the contract.",
+    lead: SAMPLE[3].source_excerpt,
+    tail: "The Council may ask for clarification of references before award.",
+  },
+  {
+    lead: "Appendix C. Tenders will be assessed against the published quality criteria and the returned price schedule. Unsatisfactory scores for any quality criterion will result in the tender being rejected, and no variant bids will be accepted.",
   },
 ];

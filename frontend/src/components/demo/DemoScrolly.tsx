@@ -60,8 +60,8 @@ function ClosingCta() {
   return (
     <div className="mt-20 flex flex-col items-center gap-5 border-t border-hairline pt-12 text-center">
       <p className="max-w-[42ch] text-lg leading-relaxed text-ink-muted">
-        That is the whole pipeline. Below, the same pipeline on a real 13-page
-        tender.
+        That is the whole pipeline. Below, the same pipeline on the real
+        Bradwell tender.
       </p>
       <BookDemoButton location="demo-scrolly-closing" variant="link" />
     </div>
@@ -79,7 +79,7 @@ function FinaleCopy() {
       </h2>
       <p className="mt-4 text-lg leading-relaxed text-ink-muted">
         That is the whole pipeline. Below, the same pipeline runs on a real
-        13-page tender.
+        Bradwell tender.
       </p>
       <div className="mt-5">
         <BookDemoButton location="demo-scrolly-finale" variant="link" />

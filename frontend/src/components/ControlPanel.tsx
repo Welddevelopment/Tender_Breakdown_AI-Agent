@@ -13,13 +13,16 @@ import { useRequirements } from "@/context/RequirementsContext";
 // Reads live from the requirements context. Rendered on /showcase; designed to fold into
 // the shared product shell (MatrixView's header) so /review shows it too — see J's note.
 export function ControlPanel() {
-  const { requirements } = useRequirements();
+  const { requirements, sourceDocs } = useRequirements();
 
   const s = useMemo(() => {
-    const pages = requirements.reduce(
-      (m, r) => Math.max(m, r.source_page ?? 0),
+    const pagesFromDocs = sourceDocs.reduce(
+      (total, doc) => total + (doc.page_count ?? 0),
       0
     );
+    const pages =
+      pagesFromDocs ||
+      requirements.reduce((m, r) => Math.max(m, r.source_page ?? 0), 0);
     const gating = requirements.filter((r) => r.is_gating).length;
     const answered = requirements.filter((r) => r.answer?.state === "auto").length;
     const openQ = requirements.reduce(
@@ -40,7 +43,7 @@ export function ControlPanel() {
       flagged,
       decided: accepted + edited + flagged,
     };
-  }, [requirements]);
+  }, [requirements, sourceDocs]);
 
   const step = (n: string | number, label: string) => (
     <li className="flex items-baseline gap-1.5">
@@ -52,11 +55,11 @@ export function ControlPanel() {
   return (
     <section
       aria-label="How Bidframe keeps you in control"
-      className="border-b border-hairline px-6 py-3"
+      className="surface-grain border-b border-hairline bg-paper-raised/70 px-6 py-3 shadow-[var(--depth-row)]"
     >
       <div className="mx-auto flex max-w-6xl flex-col gap-2.5">
         {/* Activity trail: what the agent did → what it left for you */}
-        <ol className="flex flex-wrap items-baseline gap-x-4 gap-y-1 text-sm">
+        <ol className="flex flex-wrap items-baseline gap-x-4 gap-y-1 border-b border-hairline/80 pb-2 font-mono text-[11px] uppercase tracking-[0.08em]">
           {step(s.pages, "pages read")}
           <span aria-hidden className="text-ink-muted/50">→</span>
           {step(s.total, "requirements found")}
