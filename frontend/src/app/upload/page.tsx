@@ -4,27 +4,31 @@ import { DocumentHeader } from "@/components/DocumentHeader";
 import { TendersList } from "@/components/TendersList";
 import { UploadDropzone } from "@/components/UploadDropzone";
 
-export const metadata = { title: "Tenders · Bidframe" };
+export const metadata = { title: "Tender library · Bidframe" };
 
 export default function UploadPage() {
   return (
     <AuthGate>
-      <DocumentHeader title="Your tenders" showReference={false} />
+      <DocumentHeader title="Tender library" showReference={false} />
       <AppMain>
-        {/* The upload entry: one prominent, centred slot as the single focal
-            action, with the register of already-uploaded tenders filed
-            beneath it — one page for adding a tender and reopening one. */}
-        <div className="mx-auto max-w-2xl pt-10">
+        {/* One page, two halves: drop a new tender pack at the top, and the
+            library of every tender you have uploaded directly beneath it —
+            both visible without scrolling. */}
+        <div className="mx-auto max-w-2xl pt-6">
           <UploadDropzone />
         </div>
-        <section aria-label="Your tenders" className="mx-auto mt-14 max-w-2xl">
-          <h2 className="font-serif text-lg font-semibold leading-snug text-ink">
-            Previously uploaded
-          </h2>
-          <p className="mb-4 mt-1 max-w-[60ch] text-sm text-ink-muted">
-            Every tender you have uploaded, ready to reopen where you left off.
-          </p>
-          <TendersList />
+        <section aria-label="Your tenders" className="mx-auto mt-10 max-w-2xl">
+          <div className="flex items-baseline justify-between gap-3 border-b-2 border-ink pb-2">
+            <h2 className="font-serif text-lg font-semibold leading-snug text-ink">
+              Your tenders
+            </h2>
+            <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-muted">
+              Click to reopen
+            </p>
+          </div>
+          <div className="mt-3">
+            <TendersList />
+          </div>
         </section>
       </AppMain>
     </AuthGate>

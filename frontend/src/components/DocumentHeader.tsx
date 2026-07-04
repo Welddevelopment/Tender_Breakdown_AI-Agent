@@ -10,10 +10,10 @@ import { SiteHeader } from "./SiteHeader";
 // The app-page header: the shared fixed-height SiteHeader (logo, four-link
 // SectionNav, account control, the one 2px ink rule) with a title row beneath
 // it. The title row carries the page title in Fraunces — full width, allowed
-// to wrap, never truncated — the mono reference line drawn from real tender
-// metadata (requirement count + tender id, never invented), the per-tender
-// view switcher (Review · Answers · Graph) on workspace views, and the page's
-// controls (filter, sort, Next) on views with a worklist.
+// to wrap, never truncated — the mono tender reference (tender id, never
+// invented), the per-tender view switcher (Matrix · Bid · Graph) on workspace
+// views, and the page's controls (filter, sort, Next) on views with a
+// worklist.
 
 // The per-tender views that live below the masthead: siblings of the loaded
 // tender, not global destinations, so they sit in the title row instead of
@@ -54,15 +54,9 @@ export function DocumentHeader({
   // and the line appears once a real tender is open in the app.
   showReference?: boolean;
 }) {
-  const { requirements, tenderId } = useRequirements();
+  const { tenderId } = useRequirements();
   const pathname = usePathname();
-  const count = requirements.length;
-  const reference =
-    count > 0
-      ? `${count} requirement${count === 1 ? "" : "s"}${
-          tenderId ? ` · ${tenderId}` : ""
-        }`
-      : null;
+  const reference = tenderId ?? null;
   const showViews = TENDER_VIEWS.some((view) => pathname.startsWith(view.href));
 
   return (
@@ -72,7 +66,7 @@ export function DocumentHeader({
       {/* The title row: nameplate on the left (title never truncates — it may
           wrap), the page's controls gathered on the right. A hairline rule
           closes it; the 2px ink rule belongs to the masthead above. */}
-      <div className="border-b border-hairline bg-paper-raised">
+      <div className="border-b border-hairline bg-paper">
         <div className="mx-auto flex max-w-[1160px] flex-wrap items-center justify-between gap-x-6 gap-y-3 px-6 py-4">
           <div className="flex min-w-0 flex-col gap-1">
             <h1 className="font-serif text-2xl font-semibold leading-tight tracking-tight text-ink">
@@ -87,29 +81,23 @@ export function DocumentHeader({
               {showViews && (
                 <nav
                   aria-label="Tender views"
-                  className="flex items-center gap-2 font-mono text-[11px]"
+                  className="flex items-center gap-1.5 font-mono text-[11px]"
                 >
-                  {TENDER_VIEWS.map((view, i) => (
-                    <span key={view.href} className="flex items-center gap-2">
-                      {i > 0 && (
-                        <span aria-hidden className="text-hairline">
-                          ·
-                        </span>
-                      )}
-                      <Link
-                        href={view.href}
-                        aria-current={
-                          pathname.startsWith(view.href) ? "page" : undefined
-                        }
-                        className={
-                          pathname.startsWith(view.href)
-                            ? "font-medium text-ink underline decoration-forest decoration-2 underline-offset-4"
-                            : "text-ink-muted transition-colors hover:text-ink"
-                        }
-                      >
-                        {view.label}
-                      </Link>
-                    </span>
+                  {TENDER_VIEWS.map((view) => (
+                    <Link
+                      key={view.href}
+                      href={view.href}
+                      aria-current={
+                        pathname.startsWith(view.href) ? "page" : undefined
+                      }
+                      className={
+                        pathname.startsWith(view.href)
+                          ? "rounded-md border border-forest bg-forest px-2.5 py-1 font-medium text-paper"
+                          : "rounded-md border border-hairline bg-paper px-2.5 py-1 text-ink-muted shadow-[var(--depth-row)] transition-colors hover:border-forest hover:text-ink"
+                      }
+                    >
+                      {view.label}
+                    </Link>
                   ))}
                 </nav>
               )}

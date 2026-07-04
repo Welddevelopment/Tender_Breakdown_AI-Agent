@@ -10,7 +10,7 @@ export function BrandLogo({
 }) {
   return (
     <svg
-      viewBox="0 0 282 64"
+      viewBox="0 0 312 64"
       className={className}
       role="img"
       aria-label="Bidframe"

@@ -16,7 +16,6 @@ import {
   sourceKindShortLabel,
 } from "@/lib/source-doc";
 import { ProcessingView } from "./ProcessingView";
-import { RegisterPreview } from "./RegisterPreview";
 
 type UploadStage = "idle" | "extracting" | "done" | "error";
 
@@ -360,7 +359,7 @@ export function UploadDropzone() {
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
-        className={`surface-grain group flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-8 py-20 shadow-[var(--depth-sheet)] transition-colors ${
+        className={`surface-grain group flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-8 py-14 shadow-[var(--depth-sheet)] transition-colors ${
           isDragging
             ? "border-forest bg-forest/5"
             : "border-hairline bg-paper-raised hover:border-forest hover:bg-paper"
@@ -395,16 +394,10 @@ export function UploadDropzone() {
             ? "Let go to file it"
             : stagedCount > 0
               ? "Add more tender documents"
-              : "Drop your tender pack here, or browse"}
+              : "Drop your tender pack"}
         </p>
-        {isApiEnabled() && (
-          <p className="mt-2 max-w-[52ch] text-sm leading-relaxed text-ink-muted">
-            One document or the whole tender pack. We read them into a compliance
-            matrix and flag the deal-breakers.
-          </p>
-        )}
         <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.16em] text-ink-muted">
-          PDF · Word · Excel · CSV · ZIP · docs 50MB · ZIP 200MB
+          PDF · Word · Excel · CSV · ZIP
         </p>
       </div>
 
@@ -471,15 +464,6 @@ export function UploadDropzone() {
           </div>
         </div>
       )}
-
-      {/* The form it files into. The requirements land here as a matrix, so the
-          empty state shows the shape of its own output. */}
-      <div className="mx-auto mt-8 max-w-md">
-        <p className="mb-2.5 font-mono text-[11px] text-ink-muted">
-          Files into your compliance matrix
-        </p>
-        <RegisterPreview />
-      </div>
 
       <input
         ref={inputRef}

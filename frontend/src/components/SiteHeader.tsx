@@ -38,7 +38,7 @@ export function SiteHeader({
     <header
       className={
         isApp
-          ? "border-b-2 border-ink bg-paper-raised"
+          ? "border-b-2 border-ink bg-paper"
           : "landing-masthead sticky border-b-2 border-ink bg-paper/90 backdrop-blur-sm"
       }
     >

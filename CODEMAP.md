@@ -4,7 +4,7 @@
 >
 > **Interactive graph:** [`frontend/public/codemap.html`](frontend/public/codemap.html) — drag / zoom / click-to-focus; served at `/codemap.html` on the Vercel deploy. (The diagrams below render right here on GitHub.)
 >
-> Map of commit `956f25c` · 2026-07-04T20:19:51+01:00
+> Map of commit `c007378` · 2026-07-04T21:39:13+01:00
 
 **Read this first** for a current picture of the codebase — what lives where, and what imports what. It is the fast path to context for both humans and agents. If it looks wrong, it is stale: re-run the generator and push.
 
@@ -12,17 +12,17 @@
 
 | Area | Files | Lines | What it is |
 |------|-------|-------|------------|
-| **frontend** | 193 | 72,068 | Frontend — Next.js 16 / React 19 / Tailwind (compliance matrix UI) |
-| **backend** | 22 | 3,843 | Backend — FastAPI (PDF ingest, extraction, REST API) |
-| **engine** | 84 | 7,364 | Engine — reconcile / eval / answer-draft pipeline + tests |
-| **prompts** | 6 | 713 | Prompts — LLM prompt specs (extraction, classification, answers, gaps) |
+| **frontend** | 196 | 72,944 | Frontend — Next.js 16 / React 19 / Tailwind (compliance matrix UI) |
+| **backend** | 23 | 4,378 | Backend — FastAPI (PDF ingest, extraction, REST API) |
+| **engine** | 85 | 7,528 | Engine — reconcile / eval / answer-draft pipeline + tests |
+| **prompts** | 7 | 778 | Prompts — LLM prompt specs (extraction, classification, answers, gaps) |
 | **gold** | 8 | 375 | Eval gold-set — hand-labelled requirements for accuracy measurement |
 | **data** | 17 | 0 | Data — tender source PDFs (not parsed here) |
-| **comms** | 5 | 2,796 | Comms — async agent message boards |
-| **docs** | 3 | 1,663 | Docs — plans & specs |
+| **comms** | 5 | 2,855 | Comms — async agent message boards |
+| **docs** | 7 | 2,130 | Docs — plans & specs |
 | **ci** | 1 | 57 | CI — GitHub Actions |
 | **tooling** | 1 | 516 | Tooling — repo scripts (incl. this map generator) |
-| **root** | 604 | 36,249 | Root — docs, config, role briefs |
+| **root** | 612 | 36,664 | Root — docs, config, role briefs |
 
 ## System shape
 
@@ -59,325 +59,336 @@ graph LR
   n15[app/layout.tsx] --> n16[AuthContext.tsx]
   n15[app/layout.tsx] --> n6[RequirementsContext.tsx]
   n15[app/layout.tsx] --> n7[site.ts]
+  n17[login/page.tsx] --> n18[GoogleSignInButton.tsx]
   n17[login/page.tsx] --> n10[SiteHeader.tsx]
   n17[login/page.tsx] --> n16[AuthContext.tsx]
-  n17[login/page.tsx] --> n18[api.ts]
-  n19[pack/page.tsx] --> n20[MatrixView.tsx]
-  n19[pack/page.tsx] --> n6[RequirementsContext.tsx]
-  n19[pack/page.tsx] --> n8[requirement.ts]
-  n21[app/page.tsx] --> n22[Landing.tsx]
-  n21[app/page.tsx] --> n11[json-ld.ts]
-  n21[app/page.tsx] --> n7[site.ts]
-  n23[pitch/page.tsx] --> n24[PitchDeck.tsx]
-  n23[pitch/page.tsx] --> n6[RequirementsContext.tsx]
-  n23[pitch/page.tsx] --> n8[requirement.ts]
-  n25[review/page.tsx] --> n13[AuthGate.tsx]
-  n25[review/page.tsx] --> n20[MatrixView.tsx]
-  n25[review/page.tsx] --> n8[requirement.ts]
-  n26[robots.ts] --> n7[site.ts]
-  n27[showcase/page.tsx] --> n20[MatrixView.tsx]
-  n27[showcase/page.tsx] --> n6[RequirementsContext.tsx]
-  n27[showcase/page.tsx] --> n8[requirement.ts]
-  n28[sitemap.ts] --> n7[site.ts]
-  n29[thank-you/page.tsx] --> n10[SiteHeader.tsx]
-  n30[upload/page.tsx] --> n2[AppMain.tsx]
-  n30[upload/page.tsx] --> n13[AuthGate.tsx]
-  n30[upload/page.tsx] --> n3[DocumentHeader.tsx]
-  n30[upload/page.tsx] --> n31[TendersList.tsx]
-  n30[upload/page.tsx] --> n32[UploadDropzone.tsx]
-  n33[AccountMenu.tsx] --> n16[AuthContext.tsx]
-  n34[ActivityFeed.tsx] --> n16[AuthContext.tsx]
-  n34[ActivityFeed.tsx] --> n6[RequirementsContext.tsx]
-  n34[ActivityFeed.tsx] --> n18[api.ts]
-  n34[ActivityFeed.tsx] --> n35[collaborators.ts]
-  n36[AnswerCard.tsx] --> n37[AnswerPanel.tsx]
-  n36[AnswerCard.tsx] --> n38[CategoryTag.tsx]
-  n36[AnswerCard.tsx] --> n39[ConfidenceIndicator.tsx]
-  n36[AnswerCard.tsx] --> n40[OpenQuestions.tsx]
-  n36[AnswerCard.tsx] --> n41[answers.ts]
-  n36[AnswerCard.tsx] --> n42[source-doc.ts]
-  n36[AnswerCard.tsx] --> n8[requirement.ts]
-  n43[AnswerFilterBar.tsx] --> n44[ExportMenu.tsx]
-  n43[AnswerFilterBar.tsx] --> n41[answers.ts]
-  n43[AnswerFilterBar.tsx] --> n8[requirement.ts]
-  n37[AnswerPanel.tsx] --> n45[AnswerStateBadge.tsx]
-  n37[AnswerPanel.tsx] --> n6[RequirementsContext.tsx]
-  n37[AnswerPanel.tsx] --> n8[requirement.ts]
-  n45[AnswerStateBadge.tsx] --> n8[requirement.ts]
-  n46[AnswerWorkspace.tsx] --> n36[AnswerCard.tsx]
-  n46[AnswerWorkspace.tsx] --> n8[requirement.ts]
-  n1[AnswersBody.tsx] --> n43[AnswerFilterBar.tsx]
-  n1[AnswersBody.tsx] --> n46[AnswerWorkspace.tsx]
-  n1[AnswersBody.tsx] --> n47[AutofillButton.tsx]
-  n1[AnswersBody.tsx] --> n48[CapabilityUpload.tsx]
-  n1[AnswersBody.tsx] --> n49[GapInterview.tsx]
-  n1[AnswersBody.tsx] --> n50[NoTenderLoaded.tsx]
-  n1[AnswersBody.tsx] --> n51[ReadinessLedger.tsx]
+  n17[login/page.tsx] --> n19[api.ts]
+  n20[pack/page.tsx] --> n21[MatrixView.tsx]
+  n20[pack/page.tsx] --> n6[RequirementsContext.tsx]
+  n20[pack/page.tsx] --> n8[requirement.ts]
+  n22[app/page.tsx] --> n23[Landing.tsx]
+  n22[app/page.tsx] --> n11[json-ld.ts]
+  n22[app/page.tsx] --> n7[site.ts]
+  n24[pitch/page.tsx] --> n25[PitchDeck.tsx]
+  n24[pitch/page.tsx] --> n6[RequirementsContext.tsx]
+  n24[pitch/page.tsx] --> n8[requirement.ts]
+  n26[review/page.tsx] --> n13[AuthGate.tsx]
+  n26[review/page.tsx] --> n21[MatrixView.tsx]
+  n26[review/page.tsx] --> n8[requirement.ts]
+  n27[robots.ts] --> n7[site.ts]
+  n28[showcase/page.tsx] --> n21[MatrixView.tsx]
+  n28[showcase/page.tsx] --> n6[RequirementsContext.tsx]
+  n28[showcase/page.tsx] --> n8[requirement.ts]
+  n29[sitemap.ts] --> n7[site.ts]
+  n30[teams/page.tsx] --> n2[AppMain.tsx]
+  n30[teams/page.tsx] --> n13[AuthGate.tsx]
+  n30[teams/page.tsx] --> n3[DocumentHeader.tsx]
+  n30[teams/page.tsx] --> n31[TeamsManager.tsx]
+  n32[thank-you/page.tsx] --> n10[SiteHeader.tsx]
+  n33[upload/page.tsx] --> n2[AppMain.tsx]
+  n33[upload/page.tsx] --> n13[AuthGate.tsx]
+  n33[upload/page.tsx] --> n3[DocumentHeader.tsx]
+  n33[upload/page.tsx] --> n34[TendersList.tsx]
+  n33[upload/page.tsx] --> n35[UploadDropzone.tsx]
+  n36[AccountMenu.tsx] --> n16[AuthContext.tsx]
+  n37[ActivityFeed.tsx] --> n16[AuthContext.tsx]
+  n37[ActivityFeed.tsx] --> n6[RequirementsContext.tsx]
+  n37[ActivityFeed.tsx] --> n19[api.ts]
+  n37[ActivityFeed.tsx] --> n38[collaborators.ts]
+  n39[AnswerCard.tsx] --> n40[AnswerPanel.tsx]
+  n39[AnswerCard.tsx] --> n41[CategoryTag.tsx]
+  n39[AnswerCard.tsx] --> n42[ConfidenceIndicator.tsx]
+  n39[AnswerCard.tsx] --> n43[OpenQuestions.tsx]
+  n39[AnswerCard.tsx] --> n44[answers.ts]
+  n39[AnswerCard.tsx] --> n45[source-doc.ts]
+  n39[AnswerCard.tsx] --> n8[requirement.ts]
+  n46[AnswerFilterBar.tsx] --> n47[ExportMenu.tsx]
+  n46[AnswerFilterBar.tsx] --> n44[answers.ts]
+  n46[AnswerFilterBar.tsx] --> n8[requirement.ts]
+  n40[AnswerPanel.tsx] --> n48[AnswerStateBadge.tsx]
+  n40[AnswerPanel.tsx] --> n6[RequirementsContext.tsx]
+  n40[AnswerPanel.tsx] --> n8[requirement.ts]
+  n48[AnswerStateBadge.tsx] --> n8[requirement.ts]
+  n49[AnswerWorkspace.tsx] --> n39[AnswerCard.tsx]
+  n49[AnswerWorkspace.tsx] --> n8[requirement.ts]
+  n1[AnswersBody.tsx] --> n46[AnswerFilterBar.tsx]
+  n1[AnswersBody.tsx] --> n49[AnswerWorkspace.tsx]
+  n1[AnswersBody.tsx] --> n50[AutofillButton.tsx]
+  n1[AnswersBody.tsx] --> n51[CapabilityUpload.tsx]
+  n1[AnswersBody.tsx] --> n52[GapInterview.tsx]
+  n1[AnswersBody.tsx] --> n53[NoTenderLoaded.tsx]
+  n1[AnswersBody.tsx] --> n54[ReadinessLedger.tsx]
   n1[AnswersBody.tsx] --> n6[RequirementsContext.tsx]
-  n1[AnswersBody.tsx] --> n41[answers.ts]
-  n1[AnswersBody.tsx] --> n18[api.ts]
+  n1[AnswersBody.tsx] --> n44[answers.ts]
+  n1[AnswersBody.tsx] --> n19[api.ts]
   n13[AuthGate.tsx] --> n16[AuthContext.tsx]
-  n13[AuthGate.tsx] --> n18[api.ts]
-  n47[AutofillButton.tsx] --> n52[AnimatedNumber.tsx]
-  n47[AutofillButton.tsx] --> n6[RequirementsContext.tsx]
-  n47[AutofillButton.tsx] --> n18[api.ts]
-  n48[CapabilityUpload.tsx] --> n53[EvidenceLibrary.tsx]
-  n48[CapabilityUpload.tsx] --> n6[RequirementsContext.tsx]
-  n38[CategoryTag.tsx] --> n54[categoryStyle.ts]
-  n55[CommandPalette.tsx] --> n56[matrix-derive.ts]
-  n55[CommandPalette.tsx] --> n42[source-doc.ts]
-  n55[CommandPalette.tsx] --> n57[triage.ts]
-  n58[ComplianceMatrix.tsx] --> n38[CategoryTag.tsx]
-  n58[ComplianceMatrix.tsx] --> n39[ConfidenceIndicator.tsx]
-  n58[ComplianceMatrix.tsx] --> n16[AuthContext.tsx]
-  n58[ComplianceMatrix.tsx] --> n35[collaborators.ts]
-  n58[ComplianceMatrix.tsx] --> n59[dedupe.ts]
-  n58[ComplianceMatrix.tsx] --> n56[matrix-derive.ts]
-  n58[ComplianceMatrix.tsx] --> n42[source-doc.ts]
-  n58[ComplianceMatrix.tsx] --> n57[triage.ts]
-  n58[ComplianceMatrix.tsx] --> n8[requirement.ts]
-  n60[ControlPanel.tsx] --> n6[RequirementsContext.tsx]
-  n60[ControlPanel.tsx] --> n18[api.ts]
-  n60[ControlPanel.tsx] --> n35[collaborators.ts]
-  n60[ControlPanel.tsx] --> n42[source-doc.ts]
-  n60[ControlPanel.tsx] --> n57[triage.ts]
-  n5[DemoView.tsx] --> n52[AnimatedNumber.tsx]
-  n5[DemoView.tsx] --> n58[ComplianceMatrix.tsx]
-  n5[DemoView.tsx] --> n61[GatingHero.tsx]
-  n5[DemoView.tsx] --> n62[GraphView.tsx]
+  n13[AuthGate.tsx] --> n19[api.ts]
+  n50[AutofillButton.tsx] --> n55[AnimatedNumber.tsx]
+  n50[AutofillButton.tsx] --> n6[RequirementsContext.tsx]
+  n50[AutofillButton.tsx] --> n19[api.ts]
+  n51[CapabilityUpload.tsx] --> n56[EvidenceLibrary.tsx]
+  n51[CapabilityUpload.tsx] --> n6[RequirementsContext.tsx]
+  n41[CategoryTag.tsx] --> n57[categoryStyle.ts]
+  n58[CommandPalette.tsx] --> n59[matrix-derive.ts]
+  n58[CommandPalette.tsx] --> n45[source-doc.ts]
+  n58[CommandPalette.tsx] --> n60[triage.ts]
+  n61[CommentThread.tsx] --> n6[RequirementsContext.tsx]
+  n61[CommentThread.tsx] --> n19[api.ts]
+  n61[CommentThread.tsx] --> n38[collaborators.ts]
+  n62[ComplianceMatrix.tsx] --> n41[CategoryTag.tsx]
+  n62[ComplianceMatrix.tsx] --> n42[ConfidenceIndicator.tsx]
+  n62[ComplianceMatrix.tsx] --> n16[AuthContext.tsx]
+  n62[ComplianceMatrix.tsx] --> n38[collaborators.ts]
+  n62[ComplianceMatrix.tsx] --> n63[dedupe.ts]
+  n62[ComplianceMatrix.tsx] --> n59[matrix-derive.ts]
+  n62[ComplianceMatrix.tsx] --> n45[source-doc.ts]
+  n62[ComplianceMatrix.tsx] --> n60[triage.ts]
+  n62[ComplianceMatrix.tsx] --> n8[requirement.ts]
+  n64[ControlPanel.tsx] --> n6[RequirementsContext.tsx]
+  n64[ControlPanel.tsx] --> n19[api.ts]
+  n64[ControlPanel.tsx] --> n38[collaborators.ts]
+  n64[ControlPanel.tsx] --> n45[source-doc.ts]
+  n64[ControlPanel.tsx] --> n60[triage.ts]
+  n5[DemoView.tsx] --> n55[AnimatedNumber.tsx]
+  n5[DemoView.tsx] --> n62[ComplianceMatrix.tsx]
+  n5[DemoView.tsx] --> n65[GatingHero.tsx]
+  n5[DemoView.tsx] --> n66[GraphView.tsx]
   n5[DemoView.tsx] --> n10[SiteHeader.tsx]
-  n5[DemoView.tsx] --> n63[SourceVerifyOverlay.tsx]
-  n5[DemoView.tsx] --> n64[DemoScrolly.tsx]
-  n5[DemoView.tsx] --> n65[DemoTitleCard.tsx]
-  n5[DemoView.tsx] --> n66[MountOnView.tsx]
-  n5[DemoView.tsx] --> n67[sample.ts]
-  n5[DemoView.tsx] --> n68[BookDemoButton.tsx]
-  n5[DemoView.tsx] --> n69[BotanicalSprig.tsx]
-  n5[DemoView.tsx] --> n70[ClosingArrival.tsx]
-  n5[DemoView.tsx] --> n71[DrawOn.tsx]
-  n5[DemoView.tsx] --> n72[Reveal.tsx]
-  n5[DemoView.tsx] --> n73[SiteFooter.tsx]
-  n5[DemoView.tsx] --> n74[FernFrond.tsx]
-  n5[DemoView.tsx] --> n75[TreelineDivider.tsx]
+  n5[DemoView.tsx] --> n67[SourceVerifyOverlay.tsx]
+  n5[DemoView.tsx] --> n68[DemoScrolly.tsx]
+  n5[DemoView.tsx] --> n69[DemoTitleCard.tsx]
+  n5[DemoView.tsx] --> n70[MountOnView.tsx]
+  n5[DemoView.tsx] --> n71[sample.ts]
+  n5[DemoView.tsx] --> n72[BookDemoButton.tsx]
+  n5[DemoView.tsx] --> n73[BotanicalSprig.tsx]
+  n5[DemoView.tsx] --> n74[ClosingArrival.tsx]
+  n5[DemoView.tsx] --> n75[DrawOn.tsx]
+  n5[DemoView.tsx] --> n76[Reveal.tsx]
+  n5[DemoView.tsx] --> n77[SiteFooter.tsx]
+  n5[DemoView.tsx] --> n78[FernFrond.tsx]
+  n5[DemoView.tsx] --> n79[TreelineDivider.tsx]
   n5[DemoView.tsx] --> n6[RequirementsContext.tsx]
-  n5[DemoView.tsx] --> n18[api.ts]
-  n5[DemoView.tsx] --> n57[triage.ts]
+  n5[DemoView.tsx] --> n19[api.ts]
+  n5[DemoView.tsx] --> n60[triage.ts]
   n3[DocumentHeader.tsx] --> n10[SiteHeader.tsx]
   n3[DocumentHeader.tsx] --> n6[RequirementsContext.tsx]
-  n3[DocumentHeader.tsx] --> n54[categoryStyle.ts]
-  n3[DocumentHeader.tsx] --> n57[triage.ts]
-  n76[DocxSourceView.tsx] --> n77[dom-highlight.ts]
-  n76[DocxSourceView.tsx] --> n78[text-match.ts]
-  n53[EvidenceLibrary.tsx] --> n6[RequirementsContext.tsx]
-  n44[ExportMenu.tsx] --> n79[export-response.ts]
-  n44[ExportMenu.tsx] --> n8[requirement.ts]
-  n80[FocusMode.tsx] --> n81[RequirementPanel.tsx]
-  n80[FocusMode.tsx] --> n57[triage.ts]
-  n80[FocusMode.tsx] --> n8[requirement.ts]
-  n49[GapInterview.tsx] --> n45[AnswerStateBadge.tsx]
-  n49[GapInterview.tsx] --> n38[CategoryTag.tsx]
-  n49[GapInterview.tsx] --> n40[OpenQuestions.tsx]
-  n49[GapInterview.tsx] --> n6[RequirementsContext.tsx]
-  n49[GapInterview.tsx] --> n42[source-doc.ts]
-  n61[GatingHero.tsx] --> n6[RequirementsContext.tsx]
-  n61[GatingHero.tsx] --> n59[dedupe.ts]
-  n61[GatingHero.tsx] --> n42[source-doc.ts]
-  n61[GatingHero.tsx] --> n8[requirement.ts]
-  n62[GraphView.tsx] --> n38[CategoryTag.tsx]
-  n62[GraphView.tsx] --> n39[ConfidenceIndicator.tsx]
-  n62[GraphView.tsx] --> n6[RequirementsContext.tsx]
-  n62[GraphView.tsx] --> n18[api.ts]
-  n62[GraphView.tsx] --> n54[categoryStyle.ts]
-  n62[GraphView.tsx] --> n42[source-doc.ts]
-  n62[GraphView.tsx] --> n82[structure.ts]
-  n62[GraphView.tsx] --> n8[requirement.ts]
-  n83[MarksView.tsx] --> n6[RequirementsContext.tsx]
-  n83[MarksView.tsx] --> n42[source-doc.ts]
-  n83[MarksView.tsx] --> n82[structure.ts]
-  n83[MarksView.tsx] --> n8[requirement.ts]
-  n20[MatrixView.tsx] --> n34[ActivityFeed.tsx]
-  n20[MatrixView.tsx] --> n52[AnimatedNumber.tsx]
-  n20[MatrixView.tsx] --> n2[AppMain.tsx]
-  n20[MatrixView.tsx] --> n84[ApprovalStamp.tsx]
-  n20[MatrixView.tsx] --> n85[BulkActionBar.tsx]
-  n20[MatrixView.tsx] --> n55[CommandPalette.tsx]
-  n20[MatrixView.tsx] --> n58[ComplianceMatrix.tsx]
-  n20[MatrixView.tsx] --> n60[ControlPanel.tsx]
-  n20[MatrixView.tsx] --> n3[DocumentHeader.tsx]
-  n20[MatrixView.tsx] --> n76[DocxSourceView.tsx]
-  n20[MatrixView.tsx] --> n80[FocusMode.tsx]
-  n20[MatrixView.tsx] --> n61[GatingHero.tsx]
-  n20[MatrixView.tsx] --> n50[NoTenderLoaded.tsx]
-  n20[MatrixView.tsx] --> n86[PdfSourceView.tsx]
-  n20[MatrixView.tsx] --> n87[RequirementDrawer.tsx]
-  n20[MatrixView.tsx] --> n81[RequirementPanel.tsx]
-  n20[MatrixView.tsx] --> n88[RequirementSpine.tsx]
-  n20[MatrixView.tsx] --> n89[ShareControl.tsx]
-  n20[MatrixView.tsx] --> n90[SheetSourceView.tsx]
-  n20[MatrixView.tsx] --> n6[RequirementsContext.tsx]
-  n20[MatrixView.tsx] --> n18[api.ts]
-  n20[MatrixView.tsx] --> n91[export-matrix-xlsx.ts]
-  n20[MatrixView.tsx] --> n56[matrix-derive.ts]
-  n20[MatrixView.tsx] --> n42[source-doc.ts]
-  n20[MatrixView.tsx] --> n78[text-match.ts]
-  n20[MatrixView.tsx] --> n57[triage.ts]
-  n20[MatrixView.tsx] --> n8[requirement.ts]
-  n40[OpenQuestions.tsx] --> n6[RequirementsContext.tsx]
-  n40[OpenQuestions.tsx] --> n8[requirement.ts]
-  n86[PdfSourceView.tsx] --> n78[text-match.ts]
-  n92[ProcessingView.tsx] --> n18[api.ts]
-  n51[ReadinessLedger.tsx] --> n44[ExportMenu.tsx]
-  n51[ReadinessLedger.tsx] --> n41[answers.ts]
-  n51[ReadinessLedger.tsx] --> n8[requirement.ts]
-  n87[RequirementDrawer.tsx] --> n81[RequirementPanel.tsx]
-  n87[RequirementDrawer.tsx] --> n8[requirement.ts]
-  n81[RequirementPanel.tsx] --> n37[AnswerPanel.tsx]
-  n81[RequirementPanel.tsx] --> n84[ApprovalStamp.tsx]
-  n81[RequirementPanel.tsx] --> n38[CategoryTag.tsx]
-  n81[RequirementPanel.tsx] --> n39[ConfidenceIndicator.tsx]
-  n81[RequirementPanel.tsx] --> n63[SourceVerifyOverlay.tsx]
-  n81[RequirementPanel.tsx] --> n16[AuthContext.tsx]
-  n81[RequirementPanel.tsx] --> n6[RequirementsContext.tsx]
-  n81[RequirementPanel.tsx] --> n18[api.ts]
-  n81[RequirementPanel.tsx] --> n35[collaborators.ts]
-  n81[RequirementPanel.tsx] --> n42[source-doc.ts]
-  n81[RequirementPanel.tsx] --> n8[requirement.ts]
-  n88[RequirementSpine.tsx] --> n39[ConfidenceIndicator.tsx]
-  n88[RequirementSpine.tsx] --> n57[triage.ts]
-  n89[ShareControl.tsx] --> n6[RequirementsContext.tsx]
-  n89[ShareControl.tsx] --> n18[api.ts]
-  n89[ShareControl.tsx] --> n35[collaborators.ts]
-  n90[SheetSourceView.tsx] --> n78[text-match.ts]
-  n10[SiteHeader.tsx] --> n33[AccountMenu.tsx]
-  n10[SiteHeader.tsx] --> n93[BrandLogo.tsx]
-  n10[SiteHeader.tsx] --> n94[SectionNav.tsx]
-  n10[SiteHeader.tsx] --> n68[BookDemoButton.tsx]
-  n63[SourceVerifyOverlay.tsx] --> n76[DocxSourceView.tsx]
-  n63[SourceVerifyOverlay.tsx] --> n86[PdfSourceView.tsx]
-  n63[SourceVerifyOverlay.tsx] --> n90[SheetSourceView.tsx]
-  n63[SourceVerifyOverlay.tsx] --> n42[source-doc.ts]
-  n63[SourceVerifyOverlay.tsx] --> n78[text-match.ts]
-  n63[SourceVerifyOverlay.tsx] --> n8[requirement.ts]
-  n14[StructureView.tsx] --> n62[GraphView.tsx]
-  n14[StructureView.tsx] --> n83[MarksView.tsx]
-  n14[StructureView.tsx] --> n50[NoTenderLoaded.tsx]
-  n14[StructureView.tsx] --> n87[RequirementDrawer.tsx]
+  n3[DocumentHeader.tsx] --> n57[categoryStyle.ts]
+  n3[DocumentHeader.tsx] --> n60[triage.ts]
+  n80[DocxSourceView.tsx] --> n81[dom-highlight.ts]
+  n80[DocxSourceView.tsx] --> n82[text-match.ts]
+  n56[EvidenceLibrary.tsx] --> n6[RequirementsContext.tsx]
+  n47[ExportMenu.tsx] --> n83[export-response.ts]
+  n47[ExportMenu.tsx] --> n8[requirement.ts]
+  n84[FocusMode.tsx] --> n85[RequirementPanel.tsx]
+  n84[FocusMode.tsx] --> n60[triage.ts]
+  n84[FocusMode.tsx] --> n8[requirement.ts]
+  n52[GapInterview.tsx] --> n48[AnswerStateBadge.tsx]
+  n52[GapInterview.tsx] --> n41[CategoryTag.tsx]
+  n52[GapInterview.tsx] --> n43[OpenQuestions.tsx]
+  n52[GapInterview.tsx] --> n6[RequirementsContext.tsx]
+  n52[GapInterview.tsx] --> n45[source-doc.ts]
+  n65[GatingHero.tsx] --> n6[RequirementsContext.tsx]
+  n65[GatingHero.tsx] --> n63[dedupe.ts]
+  n65[GatingHero.tsx] --> n45[source-doc.ts]
+  n65[GatingHero.tsx] --> n8[requirement.ts]
+  n18[GoogleSignInButton.tsx] --> n19[api.ts]
+  n66[GraphView.tsx] --> n41[CategoryTag.tsx]
+  n66[GraphView.tsx] --> n42[ConfidenceIndicator.tsx]
+  n66[GraphView.tsx] --> n6[RequirementsContext.tsx]
+  n66[GraphView.tsx] --> n19[api.ts]
+  n66[GraphView.tsx] --> n57[categoryStyle.ts]
+  n66[GraphView.tsx] --> n45[source-doc.ts]
+  n66[GraphView.tsx] --> n86[structure.ts]
+  n66[GraphView.tsx] --> n8[requirement.ts]
+  n87[MarksView.tsx] --> n6[RequirementsContext.tsx]
+  n87[MarksView.tsx] --> n45[source-doc.ts]
+  n87[MarksView.tsx] --> n86[structure.ts]
+  n87[MarksView.tsx] --> n8[requirement.ts]
+  n21[MatrixView.tsx] --> n37[ActivityFeed.tsx]
+  n21[MatrixView.tsx] --> n55[AnimatedNumber.tsx]
+  n21[MatrixView.tsx] --> n2[AppMain.tsx]
+  n21[MatrixView.tsx] --> n88[ApprovalStamp.tsx]
+  n21[MatrixView.tsx] --> n89[BulkActionBar.tsx]
+  n21[MatrixView.tsx] --> n58[CommandPalette.tsx]
+  n21[MatrixView.tsx] --> n62[ComplianceMatrix.tsx]
+  n21[MatrixView.tsx] --> n64[ControlPanel.tsx]
+  n21[MatrixView.tsx] --> n3[DocumentHeader.tsx]
+  n21[MatrixView.tsx] --> n80[DocxSourceView.tsx]
+  n21[MatrixView.tsx] --> n84[FocusMode.tsx]
+  n21[MatrixView.tsx] --> n65[GatingHero.tsx]
+  n21[MatrixView.tsx] --> n53[NoTenderLoaded.tsx]
+  n21[MatrixView.tsx] --> n90[PdfSourceView.tsx]
+  n21[MatrixView.tsx] --> n91[RequirementDrawer.tsx]
+  n21[MatrixView.tsx] --> n85[RequirementPanel.tsx]
+  n21[MatrixView.tsx] --> n92[RequirementSpine.tsx]
+  n21[MatrixView.tsx] --> n93[ShareControl.tsx]
+  n21[MatrixView.tsx] --> n94[SheetSourceView.tsx]
+  n21[MatrixView.tsx] --> n6[RequirementsContext.tsx]
+  n21[MatrixView.tsx] --> n19[api.ts]
+  n21[MatrixView.tsx] --> n95[export-matrix-xlsx.ts]
+  n21[MatrixView.tsx] --> n59[matrix-derive.ts]
+  n21[MatrixView.tsx] --> n45[source-doc.ts]
+  n21[MatrixView.tsx] --> n82[text-match.ts]
+  n21[MatrixView.tsx] --> n60[triage.ts]
+  n21[MatrixView.tsx] --> n8[requirement.ts]
+  n43[OpenQuestions.tsx] --> n6[RequirementsContext.tsx]
+  n43[OpenQuestions.tsx] --> n8[requirement.ts]
+  n90[PdfSourceView.tsx] --> n82[text-match.ts]
+  n96[ProcessingView.tsx] --> n19[api.ts]
+  n54[ReadinessLedger.tsx] --> n47[ExportMenu.tsx]
+  n54[ReadinessLedger.tsx] --> n44[answers.ts]
+  n54[ReadinessLedger.tsx] --> n8[requirement.ts]
+  n91[RequirementDrawer.tsx] --> n85[RequirementPanel.tsx]
+  n91[RequirementDrawer.tsx] --> n8[requirement.ts]
+  n85[RequirementPanel.tsx] --> n40[AnswerPanel.tsx]
+  n85[RequirementPanel.tsx] --> n88[ApprovalStamp.tsx]
+  n85[RequirementPanel.tsx] --> n41[CategoryTag.tsx]
+  n85[RequirementPanel.tsx] --> n61[CommentThread.tsx]
+  n85[RequirementPanel.tsx] --> n42[ConfidenceIndicator.tsx]
+  n85[RequirementPanel.tsx] --> n67[SourceVerifyOverlay.tsx]
+  n85[RequirementPanel.tsx] --> n16[AuthContext.tsx]
+  n85[RequirementPanel.tsx] --> n6[RequirementsContext.tsx]
+  n85[RequirementPanel.tsx] --> n19[api.ts]
+  n85[RequirementPanel.tsx] --> n38[collaborators.ts]
+  n85[RequirementPanel.tsx] --> n45[source-doc.ts]
+  n85[RequirementPanel.tsx] --> n8[requirement.ts]
+  n92[RequirementSpine.tsx] --> n42[ConfidenceIndicator.tsx]
+  n92[RequirementSpine.tsx] --> n60[triage.ts]
+  n93[ShareControl.tsx] --> n6[RequirementsContext.tsx]
+  n93[ShareControl.tsx] --> n19[api.ts]
+  n93[ShareControl.tsx] --> n38[collaborators.ts]
+  n94[SheetSourceView.tsx] --> n82[text-match.ts]
+  n10[SiteHeader.tsx] --> n36[AccountMenu.tsx]
+  n10[SiteHeader.tsx] --> n97[BrandLogo.tsx]
+  n10[SiteHeader.tsx] --> n98[SectionNav.tsx]
+  n10[SiteHeader.tsx] --> n72[BookDemoButton.tsx]
+  n67[SourceVerifyOverlay.tsx] --> n80[DocxSourceView.tsx]
+  n67[SourceVerifyOverlay.tsx] --> n90[PdfSourceView.tsx]
+  n67[SourceVerifyOverlay.tsx] --> n94[SheetSourceView.tsx]
+  n67[SourceVerifyOverlay.tsx] --> n45[source-doc.ts]
+  n67[SourceVerifyOverlay.tsx] --> n82[text-match.ts]
+  n67[SourceVerifyOverlay.tsx] --> n8[requirement.ts]
+  n14[StructureView.tsx] --> n66[GraphView.tsx]
+  n14[StructureView.tsx] --> n87[MarksView.tsx]
+  n14[StructureView.tsx] --> n53[NoTenderLoaded.tsx]
+  n14[StructureView.tsx] --> n91[RequirementDrawer.tsx]
   n14[StructureView.tsx] --> n6[RequirementsContext.tsx]
-  n14[StructureView.tsx] --> n18[api.ts]
-  n14[StructureView.tsx] --> n82[structure.ts]
+  n14[StructureView.tsx] --> n19[api.ts]
+  n14[StructureView.tsx] --> n86[structure.ts]
   n14[StructureView.tsx] --> n8[requirement.ts]
-  n31[TendersList.tsx] --> n6[RequirementsContext.tsx]
-  n31[TendersList.tsx] --> n18[api.ts]
-  n32[UploadDropzone.tsx] --> n92[ProcessingView.tsx]
-  n32[UploadDropzone.tsx] --> n95[RegisterPreview.tsx]
-  n32[UploadDropzone.tsx] --> n6[RequirementsContext.tsx]
-  n32[UploadDropzone.tsx] --> n18[api.ts]
-  n32[UploadDropzone.tsx] --> n42[source-doc.ts]
-  n64[DemoScrolly.tsx] --> n66[MountOnView.tsx]
-  n64[DemoScrolly.tsx] --> n96[ScrollyStage.tsx]
-  n64[DemoScrolly.tsx] --> n97[steps.ts]
-  n64[DemoScrolly.tsx] --> n98[useScrollTimeline.ts]
-  n64[DemoScrolly.tsx] --> n68[BookDemoButton.tsx]
-  n65[DemoTitleCard.tsx] --> n67[sample.ts]
-  n65[DemoTitleCard.tsx] --> n75[TreelineDivider.tsx]
-  n96[ScrollyStage.tsx] --> n84[ApprovalStamp.tsx]
-  n96[ScrollyStage.tsx] --> n38[CategoryTag.tsx]
-  n96[ScrollyStage.tsx] --> n39[ConfidenceIndicator.tsx]
-  n96[ScrollyStage.tsx] --> n61[GatingHero.tsx]
-  n96[ScrollyStage.tsx] --> n62[GraphView.tsx]
-  n96[ScrollyStage.tsx] --> n99[GhostCursor.tsx]
-  n96[ScrollyStage.tsx] --> n100[StageChrome.tsx]
-  n96[ScrollyStage.tsx] --> n67[sample.ts]
-  n96[ScrollyStage.tsx] --> n97[steps.ts]
-  n96[ScrollyStage.tsx] --> n74[FernFrond.tsx]
-  n96[ScrollyStage.tsx] --> n101[PineBranch.tsx]
-  n67[sample.ts] --> n8[requirement.ts]
-  n70[ClosingArrival.tsx] --> n68[BookDemoButton.tsx]
-  n70[ClosingArrival.tsx] --> n71[DrawOn.tsx]
-  n70[ClosingArrival.tsx] --> n72[Reveal.tsx]
-  n70[ClosingArrival.tsx] --> n101[PineBranch.tsx]
-  n70[ClosingArrival.tsx] --> n102[Seal.tsx]
-  n70[ClosingArrival.tsx] --> n75[TreelineDivider.tsx]
-  n103[ForestHeroLayers.tsx] --> n102[Seal.tsx]
-  n104[HeroResolve.tsx] --> n58[ComplianceMatrix.tsx]
-  n104[HeroResolve.tsx] --> n61[GatingHero.tsx]
-  n104[HeroResolve.tsx] --> n6[RequirementsContext.tsx]
-  n104[HeroResolve.tsx] --> n57[triage.ts]
-  n22[Landing.tsx] --> n39[ConfidenceIndicator.tsx]
-  n22[Landing.tsx] --> n10[SiteHeader.tsx]
-  n22[Landing.tsx] --> n68[BookDemoButton.tsx]
-  n22[Landing.tsx] --> n70[ClosingArrival.tsx]
-  n22[Landing.tsx] --> n105[CredibilityBand.tsx]
-  n22[Landing.tsx] --> n71[DrawOn.tsx]
-  n22[Landing.tsx] --> n103[ForestHeroLayers.tsx]
-  n22[Landing.tsx] --> n104[HeroResolve.tsx]
-  n22[Landing.tsx] --> n106[HowItWorks.tsx]
-  n22[Landing.tsx] --> n107[ProductShots.tsx]
-  n22[Landing.tsx] --> n108[ProofScrolly.tsx]
-  n22[Landing.tsx] --> n72[Reveal.tsx]
-  n22[Landing.tsx] --> n73[SiteFooter.tsx]
-  n22[Landing.tsx] --> n109[TrailDescent.tsx]
-  n22[Landing.tsx] --> n101[PineBranch.tsx]
-  n22[Landing.tsx] --> n110[PressedLeaf.tsx]
-  n22[Landing.tsx] --> n102[Seal.tsx]
-  n22[Landing.tsx] --> n75[TreelineDivider.tsx]
-  n107[ProductShots.tsx] --> n84[ApprovalStamp.tsx]
-  n108[ProofScrolly.tsx] --> n52[AnimatedNumber.tsx]
-  n108[ProofScrolly.tsx] --> n111[ProofNumbers.tsx]
-  n108[ProofScrolly.tsx] --> n72[Reveal.tsx]
-  n73[SiteFooter.tsx] --> n93[BrandLogo.tsx]
-  n73[SiteFooter.tsx] --> n68[BookDemoButton.tsx]
-  n73[SiteFooter.tsx] --> n101[PineBranch.tsx]
-  n73[SiteFooter.tsx] --> n102[Seal.tsx]
-  n73[SiteFooter.tsx] --> n75[TreelineDivider.tsx]
-  n102[Seal.tsx] --> n69[BotanicalSprig.tsx]
-  n24[PitchDeck.tsx] --> n52[AnimatedNumber.tsx]
-  n24[PitchDeck.tsx] --> n93[BrandLogo.tsx]
-  n24[PitchDeck.tsx] --> n58[ComplianceMatrix.tsx]
-  n24[PitchDeck.tsx] --> n61[GatingHero.tsx]
-  n24[PitchDeck.tsx] --> n20[MatrixView.tsx]
-  n24[PitchDeck.tsx] --> n107[ProductShots.tsx]
-  n24[PitchDeck.tsx] --> n112[PitchScene.tsx]
-  n24[PitchDeck.tsx] --> n113[TenderGlyph.tsx]
-  n24[PitchDeck.tsx] --> n114[TenderPageFacsimile.tsx]
-  n24[PitchDeck.tsx] --> n115[TrailMap.tsx]
-  n24[PitchDeck.tsx] --> n116[TrailSteps.tsx]
-  n24[PitchDeck.tsx] --> n6[RequirementsContext.tsx]
-  n24[PitchDeck.tsx] --> n57[triage.ts]
-  n112[PitchScene.tsx] --> n74[FernFrond.tsx]
-  n112[PitchScene.tsx] --> n101[PineBranch.tsx]
-  n112[PitchScene.tsx] --> n102[Seal.tsx]
-  n16[AuthContext.tsx] --> n18[api.ts]
+  n31[TeamsManager.tsx] --> n19[api.ts]
+  n31[TeamsManager.tsx] --> n38[collaborators.ts]
+  n34[TendersList.tsx] --> n6[RequirementsContext.tsx]
+  n34[TendersList.tsx] --> n19[api.ts]
+  n35[UploadDropzone.tsx] --> n96[ProcessingView.tsx]
+  n35[UploadDropzone.tsx] --> n6[RequirementsContext.tsx]
+  n35[UploadDropzone.tsx] --> n19[api.ts]
+  n35[UploadDropzone.tsx] --> n45[source-doc.ts]
+  n68[DemoScrolly.tsx] --> n70[MountOnView.tsx]
+  n68[DemoScrolly.tsx] --> n99[ScrollyStage.tsx]
+  n68[DemoScrolly.tsx] --> n100[steps.ts]
+  n68[DemoScrolly.tsx] --> n101[useScrollTimeline.ts]
+  n68[DemoScrolly.tsx] --> n72[BookDemoButton.tsx]
+  n69[DemoTitleCard.tsx] --> n71[sample.ts]
+  n69[DemoTitleCard.tsx] --> n79[TreelineDivider.tsx]
+  n99[ScrollyStage.tsx] --> n88[ApprovalStamp.tsx]
+  n99[ScrollyStage.tsx] --> n41[CategoryTag.tsx]
+  n99[ScrollyStage.tsx] --> n42[ConfidenceIndicator.tsx]
+  n99[ScrollyStage.tsx] --> n65[GatingHero.tsx]
+  n99[ScrollyStage.tsx] --> n66[GraphView.tsx]
+  n99[ScrollyStage.tsx] --> n102[GhostCursor.tsx]
+  n99[ScrollyStage.tsx] --> n103[StageChrome.tsx]
+  n99[ScrollyStage.tsx] --> n71[sample.ts]
+  n99[ScrollyStage.tsx] --> n100[steps.ts]
+  n99[ScrollyStage.tsx] --> n78[FernFrond.tsx]
+  n99[ScrollyStage.tsx] --> n104[PineBranch.tsx]
+  n71[sample.ts] --> n8[requirement.ts]
+  n74[ClosingArrival.tsx] --> n72[BookDemoButton.tsx]
+  n74[ClosingArrival.tsx] --> n75[DrawOn.tsx]
+  n74[ClosingArrival.tsx] --> n76[Reveal.tsx]
+  n74[ClosingArrival.tsx] --> n104[PineBranch.tsx]
+  n74[ClosingArrival.tsx] --> n105[Seal.tsx]
+  n74[ClosingArrival.tsx] --> n79[TreelineDivider.tsx]
+  n106[ForestHeroLayers.tsx] --> n105[Seal.tsx]
+  n107[HeroResolve.tsx] --> n62[ComplianceMatrix.tsx]
+  n107[HeroResolve.tsx] --> n65[GatingHero.tsx]
+  n107[HeroResolve.tsx] --> n6[RequirementsContext.tsx]
+  n107[HeroResolve.tsx] --> n60[triage.ts]
+  n23[Landing.tsx] --> n42[ConfidenceIndicator.tsx]
+  n23[Landing.tsx] --> n10[SiteHeader.tsx]
+  n23[Landing.tsx] --> n72[BookDemoButton.tsx]
+  n23[Landing.tsx] --> n74[ClosingArrival.tsx]
+  n23[Landing.tsx] --> n108[CredibilityBand.tsx]
+  n23[Landing.tsx] --> n75[DrawOn.tsx]
+  n23[Landing.tsx] --> n106[ForestHeroLayers.tsx]
+  n23[Landing.tsx] --> n107[HeroResolve.tsx]
+  n23[Landing.tsx] --> n109[HowItWorks.tsx]
+  n23[Landing.tsx] --> n110[ProductShots.tsx]
+  n23[Landing.tsx] --> n111[ProofScrolly.tsx]
+  n23[Landing.tsx] --> n76[Reveal.tsx]
+  n23[Landing.tsx] --> n77[SiteFooter.tsx]
+  n23[Landing.tsx] --> n112[TrailDescent.tsx]
+  n23[Landing.tsx] --> n104[PineBranch.tsx]
+  n23[Landing.tsx] --> n113[PressedLeaf.tsx]
+  n23[Landing.tsx] --> n105[Seal.tsx]
+  n23[Landing.tsx] --> n79[TreelineDivider.tsx]
+  n110[ProductShots.tsx] --> n88[ApprovalStamp.tsx]
+  n111[ProofScrolly.tsx] --> n55[AnimatedNumber.tsx]
+  n111[ProofScrolly.tsx] --> n114[ProofNumbers.tsx]
+  n111[ProofScrolly.tsx] --> n76[Reveal.tsx]
+  n77[SiteFooter.tsx] --> n97[BrandLogo.tsx]
+  n77[SiteFooter.tsx] --> n72[BookDemoButton.tsx]
+  n77[SiteFooter.tsx] --> n104[PineBranch.tsx]
+  n77[SiteFooter.tsx] --> n105[Seal.tsx]
+  n77[SiteFooter.tsx] --> n79[TreelineDivider.tsx]
+  n105[Seal.tsx] --> n73[BotanicalSprig.tsx]
+  n25[PitchDeck.tsx] --> n55[AnimatedNumber.tsx]
+  n25[PitchDeck.tsx] --> n97[BrandLogo.tsx]
+  n25[PitchDeck.tsx] --> n62[ComplianceMatrix.tsx]
+  n25[PitchDeck.tsx] --> n65[GatingHero.tsx]
+  n25[PitchDeck.tsx] --> n21[MatrixView.tsx]
+  n25[PitchDeck.tsx] --> n110[ProductShots.tsx]
+  n25[PitchDeck.tsx] --> n115[PitchScene.tsx]
+  n25[PitchDeck.tsx] --> n116[TenderGlyph.tsx]
+  n25[PitchDeck.tsx] --> n117[TenderPageFacsimile.tsx]
+  n25[PitchDeck.tsx] --> n118[TrailMap.tsx]
+  n25[PitchDeck.tsx] --> n119[TrailSteps.tsx]
+  n25[PitchDeck.tsx] --> n6[RequirementsContext.tsx]
+  n25[PitchDeck.tsx] --> n60[triage.ts]
+  n115[PitchScene.tsx] --> n78[FernFrond.tsx]
+  n115[PitchScene.tsx] --> n104[PineBranch.tsx]
+  n115[PitchScene.tsx] --> n105[Seal.tsx]
+  n16[AuthContext.tsx] --> n19[api.ts]
   n6[RequirementsContext.tsx] --> n16[AuthContext.tsx]
-  n6[RequirementsContext.tsx] --> n117[answer-store.ts]
-  n6[RequirementsContext.tsx] --> n41[answers.ts]
-  n6[RequirementsContext.tsx] --> n18[api.ts]
+  n6[RequirementsContext.tsx] --> n120[answer-store.ts]
+  n6[RequirementsContext.tsx] --> n44[answers.ts]
+  n6[RequirementsContext.tsx] --> n19[api.ts]
   n6[RequirementsContext.tsx] --> n8[requirement.ts]
-  n118[mock-requirements.ts] --> n8[requirement.ts]
-  n117[answer-store.ts] --> n8[requirement.ts]
-  n41[answers.ts] --> n57[triage.ts]
-  n41[answers.ts] --> n8[requirement.ts]
-  n18[api.ts] --> n8[requirement.ts]
-  n35[collaborators.ts] --> n8[requirement.ts]
-  n59[dedupe.ts] --> n8[requirement.ts]
-  n77[dom-highlight.ts] --> n78[text-match.ts]
-  n91[export-matrix-xlsx.ts] --> n39[ConfidenceIndicator.tsx]
-  n91[export-matrix-xlsx.ts] --> n79[export-response.ts]
-  n91[export-matrix-xlsx.ts] --> n42[source-doc.ts]
-  n91[export-matrix-xlsx.ts] --> n8[requirement.ts]
-  n79[export-response.ts] --> n42[source-doc.ts]
-  n79[export-response.ts] --> n8[requirement.ts]
-  n56[matrix-derive.ts] --> n59[dedupe.ts]
-  n56[matrix-derive.ts] --> n82[structure.ts]
-  n56[matrix-derive.ts] --> n57[triage.ts]
-  n56[matrix-derive.ts] --> n8[requirement.ts]
-  n42[source-doc.ts] --> n18[api.ts]
-  n42[source-doc.ts] --> n8[requirement.ts]
-  n82[structure.ts] --> n8[requirement.ts]
-  n78[text-match.ts] --> n59[dedupe.ts]
-  n57[triage.ts] --> n8[requirement.ts]
-  n119[error.tsx]
-  n120[tenders/page.tsx]
+  n121[mock-requirements.ts] --> n8[requirement.ts]
+  n120[answer-store.ts] --> n8[requirement.ts]
+  n44[answers.ts] --> n60[triage.ts]
+  n44[answers.ts] --> n8[requirement.ts]
+  n19[api.ts] --> n8[requirement.ts]
+  n38[collaborators.ts] --> n8[requirement.ts]
+  n63[dedupe.ts] --> n8[requirement.ts]
+  n81[dom-highlight.ts] --> n82[text-match.ts]
+  n95[export-matrix-xlsx.ts] --> n42[ConfidenceIndicator.tsx]
+  n95[export-matrix-xlsx.ts] --> n83[export-response.ts]
+  n95[export-matrix-xlsx.ts] --> n45[source-doc.ts]
+  n95[export-matrix-xlsx.ts] --> n8[requirement.ts]
+  n83[export-response.ts] --> n45[source-doc.ts]
+  n83[export-response.ts] --> n8[requirement.ts]
+  n59[matrix-derive.ts] --> n63[dedupe.ts]
+  n59[matrix-derive.ts] --> n86[structure.ts]
+  n59[matrix-derive.ts] --> n60[triage.ts]
+  n59[matrix-derive.ts] --> n8[requirement.ts]
+  n45[source-doc.ts] --> n19[api.ts]
+  n45[source-doc.ts] --> n8[requirement.ts]
+  n86[structure.ts] --> n8[requirement.ts]
+  n82[text-match.ts] --> n63[dedupe.ts]
+  n60[triage.ts] --> n8[requirement.ts]
+  n122[error.tsx]
+  n123[tenders/page.tsx]
 ```
 
 ## Backend + Engine module graph (Python, tests excluded)
@@ -462,8 +473,9 @@ graph LR
   n26[run_tender.py] --> n13[embeddings.py]
   n26[run_tender.py] --> n20[eval.py]
   n26[run_tender.py] --> n16[reconcile.py]
-  n33[parse_check.py]
-  n34[stress_test.py]
+  n33[events.py]
+  n34[parse_check.py]
+  n35[stress_test.py]
 ```
 
 ## Files by area
@@ -513,6 +525,7 @@ graph LR
 - `frontend/src/app/robots.ts` — exports `robots`
 - `frontend/src/app/showcase/page.tsx` — exports `metadata`
 - `frontend/src/app/sitemap.ts` — exports `sitemap`
+- `frontend/src/app/teams/page.tsx` — exports `metadata`
 - `frontend/src/app/tenders/page.tsx` — exports `TendersPage`
 - `frontend/src/app/thank-you/page.tsx` — exports `metadata`
 - `frontend/src/app/upload/page.tsx` — exports `metadata`
@@ -535,6 +548,7 @@ graph LR
 - `frontend/src/components/CapabilityUpload.tsx` — exports `CapabilityUpload`
 - `frontend/src/components/CategoryTag.tsx` — exports `CategoryDot`
 - `frontend/src/components/CommandPalette.tsx` — exports `CommandPaletteProps`
+- `frontend/src/components/CommentThread.tsx` — exports `CommentThread`
 - `frontend/src/components/ComplianceMatrix.tsx` — exports `Density`
 - `frontend/src/components/ConfidenceIndicator.tsx` — The confidence indicator (DESIGN-SYSTEM section 4, axis 1). Four tiers, worst
 - `frontend/src/components/ControlPanel.tsx` — exports `ControlPanel`
@@ -546,6 +560,7 @@ graph LR
 - `frontend/src/components/FocusMode.tsx` — exports `FocusMode`
 - `frontend/src/components/GapInterview.tsx` — exports `GapInterview`
 - `frontend/src/components/GatingHero.tsx` — exports `GatingHero`
+- `frontend/src/components/GoogleSignInButton.tsx` — exports `GoogleSignInButton`
 - `frontend/src/components/GraphView.module.css`
 - `frontend/src/components/GraphView.tsx` — exports `GraphView`
 - `frontend/src/components/MarksView.tsx` — exports `MarksView`
@@ -555,7 +570,6 @@ graph LR
 - `frontend/src/components/PdfSourceView.tsx` — exports `PdfSourceView`
 - `frontend/src/components/ProcessingView.tsx` — exports `ProcessingView`
 - `frontend/src/components/ReadinessLedger.tsx` — exports `ReadinessLedger`
-- `frontend/src/components/RegisterPreview.tsx` — A faint, non-interactive echo of the compliance matrix grid: the blank official
 - `frontend/src/components/RequirementDrawer.tsx` — exports `RequirementDrawer`
 - `frontend/src/components/RequirementPanel.tsx` — exports `PanelVariant`
 - `frontend/src/components/RequirementSpine.tsx` — exports `RequirementSpine`
@@ -565,6 +579,7 @@ graph LR
 - `frontend/src/components/SiteHeader.tsx` — exports `SiteHeader`
 - `frontend/src/components/SourceVerifyOverlay.tsx` — exports `SourceVerifyOverlay`
 - `frontend/src/components/StructureView.tsx` — exports `StructureView`
+- `frontend/src/components/TeamsManager.tsx` — exports `TeamsManager`
 - `frontend/src/components/TendersList.tsx` — exports `TendersList`
 - `frontend/src/components/UploadDropzone.tsx` — exports `UploadDropzone`
 - `frontend/src/components/demo/DemoScrolly.tsx` — exports `DemoScrolly`
@@ -640,6 +655,7 @@ graph LR
 - `backend/app/admin.py` — command-line account management for the invite-only auth.
 - `backend/app/auth.py` — self-hosted, invite-only authentication.
 - `backend/app/chunk.py` — page-aware overlapping chunker.
+- `backend/app/events.py` — in-memory per-tender pub/sub for live collaboration (SSE).
 - `backend/app/extract.py` — chunk → raw requirement objects.
 - `backend/app/extract_cache.py` — content-addressed cache for the expensive LLM extraction step.
 - `backend/app/graph.py` — relationship edges (criteria_ref · depends_on).
@@ -736,6 +752,7 @@ graph LR
 - `engine/tests/test_similarity.py`
 - `engine/tests/test_source_file_endpoint.py` — GET /tenders/{id}/source: serves any pack document (PDF/DOCX/XLSX/CSV) inline in
 - `engine/tests/test_source_rect.py` — Regression tests for source_rect highlight coordinates (J-049 P3, backend/app/pipeline.py).
+- `engine/tests/test_teams_comments.py` — Teams + comments + Google provisioning (extend of the self-hosted auth, Generalist lane).
 - `engine/tests/test_to_final.py`
 - `engine/tests/test_upload_mixed_pack.py` — Mixed-pack upload (backend lane, B-022): POST /tenders/upload accepts PDF + Word +
 - `engine/tests/test_upload_zip_pack.py` — ZIP-pack upload (backend lane, J-096): POST /tenders/upload accepts a single .zip
@@ -750,6 +767,7 @@ graph LR
 - `prompts/gap-interview.md`
 - `prompts/mock-raw-extraction.json`
 - `prompts/raw-extraction-format.md`
+- `prompts/standup-digest-routine.md`
 
 ### gold — Eval gold-set — hand-labelled requirements for accuracy measurement
 
@@ -776,9 +794,13 @@ graph LR
 
 ### docs — Docs — plans & specs
 
+- `docs/setup-google-teams.md`
 - `docs/superpowers/plans/2026-06-28-eval-harness-plan.md`
 - `docs/superpowers/plans/2026-06-28-reconcile-dedupe-plan.md`
+- `docs/superpowers/plans/2026-07-04-slack-claude-integration.md`
 - `docs/superpowers/specs/2026-06-28-reconcile-dedupe-design.md`
+- `docs/superpowers/specs/2026-07-04-google-teams-collab-design.md`
+- `docs/superpowers/specs/2026-07-04-slack-claude-integration-design.md`
 
 ### ci — CI — GitHub Actions
 
@@ -790,6 +812,8 @@ graph LR
 
 ### root — Root — docs, config, role briefs
 
+- `.claude/commands/proof.md`
+- `.claude/commands/weekly-update.md`
 - `.gitattributes`
 - `.gitignore`
 - `AGENTS.md`
@@ -1306,6 +1330,7 @@ graph LR
 - `fixtures/mixed-pack/sample-compliance.csv`
 - `fixtures/mixed-pack/sample-pricing-schedule.xlsx`
 - `fixtures/mixed-pack/sample-return-forms.docx`
+- `fly.toml`
 - `go-live-runbook.md`
 - `incumbent-pricing-research.md`
 - `live-read-call-script.md`
@@ -1313,6 +1338,7 @@ graph LR
 - `ops/Jawad's progress day 1.md`
 - `ops/collaboration-frontend-polish.md`
 - `ops/fetch-agent-scope.md`
+- `ops/fly-deploy-status.md`
 - `ops/fly-deploy.md`
 - `ops/frontend-integration.md`
 - `ops/frontend-ux-audit.md`
@@ -1353,15 +1379,19 @@ graph LR
 - `role-frontend.md`
 - `role-generalist.md`
 - `send_outreach.py` — Safe Gmail sender for Bidframe outreach.
+- `slack-setup.md`
 - `sourcing-playbook.md`
 - `storyboard.md`
 - `tender-master-plan.md`
 - `tenders.md`
 - `traction-outreach.md`
 - `traction-research.md`
+- `updates/2026-07-04.md`
+- `updates/TEMPLATE.md`
 - `vercel.json`
+- `yc-story.md`
 - *(+34 binary/asset file(s))*
 
 ---
 
-*944 tracked files mapped. Generated by `scripts/gen_codemap.py`.*
+*962 tracked files mapped. Generated by `scripts/gen_codemap.py`.*
