@@ -1,51 +1,701 @@
-id,firm,contact_person,email,conversion_estimate,sub_sector,source,draft_path,mt_id
-L-0425,Midland Fire Ltd,not_found,sales@midland-fire.co.uk,High,"compliance trades / fire, water, drainage and grounds",https://midland-fire.co.uk,crm/drafts/L-0425.md,MT-01
-L-0426,Cropper Grounds Maintenance,not_found,info@grounds-maintenance.com,High,"compliance trades / fire, water, drainage and grounds",https://grounds-maintenance.com,crm/drafts/L-0426.md,MT-02
-L-0427,Exjet,Robin,info@exjet.co.uk,High,"compliance trades / fire, water, drainage and grounds",https://exjet.co.uk/about-us,crm/drafts/L-0427.md,MT-03
-L-0428,H2O Hygiene Ltd,not_found,info@h2ohygiene.co.uk,High,"compliance trades / fire, water, drainage and grounds",https://h2ohygiene.co.uk; https://legionellacontrol.org.uk,crm/drafts/L-0428.md,MT-04
-L-0429,Hallifax Care,Johanne,info@hallifaxcare.co.uk,High,care,https://hallifaxcare.co.uk,crm/drafts/L-0429.md,MT-07
-L-0430,Devon & Cornwall Care Services (DACCS),Pauline and Samantha,info@daccservices.com,High,care,https://daccservices.com/about,crm/drafts/L-0430.md,MT-08
-L-0431,Home Care Wales,not_found,info@homecarewales.com,High,care,https://homecarewales.com,crm/drafts/L-0431.md,MT-09
-L-0432,Charles Walker Construction Ltd,Andrew,hello@charleswalkerconstruction.co.uk,High,"building, grounds and property-care",https://northyorks.gov.uk,crm/drafts/L-0432.md,MT-12
-L-0433,Top Garden Services,not_found,info@topgardenservices.com,High,"building, grounds and property-care",https://topgardenservices.com/tenders,crm/drafts/L-0433.md,MT-13
-L-0434,Headcorn Heating Ltd,Andrew,mail@headcornheating.co.uk,High,"heating, plumbing and electrical",https://tch.org.uk/repairs,crm/drafts/L-0434.md,MT-20
-L-0435,Reids Playground Maintenance Ltd,not_found,rpm@reidsplayground.co.uk,High,"playground inspection, repair and install",https://reidsplaygroundmaintenance.co.uk,crm/drafts/L-0435.md,MT-23
-L-0436,TK Play Ltd,not_found,enquiries@tkplay.co.uk,High,"playground inspection, repair and install",https://tkplay.co.uk/news; https://tkplay.co.uk/projects,crm/drafts/L-0436.md,MT-24
-L-0437,Aardvark Pest Control,not_found,info@aardvarkpest.co.uk,High,pest control,https://aardvarkpest.co.uk,crm/drafts/L-0437.md,MT-33
-L-0438,Blake Fire & Security Systems,Ian,info@blakefire-security.co.uk,High,"security, CCTV and locksmith",https://blakefire-security.co.uk/school-security,crm/drafts/L-0438.md,MT-39
-L-0439,Around The Clock Locks (ATCL),not_found,info@atcl.co.uk,High,"security, CCTV and locksmith",https://atcl.co.uk,crm/drafts/L-0439.md,MT-40
-L-0440,Harrier Fences & Landscaping,not_found,cogramp@gmail.com,High,"fencing, MUGA and sports surfacing",https://harrierfencesandlandscaping.com,crm/drafts/L-0440.md,MT-45
-L-0441,Elvington Floorcraft,Andrew,admin@elvingtonfloorcraft.co.uk,High,flooring and refurbishment,https://elvingtonfloorcraft.co.uk/flooring/local-authorities,crm/drafts/L-0441.md,MT-50
-L-0442,Lees Heginbotham & Sons Ltd,not_found,info@leesheginbotham.co.uk,High,flooring and refurbishment,https://leesheginbotham.co.uk/commercial,crm/drafts/L-0442.md,MT-51
-L-0443,Rooftec (Scotland) Ltd,Mark,info@rooftecscotland.co.uk,High,roofing and scaffolding,https://rooftecscotland.co.uk,crm/drafts/L-0443.md,MT-58
-L-0444,Newseal Ltd,Phil,enquiries@newsealltd.com,High,damp-proofing and damp/mould,https://newsealltd.com,crm/drafts/L-0444.md,MT-63
-L-0445,Advanced Preservation Specialists Ltd (APS),not_found,info@advancedpreservation.co.uk,High,damp-proofing and damp/mould,https://advancedpreservation.co.uk,crm/drafts/L-0445.md,MT-64
-L-0446,Listed Window Refurbishment Ltd,not_found,info@listedwindowrefurbishment.co.uk,High,"windows, doors and heritage restoration",https://listedwindowrefurbishment.co.uk/about,crm/drafts/L-0446.md,MT-69
-L-0447,Sash Window Preservation,not_found,info@sashwindowpreservation.co.uk,High,"windows, doors and heritage restoration",https://sashwindowpreservation.co.uk/case-studies,crm/drafts/L-0447.md,MT-70
-L-0448,CJL Designs,not_found,cjldesigns@macunlimited.net,High,"windows, doors and heritage restoration",https://cjldesigns.co.uk,crm/drafts/L-0448.md,MT-71
-L-0449,AJM Decorating Ltd,Adrian,enquiries@ajmdecorating.co.uk,High,painting and decorating,https://ajmdecorating.co.uk,crm/drafts/L-0449.md,MT-75
-L-0450,ALCo Decorating (ALCo Group),Tom,info@alcoltd.co.uk,High,painting and decorating,https://alcoltd.co.uk/decorating/education,crm/drafts/L-0450.md,MT-76
-L-0451,Environmental Solutions Midlands Ltd,Kevin and Craig,enquiries@esminfo.co.uk,High,asbestos surveying and removal,https://esm-group.co.uk,crm/drafts/L-0451.md,MT-80
-L-0452,ISCA Heating & Plumbing Ltd,Lewis,lewis@iscaheating-plumbing.co.uk,High,"kitchen, bathroom and DFG adaptations",https://iscaheating-plumbing.co.uk/wetrooms/disability-wetrooms,crm/drafts/L-0452.md,MT-87
-L-0453,MIserve (C.G.Y. (MISERVE) Ltd),not_found,office@miserve.co.uk,High,"kitchen, bathroom and DFG adaptations",https://miserve.co.uk/business-clients,crm/drafts/L-0453.md,MT-88
-L-0454,A T Plumbing Services,Anna and Tristan,atplumbing@btinternet.com,High,"kitchen, bathroom and DFG adaptations",https://atplumbing.wales,crm/drafts/L-0454.md,MT-89
-L-0455,RenderRight (Render Right Ltd),Johnny and Jenna,info@rrfl.co.uk,High,"retrofit, insulation and EWI",https://renderright.co.uk,crm/drafts/L-0455.md,MT-94
-L-0456,Express Stairlifts Southwest,not_found,enquiries@expressstairliftssw.co.uk,High,mobility and stairlift installation,https://expressstairliftssw.co.uk/contact,crm/drafts/L-0456.md,MT-100
-L-0457,Dolphin Devon Stairlifts,not_found,info@dolphindevon.co.uk,High,mobility and stairlift installation,https://dolphindevon.co.uk,crm/drafts/L-0457.md,MT-101
-L-0458,B L Fire Risk Limited,Bill,bill@blfirerisk.co.uk,High,fire risk and fire door compliance,https://blfirerisk.co.uk,crm/drafts/L-0458.md,MT-107
-L-0459,Sustainable Energy Engineering (SUS Energy),Stephen and Haley,info@susenergy.co.uk,High,"solar PV, battery and heat pump",https://susenergy.co.uk,crm/drafts/L-0459.md,MT-112
-L-0460,Solar Partner,Tony,tony@solarpartner.uk,High,"solar PV, battery and heat pump",https://solarpartner.uk,crm/drafts/L-0460.md,MT-113
-L-0461,Brimstone Energy UK,Matt,sales@brimstone-energy.uk,High,"solar PV, battery and heat pump",https://brimstone-energy.uk/case-study...caxton-village-hall,crm/drafts/L-0461.md,MT-114
-L-0462,InspireGreen,not_found,hello@inspiregreen.co.uk,High,"solar PV, battery and heat pump",https://inspiregreen.co.uk,crm/drafts/L-0462.md,MT-115
-L-0463,Call2Drain,not_found,info@call2drain.co.uk,Medium,"compliance trades / fire, water, drainage and grounds",https://call2drain.co.uk/about,crm/drafts/L-0463.md,MT-05
-L-0464,Browns Landscape Solutions Ltd,not_found,info@brownslandscapes.com,Medium,"compliance trades / fire, water, drainage and grounds",https://brownslandscapes.com/school-grounds-maintenance,crm/drafts/L-0464.md,MT-06
-L-0465,Celtic Care Services,not_found,samwhite@celticcare.co.uk,Medium,care,https://adults.wiltshire.gov.uk,crm/drafts/L-0465.md,MT-10
-L-0466,Home Care Service Provider,not_found,admin@homecareserviceprovider.co.uk,Medium,care,https://homecareserviceprovider.co.uk,crm/drafts/L-0466.md,MT-11
-L-0467,Homebuilder (Scarborough) Ltd,not_found,enquiries@homebuilderscarborough.co.uk,Medium,"building, grounds and property-care",https://northyorks.gov.uk,crm/drafts/L-0467.md,MT-14
-L-0468,Anglian Land Services,Chris,chris@anglianlandservices.co.uk,Medium,"building, grounds and property-care",https://anglianlandservices.co.uk/council,crm/drafts/L-0468.md,MT-15
-L-0469,GreenServe GM,not_found,info@greenservegm.com,Medium,"building, grounds and property-care",https://greenservegm.com,crm/drafts/L-0469.md,MT-16
-L-0470,Revive Property Services (UK) Ltd,not_found,info@reviveps.co.uk,Medium,"building, grounds and property-care",https://revivepropertyservices.co.uk/about-revive,crm/drafts/L-0470.md,MT-17
-L-0471,Hamilton Builders & Property Care Ltd,not_found,info@hamiltonbuilders.co.uk,Medium,"building, grounds and property-care",https://hamiltonbuilders.co.uk,crm/drafts/L-0471.md,MT-18
-L-0472,David Ryan Plumbing / Merrybent Bathrooms Ltd,David,info@darlingtonplumber.co.uk,Medium,"building, grounds and property-care",https://northyorks.gov.uk; https://merrybentbathrooms.co.uk,crm/drafts/L-0472.md,MT-19
-L-0473,Sandy's Plumbing,Sandy,sandy@sandysplumbing.co.uk,Medium,"heating, plumbing and electrical",https://redkitehousing.org.uk/about-us/our-partners,crm/drafts/L-0473.md,MT-21
-L-0474,LJH Electrical,Luke,luke@ljhelectrical.com,Medium,"heating, plumbing and electrical",https://ljhelectrical.com/social-housing-eicrs,crm/drafts/L-0474.md,MT-22
+id,firm,contact_person,email,conversion_estimate,sub_sector,source,draft_path,mt_id,email_subject,personalised_email,personalisation_note
+L-0425,Midland Fire Ltd,not_found,sales@midland-fire.co.uk,High,"compliance trades / fire, water, drainage and grounds",https://midland-fire.co.uk,crm/drafts/L-0425.md,MT-01,Pass/fail lines in compliance tenders,"Hi there,
+
+I found Midland Fire Ltd while mapping small firms that bid or deliver into compliance trades / fire, water, drainage and grounds. The detail that stood out was: Small family fire-safety firm (est. 1985), about 3 engineers; services schools, colleges, libraries, government facilities.
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Small family fire-safety firm (est. 1985), about 3 engineers; services schools, colleges, libraries, government facilities."
+L-0426,Cropper Grounds Maintenance,not_found,info@grounds-maintenance.com,High,"compliance trades / fire, water, drainage and grounds",https://grounds-maintenance.com,crm/drafts/L-0426.md,MT-02,Pass/fail lines in compliance tenders,"Hi there,
+
+I found Cropper Grounds Maintenance while mapping small firms that bid or deliver into compliance trades / fire, water, drainage and grounds. The detail that stood out was: Family-owned grounds/gritting firm (est. 2001), North Staffs; named council client (Uttoxeter Town Council), gritting for hospitals and schools.
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Family-owned grounds/gritting firm (est. 2001), North Staffs; named council client (Uttoxeter Town Council), gritting for hospitals and schools."
+L-0427,Exjet,Robin,info@exjet.co.uk,High,"compliance trades / fire, water, drainage and grounds",https://exjet.co.uk/about-us,crm/drafts/L-0427.md,MT-03,Pass/fail lines in compliance tenders,"Hi Robin,
+
+I found Exjet while mapping small firms that bid or deliver into compliance trades / fire, water, drainage and grounds. The detail that stood out was: Second-generation family drainage firm (est. 1986), Devon; MD Robin Dowell (publicly listed). Serves local councils and MoD.
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Second-generation family drainage firm (est. 1986), Devon; MD Robin Dowell (publicly listed). Serves local councils and MoD."
+L-0428,H2O Hygiene Ltd,not_found,info@h2ohygiene.co.uk,High,"compliance trades / fire, water, drainage and grounds",https://h2ohygiene.co.uk; https://legionellacontrol.org.uk,crm/drafts/L-0428.md,MT-04,Pass/fail lines in compliance tenders,"Hi there,
+
+I found H2O Hygiene Ltd while mapping small firms that bid or deliver into compliance trades / fire, water, drainage and grounds. The detail that stood out was: Family-run water-hygiene firm, Walsall, 2023 Family Business Awards winner. Council portfolio, schools legionella, and care homes. Email verified via LCA directory.
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Family-run water-hygiene firm, Walsall, 2023 Family Business Awards winner. Council portfolio, schools legionella, and care homes. Email verified via LCA directory."
+L-0429,Hallifax Care,Johanne,info@hallifaxcare.co.uk,High,care,https://hallifaxcare.co.uk,crm/drafts/L-0429.md,MT-07,Pass/fail lines in care tenders,"Hi Johanne,
+
+I found Hallifax Care while mapping small firms that bid or deliver into care. The detail that stood out was: Two-generation family homecare, Brighton and Hove (founded 1996 by Anne Hallifax, now run by daughter Johanne Stanley). Approved contractor for Brighton and Hove City Council.
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Two-generation family homecare, Brighton and Hove (founded 1996 by Anne Hallifax, now run by daughter Johanne Stanley). Approved contractor for Brighton and Hove City Council."
+L-0430,Devon & Cornwall Care Services (DACCS),Pauline and Samantha,info@daccservices.com,High,care,https://daccservices.com/about,crm/drafts/L-0430.md,MT-08,Pass/fail lines in care tenders,"Hi Pauline and Samantha,
+
+I found Devon & Cornwall Care Services (DACCS) while mapping small firms that bid or deliver into care. The detail that stood out was: Mother-daughter family firm (Pauline and Samantha Hilton), more than 30 years, Tavistock/Okehampton rural Devon. Trusted provider for Devon County Council; CQC Good.
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Mother-daughter family firm (Pauline and Samantha Hilton), more than 30 years, Tavistock/Okehampton rural Devon. Trusted provider for Devon County Council; CQC Good."
+L-0431,Home Care Wales,not_found,info@homecarewales.com,High,care,https://homecarewales.com,crm/drafts/L-0431.md,MT-09,Pass/fail lines in care tenders,"Hi there,
+
+I found Home Care Wales while mapping small firms that bid or deliver into care. The detail that stood out was: Small community-based homecare, Anglesey. Approved provider on the North Wales framework, delivering for Anglesey Council.
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Small community-based homecare, Anglesey. Approved provider on the North Wales framework, delivering for Anglesey Council."
+L-0432,Charles Walker Construction Ltd,Andrew,hello@charleswalkerconstruction.co.uk,High,"building, grounds and property-care",https://northyorks.gov.uk,crm/drafts/L-0432.md,MT-12,Pass/fail lines in property tenders,"Hi Andrew,
+
+I found Charles Walker Construction Ltd while mapping small firms that bid or deliver into building, grounds and property-care. The detail that stood out was: 3rd-generation family builder, York (about 6 people; MD Andrew and wife Alex). Named on North Yorkshire Council's housing-repairs contractor list.
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","3rd-generation family builder, York (about 6 people; MD Andrew and wife Alex). Named on North Yorkshire Council's housing-repairs contractor list."
+L-0433,Top Garden Services,not_found,info@topgardenservices.com,High,"building, grounds and property-care",https://topgardenservices.com/tenders,crm/drafts/L-0433.md,MT-13,Pass/fail lines in property tenders,"Hi there,
+
+I found Top Garden Services while mapping small firms that bid or deliver into building, grounds and property-care. The detail that stood out was: Family-owned grounds firm, Thetford; explicitly tenders for Norfolk County Council, Suffolk County Council and East Cambs District Council (more than 15 years).
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Family-owned grounds firm, Thetford; explicitly tenders for Norfolk County Council, Suffolk County Council and East Cambs District Council (more than 15 years)."
+L-0434,Headcorn Heating Ltd,Andrew,mail@headcornheating.co.uk,High,"heating, plumbing and electrical",https://tch.org.uk/repairs,crm/drafts/L-0434.md,MT-20,Pass/fail lines in trade tenders,"Hi Andrew,
+
+I found Headcorn Heating Ltd while mapping small firms that bid or deliver into heating, plumbing and electrical. The detail that stood out was: 3-person family heating firm (est. 1976), Ashford/Headcorn, Kent (directors Andrew Grant and Elton Ross). Named contractor for Town and Country Housing (housing association) oil/solid-fuel heating; phone matches.
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","3-person family heating firm (est. 1976), Ashford/Headcorn, Kent (directors Andrew Grant and Elton Ross). Named contractor for Town and Country Housing (housing association) oil/solid-fuel heating; phone matches."
+L-0435,Reids Playground Maintenance Ltd,not_found,rpm@reidsplayground.co.uk,High,"playground inspection, repair and install",https://reidsplaygroundmaintenance.co.uk,crm/drafts/L-0435.md,MT-23,Pass/fail lines in playground tenders,"Hi there,
+
+I found Reids Playground Maintenance Ltd while mapping small firms that bid or deliver into playground inspection, repair and install. The detail that stood out was: Family-run playground firm, Northamptonshire. Named client: Open Spaces Asset Inspector at Huntingdonshire District Council (testimonial, RPII/EN1176 work).
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Family-run playground firm, Northamptonshire. Named client: Open Spaces Asset Inspector at Huntingdonshire District Council (testimonial, RPII/EN1176 work)."
+L-0436,TK Play Ltd,not_found,enquiries@tkplay.co.uk,High,"playground inspection, repair and install",https://tkplay.co.uk/news; https://tkplay.co.uk/projects,crm/drafts/L-0436.md,MT-24,Pass/fail lines in playground tenders,"Hi there,
+
+I found TK Play Ltd while mapping small firms that bid or deliver into playground inspection, repair and install. The detail that stood out was: Family-run playground specialist, North Devon, with its own workshop and 100+ public playgrounds since 2011. Named clients include North Tawton Town Council, St Ives Town Council, Torridge District Council, and several parish councils.
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Family-run playground specialist, North Devon, with its own workshop and 100+ public playgrounds since 2011. Named clients include North Tawton Town Council, St Ives Town Council, Torridge District Council, and several parish councils."
+L-0437,Aardvark Pest Control,not_found,info@aardvarkpest.co.uk,High,pest control,https://aardvarkpest.co.uk,crm/drafts/L-0437.md,MT-33,Pass/fail lines in your next tender,"Hi there,
+
+I found Aardvark Pest Control while mapping small firms that bid or deliver into pest control. The detail that stood out was: Family-run pest firm, Wigan/North-West (single owner-run operator). Own site names current clients ""Wigan Council"" and ""national health authorities (NHS)"" (self-published).
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Family-run pest firm, Wigan/North-West (single owner-run operator). Own site names current clients ""Wigan Council"" and ""national health authorities (NHS)"" (self-published)."
+L-0438,Blake Fire & Security Systems,Ian,info@blakefire-security.co.uk,High,"security, CCTV and locksmith",https://blakefire-security.co.uk/school-security,crm/drafts/L-0438.md,MT-39,Pass/fail lines in your next tender,"Hi Ian,
+
+I found Blake Fire & Security Systems while mapping small firms that bid or deliver into security, cctv and locksmith. The detail that stood out was: Family firm (est. 1979, MD Ian Blake), Essex; ""big enough to cope, small enough to care"". Named school clients: Wethersfield C of E Primary (testimonial), Chalkwell School; 200and Essex schools.
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Family firm (est. 1979, MD Ian Blake), Essex; ""big enough to cope, small enough to care"". Named school clients: Wethersfield C of E Primary (testimonial), Chalkwell School; 200and Essex schools."
+L-0439,Around The Clock Locks (ATCL),not_found,info@atcl.co.uk,High,"security, CCTV and locksmith",https://atcl.co.uk,crm/drafts/L-0439.md,MT-40,Pass/fail lines in your next tender,"Hi there,
+
+I found Around The Clock Locks (ATCL) while mapping small firms that bid or deliver into security, cctv and locksmith. The detail that stood out was: Family locksmith (est. 2000), Romford/Essex and East London. Client list names Waltham Forest Council, Peabody and The Guinness Partnership.
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Family locksmith (est. 2000), Romford/Essex and East London. Client list names Waltham Forest Council, Peabody and The Guinness Partnership."
+L-0440,Harrier Fences & Landscaping,not_found,cogramp@gmail.com,High,"fencing, MUGA and sports surfacing",https://harrierfencesandlandscaping.com,crm/drafts/L-0440.md,MT-45,Pass/fail lines in your next tender,"Hi there,
+
+I found Harrier Fences & Landscaping while mapping small firms that bid or deliver into fencing, muga and sports surfacing. The detail that stood out was: Owner-operator micro fencing firm (single founder, personal Gmail - classic sole-trader). Named clients on own site: Bisham Parish Council (80m post-and-rail) and Spinfield School.
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Owner-operator micro fencing firm (single founder, personal Gmail - classic sole-trader). Named clients on own site: Bisham Parish Council (80m post-and-rail) and Spinfield School."
+L-0441,Elvington Floorcraft,Andrew,admin@elvingtonfloorcraft.co.uk,High,flooring and refurbishment,https://elvingtonfloorcraft.co.uk/flooring/local-authorities,crm/drafts/L-0441.md,MT-50,Pass/fail lines in property tenders,"Hi Andrew,
+
+I found Elvington Floorcraft while mapping small firms that bid or deliver into flooring and refurbishment. The detail that stood out was: Family firm since 1965, about 13 people (MD Andrew Garland), York. Named clients: City of York Council, York Housing Association, Family Housing Association, Joseph Rowntree Foundation.
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Family firm since 1965, about 13 people (MD Andrew Garland), York. Named clients: City of York Council, York Housing Association, Family Housing Association, Joseph Rowntree Foundation."
+L-0442,Lees Heginbotham & Sons Ltd,not_found,info@leesheginbotham.co.uk,High,flooring and refurbishment,https://leesheginbotham.co.uk/commercial,crm/drafts/L-0442.md,MT-51,Pass/fail lines in property tenders,"Hi there,
+
+I found Lees Heginbotham & Sons Ltd while mapping small firms that bid or deliver into flooring and refurbishment. The detail that stood out was: Multi-generational family carpet/flooring firm since 1945, single Oldham premises. Named clients: Rochdale Borough Housing, Riverside Housing, Guinness Northern Counties, Oasis Academy, NHS.
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Multi-generational family carpet/flooring firm since 1945, single Oldham premises. Named clients: Rochdale Borough Housing, Riverside Housing, Guinness Northern Counties, Oasis Academy, NHS."
+L-0443,Rooftec (Scotland) Ltd,Mark,info@rooftecscotland.co.uk,High,roofing and scaffolding,https://rooftecscotland.co.uk,crm/drafts/L-0443.md,MT-58,Pass/fail lines in property tenders,"Hi Mark,
+
+I found Rooftec (Scotland) Ltd while mapping small firms that bid or deliver into roofing and scaffolding. The detail that stood out was: Family-run roofer (est. 2008; lead contact Mark Cattanach), Falkirk. Won Kingdom Housing Association re-roofing via a Public Contracts Scotland procurement (case study).
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Family-run roofer (est. 2008; lead contact Mark Cattanach), Falkirk. Won Kingdom Housing Association re-roofing via a Public Contracts Scotland procurement (case study)."
+L-0444,Newseal Ltd,Phil,enquiries@newsealltd.com,High,damp-proofing and damp/mould,https://newsealltd.com,crm/drafts/L-0444.md,MT-63,Pass/fail lines in property tenders,"Hi Phil,
+
+I found Newseal Ltd while mapping small firms that bid or deliver into damp-proofing and damp/mould. The detail that stood out was: Family remedial firm since about 1989 (owner/director Phil Bennetto, CSRT surveyor), Redruth, Cornwall. Names Cornwall Housing (Cornwall Council's housing co.) and councils/parish councils/housing associations.
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Family remedial firm since about 1989 (owner/director Phil Bennetto, CSRT surveyor), Redruth, Cornwall. Names Cornwall Housing (Cornwall Council's housing co.) and councils/parish councils/housing associations."
+L-0445,Advanced Preservation Specialists Ltd (APS),not_found,info@advancedpreservation.co.uk,High,damp-proofing and damp/mould,https://advancedpreservation.co.uk,crm/drafts/L-0445.md,MT-64,Pass/fail lines in property tenders,"Hi there,
+
+I found Advanced Preservation Specialists Ltd (APS) while mapping small firms that bid or deliver into damp-proofing and damp/mould. The detail that stood out was: ""Glasgow's longest-running PCA-registered family-run"" building-preservation firm (more than 25 years), single Glasgow base. NHS Scotland client logo and trusted by local authorities/housing associations across Glasgow/Lanarkshire/Renfrewshire (NHS shown as logo, not case study).
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","""Glasgow's longest-running PCA-registered family-run"" building-preservation firm (more than 25 years), single Glasgow base. NHS Scotland client logo and trusted by local authorities/housing associations across Glasgow/Lanarkshire/Renfrewshire (NHS shown as logo, not case study)."
+L-0446,Listed Window Refurbishment Ltd,not_found,info@listedwindowrefurbishment.co.uk,High,"windows, doors and heritage restoration",https://listedwindowrefurbishment.co.uk/about,crm/drafts/L-0446.md,MT-69,Pass/fail lines in heritage tenders,"Hi there,
+
+I found Listed Window Refurbishment Ltd while mapping small firms that bid or deliver into windows, doors and heritage restoration. The detail that stood out was: Family-owned traditional window/joinery firm (more than 30 years), single Scotland workshop. Named public clients: Edinburgh City Chambers, Scotland Street School Museum, High School of Glasgow, Hermiston School and ""various Town Halls"".
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Family-owned traditional window/joinery firm (more than 30 years), single Scotland workshop. Named public clients: Edinburgh City Chambers, Scotland Street School Museum, High School of Glasgow, Hermiston School and ""various Town Halls""."
+L-0447,Sash Window Preservation,not_found,info@sashwindowpreservation.co.uk,High,"windows, doors and heritage restoration",https://sashwindowpreservation.co.uk/case-studies,crm/drafts/L-0447.md,MT-70,Pass/fail lines in heritage tenders,"Hi there,
+
+I found Sash Window Preservation while mapping small firms that bid or deliver into windows, doors and heritage restoration. The detail that stood out was: Small CERTASS team (""Alex and Ross""), Norfolk/Cambridge. Named public clients (case studies): Cromer Town Council, Gresham's School Holt (about 90 windows), Norfolk and Norwich Hospital, IWM Duxford.
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Small CERTASS team (""Alex and Ross""), Norfolk/Cambridge. Named public clients (case studies): Cromer Town Council, Gresham's School Holt (about 90 windows), Norfolk and Norwich Hospital, IWM Duxford."
+L-0448,CJL Designs,not_found,cjldesigns@macunlimited.net,High,"windows, doors and heritage restoration",https://cjldesigns.co.uk,crm/drafts/L-0448.md,MT-71,Pass/fail lines in heritage tenders,"Hi there,
+
+I found CJL Designs while mapping small firms that bid or deliver into windows, doors and heritage restoration. The detail that stood out was: Micro specialist heritage window restorer (more than 25 years; owner-operator, subcontracts specialist trades), Glastonbury, Somerset. Named clients: Roundway Hospital Devizes and churches across Oxford/Winchester/Guildford dioceses and listed buildings. (Family status implied, not stated.)
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Micro specialist heritage window restorer (more than 25 years; owner-operator, subcontracts specialist trades), Glastonbury, Somerset. Named clients: Roundway Hospital Devizes and churches across Oxford/Winchester/Guildford dioceses and listed buildings. (Family status implied, not stated.)"
+L-0449,AJM Decorating Ltd,Adrian,enquiries@ajmdecorating.co.uk,High,painting and decorating,https://ajmdecorating.co.uk,crm/drafts/L-0449.md,MT-75,Pass/fail lines in property tenders,"Hi Adrian,
+
+I found AJM Decorating Ltd while mapping small firms that bid or deliver into painting and decorating. The detail that stood out was: Small owner-run firm since 1994 (owner Adrian Morris, on the tools), Kendal, Cumbria; Dulux Trade Contract Partner. Named clients (testimonials): Kendal Town Council, Lancaster City Council and a school.
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Small owner-run firm since 1994 (owner Adrian Morris, on the tools), Kendal, Cumbria; Dulux Trade Contract Partner. Named clients (testimonials): Kendal Town Council, Lancaster City Council and a school."
+L-0450,ALCo Decorating (ALCo Group),Tom,info@alcoltd.co.uk,High,painting and decorating,https://alcoltd.co.uk/decorating/education,crm/drafts/L-0450.md,MT-76,Pass/fail lines in property tenders,"Hi Tom,
+
+I found ALCo Decorating (ALCo Group) while mapping small firms that bid or deliver into painting and decorating. The detail that stood out was: Small owner-led Surrey group with construction, decorating, and roofing divisions, led by Tom Allen in Chiddingfold. Named state clients include Godalming College, Queen Eleanor's C of E Junior, Stoughton Infant, Glenthorne High, plus social-housing void contracts.
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Small owner-led Surrey group with construction, decorating, and roofing divisions, led by Tom Allen in Chiddingfold. Named state clients include Godalming College, Queen Eleanor's C of E Junior, Stoughton Infant, Glenthorne High, plus social-housing void contracts."
+L-0451,Environmental Solutions Midlands Ltd,Kevin and Craig,enquiries@esminfo.co.uk,High,asbestos surveying and removal,https://esm-group.co.uk,crm/drafts/L-0451.md,MT-80,Pass/fail lines in your next tender,"Hi Kevin and Craig,
+
+I found Environmental Solutions Midlands Ltd while mapping small firms that bid or deliver into asbestos surveying and removal. The detail that stood out was: Family firm since 2009 (founder-brothers Kevin and Craig Nicklin and Deborah; about 8 staff), Wolverhampton. Named clients: Cannock, Dudley and Wolverhampton Councils, Solihull Community Housing, NHS.
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Family firm since 2009 (founder-brothers Kevin and Craig Nicklin and Deborah; about 8 staff), Wolverhampton. Named clients: Cannock, Dudley and Wolverhampton Councils, Solihull Community Housing, NHS."
+L-0452,ISCA Heating & Plumbing Ltd,Lewis,lewis@iscaheating-plumbing.co.uk,High,"kitchen, bathroom and DFG adaptations",https://iscaheating-plumbing.co.uk/wetrooms/disability-wetrooms,crm/drafts/L-0452.md,MT-87,Pass/fail lines in your next tender,"Hi Lewis,
+
+I found ISCA Heating & Plumbing Ltd while mapping small firms that bid or deliver into kitchen, bathroom and dfg adaptations. The detail that stood out was: Family firm since 1992, Pinhoe/Exeter. Own site: ""We currently work for Teignbridge Council, East Devon District Council and Mid-Devon District Council"" (DFG wet rooms, more than 25 years).
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Family firm since 1992, Pinhoe/Exeter. Own site: ""We currently work for Teignbridge Council, East Devon District Council and Mid-Devon District Council"" (DFG wet rooms, more than 25 years)."
+L-0453,MIserve (C.G.Y. (MISERVE) Ltd),not_found,office@miserve.co.uk,High,"kitchen, bathroom and DFG adaptations",https://miserve.co.uk/business-clients,crm/drafts/L-0453.md,MT-88,Pass/fail lines in your next tender,"Hi there,
+
+I found MIserve (C.G.Y. (MISERVE) Ltd) while mapping small firms that bid or deliver into kitchen, bathroom and dfg adaptations. The detail that stood out was: Small Devon adaptations specialist (single Exeter unit, more than 15 years). Own site names 6 councils: Exeter City, Plymouth City, West Devon Borough, South Hams District Council, East Devon District Council, Torridge District Council.
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Small Devon adaptations specialist (single Exeter unit, more than 15 years). Own site names 6 councils: Exeter City, Plymouth City, West Devon Borough, South Hams District Council, East Devon District Council, Torridge District Council."
+L-0454,A T Plumbing Services,Anna and Tristan,atplumbing@btinternet.com,High,"kitchen, bathroom and DFG adaptations",https://atplumbing.wales,crm/drafts/L-0454.md,MT-89,Pass/fail lines in your next tender,"Hi Anna and Tristan,
+
+I found A T Plumbing Services while mapping small firms that bid or deliver into kitchen, bathroom and dfg adaptations. The detail that stood out was: Family firm (20 years, 800and installs), Pembrokeshire (owners Anna Gardner and Tristan Thomas). Own site: ""working on contracts for both Pembrokeshire County Council and Ateb"" (Pembrokeshire housing association).
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Family firm (20 years, 800and installs), Pembrokeshire (owners Anna Gardner and Tristan Thomas). Own site: ""working on contracts for both Pembrokeshire County Council and Ateb"" (Pembrokeshire housing association)."
+L-0455,RenderRight (Render Right Ltd),Johnny and Jenna,info@rrfl.co.uk,High,"retrofit, insulation and EWI",https://renderright.co.uk,crm/drafts/L-0455.md,MT-94,Pass/fail lines in property tenders,"Hi Johnny and Jenna,
+
+I found RenderRight (Render Right Ltd) while mapping small firms that bid or deliver into retrofit, insulation and ewi. The detail that stood out was: Husband-and-wife firm (about 6 core staff; directors Johnny and Jenna Carlin). Case studies name: LB Barking and Dagenham, Rugby Borough Council, South Kesteven District Council, Ashford Borough Council, Leicester City, Chisel housing association, Soha housing association; delivers ECO/Warm Homes/HUG/SHDF.
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Husband-and-wife firm (about 6 core staff; directors Johnny and Jenna Carlin). Case studies name: LB Barking and Dagenham, Rugby Borough Council, South Kesteven District Council, Ashford Borough Council, Leicester City, Chisel housing association, Soha housing association; delivers ECO/Warm Homes/HUG/SHDF."
+L-0456,Express Stairlifts Southwest,not_found,enquiries@expressstairliftssw.co.uk,High,mobility and stairlift installation,https://expressstairliftssw.co.uk/contact,crm/drafts/L-0456.md,MT-100,Pass/fail lines in your next tender,"Hi there,
+
+I found Express Stairlifts Southwest while mapping small firms that bid or deliver into mobility and stairlift installation. The detail that stood out was: Family-run stairlift firm, single SW operation. Own contact page names 7 councils: Cornwall, Plymouth City, Teignbridge, East Devon, Torridge, South Hams, West Devon.
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Family-run stairlift firm, single SW operation. Own contact page names 7 councils: Cornwall, Plymouth City, Teignbridge, East Devon, Torridge, South Hams, West Devon."
+L-0457,Dolphin Devon Stairlifts,not_found,info@dolphindevon.co.uk,High,mobility and stairlift installation,https://dolphindevon.co.uk,crm/drafts/L-0457.md,MT-101,Pass/fail lines in your next tender,"Hi there,
+
+I found Dolphin Devon Stairlifts while mapping small firms that bid or deliver into mobility and stairlift installation. The detail that stood out was: Independent family-run stairlift/lift firm, Devon-wide. Homepage names Devon County Council, Exeter City, Plymouth City, Torridge District Council, Torbay, South Hams District Council and housing associations (Westward, Guinness Trust, LiveWest, Cornerstone).
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Independent family-run stairlift/lift firm, Devon-wide. Homepage names Devon County Council, Exeter City, Plymouth City, Torridge District Council, Torbay, South Hams District Council and housing associations (Westward, Guinness Trust, LiveWest, Cornerstone)."
+L-0458,B L Fire Risk Limited,Bill,bill@blfirerisk.co.uk,High,fire risk and fire door compliance,https://blfirerisk.co.uk,crm/drafts/L-0458.md,MT-107,Pass/fail lines in compliance tenders,"Hi Bill,
+
+I found B L Fire Risk Limited while mapping small firms that bid or deliver into fire risk and fire door compliance. The detail that stood out was: One-person owner-operator FRA practice (William ""Bill"" Failey, MIFSM/FRACS/GIFireE), independent of any equipment/alarm company. Named client: Hull College (FE); social-housing and education experience.
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","One-person owner-operator FRA practice (William ""Bill"" Failey, MIFSM/FRACS/GIFireE), independent of any equipment/alarm company. Named client: Hull College (FE); social-housing and education experience."
+L-0459,Sustainable Energy Engineering (SUS Energy),Stephen and Haley,info@susenergy.co.uk,High,"solar PV, battery and heat pump",https://susenergy.co.uk,crm/drafts/L-0459.md,MT-112,Pass/fail lines in energy tenders,"Hi Stephen and Haley,
+
+I found Sustainable Energy Engineering (SUS Energy) while mapping small firms that bid or deliver into solar pv, battery and heat pump. The detail that stood out was: Husband-and-wife firm since 2006 (Stephen and Haley Fairless; about 1-10 staff), North East England only. Named clients: Cragside and Dame Dorothy schools, Kibblesworth Millennium Centre, Alnwick Community Centre, Darlington College.
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Husband-and-wife firm since 2006 (Stephen and Haley Fairless; about 1-10 staff), North East England only. Named clients: Cragside and Dame Dorothy schools, Kibblesworth Millennium Centre, Alnwick Community Centre, Darlington College."
+L-0460,Solar Partner,Tony,tony@solarpartner.uk,High,"solar PV, battery and heat pump",https://solarpartner.uk,crm/drafts/L-0460.md,MT-113,Pass/fail lines in energy tenders,"Hi Tony,
+
+I found Solar Partner while mapping small firms that bid or deliver into solar pv, battery and heat pump. The detail that stood out was: Family-run owner-operator solar firm (""Anthony at Solar Partner""; MCS 63381), Milton Keynes. Named clients: Middleton School, Walton High School and ""various Parish Councils"".
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Family-run owner-operator solar firm (""Anthony at Solar Partner""; MCS 63381), Milton Keynes. Named clients: Middleton School, Walton High School and ""various Parish Councils""."
+L-0461,Brimstone Energy UK,Matt,sales@brimstone-energy.uk,High,"solar PV, battery and heat pump",https://brimstone-energy.uk/case-study...caxton-village-hall,crm/drafts/L-0461.md,MT-114,Pass/fail lines in energy tenders,"Hi Matt,
+
+I found Brimstone Energy UK while mapping small firms that bid or deliver into solar pv, battery and heat pump. The detail that stood out was: Owner-operator, veteran-owned (founder Matt Hilton; delivers via a tradesperson network), Hemingford Grey, Cambs. Named public project: Caxton Village Hall solarandbattery, funded by a £15k South Cambridgeshire District Council grant.
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Owner-operator, veteran-owned (founder Matt Hilton; delivers via a tradesperson network), Hemingford Grey, Cambs. Named public project: Caxton Village Hall solarandbattery, funded by a £15k South Cambridgeshire District Council grant."
+L-0462,InspireGreen,not_found,hello@inspiregreen.co.uk,High,"solar PV, battery and heat pump",https://inspiregreen.co.uk,crm/drafts/L-0462.md,MT-115,Pass/fail lines in energy tenders,"Hi there,
+
+I found InspireGreen while mapping small firms that bid or deliver into solar pv, battery and heat pump. The detail that stood out was: Small MCS-certified solar firm since 2021 (""small but knowledgeable team"", about 2-10 staff), Cardiff. Named clients: Newport City Council (Kingsway Solar Car Park) and NHS Wales.
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Small MCS-certified solar firm since 2021 (""small but knowledgeable team"", about 2-10 staff), Cardiff. Named clients: Newport City Council (Kingsway Solar Car Park) and NHS Wales."
+L-0463,Call2Drain,not_found,info@call2drain.co.uk,Medium,"compliance trades / fire, water, drainage and grounds",https://call2drain.co.uk/about,crm/drafts/L-0463.md,MT-05,Pass/fail lines in compliance tenders,"Hi there,
+
+I found Call2Drain while mapping small firms that bid or deliver into compliance trades / fire, water, drainage and grounds. The detail that stood out was: Family-run drainage specialist (est. 2005), Tunbridge Wells; CHAS-accredited, states local authority/public-sector clients.
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Family-run drainage specialist (est. 2005), Tunbridge Wells; CHAS-accredited, states local authority/public-sector clients."
+L-0464,Browns Landscape Solutions Ltd,not_found,info@brownslandscapes.com,Medium,"compliance trades / fire, water, drainage and grounds",https://brownslandscapes.com/school-grounds-maintenance,crm/drafts/L-0464.md,MT-06,Pass/fail lines in compliance tenders,"Hi there,
+
+I found Browns Landscape Solutions Ltd while mapping small firms that bid or deliver into compliance trades / fire, water, drainage and grounds. The detail that stood out was: Family-run landscaping/grounds firm, Leighton Buzzard; local-authority school grounds contracts and housing-association work.
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Family-run landscaping/grounds firm, Leighton Buzzard; local-authority school grounds contracts and housing-association work."
+L-0465,Celtic Care Services,not_found,samwhite@celticcare.co.uk,Medium,care,https://adults.wiltshire.gov.uk,crm/drafts/L-0465.md,MT-10,Pass/fail lines in care tenders,"Hi there,
+
+I found Celtic Care Services while mapping small firms that bid or deliver into care. The detail that stood out was: Family-run Wiltshire homecare (est. 2001), Chippenham and Swindon. Listed on Wiltshire Council's provider directory; CQC Good. (Owner name not stated on site - greeting kept generic.)
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Family-run Wiltshire homecare (est. 2001), Chippenham and Swindon. Listed on Wiltshire Council's provider directory; CQC Good. (Owner name not stated on site - greeting kept generic.)"
+L-0466,Home Care Service Provider,not_found,admin@homecareserviceprovider.co.uk,Medium,care,https://homecareserviceprovider.co.uk,crm/drafts/L-0466.md,MT-11,Pass/fail lines in care tenders,"Hi there,
+
+I found Home Care Service Provider while mapping small firms that bid or deliver into care. The detail that stood out was: Family-owned homecare agency, SW London (Merton, Wandsworth, Sutton, Croydon, Kingston). Self-described NHS provider (claim on own site; not a named framework - weaker evidence).
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Family-owned homecare agency, SW London (Merton, Wandsworth, Sutton, Croydon, Kingston). Self-described NHS provider (claim on own site; not a named framework - weaker evidence)."
+L-0467,Homebuilder (Scarborough) Ltd,not_found,enquiries@homebuilderscarborough.co.uk,Medium,"building, grounds and property-care",https://northyorks.gov.uk,crm/drafts/L-0467.md,MT-14,Pass/fail lines in property tenders,"Hi there,
+
+I found Homebuilder (Scarborough) Ltd while mapping small firms that bid or deliver into building, grounds and property-care. The detail that stood out was: Family builder, Scarborough; new builds/extensions/adaptations. Named on North Yorkshire Council's housing-repairs contractor list.
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Family builder, Scarborough; new builds/extensions/adaptations. Named on North Yorkshire Council's housing-repairs contractor list."
+L-0468,Anglian Land Services,Chris,chris@anglianlandservices.co.uk,Medium,"building, grounds and property-care",https://anglianlandservices.co.uk/council,crm/drafts/L-0468.md,MT-15,Pass/fail lines in property tenders,"Hi Chris,
+
+I found Anglian Land Services while mapping small firms that bid or deliver into building, grounds and property-care. The detail that stood out was: Owner-run family grounds firm (contact ""Chris""), East Anglia; parish-council work (Takeley PC named).
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Owner-run family grounds firm (contact ""Chris""), East Anglia; parish-council work (Takeley PC named)."
+L-0469,GreenServe GM,not_found,info@greenservegm.com,Medium,"building, grounds and property-care",https://greenservegm.com,crm/drafts/L-0469.md,MT-16,Pass/fail lines in property tenders,"Hi there,
+
+I found GreenServe GM while mapping small firms that bid or deliver into building, grounds and property-care. The detail that stood out was: Tiny West Sussex grounds firm (Patching); multi-year Thakeham Parish Council contract, also schools/colleges.
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Tiny West Sussex grounds firm (Patching); multi-year Thakeham Parish Council contract, also schools/colleges."
+L-0470,Revive Property Services (UK) Ltd,not_found,info@reviveps.co.uk,Medium,"building, grounds and property-care",https://revivepropertyservices.co.uk/about-revive,crm/drafts/L-0470.md,MT-17,Pass/fail lines in property tenders,"Hi there,
+
+I found Revive Property Services (UK) Ltd while mapping small firms that bid or deliver into building, grounds and property-care. The detail that stood out was: Family building contractor, NW England (Liverpool); social-housing voids/disrepair/damp and mould for housing associations and councils (self-declared, no named framework). NB mailbox domain (reviveps.co.uk) differs from website (revivepropertyservices.co.uk).
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Family building contractor, NW England (Liverpool); social-housing voids/disrepair/damp and mould for housing associations and councils (self-declared, no named framework). NB mailbox domain (reviveps.co.uk) differs from website (revivepropertyservices.co.uk)."
+L-0471,Hamilton Builders & Property Care Ltd,not_found,info@hamiltonbuilders.co.uk,Medium,"building, grounds and property-care",https://hamiltonbuilders.co.uk,crm/drafts/L-0471.md,MT-18,Pass/fail lines in property tenders,"Hi there,
+
+I found Hamilton Builders & Property Care Ltd while mapping small firms that bid or deliver into building, grounds and property-care. The detail that stood out was: Small Scottish family builder (more than 30 years), Glasgow/Stirling/Kilsyth; councils and housing associations named as client types (self-declared, no named framework).
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Small Scottish family builder (more than 30 years), Glasgow/Stirling/Kilsyth; councils and housing associations named as client types (self-declared, no named framework)."
+L-0472,David Ryan Plumbing / Merrybent Bathrooms Ltd,David,info@darlingtonplumber.co.uk,Medium,"building, grounds and property-care",https://northyorks.gov.uk; https://merrybentbathrooms.co.uk,crm/drafts/L-0472.md,MT-19,Pass/fail lines in property tenders,"Hi David,
+
+I found David Ryan Plumbing / Merrybent Bathrooms Ltd while mapping small firms that bid or deliver into building, grounds and property-care. The detail that stood out was: Sole operator established in 1992, David Ryan, Darlington. Listed on North Yorkshire Council's authorised housing-repairs contractors list and does school work. Caveat: trades under Merrybent Bathrooms for bathroom jobs.
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Sole operator established in 1992, David Ryan, Darlington. Listed on North Yorkshire Council's authorised housing-repairs contractors list and does school work. Caveat: trades under Merrybent Bathrooms for bathroom jobs."
+L-0473,Sandy's Plumbing,Sandy,sandy@sandysplumbing.co.uk,Medium,"heating, plumbing and electrical",https://redkitehousing.org.uk/about-us/our-partners,crm/drafts/L-0473.md,MT-21,Pass/fail lines in trade tenders,"Hi Sandy,
+
+I found Sandy's Plumbing while mapping small firms that bid or deliver into heating, plumbing and electrical. The detail that stood out was: Small family plumbing firm (more than 16 years), Oakley/Aylesbury, Bucks. Listed as a contractor on Red Kite Community Housing's partners page (identity match inferred from Bucks geography/trade, not an explicit cross-link - softer proof).
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Small family plumbing firm (more than 16 years), Oakley/Aylesbury, Bucks. Listed as a contractor on Red Kite Community Housing's partners page (identity match inferred from Bucks geography/trade, not an explicit cross-link - softer proof)."
+L-0474,LJH Electrical,Luke,luke@ljhelectrical.com,Medium,"heating, plumbing and electrical",https://ljhelectrical.com/social-housing-eicrs,crm/drafts/L-0474.md,MT-22,Pass/fail lines in trade tenders,"Hi Luke,
+
+I found LJH Electrical while mapping small firms that bid or deliver into heating, plumbing and electrical. The detail that stood out was: Owner-led electrical firm (""Luke and his team""), Havant, Hants; NICEIC. High-volume social-housing EICRs - names Orbit, A2Dominion, Richmond Housing on its own site (some via subcontracting).
+
+That is the kind of public-sector work where a tender can hide pass/fail lines in different places: insurance, certificates, response times, exclusions, or pricing instructions.
+
+Bidframe reads the tender and turns it into a checklist you can review. It puts deal-breakers first, links every row back to the page and clause, and only drafts answers from evidence you provide. If something is missing, it leaves a question for you.
+
+I can do a free 15-minute read of one tender you are considering. Send me the PDF and I will show the pass/fail lines beside their source.
+
+Book a slot: https://cal.com/joel-jeon-o29lfr/bidframe
+Or reply with the tender and a time that suits.
+
+Joel","Owner-led electrical firm (""Luke and his team""), Havant, Hants; NICEIC. High-volume social-housing EICRs - names Orbit, A2Dominion, Richmond Housing on its own site (some via subcontracting)."

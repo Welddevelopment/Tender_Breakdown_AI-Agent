@@ -4,6 +4,12 @@
 
 ---
 
+### [J-086] @all · INFO · OPEN · 2026-07-04 · personalised email copy added to the 50-lead send sheet
+Updated `crm/sendable-list-2026-07-04.csv` so the 50-lead batch `L-0425`-`L-0474` now carries
+spreadsheet-ready `email_subject`, `personalised_email`, and `personalisation_note` columns. The copy uses
+`frontend/copywriting.md` rules: calm, source-led, no false urgency, no hype, no em dashes. The matching
+`crm/drafts/L-0425.md`-`L-0474.md` cold-email sections are synced to the same wording.
+
 ### [J-085] @all · INFO · OPEN · 2026-07-04 · 50 more sendable CRM leads added
 Added a new operational CRM batch: `L-0425`-`L-0474` in `crm/leads.csv`, with 50 send-ready drafts in
 `crm/drafts/` and a compact send list at `crm/sendable-list-2026-07-04.csv`. These migrate the strongest
