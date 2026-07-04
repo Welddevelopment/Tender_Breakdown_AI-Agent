@@ -619,12 +619,18 @@ export function MatrixView({
             <p className="font-mono text-xs uppercase tracking-wide text-ink-muted">
               Live walkthrough
             </p>
-            <Link
-              href={stageReturnHref}
+            {/* Returns to the showcase home (resting matrix). The deck handoff
+                stays on ArrowRight (stageReturnHref), off any visible control. */}
+            <button
+              type="button"
+              onClick={() => {
+                close();
+                window.scrollTo({ top: 0 });
+              }}
               className="font-mono text-xs uppercase tracking-wide text-forest underline decoration-forest/30 underline-offset-4 transition-colors hover:text-forest-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-forest focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
             >
-              Back to final ask
-            </Link>
+              Back to matrix
+            </button>
           </div>
         </div>
       )}
