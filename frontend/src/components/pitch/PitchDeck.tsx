@@ -688,14 +688,7 @@ export function PitchDeck() {
           glyph: "pdf",
           body: (
             <div className="pitch-poster pitch-poster--center">
-              <p className="pitch-kicker">
-                Bidframe · the first read for public&#8209;sector tenders
-              </p>
               <h1>One missed deal&#8209;breaker kills the bid</h1>
-              <p className="pitch-poster__line">
-                Bidframe reads the tender pack first — every deal&#8209;breaker
-                surfaced, every line traced to its source.
-              </p>
             </div>
           ),
         },
