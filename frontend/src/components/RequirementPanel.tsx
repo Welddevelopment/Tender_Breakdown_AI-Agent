@@ -41,24 +41,27 @@ const REQUIREMENT_TEXT: Record<PanelVariant, string> = {
   focus: "max-w-[72ch] font-serif text-xl leading-relaxed text-ink sm:text-2xl",
 };
 
+// The two-column requirement split keys off the PANEL's width (@container),
+// not the viewport: under projector zoom the split pane narrows while the
+// viewport stays md+, which crushed the reading column to one word per line.
 const REQUIREMENT_LAYOUT: Record<PanelVariant, string> = {
-  split: "flex flex-col gap-4 md:flex-row md:gap-0",
+  split: "flex flex-col gap-4 @2xl:flex-row @2xl:gap-0",
   drawer: "flex flex-col gap-4",
-  focus: "flex flex-col gap-4 md:flex-row md:gap-0",
+  focus: "flex flex-col gap-4 @2xl:flex-row @2xl:gap-0",
 };
 
 const REQUIREMENT_COPY: Record<PanelVariant, string> = {
-  split: "min-w-0 flex-1 md:pr-8",
+  split: "min-w-0 flex-1 @2xl:pr-8",
   drawer: "min-w-0",
-  focus: "min-w-0 flex-1 md:pr-8",
+  focus: "min-w-0 flex-1 @2xl:pr-8",
 };
 
 const REQUIREMENT_META: Record<PanelVariant, string> = {
   split:
-    "flex min-w-0 flex-col gap-2 border-t border-hairline pt-4 md:w-56 md:shrink-0 md:border-l md:border-t-0 md:pl-8 md:pt-0",
+    "flex min-w-0 flex-col gap-2 border-t border-hairline pt-4 @2xl:w-56 @2xl:shrink-0 @2xl:border-l @2xl:border-t-0 @2xl:pl-8 @2xl:pt-0",
   drawer: "flex min-w-0 flex-col gap-2 border-t border-hairline pt-4",
   focus:
-    "flex min-w-0 flex-col gap-2 border-t border-hairline pt-4 md:w-64 md:shrink-0 md:border-l md:border-t-0 md:pl-8 md:pt-0",
+    "flex min-w-0 flex-col gap-2 border-t border-hairline pt-4 @2xl:w-64 @2xl:shrink-0 @2xl:border-l @2xl:border-t-0 @2xl:pl-8 @2xl:pt-0",
 };
 
 const DECISION_PADDING: Record<PanelVariant, string> = {
@@ -179,7 +182,7 @@ export function RequirementPanel({
   // requirement id to reset per item. The drawer already keys the whole panel.
   return (
     <div
-      className="surface-grain flex h-full max-h-full flex-col bg-paper-raised"
+      className="surface-grain @container flex h-full max-h-full flex-col bg-paper-raised"
       style={{ "--grain": "0.14" } as React.CSSProperties}
     >
       <div className={BODY_PADDING[variant]}>

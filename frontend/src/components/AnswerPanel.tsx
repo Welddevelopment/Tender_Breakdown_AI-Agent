@@ -24,9 +24,9 @@ export function AnswerPanel({ requirement }: { requirement: Requirement }) {
   }
 
   return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:gap-0">
+    <div className="flex flex-col gap-4 @2xl:flex-row @2xl:gap-0">
       {/* Prose column: the warm reading measure, left-aligned, capped at 64ch. */}
-      <div className="min-w-0 flex-1 sm:pr-8">
+      <div className="min-w-0 flex-1 @2xl:pr-8">
         {editing ? (
           <div className="flex max-w-[64ch] flex-col gap-2.5">
             <textarea
@@ -104,7 +104,7 @@ export function AnswerPanel({ requirement }: { requirement: Requirement }) {
       {/* Mono margin: the answer-state badge, then the evidence refs as quiet
           source lines that expand in place to the verbatim excerpt. */}
       {answer && (
-        <div className="flex shrink-0 flex-col gap-3 sm:w-56 sm:border-l sm:border-hairline sm:pl-8">
+        <div className="flex shrink-0 flex-col gap-3 @2xl:w-56 @2xl:border-l @2xl:border-hairline @2xl:pl-8">
           <AnswerStateBadge state={answer.state} />
           {answer.state === "human_edited" && (
             <p className="font-mono text-xs leading-relaxed text-forest">

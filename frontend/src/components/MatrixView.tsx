@@ -655,8 +655,18 @@ export function MatrixView({
               />
             </div>
             <div className="flex min-w-0 flex-col pl-6">
-              {!evidenceOpen && (
-                <div className="flex justify-end pb-2">
+              {/* Always-visible way back to the resting matrix — the decision
+                  zone's quiet Close sits below the fold on stage, so the exit
+                  must live at the top too (Esc still works). */}
+              <div className="flex items-center justify-between pb-2">
+                <button
+                  type="button"
+                  onClick={close}
+                  className="font-mono text-xs text-ink-muted transition-colors hover:text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-forest"
+                >
+                  ← Back to the matrix
+                </button>
+                {!evidenceOpen && (
                   <button
                     type="button"
                     onClick={() => setEvidenceOpen(true)}
@@ -664,8 +674,8 @@ export function MatrixView({
                   >
                     Show source
                   </button>
-                </div>
-              )}
+                )}
+              </div>
               <div className="min-h-0 flex-1">
                 <RequirementPanel
                   requirement={selected}
