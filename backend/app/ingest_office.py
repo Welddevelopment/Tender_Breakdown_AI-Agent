@@ -20,6 +20,8 @@ from .ingest import IngestedDoc, Page, PDFIngestError
 
 def _doc(filename: str, blocks: list[str]) -> IngestedDoc:
     text = "\n\n".join(b for b in blocks if b.strip())
+    if not text.strip():
+        raise PDFIngestError(f"Could not find readable tender text in {filename}.")
     return IngestedDoc(filename=filename, pages=[Page(number=1, text=text)])
 
 

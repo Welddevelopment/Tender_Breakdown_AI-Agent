@@ -63,6 +63,14 @@ def test_rejects_unsupported_extension(client, tmp_path):
     assert "diagram.png" in resp.json()["detail"]
 
 
+def test_malformed_docx_upload_is_422_not_500(client, tmp_path):
+    broken = tmp_path / "broken.docx"
+    broken.write_bytes(b"not a real word document")
+    resp = _upload(client, [broken])
+    assert resp.status_code == 422
+    assert "could be read" in resp.json()["detail"].lower() or "could not parse" in resp.json()["detail"].lower()
+
+
 def test_docx_only_upload_reaches_extraction(client):
     resp = _upload(client, [DOCX_FIXTURE])
     assert resp.status_code == 200

@@ -90,6 +90,38 @@ def test_office_readers_skip_empty_rows(tmp_path):
     assert doc.pages[0].text.count("[XLSX") == 2  # blank row dropped
 
 
+def test_empty_docx_is_a_clean_parse_error(tmp_path):
+    docx = pytest.importorskip("docx")
+    path = tmp_path / "empty.docx"
+    docx.Document().save(str(path))
+    with pytest.raises(ingest_mod.PDFIngestError, match="readable tender text"):
+        ingest_office.ingest_docx(path)
+
+
+def test_empty_xlsx_is_a_clean_parse_error(tmp_path):
+    openpyxl = pytest.importorskip("openpyxl")
+    path = tmp_path / "empty.xlsx"
+    wb = openpyxl.Workbook()
+    wb.active["A1"] = None
+    wb.save(str(path))
+    with pytest.raises(ingest_mod.PDFIngestError, match="readable tender text"):
+        ingest_office.ingest_xlsx(path)
+
+
+def test_empty_csv_is_a_clean_parse_error(tmp_path):
+    path = tmp_path / "empty.csv"
+    path.write_text("", encoding="utf-8")
+    with pytest.raises(ingest_mod.PDFIngestError, match="readable tender text"):
+        ingest_office.ingest_csv(path)
+
+
+def test_malformed_xlsx_is_a_clean_parse_error(tmp_path):
+    path = tmp_path / "locked-or-corrupt.xlsx"
+    path.write_bytes(b"not a workbook")
+    with pytest.raises(ingest_mod.PDFIngestError, match="Could not parse"):
+        ingest_office.ingest_xlsx(path)
+
+
 # --------------------------------------------------------------------------- #
 # Dispatcher
 # --------------------------------------------------------------------------- #

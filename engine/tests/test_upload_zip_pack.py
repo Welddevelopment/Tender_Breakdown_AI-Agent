@@ -69,6 +69,15 @@ def test_expand_zip_extracts_supported_entries_and_skips_the_rest(tmp_path):
     assert names == {"return-forms.docx"}
 
 
+def test_expand_zip_handles_nested_supported_entries(tmp_path):
+    zpath = _make_zip(tmp_path, {
+        "portal-download/forms/return-forms.docx": b"nested but supported",
+        "portal-download/readme.txt": b"unsupported",
+    })
+    entries = _expand_zip(zpath.read_bytes(), "nested.zip")
+    assert entries == [("return-forms.docx", b"nested but supported")]
+
+
 def test_expand_zip_rejects_bad_zip():
     from fastapi import HTTPException
     with pytest.raises(HTTPException) as exc:
