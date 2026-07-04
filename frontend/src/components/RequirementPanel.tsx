@@ -5,12 +5,13 @@ import Link from "next/link";
 import type { Requirement } from "@/types/requirement";
 import { AnswerPanel } from "./AnswerPanel";
 import { ApprovalStamp } from "./ApprovalStamp";
+import { CommentThread } from "./CommentThread";
 import { ConfidenceIndicator } from "./ConfidenceIndicator";
 import { CategoryTag } from "./CategoryTag";
 import { useRequirements } from "@/context/RequirementsContext";
 import { useAuth } from "@/context/AuthContext";
 import { actorLabel } from "@/lib/collaborators";
-import { tenderPdfPageUrl } from "@/lib/api";
+import { isApiEnabled, tenderPdfPageUrl } from "@/lib/api";
 import {
   hasPdfSource,
   requirementPdfUrl,
@@ -217,6 +218,14 @@ export function RequirementPanel({
             <AnswerPanel key={`ans-${requirement.id}`} requirement={requirement} />
           )}
         </Zone>
+
+        {/* Team discussion — live-product only (needs the backend to store + stream
+            comments). Hidden on the mock/frozen-demo build, which has no accounts. */}
+        {isApiEnabled() && (
+          <Zone title="Team comments">
+            <CommentThread key={`cmt-${requirement.id}`} reqId={requirement.id} />
+          </Zone>
+        )}
       </div>
 
       <DecisionZone

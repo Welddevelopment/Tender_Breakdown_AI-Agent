@@ -19,6 +19,8 @@ import {
   getTender,
   isApiEnabled,
   patchRequirement,
+  tenderEventsUrl,
+  type TenderEvent,
 } from "@/lib/api";
 import {
   loadAnswerStore,
@@ -265,6 +267,41 @@ export function RequirementsProvider({
       }, 420 + order.length * step + 600)
     );
   }
+
+  // Live collaboration: subscribe to the loaded tender's event stream so a teammate's
+  // decision lands here without a refresh. setState happens in the SSE onmessage
+  // callback (an external subscription), the pattern the lint rule permits. The stream
+  // is per-tender; comment threads open their own stream. EventSource auto-reconnects.
+  useEffect(() => {
+    if (initialTender || !tenderId || !isApiEnabled()) return;
+    const url = tenderEventsUrl(tenderId);
+    if (!url || typeof window === "undefined" || !("EventSource" in window)) return;
+    const source = new EventSource(url);
+    source.onmessage = (e) => {
+      let event: TenderEvent;
+      try {
+        event = JSON.parse(e.data) as TenderEvent;
+      } catch {
+        return;
+      }
+      if (event.type !== "requirement" || !event.req_id) return;
+      const reqId = event.req_id;
+      setRequirements((prev) =>
+        prev.map((req) =>
+          req.id === reqId
+            ? {
+                ...req,
+                status: event.status ?? req.status,
+                // decision may legitimately be null (a reopen) — apply it as sent.
+                decision:
+                  event.decision === undefined ? req.decision : event.decision,
+              }
+            : req
+        )
+      );
+    };
+    return () => source.close();
+  }, [tenderId, initialTender]);
 
   // Auditable autofill: ask the API to (re)draft grounded answers for the loaded
   // tender, optionally against freshly-uploaded capability docs. The non-answer
