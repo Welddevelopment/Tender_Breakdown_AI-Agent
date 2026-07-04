@@ -140,6 +140,25 @@ export function sourceDocUrl(opts: {
   return null;
 }
 
+// The live-backend URL for ANY document in a tender pack (PDF/DOCX/XLSX/CSV),
+// via the generic /source endpoint — the Office-format sibling of sourceDocUrl
+// (which is PDF-specific and kept as-is for the existing #page deep-link use).
+// Null when there's no live backend configured (mock/demo build resolves its own
+// static copy instead — see source-doc.ts's sourceDocRawUrl).
+export function sourceDocRawFileUrl(opts: {
+  tenderId: string | null;
+  docId?: string | null;
+}): string | null {
+  const { tenderId, docId } = opts;
+  if (!BASE || !tenderId) return null;
+  const params = new URLSearchParams();
+  if (docId) params.set("doc", docId);
+  const token = getToken();
+  if (token) params.set("token", token);
+  const qs = params.toString();
+  return `${BASE}/tenders/${tenderId}/source${qs ? `?${qs}` : ""}`;
+}
+
 interface UploadJobResult {
   job_id: string;
   tender_id: string;

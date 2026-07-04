@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { PDFDocumentProxy } from "pdfjs-dist";
-import { normalize } from "@/lib/dedupe";
+import { locate, type MatchKind } from "@/lib/text-match";
 
 // Loaded documents, cached for the session keyed by URL, so the persistent
 // evidence pane doesn't refetch and reparse the whole tender PDF every time the
@@ -34,9 +34,10 @@ function getCachedDocument(
 // Everything here is client-only — pdfjs is dynamically imported inside the effect
 // so it never runs on the server, and the worker is served from /public.
 
-// How well the excerpt matched the page text. Reported up so the claim side can
-// carry the honest signal (forest = verified, amber = close, muted = not pinned).
-export type MatchKind = "exact" | "approximate" | "unlocated";
+// How well the excerpt matched the page text (from lib/text-match). Reported up so
+// the claim side can carry the honest signal (forest = verified, amber = close,
+// muted = not pinned). Re-exported so existing importers of this module keep working.
+export type { MatchKind };
 
 interface PdfSourceViewProps {
   // The source PDF: a live tender doc (…/tenders/{id}/pdf?doc=&token=) or a static
@@ -55,54 +56,6 @@ interface Highlight {
 }
 
 type LoadState = "loading" | "ready" | "error";
-
-// A whitespace-flexible search: runs of whitespace in the excerpt match any
-// whitespace in the page text (PDF line breaks become spaces), everything else is
-// matched literally. Returns the [start, end) char range in `haystack`, or null.
-function findRange(haystack: string, phrase: string): [number, number] | null {
-  const trimmed = phrase.trim();
-  if (!trimmed) return null;
-  const pattern = trimmed
-    .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
-    .replace(/\s+/g, "\\s+");
-  const match = new RegExp(pattern, "i").exec(haystack);
-  return match ? [match.index, match.index + match[0].length] : null;
-}
-
-// Locate the excerpt in the page text. An exact hit on the whole excerpt is the
-// verified match; if only a leading run matches (wording drifted mid-sentence, or
-// the extractor tidied punctuation), that is an honest "close match"; nothing at
-// all is "couldn't pin the line".
-function locate(
-  haystack: string,
-  excerpt: string
-): { range: [number, number] | null; kind: MatchKind } {
-  const full = findRange(haystack, excerpt);
-  if (full) return { range: full, kind: "exact" };
-
-  // Normalised containment still counts as exact — it only differs by punctuation
-  // or spacing, which is not a wording change.
-  if (normalize(excerpt) && normalize(haystack).includes(normalize(excerpt))) {
-    const words = excerpt.trim().split(/\s+/);
-    for (const n of [16, 12, 8, 5]) {
-      if (words.length >= n) {
-        const r = findRange(haystack, words.slice(0, n).join(" "));
-        if (r) return { range: r, kind: "exact" };
-      }
-    }
-    return { range: null, kind: "exact" };
-  }
-
-  // A leading run matches but the whole excerpt doesn't: close, not verbatim.
-  const words = excerpt.trim().split(/\s+/);
-  for (const n of [16, 12, 8, 5]) {
-    if (words.length >= n) {
-      const r = findRange(haystack, words.slice(0, n).join(" "));
-      if (r) return { range: r, kind: "approximate" };
-    }
-  }
-  return { range: null, kind: "unlocated" };
-}
 
 // pdfjs page items are TextItem | TextMarkedContent; only TextItem carries `str`
 // and geometry. This is the shape we read (marked-content rows drop out at runtime

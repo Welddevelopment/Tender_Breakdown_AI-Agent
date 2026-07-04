@@ -26,6 +26,8 @@ import { deriveVisibleGroups, type MatrixLens } from "@/lib/matrix-derive";
 import {
   hasPdfSource,
   requirementPdfUrl,
+  sourceDocRawUrl,
+  sourceDocumentKind,
   sourceKindLabel,
   sourceRefLabel,
 } from "@/lib/source-doc";
@@ -43,7 +45,10 @@ import { ControlPanel } from "./ControlPanel";
 import { ActivityFeed } from "./ActivityFeed";
 import { ShareControl } from "./ShareControl";
 import { NoTenderLoaded } from "./NoTenderLoaded";
-import { PdfSourceView, type MatchKind } from "./PdfSourceView";
+import { PdfSourceView } from "./PdfSourceView";
+import type { MatchKind } from "@/lib/text-match";
+import { DocxSourceView } from "./DocxSourceView";
+import { SheetSourceView } from "./SheetSourceView";
 import { RequirementDrawer } from "./RequirementDrawer";
 import { RequirementPanel } from "./RequirementPanel";
 import { RequirementSpine } from "./RequirementSpine";
@@ -746,6 +751,7 @@ export function MatrixView({
                     key={selected.id}
                     requirement={selected}
                     pdfUrl={requirementPdfUrl(tenderId, selected)}
+                    rawDocUrl={sourceDocRawUrl(tenderId, selected)}
                     onHide={() => setEvidenceOpen(false)}
                   />
                 </div>
@@ -1015,12 +1021,13 @@ function CompletionSummary({
   );
 }
 
-// The persistent evidence pane (wide split only): the actual tender page,
-// rendered by the same PdfSourceView the verify overlay uses, with the excerpt
-// highlighted. Above it, a mono header names the document and page and carries
-// the honest match signal — a word in a chip, never a score. When no PDF exists
-// (the plain mock), a calm placeholder holds the pane so it is never a broken
-// hole. Keyed by requirement in the owner so the match state resets per item.
+// The persistent evidence pane (wide split only): the actual source document —
+// PDF, DOCX, XLSX or CSV — rendered by the same viewers the verify overlay uses,
+// with the excerpt highlighted. Above it, a mono header names the document and
+// page and carries the honest match signal — a word in a chip, never a score.
+// When no document is available (the plain mock), a calm placeholder holds the
+// pane so it is never a broken hole. Keyed by requirement in the owner so the
+// match state resets per item.
 
 // Tailwind 4: full literal class strings in a lookup map, never template-built.
 const MATCH_CHIP: Record<
@@ -1047,17 +1054,21 @@ const MATCH_CHIP: Record<
 function EvidencePane({
   requirement,
   pdfUrl,
+  rawDocUrl = null,
   onHide,
 }: {
   requirement: Requirement;
   pdfUrl: string | null;
+  rawDocUrl?: string | null;
   onHide: () => void;
 }) {
-  // null while PdfSourceView is still locating the line.
+  // null while PdfSourceView/DocxSourceView/SheetSourceView is still locating the line.
   const [match, setMatch] = useState<MatchKind | null>(null);
   const ref = sourceRefLabel(requirement);
   const isPdf = hasPdfSource(requirement);
+  const kind = sourceDocumentKind(requirement);
   const sourceKind = sourceKindLabel(requirement);
+  const hasRenderableSource = Boolean(pdfUrl || rawDocUrl);
 
   return (
     <div className="flex h-full flex-col">
@@ -1078,7 +1089,7 @@ function EvidencePane({
           <span className="text-accent">{ref}</span>
         </p>
         <span className="flex shrink-0 items-center gap-3">
-          {pdfUrl &&
+          {hasRenderableSource &&
             (match === null ? (
               <span className="font-mono text-[11px] text-ink-muted">
                 Finding the line…
@@ -1105,6 +1116,20 @@ function EvidencePane({
             excerpt={requirement.source_excerpt}
             onMatch={setMatch}
           />
+        ) : rawDocUrl && kind === "word" ? (
+          <DocxSourceView
+            docUrl={rawDocUrl}
+            excerpt={requirement.source_excerpt}
+            onMatch={setMatch}
+          />
+        ) : rawDocUrl && (kind === "excel" || kind === "csv") ? (
+          <SheetSourceView
+            docUrl={rawDocUrl}
+            isCsv={kind === "csv"}
+            sourceClause={requirement.source_clause ?? null}
+            excerpt={requirement.source_excerpt}
+            onMatch={setMatch}
+          />
         ) : !isPdf ? (
           <div className="flex h-full flex-col bg-paper-recessed p-6 shadow-[var(--depth-pressed)]">
             <p className="font-mono text-[11px] uppercase tracking-wide text-ink-muted">
@@ -1114,7 +1139,7 @@ function EvidencePane({
               &ldquo;{requirement.source_excerpt}&rdquo;
             </p>
             <p className="mt-auto pt-6 font-mono text-[11px] leading-relaxed text-ink-muted">
-              {ref}. This source is shown as text because it is not a PDF page.
+              {ref}. This source isn&rsquo;t available to render here.
             </p>
           </div>
         ) : (

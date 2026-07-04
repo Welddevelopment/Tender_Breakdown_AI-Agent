@@ -11,6 +11,7 @@ export default function robots(): MetadataRoute.Robots {
         "/codemap.html",
         "/demo/bradwell-grounds-itt.pdf",
         "/demo/spso-cleaning.pdf",
+        "/demo/mixed-pack/",
         "/graph",
         "/login",
         "/pdf.worker.min.mjs",

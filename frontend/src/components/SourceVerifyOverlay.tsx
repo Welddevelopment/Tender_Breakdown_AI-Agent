@@ -2,8 +2,16 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Requirement } from "@/types/requirement";
-import { hasPdfSource, sourceKindLabel, sourceRefLabel } from "@/lib/source-doc";
-import { PdfSourceView, type MatchKind } from "./PdfSourceView";
+import {
+  hasPdfSource,
+  sourceDocumentKind,
+  sourceKindLabel,
+  sourceRefLabel,
+} from "@/lib/source-doc";
+import type { MatchKind } from "@/lib/text-match";
+import { PdfSourceView } from "./PdfSourceView";
+import { DocxSourceView } from "./DocxSourceView";
+import { SheetSourceView } from "./SheetSourceView";
 
 // The claim ↔ source split (graph-and-verification-deep-plan.md Part B, #1): click
 // a claim's source and the tender page opens beside it with the exact line
@@ -17,12 +25,16 @@ interface SourceVerifyOverlayProps {
   // The resolved source PDF (live tender doc or a static demo copy), or null when
   // no PDF is available and we fall back to the excerpt as the proof.
   pdfUrl: string | null;
+  // The resolved raw DOCX/XLSX/CSV file (live tender doc or a static demo copy),
+  // or null when this requirement isn't Office-sourced or no copy is available.
+  rawDocUrl?: string | null;
   onClose: () => void;
 }
 
 export function SourceVerifyOverlay({
   requirement,
   pdfUrl,
+  rawDocUrl = null,
   onClose,
 }: SourceVerifyOverlayProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -39,7 +51,9 @@ export function SourceVerifyOverlay({
 
   const ref = sourceRefLabel(requirement);
   const isPdf = hasPdfSource(requirement);
+  const kind = sourceDocumentKind(requirement);
   const sourceKind = sourceKindLabel(requirement);
+  const hasRenderableSource = Boolean(pdfUrl || rawDocUrl);
   // "Open the page" escape hatch: the raw PDF at the right page, in a new tab.
   const openPageHref = pdfUrl ? `${pdfUrl}#page=${requirement.source_page}` : "";
 
@@ -102,7 +116,11 @@ export function SourceVerifyOverlay({
           </p>
 
           <div className="mt-auto pt-5">
-            <MatchSignal kind={pdfUrl ? match : "unlocated"} page={requirement.source_page} />
+            <MatchSignal
+              kind={hasRenderableSource ? match : "unlocated"}
+              page={requirement.source_page}
+              isPdf={isPdf}
+            />
             {openPageHref && (
               <a
                 href={openPageHref}
@@ -125,11 +143,25 @@ export function SourceVerifyOverlay({
               excerpt={requirement.source_excerpt}
               onMatch={setMatch}
             />
+          ) : rawDocUrl && kind === "word" ? (
+            <DocxSourceView
+              docUrl={rawDocUrl}
+              excerpt={requirement.source_excerpt}
+              onMatch={setMatch}
+            />
+          ) : rawDocUrl && (kind === "excel" || kind === "csv") ? (
+            <SheetSourceView
+              docUrl={rawDocUrl}
+              isCsv={kind === "csv"}
+              sourceClause={requirement.source_clause ?? null}
+              excerpt={requirement.source_excerpt}
+              onMatch={setMatch}
+            />
           ) : (
             <p className="p-6 font-mono text-xs leading-relaxed text-ink-muted">
               {isPdf
                 ? "The source PDF is not available here. The exact wording above is what Bidframe read from the tender."
-                : `This ${sourceKind} source is shown as extracted text. Bidframe does not show a PDF highlight for this file type.`}
+                : `This ${sourceKind} source isn't available to render here. The exact wording above is what Bidframe read from it.`}
             </p>
           )}
         </div>
@@ -145,9 +177,11 @@ export function SourceVerifyOverlay({
 function MatchSignal({
   kind,
   page,
+  isPdf,
 }: {
   kind: MatchKind | null;
   page: number;
+  isPdf: boolean;
 }) {
   if (kind === null) {
     return (
@@ -160,7 +194,7 @@ function MatchSignal({
         <span aria-hidden className="text-forest">
           ✓
         </span>
-        Matches the tender, p.{page}
+        {isPdf ? `Matches the tender, p.${page}` : "Matches the document"}
       </p>
     );
   }

@@ -14,6 +14,7 @@ import { tenderPdfPageUrl } from "@/lib/api";
 import {
   hasPdfSource,
   requirementPdfUrl,
+  sourceDocRawUrl,
   sourceLocatorLabel,
   sourceRefLabel,
 } from "@/lib/source-doc";
@@ -271,6 +272,10 @@ function RequirementZone({
   // The source document to verify against: the live tender's PDF, or a static demo
   // copy. Null in the plain mock (no matching document) — the button hides then.
   const pdfUrl = requirementPdfUrl(tenderId, requirement);
+  // Same idea for a Word/Excel/CSV source, so "see it in the document" isn't a
+  // PDF-only promise — an Office source gets the real file rendered too.
+  const rawDocUrl = sourceDocRawUrl(tenderId, requirement);
+  const canVerifySource = Boolean(pdfUrl || rawDocUrl);
 
   return (
     <Zone title="Requirement">
@@ -299,7 +304,7 @@ function RequirementZone({
           )}
           <CategoryTag category={requirement.category} className="w-fit" />
           <SourceRef requirement={requirement} />
-          {pdfUrl && (
+          {canVerifySource && (
             <button
               type="button"
               onClick={() => setVerifyOpen(true)}
@@ -314,7 +319,7 @@ function RequirementZone({
       {requirement.is_gating && (
         <ExplainabilityBlock
           requirement={requirement}
-          canVerify={Boolean(pdfUrl)}
+          canVerify={canVerifySource}
           onVerify={() => setVerifyOpen(true)}
         />
       )}
@@ -323,6 +328,7 @@ function RequirementZone({
         <SourceVerifyOverlay
           requirement={requirement}
           pdfUrl={pdfUrl}
+          rawDocUrl={rawDocUrl}
           onClose={() => setVerifyOpen(false)}
         />
       )}

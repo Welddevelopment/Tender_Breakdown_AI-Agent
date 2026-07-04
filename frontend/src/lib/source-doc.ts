@@ -1,5 +1,5 @@
 import type { Requirement } from "@/types/requirement";
-import { sourceDocUrl } from "@/lib/api";
+import { sourceDocUrl, sourceDocRawFileUrl } from "@/lib/api";
 
 export type SourceDocumentKind =
   | "pdf"
@@ -127,4 +127,39 @@ export function sourceLocatorLabel(req: Requirement): string {
       : `p.${req.source_page}`;
   }
   return req.source_clause ?? sourceKindLabel(req);
+}
+
+// Static copies of the mixed-pack demo's Word/Excel/CSV fixtures, shipped in
+// /public so the offline /pack + /showcase surfaces can render + highlight the
+// REAL document with no backend and no key — the same reasoning as DEMO_PDFS
+// above. Keyed by the source_filename carried on each requirement.
+const DEMO_OFFICE_FILES: Record<string, string> = {
+  "sample-return-forms.docx": "/demo/mixed-pack/sample-return-forms.docx",
+  "sample-pricing-schedule.xlsx": "/demo/mixed-pack/sample-pricing-schedule.xlsx",
+  "sample-compliance.csv": "/demo/mixed-pack/sample-compliance.csv",
+};
+
+// The source DOCX/XLSX/CSV URL for the claim/source verification view — the Office
+// sibling of sourceDocPdfUrl. A live tender streams the real file from the backend
+// (owner-scoped, token as a query param, via the generic /source endpoint); the
+// mock/demo build falls back to a static public copy for a known demo fixture.
+// Null when this requirement isn't Office-sourced or no copy is available.
+export function sourceDocRawUrl(
+  tenderId: string | null,
+  req: Requirement
+): string | null {
+  if (sourceDocumentKind(req) === "pdf") return null;
+  const live = sourceDocRawFileUrl({ tenderId, docId: req.source_doc_id });
+  if (live) return live;
+  return req.source_filename ? DEMO_OFFICE_FILES[req.source_filename] ?? null : null;
+}
+
+// Parse the row-oriented locator backend/app/ingest_office.py bakes into
+// source_clause for XLSX/CSV rows ("XLSX Pricing row 6 | A6:E6", "CSV row 2") into
+// a 1-based row number the sheet viewer can highlight directly. Null when the
+// clause doesn't carry one (e.g. it was left as a heuristic-extractor clause).
+export function parseSheetRowLocator(sourceClause: string | null | undefined): number | null {
+  if (!sourceClause) return null;
+  const m = /\brow\s+(\d+)/i.exec(sourceClause);
+  return m ? parseInt(m[1], 10) : null;
 }

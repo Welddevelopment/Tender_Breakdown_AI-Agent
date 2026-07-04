@@ -427,6 +427,51 @@ def get_tender_pdf(
     )
 
 
+_SOURCE_MEDIA_TYPES = {
+    ".pdf": "application/pdf",
+    ".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    ".csv": "text/csv",
+}
+
+
+@app.get("/tenders/{tender_id}/source")
+def get_tender_source_file(
+    tender_id: str,
+    doc: str = "d1",
+    token: Optional[str] = None,          # accepted so an <iframe>/fetch can authenticate
+    authorization: str = Header(None),
+):
+    """Serve any document in a tender pack — PDF, DOCX, XLSX or CSV — inline in its
+    native format, so the frontend can render + highlight the real DOCX/XLSX/CSV
+    alongside the existing PDF proof view instead of showing only the extracted
+    excerpt as plain text. Same auth (bearer header or ?token=) and path-traversal
+    guard as /tenders/{id}/pdf; looks up whichever extension is actually stored for
+    `doc` since main.py keeps each upload's original suffix (d1.pdf, d2.docx, ...)."""
+    raw = None
+    if authorization and authorization.lower().startswith("bearer "):
+        raw = authorization[7:].strip()
+    elif token:
+        raw = token
+    user = auth.user_from_token(raw)
+    if user is None:
+        raise HTTPException(status_code=401, detail="Sign in to view this document.")
+    if not tender_id.replace("-", "").isalnum() or not doc.isalnum():
+        raise HTTPException(status_code=400, detail="Invalid id.")
+    if store.get_tender_owner(tender_id) != user["id"]:
+        raise HTTPException(status_code=404, detail="Source document not available for this tender.")
+    folder = UPLOAD_DIR / tender_id
+    for ext, media_type in _SOURCE_MEDIA_TYPES.items():
+        path = folder / f"{doc}{ext}"
+        if path.is_file():
+            return FileResponse(
+                path,
+                media_type=media_type,
+                headers={"Content-Disposition": f'inline; filename="{tender_id}-{doc}{ext}"'},
+            )
+    raise HTTPException(status_code=404, detail="Source document not available for this tender.")
+
+
 DRAFT_CONCURRENCY = 8   # parallel LLM draft calls — keeps the live "Autofill with AI" snappy
 
 
