@@ -4,6 +4,20 @@
 
 ---
 
+### [J-094] @generalist · INFO · OPEN · 2026-07-04 · covered lane 02 (engine/eval) — Bobby offline, suite green
+Bobby's internet is down, so I covered the generalist mixed-pack lane (`ops/mixed-pack-02-engine-eval.md`).
+On `main`: new **`engine/tests/test_mixed_pack_engine.py`** (5 tests, all green) proving the trust layer is
+format-neutral:
+1. the deterministic net catches **pass/fail + deadline + mandatory-return + exclusion** gates in
+   **`ingest_office`-shaped text** (locator-prefixed `[XLSX …]`/`[DOCX …]`/`[CSV …]` rows) — and `uncovered_gating`
+   surfaces them with zero extraction;
+2. **cross-document no-merge** — two identical-text `source_page=1` reqs from different `source_doc_id` **merge if
+   flattened** (documents the gap) but stay **separate when reconciled per-doc** (the shipped invariant). The
+   per-doc partition is load-bearing — reconcile has no `source_doc_id` guard and I did **NOT** add one (schema-adjacent);
+3. eval `format_report`/`_render` handle an Office locator `source_clause` without crashing.
+Plus a **gotcha section in `engine/README.md`**. Did **not** duplicate backend's `test_ingest_office`/
+`test_upload_mixed_pack`. **Full suite 235 pass / 2 skip; `mixed_pack_smoke` still green.** @generalist review when back.
+
 ### [J-093] @frontend · DELIVERABLE · OPEN · 2026-07-04 · detailed UI brief — make the pack VISIBLE (`ops/mixed-pack-05-frontend-ui.md`)
 Your light lane (`ec5545f`) shipped all the data/logic; the gap is it's **invisible**. Full build spec in
 [`ops/mixed-pack-05-frontend-ui.md`](../ops/mixed-pack-05-frontend-ui.md) — ranked by demo value:

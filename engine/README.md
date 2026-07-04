@@ -43,6 +43,26 @@ A **backend-rooted deploy** can't import `engine/`, so it silently falls back to
 
 `reconcile` emits the **15-field `Requirement`** + `{tender_id, title, requirements}` envelope from `frontend/src/types/requirement.ts`. The additive autofill fields (`answer`, `open_questions`, `capability_docs`) are populated by the answer-draft step and now flow through the live API (the frontend type + matrix already carry them). Merge provenance lives in the reconcile **report**, never in a requirement object.
 
+## Mixed-pack / format-neutrality (gotcha)
+
+The trust layer is **format-neutral** — `reconcile`/`gating_scan`/`eval` operate on an opaque
+`source_page` int + text and never open a PDF, so Word/Excel/CSV sources flow through unchanged
+(`backend/app/ingest_office.py` bakes a locator like `[XLSX Pricing row 5 | A5:E5]` into the page text
+and collapses every Office doc to `Page(number=1)`). Tests: `test_mixed_pack_engine.py`.
+
+- **Cross-document dedupe is a PIPELINE-level partition, not a reconcile guard.** `group_candidates`
+  has **no `source_doc_id`** awareness (`source_doc_id`/`source_filename` aren't in `FINAL_KEYS` — the
+  backend re-attaches them). So identical text on `source_page=1` from two *different* files **merges if
+  grouped together** — and every Office doc lands on page 1, so this is the real collision case. The
+  safety is that `backend/app/pipeline.py::run_pipeline_multi` reconciles **each document independently**,
+  then renumbers. **Do not flatten that partition, and do not add `source_doc_id` to the merge key**
+  (schema-adjacent). Regression-locked by `test_per_document_reconcile_keeps_cross_doc_requirements_separate`.
+- **`source_page` is the only int-contract field.** A non-PDF `source_clause` (e.g. `XLSX: Pricing!A12`)
+  is an opaque string everywhere — never `int()`-ed — so eval/reporting renders it fine. Office docs keep
+  `source_page=1`; never treat that as a real PDF page or a highlight (`source_rect` stays null for Office).
+- **`scripts/eval_all.py` + `scripts/gating_recall.py` are PDF-bound by design** (they `fitz.open` the gold
+  corpus). That's fine — they're batch harnesses over the PDF gold sets, not the runtime trust layer.
+
 ## Modules
 
 - `reconcile.py` — conservative dedupe/merge (char + token-Jaccard + same page + same clause), noisy-OR confidence, safety escalation (+ audit report).
