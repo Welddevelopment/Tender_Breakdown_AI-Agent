@@ -2991,7 +2991,7 @@ body {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   white-space: nowrap;
-  opacity: 0.55;
+  opacity: 0.68;
   transition: opacity 300ms ease;
 }
 
@@ -3008,8 +3008,8 @@ body {
 
 .pitch-trailmap__fieldnotes {
   position: absolute;
-  left: 63%;
-  top: 0.35rem;
+  left: 55%;
+  top: 0.18rem;
   font-family: var(--font-mono-ibm), monospace;
   font-size: clamp(0.5rem, 0.6vw, 0.66rem);
   letter-spacing: 0.12em;

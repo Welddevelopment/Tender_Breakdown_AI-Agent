@@ -18,10 +18,12 @@ import {
 
 // The route sits centered in the band's free stretch: it starts far enough in
 // for the first label to breathe and ends well short of the controls dock
-// (timer, pace, handoff), which now claims the band's right quarter. The
-// field-notes side path branches off the final blaze.
-const TRAIL_PATH =
-  "M 70 30 C 140 14, 210 38, 290 26 C 370 12, 440 38, 510 24 C 560 14, 600 30, 640 22";
+// (timer, pace, handoff), which claims the band's right quarter. It runs
+// nearly level with one soft lift toward the ask — at this stretched aspect
+// ratio anything wavier reads as noise, and a level line keeps every blaze
+// and label on one clean baseline. The field-notes side path branches off
+// the final blaze.
+const TRAIL_PATH = "M 70 24 C 260 22, 450 21, 640 15";
 
 const VIEW_W = 1000;
 const VIEW_H = 44;
@@ -125,15 +127,15 @@ export function TrailMap({
           <circle
             ref={walkerRef}
             className="pitch-trailmap__walker"
-            cx="18"
-            cy="30"
+            cx="70"
+            cy="24"
             r="3.4"
           />
         </g>
         {/* the field-notes side path, off the end of the route */}
         <path
           className="pitch-trailmap__sidepath"
-          d="M 640 22 C 654 14, 664 10, 676 7"
+          d="M 640 15 C 652 11, 660 9, 672 6"
           stroke="currentColor"
           strokeWidth="1.5"
           strokeDasharray="3 4"
