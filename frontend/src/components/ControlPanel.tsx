@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { useRequirements } from "@/context/RequirementsContext";
+import { deriveTriage } from "@/lib/triage";
 
 // Live decision tally for the demo shell: short enough to sit above the matrix,
 // but still explicit that every approval, edit, and flag is human-owned.
@@ -18,8 +19,14 @@ export function ControlPanel() {
       (r) => r.status === "edited" || r.answer?.state === "human_edited"
     ).length;
     const flagged = requirements.filter((r) => r.status === "flagged").length;
+    // What Bidframe found — the same triage the matrix groups use, so these
+    // headline counts can never disagree with the register below.
+    const triage = deriveTriage(requirements);
     return {
       total: requirements.length,
+      dealBreakers: requirements.filter((r) => r.is_gating).length,
+      toVerify: triage.counts["to-verify"],
+      needsYou: triage.counts["needs-you"],
       openQ,
       accepted,
       edited,
@@ -34,6 +41,34 @@ export function ControlPanel() {
       className="surface-grain border-b border-hairline bg-paper-raised/75 px-6 py-3 shadow-[var(--depth-row)]"
     >
       <div className="mx-auto max-w-6xl">
+        {/* What Bidframe found — the headline read of the tender, above the
+            human decision log. Deal-breakers carry the one earned alarm colour. */}
+        <dl className="mb-3 grid grid-cols-2 gap-x-4 gap-y-2 rounded-md border border-hairline/90 bg-paper/80 px-4 py-3 text-sm shadow-[var(--depth-pressed)] sm:grid-cols-4">
+          <div>
+            <dt className="text-ink-muted">Requirements found</dt>
+            <dd className="mt-0.5 font-mono text-xl leading-none text-ink">
+              {s.total}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-ink-muted">Deal-breakers</dt>
+            <dd className="mt-0.5 font-mono text-xl leading-none text-signal-oxblood">
+              {s.dealBreakers}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-ink-muted">Need verification</dt>
+            <dd className="mt-0.5 font-mono text-xl leading-none text-ink">
+              {s.toVerify}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-ink-muted">Need your input</dt>
+            <dd className="mt-0.5 font-mono text-xl leading-none text-ink">
+              {s.needsYou}
+            </dd>
+          </div>
+        </dl>
         <aside className="grid gap-3 rounded-md border border-hairline/90 bg-paper/80 px-4 py-3 shadow-[var(--depth-pressed)] lg:grid-cols-[9rem_minmax(0,1fr)_minmax(18rem,24rem)] lg:items-center">
           <div className="flex items-baseline justify-between gap-3 border-b border-hairline/70 pb-2 lg:block lg:border-b-0 lg:border-r lg:pb-0 lg:pr-4">
             <p className="font-mono text-[11px] font-medium uppercase tracking-wide text-ink-muted">
