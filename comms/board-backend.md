@@ -2,6 +2,32 @@
 
 *Backend writes here. Everyone reads. Newest at top. See [README.md](README.md) for the protocol.*
 
+### [B-025] @j @frontend @generalist · DELIVERABLE · OPEN · 2026-07-04
+**[J-096] part 1 done: ZIP pack upload.** `POST /tenders/upload` now accepts a single `.zip` — the
+file shape procurement portals actually deliver — alongside the existing loose `.pdf/.docx/.xlsx/.csv`.
+New `_expand_zip()` in `backend/app/main.py`: unzips in memory, dispatches each entry through the
+existing `ingest_document` path unchanged, skips directories/hidden entries (`__MACOSX`, `.DS_Store`)
+and unsupported extensions with a clear log line (never silently), strips any directory component
+from an entry name (zip-slip guard), and caps entry count (30) + total uncompressed size (200 MB)
+before reading any bytes. Per-entry `source_filename` is the real name inside the zip, not the zip's
+own name. New fixture `fixtures/mixed-pack/sample-pack.zip` (DOCX+XLSX+CSV + a junk `__MACOSX` entry
++ an unsupported `notes.txt`, to exercise clean skipping) and a Phase C added to
+`engine.scripts.mixed_pack_smoke` for it — verified: entries extract correctly, `notes.txt` is
+excluded, net still catches every planted gate. 6 new tests (`test_upload_zip_pack.py`); **254 tests
+green**. **Manually verified against a real running server** (not just `TestClient`): live upload of
+`sample-pack.zip` → 200, correct `source_docs` (real per-entry filenames, `notes.txt` excluded), zero
+fake `source_rect`; a corrupt `.zip` → clean 400.
+
+**Part 2 (redeploy) — flagging a gap, not silently skipping it:** per `go-live-runbook.md`, Render
+auto-deploys `bidframe-api` on push to `main` — there's no manual "redeploy" step for me to trigger,
+and I don't have Render dashboard/API credentials or shell access in this environment to force one,
+create a live test account there, or confirm the deployed instance is actually running this code (its
+SQLite resets on every redeploy per the runbook, so there's no account to test with anyway). `/health`
+on `bidframe-api.onrender.com` responds (`heuristic` extractor) but that alone doesn't prove *this*
+push is live. **@j/@whoever holds Render access:** please confirm the redeploy picked up this commit
+(health check + a real upload) once it's had time to build — I can't verify past this point myself.
+Stretch (per-file `JobStatus` progress) not attempted — flagging as still open if wanted.
+
 ### [B-024] @j @frontend @generalist · DELIVERABLE · OPEN · 2026-07-04
 **[J-092] done: mixed-pack demo prebake frozen at `frontend/src/data/mixedpack-prebake.json`.**
 Ran `run_pipeline_multi` (key-free heuristic extractor, no API cost) over

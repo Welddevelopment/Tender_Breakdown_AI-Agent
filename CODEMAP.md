@@ -13,8 +13,8 @@
 | Area | Files | Lines | What it is |
 |------|-------|-------|------------|
 | **frontend** | 180 | 69,277 | Frontend — Next.js 16 / React 19 / Tailwind (compliance matrix UI) |
-| **backend** | 22 | 3,416 | Backend — FastAPI (PDF ingest, extraction, REST API) |
-| **engine** | 79 | 6,683 | Engine — reconcile / eval / answer-draft pipeline + tests |
+| **backend** | 22 | 3,477 | Backend — FastAPI (PDF ingest, extraction, REST API) |
+| **engine** | 79 | 6,743 | Engine — reconcile / eval / answer-draft pipeline + tests |
 | **prompts** | 6 | 713 | Prompts — LLM prompt specs (extraction, classification, answers, gaps) |
 | **gold** | 7 | 363 | Eval gold-set — hand-labelled requirements for accuracy measurement |
 | **data** | 17 | 0 | Data — tender source PDFs (not parsed here) |
@@ -415,6 +415,7 @@ graph LR
   n28[gating_recall.py] --> n16[reconcile.py]
   n28[gating_recall.py] --> n26[run_tender.py]
   n29[mixed_pack_smoke.py] --> n3[ingest.py]
+  n29[mixed_pack_smoke.py] --> n10[main.py]
   n29[mixed_pack_smoke.py] --> n15[gating_scan.py]
   n30[net_floor.py] --> n15[gating_scan.py]
   n31[precision_report.py] --> n21[_io.py]

@@ -14,6 +14,8 @@ import shutil
 import threading
 import time
 import uuid
+import zipfile
+from io import BytesIO
 from pathlib import Path
 from typing import List, Optional
 
@@ -103,6 +105,48 @@ def _startup() -> None:
 
 MAX_UPLOAD_MB = 50    # per file
 MAX_PACK_MB = 150     # per tender pack (all files together)
+MAX_ZIP_ENTRIES = 30          # a tender pack has a handful of documents, not hundreds
+MAX_ZIP_UNCOMPRESSED_MB = 200  # zip-bomb guard: cap total uncompressed size before extracting
+UPLOAD_ACCEPT_EXTENSIONS = SUPPORTED_EXTENSIONS | {".zip"}
+
+
+def _expand_zip(raw: bytes, zip_filename: str) -> list[tuple[str, bytes]]:
+    """Unzip a tender pack in memory into (basename, content) pairs — this is the file
+    shape procurement portals actually deliver. Skips directories, hidden/system entries
+    (__MACOSX, .DS_Store) and any extension ingest_document can't read, each with a clear
+    note; never recurses into a nested .zip. Guards entry count and total uncompressed
+    size against a zip bomb before reading any entry's bytes."""
+    try:
+        zf = zipfile.ZipFile(BytesIO(raw))
+    except zipfile.BadZipFile as exc:
+        raise HTTPException(status_code=400, detail=f"'{zip_filename}' is not a valid ZIP file.") from exc
+
+    infos = [i for i in zf.infolist() if not i.is_dir()]
+    if len(infos) > MAX_ZIP_ENTRIES:
+        raise HTTPException(
+            status_code=413,
+            detail=f"'{zip_filename}' has too many files ({len(infos)}). Maximum is {MAX_ZIP_ENTRIES}.",
+        )
+    total_uncompressed = sum(i.file_size for i in infos)
+    if total_uncompressed > MAX_ZIP_UNCOMPRESSED_MB * 1024 * 1024:
+        raise HTTPException(
+            status_code=413,
+            detail=f"'{zip_filename}' is too large uncompressed. Maximum is {MAX_ZIP_UNCOMPRESSED_MB} MB.",
+        )
+
+    out: list[tuple[str, bytes]] = []
+    for info in infos:
+        # Path(...).name strips any directory component — defends against a "zip slip"
+        # entry (e.g. "../../etc/passwd") ever being used as a filesystem path.
+        name = Path(info.filename).name
+        if not name or name.startswith(".") or name.startswith("__MACOSX"):
+            continue
+        ext = Path(name).suffix.lower()
+        if ext not in SUPPORTED_EXTENSIONS:
+            print(f"[upload] skipping unsupported entry '{info.filename}' inside {zip_filename}")
+            continue
+        out.append((name, zf.read(info)))
+    return out
 
 
 # ---- Extraction jobs (live progress) ----------------------------------------
@@ -214,12 +258,30 @@ async def upload_tender(
     if not all_files:
         raise HTTPException(status_code=400, detail="Please upload at least one document.")
     for f in all_files:
-        if Path(f.filename).suffix.lower() not in SUPPORTED_EXTENSIONS:
-            supported = ", ".join(sorted(SUPPORTED_EXTENSIONS))
+        if Path(f.filename).suffix.lower() not in UPLOAD_ACCEPT_EXTENSIONS:
+            supported = ", ".join(sorted(UPLOAD_ACCEPT_EXTENSIONS))
             raise HTTPException(
                 status_code=400,
                 detail=f"'{f.filename}' is not a supported file type. Supported: {supported}.",
             )
+
+    # Expand any .zip pack into its contained supported entries — this is the single
+    # file procurement portals actually deliver a tender pack as. A plain (non-zip)
+    # upload just passes through unchanged. Reads each UploadFile fully into memory
+    # (bounded by the per-file/pack size checks below), which .zip expansion needs anyway.
+    expanded: list[tuple[str, bytes]] = []   # (filename, content)
+    for f in all_files:
+        raw = f.file.read()
+        if Path(f.filename).suffix.lower() == ".zip":
+            entries = _expand_zip(raw, f.filename)
+            if not entries:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"'{f.filename}' contains no supported files (.pdf/.docx/.xlsx/.csv).",
+                )
+            expanded.extend(entries)
+        else:
+            expanded.append((f.filename, raw))
 
     tender_id = f"tnd-{uuid.uuid4().hex[:8]}"
     folder = UPLOAD_DIR / tender_id
@@ -228,21 +290,20 @@ async def upload_tender(
 
     docs: list = []   # (doc_id, path, filename)
     total_mb = 0.0
-    for i, f in enumerate(all_files, start=1):
+    for i, (name, raw) in enumerate(expanded, start=1):
         doc_id = f"d{i}"
-        ext = Path(f.filename).suffix.lower()
+        ext = Path(name).suffix.lower()
         dest = folder / f"{doc_id}{ext}"
-        with dest.open("wb") as out:
-            shutil.copyfileobj(f.file, out)
-        mb = dest.stat().st_size / (1024 * 1024)
+        dest.write_bytes(raw)
+        mb = len(raw) / (1024 * 1024)
         total_mb += mb
         if mb > MAX_UPLOAD_MB:
             shutil.rmtree(folder, ignore_errors=True)
             raise HTTPException(
                 status_code=413,
-                detail=f"'{f.filename}' is too large ({mb:.1f} MB). Maximum is {MAX_UPLOAD_MB} MB per file.",
+                detail=f"'{name}' is too large ({mb:.1f} MB). Maximum is {MAX_UPLOAD_MB} MB per file.",
             )
-        docs.append((doc_id, str(dest), f.filename))
+        docs.append((doc_id, str(dest), name))
     if total_mb > MAX_PACK_MB:
         shutil.rmtree(folder, ignore_errors=True)
         raise HTTPException(
