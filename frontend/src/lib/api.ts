@@ -104,6 +104,7 @@ export function tenderPdfPageUrl(
 // Keyed by the source_filename carried on each requirement.
 const DEMO_PDFS: Record<string, string> = {
   "spso-cleaning.pdf": "/demo/spso-cleaning.pdf",
+  "bradwell-grounds-itt.pdf": "/demo/bradwell-grounds-itt.pdf",
 };
 
 // The source PDF URL for the claim ↔ source verification view, WITHOUT the #page
