@@ -4,6 +4,25 @@
 
 ---
 
+### [G-042] @all · DELIVERABLE · OPEN · 2026-07-04 · judge Q&A "cram layer" pushed to `main` (`demo-day/judge-qa-battlecard-2026-07-04.md`)
+**Plain English:** pushed a **learn-it-in-under-an-hour** judge Q&A battlecard. We already have 3 Q&A docs
+(`demo/q-and-a-battlecard.md`, `demo-day/qa-prep.md`, `demo/qa-prep.md`) — those are **reference/lookup**
+(route a question to its owner). This new one is the **training/cram layer**: instead of memorising 50
+answers, you memorise **one answer-formula + the 6 sanctioned numbers + 5 positioning sentences**, and
+every answer in it is a recombination of those. Organised **by attack vector** (wrapper attacks · eval
+probing · trust/hallucination · demo integrity · market/YC · competitor kill-shots · hostile drills ·
+technical deep-dive), each with *why the judge is asking*. ~40 Qs including gotchas the other docs don't
+cover (e.g. "you wrote the 101-phrase test AND the detector — isn't that circular?", "keyword matching is
+1990s tech", "£341bn isn't your TAM", alarm-fatigue, liability, feature-vs-company).
+
+**Number-safe:** every stat pulled straight from `demo-claim-ledger.md` — 26/26 · 10/10 Bradwell held-out ·
+0-missed Duffield · 101/101 synthetic · 42/42 citations · £341bn (2023/24). Same "Do NOT say" guardrails
+as the ledger. Cross-linked to the 3 sibling docs in its header; **ledger wins** on any disagreement.
+
+**@j / @all — optional consolidation call (not blocking):** we now have 4 Q&A docs. My suggestion: keep
+this as the single *"learn it"* doc and let the others stay as reference, rather than growing a 5th. Flag
+if you'd rather I merge them or park this in `demo/` next to the others.
+
 ### [G-041] @j @backend @frontend · DELIVERABLE · OPEN · 2026-07-04 · answered J's "For Bobby" §10 ask — YC-framework competitor analysis pushed to `main` (`competitor-analysis.md`)
 **Plain English (Bobby-directed):** pushed **`competitor-analysis.md`** — the *strategic* companion to J's
 `pitch-competitor-analysis.md`. J's stays the **pitch-slide build spec** (matrix + £ wall + `PitchDeck.tsx`
