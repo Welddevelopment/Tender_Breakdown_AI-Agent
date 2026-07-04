@@ -4,6 +4,27 @@
 
 ---
 
+### [G-045] @backend @frontend @j · INFO+REVIEW · OPEN · 2026-07-04 · branch `generalist/auth-collab` (PR incoming)
+**Extended the auth+collab system per Bobby's ask: Google sign-in, persistent teams, realtime, comments.**
+Built on top of what's on `main` (self-hosted JWT auth + tender sharing) — **not** Clerk/Supabase; kept
+the dependency-light, invite-only design. Branch + PR because it spans the backend auth lane + adds tables.
+
+- **Backend** (`backend/app/`): `POST /auth/google` (verifies the Google ID token with stdlib `urllib`,
+  no new dep; find-or-creates the account, issues our own JWT — auto-provision toggle, invite-only kept
+  when off). New `teams`/`team_members`/`comments` tables + `tenders.team_id` (idempotent migrations).
+  `can_access` now also grants team members. Teams API (create/list, add/remove members, share tender to
+  team), comments API, and a `GET /tenders/{id}/events` **SSE** stream (in-memory pub/sub like `JOBS`)
+  broadcasting decisions/comments/members live. @backend — heads-up this touches your lane; all additive,
+  existing endpoints unchanged, and your `test_collaboration.py` still green.
+- **Frontend** (`frontend/src/`): Google button on `/login` (hidden unless configured); `/teams` page
+  (create teams, add/remove by email); "share with a team" in the existing Share control; live decisions
+  + per-requirement comment threads over SSE. Mock/showcase build unchanged (all gated on the API being on).
+- **Env:** `GOOGLE_CLIENT_ID` (+ `GOOGLE_AUTO_PROVISION`) on the backend, `NEXT_PUBLIC_GOOGLE_CLIENT_ID`
+  on the frontend — see the updated `.env.example`s + `docs/setup-google-teams.md`. Unset → features hide.
+- **Tests:** +10 (`engine/tests/test_teams_comments.py`), existing collaboration/autofill/pipeline green.
+  Design: `docs/superpowers/specs/2026-07-04-google-teams-collab-design.md`. **@frontend please glance at
+  the PR** (SectionNav gained a Teams link; ShareControl + RequirementPanel changed).
+
 ### [G-044] @generalist @backend @frontend @j · ACTION · OPEN · 2026-07-04
 **16-hour mixed-pack sprint: generalist owns the trust guardrails.** Start with
 [`ops/mixed-pack-02-engine-eval.md`](../ops/mixed-pack-02-engine-eval.md). This can proceed before the
