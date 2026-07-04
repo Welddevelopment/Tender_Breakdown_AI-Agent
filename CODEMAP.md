@@ -4,7 +4,7 @@
 >
 > **Interactive graph:** [`frontend/public/codemap.html`](frontend/public/codemap.html) — drag / zoom / click-to-focus; served at `/codemap.html` on the Vercel deploy. (The diagrams below render right here on GitHub.)
 >
-> Map of commit `dc4b2e4` · 2026-07-04T17:42:40+01:00
+> Map of commit `bdf1235` · 2026-07-04T17:54:50+01:00
 
 **Read this first** for a current picture of the codebase — what lives where, and what imports what. It is the fast path to context for both humans and agents. If it looks wrong, it is stale: re-run the generator and push.
 
@@ -12,17 +12,17 @@
 
 | Area | Files | Lines | What it is |
 |------|-------|-------|------------|
-| **frontend** | 178 | 61,391 | Frontend — Next.js 16 / React 19 / Tailwind (compliance matrix UI) |
-| **backend** | 21 | 3,314 | Backend — FastAPI (PDF ingest, extraction, REST API) |
-| **engine** | 78 | 6,559 | Engine — reconcile / eval / answer-draft pipeline + tests |
+| **frontend** | 179 | 69,251 | Frontend — Next.js 16 / React 19 / Tailwind (compliance matrix UI) |
+| **backend** | 22 | 3,416 | Backend — FastAPI (PDF ingest, extraction, REST API) |
+| **engine** | 79 | 6,683 | Engine — reconcile / eval / answer-draft pipeline + tests |
 | **prompts** | 6 | 713 | Prompts — LLM prompt specs (extraction, classification, answers, gaps) |
 | **gold** | 7 | 363 | Eval gold-set — hand-labelled requirements for accuracy measurement |
 | **data** | 17 | 0 | Data — tender source PDFs (not parsed here) |
-| **comms** | 5 | 2,489 | Comms — async agent message boards |
+| **comms** | 5 | 2,549 | Comms — async agent message boards |
 | **docs** | 3 | 1,663 | Docs — plans & specs |
 | **ci** | 1 | 57 | CI — GitHub Actions |
 | **tooling** | 1 | 516 | Tooling — repo scripts (incl. this map generator) |
-| **root** | 600 | 36,008 | Root — docs, config, role briefs |
+| **root** | 600 | 36,009 | Root — docs, config, role briefs |
 
 ## System shape
 
@@ -131,6 +131,7 @@ graph LR
   n55[ComplianceMatrix.tsx] --> n54[triage.ts]
   n55[ComplianceMatrix.tsx] --> n5[requirement.ts]
   n57[ControlPanel.tsx] --> n4[RequirementsContext.tsx]
+  n57[ControlPanel.tsx] --> n43[source-doc.ts]
   n57[ControlPanel.tsx] --> n54[triage.ts]
   n7[DemoView.tsx] --> n58[AnimatedNumber.tsx]
   n7[DemoView.tsx] --> n10[BrandLogo.tsx]
@@ -243,6 +244,7 @@ graph LR
   n34[UploadDropzone.tsx] --> n88[RegisterPreview.tsx]
   n34[UploadDropzone.tsx] --> n4[RequirementsContext.tsx]
   n34[UploadDropzone.tsx] --> n19[api.ts]
+  n34[UploadDropzone.tsx] --> n43[source-doc.ts]
   n62[DemoScrolly.tsx] --> n64[MountOnView.tsx]
   n62[DemoScrolly.tsx] --> n89[ScrollyStage.tsx]
   n62[DemoScrolly.tsx] --> n90[steps.ts]
@@ -374,56 +376,58 @@ graph LR
   n11[pipeline.py] --> n15[gating_scan.py]
   n11[pipeline.py] --> n16[reconcile.py]
   n17[store.py] --> n8[schema.py]
-  n12[answer.py] --> n18[similarity.py]
+  n18[gen_mixedpack_prebake.py] --> n3[ingest.py]
+  n18[gen_mixedpack_prebake.py] --> n11[pipeline.py]
+  n12[answer.py] --> n19[similarity.py]
   n12[answer.py] --> n5[usage_log.py]
-  n13[embeddings.py] --> n18[similarity.py]
+  n13[embeddings.py] --> n19[similarity.py]
   n13[embeddings.py] --> n5[usage_log.py]
-  n19[eval.py] --> n20[_io.py]
-  n19[eval.py] --> n18[similarity.py]
-  n21[eval_answers.py] --> n20[_io.py]
-  n21[eval_answers.py] --> n12[answer.py]
-  n21[eval_answers.py] --> n18[similarity.py]
+  n20[eval.py] --> n21[_io.py]
+  n20[eval.py] --> n19[similarity.py]
+  n22[eval_answers.py] --> n21[_io.py]
+  n22[eval_answers.py] --> n12[answer.py]
+  n22[eval_answers.py] --> n19[similarity.py]
   n14[gating_filter.py] --> n5[usage_log.py]
-  n15[gating_scan.py] --> n18[similarity.py]
-  n16[reconcile.py] --> n20[_io.py]
+  n15[gating_scan.py] --> n19[similarity.py]
+  n16[reconcile.py] --> n21[_io.py]
   n16[reconcile.py] --> n13[embeddings.py]
-  n16[reconcile.py] --> n18[similarity.py]
-  n22[calibrate.py] --> n20[_io.py]
-  n22[calibrate.py] --> n19[eval.py]
-  n23[draft_answers.py] --> n20[_io.py]
-  n23[draft_answers.py] --> n12[answer.py]
-  n23[draft_answers.py] --> n19[eval.py]
-  n24[eval_all.py] --> n20[_io.py]
-  n24[eval_all.py] --> n13[embeddings.py]
-  n24[eval_all.py] --> n19[eval.py]
-  n24[eval_all.py] --> n15[gating_scan.py]
-  n24[eval_all.py] --> n16[reconcile.py]
-  n24[eval_all.py] --> n25[run_tender.py]
-  n26[gating_coverage.py] --> n20[_io.py]
-  n26[gating_coverage.py] --> n15[gating_scan.py]
-  n27[gating_recall.py] --> n20[_io.py]
-  n27[gating_recall.py] --> n13[embeddings.py]
-  n27[gating_recall.py] --> n19[eval.py]
-  n27[gating_recall.py] --> n15[gating_scan.py]
-  n27[gating_recall.py] --> n16[reconcile.py]
-  n27[gating_recall.py] --> n25[run_tender.py]
-  n28[mixed_pack_smoke.py] --> n3[ingest.py]
-  n28[mixed_pack_smoke.py] --> n15[gating_scan.py]
-  n29[net_floor.py] --> n15[gating_scan.py]
-  n30[precision_report.py] --> n20[_io.py]
-  n30[precision_report.py] --> n19[eval.py]
-  n30[precision_report.py] --> n16[reconcile.py]
-  n30[precision_report.py] --> n25[run_tender.py]
-  n30[precision_report.py] --> n18[similarity.py]
-  n25[run_tender.py] --> n2[chunk.py]
-  n25[run_tender.py] --> n4[extract.py]
-  n25[run_tender.py] --> n3[ingest.py]
-  n25[run_tender.py] --> n20[_io.py]
-  n25[run_tender.py] --> n13[embeddings.py]
-  n25[run_tender.py] --> n19[eval.py]
-  n25[run_tender.py] --> n16[reconcile.py]
-  n31[parse_check.py]
-  n32[stress_test.py]
+  n16[reconcile.py] --> n19[similarity.py]
+  n23[calibrate.py] --> n21[_io.py]
+  n23[calibrate.py] --> n20[eval.py]
+  n24[draft_answers.py] --> n21[_io.py]
+  n24[draft_answers.py] --> n12[answer.py]
+  n24[draft_answers.py] --> n20[eval.py]
+  n25[eval_all.py] --> n21[_io.py]
+  n25[eval_all.py] --> n13[embeddings.py]
+  n25[eval_all.py] --> n20[eval.py]
+  n25[eval_all.py] --> n15[gating_scan.py]
+  n25[eval_all.py] --> n16[reconcile.py]
+  n25[eval_all.py] --> n26[run_tender.py]
+  n27[gating_coverage.py] --> n21[_io.py]
+  n27[gating_coverage.py] --> n15[gating_scan.py]
+  n28[gating_recall.py] --> n21[_io.py]
+  n28[gating_recall.py] --> n13[embeddings.py]
+  n28[gating_recall.py] --> n20[eval.py]
+  n28[gating_recall.py] --> n15[gating_scan.py]
+  n28[gating_recall.py] --> n16[reconcile.py]
+  n28[gating_recall.py] --> n26[run_tender.py]
+  n29[mixed_pack_smoke.py] --> n3[ingest.py]
+  n29[mixed_pack_smoke.py] --> n15[gating_scan.py]
+  n30[net_floor.py] --> n15[gating_scan.py]
+  n31[precision_report.py] --> n21[_io.py]
+  n31[precision_report.py] --> n20[eval.py]
+  n31[precision_report.py] --> n16[reconcile.py]
+  n31[precision_report.py] --> n26[run_tender.py]
+  n31[precision_report.py] --> n19[similarity.py]
+  n26[run_tender.py] --> n2[chunk.py]
+  n26[run_tender.py] --> n4[extract.py]
+  n26[run_tender.py] --> n3[ingest.py]
+  n26[run_tender.py] --> n21[_io.py]
+  n26[run_tender.py] --> n13[embeddings.py]
+  n26[run_tender.py] --> n20[eval.py]
+  n26[run_tender.py] --> n16[reconcile.py]
+  n32[parse_check.py]
+  n33[stress_test.py]
 ```
 
 ## Files by area
@@ -554,6 +558,7 @@ graph LR
 - `frontend/src/context/AuthContext.tsx` — exports `AuthProvider`
 - `frontend/src/context/RequirementsContext.tsx` — exports `DecisionSnapshot`
 - `frontend/src/data/bradwell-prebake.json`
+- `frontend/src/data/mixedpack-prebake.json`
 - `frontend/src/data/mock-requirements.ts` — exports `mockTender`
 - `frontend/src/data/nhs-prebake.json`
 - `frontend/src/data/spso-prebake.json`
@@ -595,6 +600,7 @@ graph LR
 - `backend/app/schema.py` — the locked data contract as Pydantic models.
 - `backend/app/store.py` — SQLite persistence (stdlib sqlite3, zero-config).
 - `backend/requirements.txt`
+- `backend/scripts/gen_mixedpack_prebake.py` — freeze a mixed-pack demo snapshot (J-092).
 - `backend/scripts/parse_check.py` — hour-one tender sanity check.
 - `backend/scripts/stress_test.py` — throw real tenders at the full backend and log what breaks.
 - `backend/scripts/tender-sources.txt`
@@ -668,6 +674,7 @@ graph LR
 - `engine/tests/test_io.py`
 - `engine/tests/test_match_score.py` — Eval matcher: paraphrase/granularity tolerance without embeddings.
 - `engine/tests/test_merge.py`
+- `engine/tests/test_mixed_pack_engine.py` — Mixed-pack engine/eval lane (generalist, ops/mixed-pack-02-engine-eval.md).
 - `engine/tests/test_net_floor.py` — Regression lock for the deterministic deal-breaker floor (the demo's headline proof).
 - `engine/tests/test_pipeline_wiring.py` — Integration: the backend pipeline now uses the generalist engine for reconcile + routing.
 - `engine/tests/test_real_data_robustness.py` — Robustness against real extractor output (regression for the SPSO run).
@@ -1299,4 +1306,4 @@ graph LR
 
 ---
 
-*917 tracked files mapped. Generated by `scripts/gen_codemap.py`.*
+*920 tracked files mapped. Generated by `scripts/gen_codemap.py`.*

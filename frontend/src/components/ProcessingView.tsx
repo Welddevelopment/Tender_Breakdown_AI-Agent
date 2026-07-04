@@ -41,11 +41,14 @@ export function ProcessingView({
   const progress = Math.max(0, Math.min(1, job?.progress ?? 0.02));
   const found = job?.requirementCount ?? job?.rawCount;
   const dealBreakers = job?.dealBreakerCount;
+  const isPack = Boolean(fileName?.includes("documents"));
 
   return (
     <div className="surface-grain w-full max-w-xl rounded-xl border border-hairline bg-paper-raised p-6 shadow-[var(--depth-sheet)]">
       <div className="flex items-baseline justify-between gap-3">
-        <h2 className="text-base font-semibold text-ink">Reading your tender</h2>
+        <h2 className="text-base font-semibold text-ink">
+          {isPack ? `Reading ${fileName}` : "Reading your tender"}
+        </h2>
         <span className="font-mono text-xs text-ink-muted">
           {Math.round(progress * 100)}%
         </span>
@@ -71,6 +74,7 @@ export function ProcessingView({
             <>
               <span className="font-semibold">{found}</span> requirement
               {found === 1 ? "" : "s"} found
+              {isPack ? " across the pack" : ""}
             </>
           )}
           {dealBreakers != null && dealBreakers > 0 && (

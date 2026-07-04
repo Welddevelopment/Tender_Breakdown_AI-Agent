@@ -11,6 +11,10 @@ import {
   type JobStatus,
 } from "@/lib/api";
 import { useRequirements } from "@/context/RequirementsContext";
+import {
+  sourceDocumentKindFromFilename,
+  sourceKindShortLabel,
+} from "@/lib/source-doc";
 import { ProcessingView } from "./ProcessingView";
 import { RegisterPreview } from "./RegisterPreview";
 
@@ -30,6 +34,21 @@ function isAcceptedTenderFile(file: File): boolean {
     ACCEPTED_TENDER_MIME.has(file.type) ||
     ACCEPTED_TENDER_EXTENSIONS.some((ext) => name.endsWith(ext))
   );
+}
+
+function formatFileSize(bytes: number): string {
+  if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))}KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(bytes < 10 * 1024 * 1024 ? 1 : 0)}MB`;
+}
+
+function packLabel(files: File[]): string | null {
+  if (files.length === 0) return null;
+  if (files.length === 1) return files[0].name;
+  return `${files.length} documents`;
+}
+
+function fileKey(file: File): string {
+  return `${file.name}:${file.size}:${file.lastModified}`;
 }
 
 // Poll a background extraction job until it finishes, pushing each update to the
@@ -52,6 +71,7 @@ export function UploadDropzone() {
   const [stage, setStage] = useState<UploadStage>("idle");
   const [isDragging, setIsDragging] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
+  const [stagedFiles, setStagedFiles] = useState<File[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [job, setJob] = useState<JobStatus | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -65,7 +85,7 @@ export function UploadDropzone() {
     return () => window.clearTimeout(timer);
   }, [stage, router]);
 
-  async function handleFiles(fileList: FileList | null) {
+  function stageFiles(fileList: FileList | null, append = true) {
     if (stage === "extracting") return;
     const all = fileList ? Array.from(fileList) : [];
     if (all.length === 0) return;
@@ -89,8 +109,21 @@ export function UploadDropzone() {
       return;
     }
 
-    setFileName(all.length === 1 ? all[0].name : `${all.length} documents`);
+    setStagedFiles((current) => {
+      const merged = append ? [...current, ...all] : all;
+      return Array.from(
+        new Map(merged.map((file) => [fileKey(file), file])).values()
+      );
+    });
     setJob(null);
+    setStage("idle");
+  }
+
+  async function startUpload() {
+    if (stage === "extracting" || stagedFiles.length === 0) return;
+
+    const all = stagedFiles;
+    setFileName(packLabel(all));
     setStage("extracting");
 
     // No API configured → wireframe path (fake extraction, mock stays in place).
@@ -123,7 +156,7 @@ export function UploadDropzone() {
   function handleDrop(event: React.DragEvent<HTMLDivElement>) {
     event.preventDefault();
     setIsDragging(false);
-    handleFiles(event.dataTransfer.files);
+    stageFiles(event.dataTransfer.files);
   }
 
   function handleDragOver(event: React.DragEvent<HTMLDivElement>) {
@@ -145,9 +178,17 @@ export function UploadDropzone() {
   function reset() {
     setStage("idle");
     setFileName(null);
+    setStagedFiles([]);
     setErrorMessage(null);
     setJob(null);
     if (inputRef.current) inputRef.current.value = "";
+  }
+
+  function removeStagedFile(key: string) {
+    setStagedFiles((current) => {
+      const next = current.filter((file) => fileKey(file) !== key);
+      return next;
+    });
   }
 
   if (stage === "done") {
@@ -168,7 +209,7 @@ export function UploadDropzone() {
           ) : found != null ? (
             <>
               Found <span className="font-medium text-ink">{found}</span>{" "}
-              requirement{found === 1 ? "" : "s"} in{" "}
+              requirement{found === 1 ? "" : "s"} across{" "}
               <span className="font-medium text-ink">{fileName}</span>
               {dealBreakers != null && dealBreakers > 0 ? (
                 <>
@@ -266,6 +307,8 @@ export function UploadDropzone() {
     );
   }
 
+  const stagedCount = stagedFiles.length;
+
   return (
     // Centred intake: one prominent slot as the single focal action, grounded on
     // the blank register it files into.
@@ -314,7 +357,11 @@ export function UploadDropzone() {
         </span>
 
         <p className="mt-6 font-serif text-2xl font-semibold leading-tight text-ink">
-          {isDragging ? "Let go to file it" : "Drop your tender here, or browse"}
+          {isDragging
+            ? "Let go to file it"
+            : stagedCount > 0
+              ? "Add more tender documents"
+              : "Drop your tender pack here, or browse"}
         </p>
         <p className="mt-2 max-w-[52ch] text-sm leading-relaxed text-ink-muted">
           {isApiEnabled()
@@ -325,6 +372,71 @@ export function UploadDropzone() {
           PDF · Word · Excel · CSV · up to 50MB each
         </p>
       </div>
+
+      {stagedCount > 0 && (
+        <div className="mx-auto mt-5 max-w-2xl rounded-md border border-hairline bg-paper-raised text-left shadow-[var(--depth-row)]">
+          <div className="flex items-center justify-between gap-3 border-b border-hairline px-4 py-3">
+            <div>
+              <p className="font-mono text-[11px] font-medium uppercase tracking-wide text-ink-muted">
+                Tender pack staged
+              </p>
+              <p className="mt-0.5 text-sm text-ink-muted">
+                {stagedCount} document{stagedCount === 1 ? "" : "s"} ready to read
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={startUpload}
+              className="shrink-0 rounded-md bg-forest px-4 py-2 text-sm font-semibold text-paper transition-colors hover:bg-forest-hover"
+            >
+              Read tender pack
+            </button>
+          </div>
+          <ul className="divide-y divide-hairline">
+            {stagedFiles.map((file) => {
+              const key = fileKey(file);
+              const kind = sourceDocumentKindFromFilename(file.name);
+              return (
+                <li key={key} className="flex items-center gap-3 px-4 py-2.5">
+                  <span className="rounded-[3px] border border-hairline bg-paper-recessed px-1.5 py-1 font-mono text-[10px] font-medium leading-none text-ink shadow-[var(--depth-pressed)]">
+                    {sourceKindShortLabel(kind)}
+                  </span>
+                  <span className="min-w-0 flex-1 truncate text-sm text-ink" title={file.name}>
+                    {file.name}
+                  </span>
+                  <span className="font-mono text-xs text-ink-muted">
+                    {formatFileSize(file.size)}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => removeStagedFile(key)}
+                    className="rounded px-1.5 py-0.5 font-mono text-xs text-ink-muted transition-colors hover:bg-paper-recessed hover:text-ink"
+                    aria-label={`Remove ${file.name}`}
+                  >
+                    ×
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+          <div className="flex items-center justify-between gap-3 px-4 py-3">
+            <button
+              type="button"
+              onClick={handleBrowseClick}
+              className="font-mono text-xs text-forest underline decoration-forest/30 underline-offset-4 transition-colors hover:text-forest-hover"
+            >
+              Add more
+            </button>
+            <button
+              type="button"
+              onClick={reset}
+              className="font-mono text-xs text-ink-muted transition-colors hover:text-ink"
+            >
+              Clear pack
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* The form it files into. The requirements land here as a matrix, so the
           empty state shows the shape of its own output. */}
@@ -341,7 +453,10 @@ export function UploadDropzone() {
         accept=".pdf,.docx,.xlsx,.csv,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv"
         multiple
         className="hidden"
-        onChange={(event) => handleFiles(event.target.files)}
+        onChange={(event) => {
+          stageFiles(event.target.files);
+          event.currentTarget.value = "";
+        }}
       />
     </div>
   );
