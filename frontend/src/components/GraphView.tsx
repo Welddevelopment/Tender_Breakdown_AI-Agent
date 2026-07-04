@@ -19,7 +19,13 @@ import {
 import "@xyflow/react/dist/style.css";
 import { useRequirements } from "@/context/RequirementsContext";
 import { isApiEnabled } from "@/lib/api";
-import { sourceRefLabel } from "@/lib/source-doc";
+import {
+  sourceDocumentKind,
+  sourceKindLabel,
+  sourceKindShortLabel,
+  type SourceDocumentKind,
+  sourceRefLabel,
+} from "@/lib/source-doc";
 import type { Requirement } from "@/types/requirement";
 import { ConfidenceIndicator } from "./ConfidenceIndicator";
 import { CategoryTag } from "@/components/CategoryTag";
@@ -71,6 +77,14 @@ const HANDLE: React.CSSProperties = {
   border: "1px solid var(--color-paper-raised)",
 };
 
+const SOURCE_BADGE_TONE: Record<SourceDocumentKind, string> = {
+  pdf: "border-ink/20 bg-paper text-ink-muted",
+  word: "border-forest/30 bg-forest/5 text-forest",
+  excel: "border-accent/35 bg-accent/5 text-accent",
+  csv: "border-signal-amber/40 bg-signal-amber/10 text-ink",
+  document: "border-hairline bg-paper text-ink-muted",
+};
+
 function CheckMark() {
   return (
     <svg width="10" height="10" viewBox="0 0 14 14" fill="none" aria-hidden>
@@ -82,6 +96,18 @@ function CheckMark() {
         strokeLinejoin="round"
       />
     </svg>
+  );
+}
+
+function SourceTypeBadge({ req }: { req: Requirement }) {
+  const kind = sourceDocumentKind(req);
+  return (
+    <span
+      title={sourceKindLabel(req)}
+      className={`inline-flex h-4 shrink-0 items-center rounded border px-1 font-mono text-[9px] font-medium leading-none ${SOURCE_BADGE_TONE[kind]}`}
+    >
+      {sourceKindShortLabel(kind)}
+    </span>
   );
 }
 
@@ -146,8 +172,9 @@ function RequirementNode({ data }: NodeProps) {
       />
 
       <div className="flex items-start justify-between gap-2">
-        <span className="font-mono text-[11px] leading-tight text-ink-muted">
-          {ref}
+        <span className="flex min-w-0 items-center gap-1 font-mono text-[11px] leading-tight text-ink-muted">
+          <SourceTypeBadge req={req} />
+          <span className="truncate">{ref}</span>
         </span>
         <ConfidenceIndicator
           confidence={req.confidence}

@@ -16,7 +16,13 @@ import {
   type TriageGroup,
 } from "@/lib/triage";
 import { alsoCitedLabel } from "@/lib/dedupe";
-import { sourceRefLabel } from "@/lib/source-doc";
+import {
+  sourceDocumentKind,
+  sourceKindLabel,
+  sourceKindShortLabel,
+  type SourceDocumentKind,
+  sourceRefLabel,
+} from "@/lib/source-doc";
 import {
   deriveVisibleGroups,
   type MatrixLens,
@@ -126,6 +132,14 @@ const TIER_WASH: Record<ConfidenceTier, string> = {
   "light-green": "hover:bg-paper-raised",
 };
 
+const SOURCE_BADGE_TONE: Record<SourceDocumentKind, string> = {
+  pdf: "border-ink/20 bg-paper text-ink-muted",
+  word: "border-forest/30 bg-forest/5 text-forest",
+  excel: "border-accent/35 bg-accent/5 text-accent",
+  csv: "border-signal-amber/40 bg-signal-amber/10 text-ink",
+  document: "border-hairline bg-paper text-ink-muted",
+};
+
 // The resting matrix: a contents page, not a table (layout.md sections 3, 4, 7).
 // Each requirement is one line on a shared grid [ref | dot | text | status],
 // grouped by the ask. Hierarchy comes from type and space, not boxes: no card
@@ -193,6 +207,18 @@ function StatusWord({ req }: { req: Requirement }) {
         </svg>
       )}
       {DECIDED_WORD[req.status]}
+    </span>
+  );
+}
+
+function SourceTypeBadge({ req }: { req: Requirement }) {
+  const kind = sourceDocumentKind(req);
+  return (
+    <span
+      title={sourceKindLabel(req)}
+      className={`inline-flex h-4 shrink-0 items-center rounded border px-1 font-mono text-[9px] font-medium leading-none ${SOURCE_BADGE_TONE[kind]}`}
+    >
+      {sourceKindShortLabel(kind)}
     </span>
   );
 }
@@ -298,6 +324,7 @@ function MatrixRow({
             <path d="M1 1h5L4.6 3 6 5H1z" fill="currentColor" />
           </svg>
         )}
+        <SourceTypeBadge req={req} />
         {ref}
       </span>
 

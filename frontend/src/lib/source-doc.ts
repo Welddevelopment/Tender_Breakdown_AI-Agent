@@ -14,8 +14,10 @@ function isPdfFilename(filename: string | null | undefined): boolean {
   return ext === null || ext === ".pdf";
 }
 
-export function sourceDocumentKind(req: Requirement): SourceDocumentKind {
-  const ext = sourceExtension(req.source_filename);
+export function sourceDocumentKindFromFilename(
+  filename: string | null | undefined
+): SourceDocumentKind {
+  const ext = sourceExtension(filename);
   if (!ext) return "pdf";
   if (ext === ".pdf") return "pdf";
   if (ext === ".docx") return "word";
@@ -24,8 +26,12 @@ export function sourceDocumentKind(req: Requirement): SourceDocumentKind {
   return "document";
 }
 
-export function sourceKindLabel(req: Requirement): string {
-  switch (sourceDocumentKind(req)) {
+export function sourceDocumentKind(req: Requirement): SourceDocumentKind {
+  return sourceDocumentKindFromFilename(req.source_filename);
+}
+
+export function sourceKindName(kind: SourceDocumentKind): string {
+  switch (kind) {
     case "pdf":
       return "PDF";
     case "word":
@@ -37,6 +43,25 @@ export function sourceKindLabel(req: Requirement): string {
     case "document":
       return "Document";
   }
+}
+
+export function sourceKindShortLabel(kind: SourceDocumentKind): string {
+  switch (kind) {
+    case "pdf":
+      return "PDF";
+    case "word":
+      return "DOC";
+    case "excel":
+      return "XLS";
+    case "csv":
+      return "CSV";
+    case "document":
+      return "DOC";
+  }
+}
+
+export function sourceKindLabel(req: Requirement): string {
+  return sourceKindName(sourceDocumentKind(req));
 }
 
 export function hasPdfSource(req: Requirement): boolean {

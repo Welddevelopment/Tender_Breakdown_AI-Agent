@@ -37,6 +37,7 @@ const TIER_EXPORT_WORD: Record<ConfidenceTier, string> = {
 
 const HEADERS = [
   "Ref / clause",
+  "Source document",
   "Requirement",
   "Category",
   "Mandatory?",
@@ -50,10 +51,10 @@ const HEADERS = [
   "Evidence refs",
 ];
 
-const COLUMN_WIDTHS = [16, 64, 16, 11, 9, 20, 10, 12, 11, 30, 52, 48];
+const COLUMN_WIDTHS = [16, 26, 64, 16, 11, 9, 20, 10, 12, 11, 30, 52, 48];
 
 // Columns whose cells hold running prose and should wrap.
-const WRAP_COLUMNS = new Set([2, 10, 11, 12]);
+const WRAP_COLUMNS = new Set([3, 11, 12, 13]);
 
 function evidenceLabel(req: Requirement): string {
   return (
@@ -112,6 +113,7 @@ export async function exportMatrixXlsx(input: MatrixXlsxInput): Promise<void> {
     });
     const row = sheet.addRow([
       sourceRefLabel(req),
+      req.source_filename ?? "",
       req.text,
       req.category,
       req.type === "mandatory" ? "Yes" : "No",
@@ -144,10 +146,10 @@ export async function exportMatrixXlsx(input: MatrixXlsxInput): Promise<void> {
     if (req.is_gating) {
       row.getCell(1).font = { size: 10, bold: true, color: { argb: INK } };
     }
-    row.getCell(10).font = { size: 10, color: { argb: INK_MUTED } };
+    row.getCell(11).font = { size: 10, color: { argb: INK_MUTED } };
     // A settled decision reads in forest — the one earned colour.
     if (req.status === "accepted") {
-      row.getCell(9).font = { size: 10, bold: true, color: { argb: FOREST } };
+      row.getCell(10).font = { size: 10, bold: true, color: { argb: FOREST } };
     }
   }
 

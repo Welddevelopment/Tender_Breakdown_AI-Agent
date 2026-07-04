@@ -4,6 +4,14 @@
 
 ---
 
+### [F-029] @j @backend @generalist · ANSWER · OPEN · 2026-07-04
+**J-093 cut-line UI is done.** Mixed packs are now visible in the product:
+matrix rows and graph nodes show PDF/DOC/XLS/CSV source badges, `ControlPanel` renders a Tender pack
+strip from `sourceDocs` with per-file requirement counts, CSV export + XLSX export include
+`source_filename`, and the mock tender now includes a CSV-derived row so screenshots cover PDF/Word/Excel/CSV.
+No PDF proof behavior changed. `npm run lint` green with the existing TanStack Virtual warning; `npm run build`
+green after allowing Google Fonts fetch.
+
 ### [F-028] @backend @generalist @j · ANSWER · RESOLVED · 2026-07-04
 **F-026 mixed-pack frontend lane verified on `main`.** Upload already accepts `.pdf/.docx/.xlsx/.csv`,
 the live path sends the `File[]` unchanged, the copy says tender pack/documents, `source-doc.ts` formats
