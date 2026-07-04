@@ -4,6 +4,7 @@
 // decision (actor + action + timestamp). Read-only — the decision already carries the actor once
 // the backend stamps it. On a solo/frozen tender it degrades to a personal action log ("you …").
 
+import { useState } from "react";
 import { useRequirements } from "@/context/RequirementsContext";
 import { useAuth } from "@/context/AuthContext";
 import { actorLabel, collaboratorFor } from "@/lib/collaborators";
@@ -29,6 +30,7 @@ function timeAgo(iso: string): string {
 export function ActivityFeed() {
   const { requirements } = useRequirements();
   const { user } = useAuth();
+  const [open, setOpen] = useState(true);
 
   const entries = requirements
     .filter((r) => r.decision)
@@ -40,12 +42,26 @@ export function ActivityFeed() {
   return (
     <section
       aria-label="Team activity"
-      className="rounded-lg border border-hairline bg-paper-raised p-4 shadow-[var(--depth-sheet)]"
+      className="rounded-lg border border-hairline bg-paper-raised shadow-[var(--depth-sheet)]"
     >
-      <h3 className="mb-3 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-muted">
-        Activity
-      </h3>
-      <ul className="flex flex-col gap-2.5">
+      <div className="flex items-center justify-between gap-3 px-4 py-3">
+        <h3 className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-muted">
+          Activity
+          <span className="ml-2 normal-case tracking-normal text-ink-muted/80">
+            {entries.length} action{entries.length === 1 ? "" : "s"}
+          </span>
+        </h3>
+        <button
+          type="button"
+          onClick={() => setOpen((o) => !o)}
+          aria-expanded={open}
+          className="font-mono text-[11px] uppercase tracking-wide text-ink-muted transition-colors hover:text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-forest"
+        >
+          {open ? "Hide" : "Show"}
+        </button>
+      </div>
+      {open && (
+      <ul className="flex max-h-52 flex-col gap-2.5 overflow-y-auto px-4 pb-4">
         {entries.slice(0, 12).map(({ req, d }) => {
           const who = actorLabel(d.actor, user?.id);
           const collab = d.actor ? collaboratorFor(d.actor) : null;
@@ -70,6 +86,7 @@ export function ActivityFeed() {
           );
         })}
       </ul>
+      )}
     </section>
   );
 }

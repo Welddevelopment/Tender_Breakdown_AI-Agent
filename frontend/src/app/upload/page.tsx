@@ -18,12 +18,9 @@ export default function UploadPage() {
           <UploadDropzone />
         </div>
         <section aria-label="Your tenders" className="mx-auto mt-14 max-w-2xl">
-          <h2 className="font-serif text-lg font-semibold leading-snug text-ink">
-            Previously uploaded
-          </h2>
-          <p className="mb-4 mt-1 max-w-[60ch] text-sm text-ink-muted">
-            Every tender you have uploaded, ready to reopen where you left off.
-          </p>
+          {/* The register's header (eyebrow, heading, live tender count) is
+              rendered inside TendersList, which is the component that knows
+              how many tenders actually loaded. */}
           <TendersList />
         </section>
       </AppMain>

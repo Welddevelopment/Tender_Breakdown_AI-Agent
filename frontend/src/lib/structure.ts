@@ -41,11 +41,44 @@ export function orderByCriterion(requirements: Requirement[]): Requirement[] {
 }
 
 // The set of node ids lit when a requirement is the focus: itself, the criterion
-// it is scored against, and the requirements on either end of its dependency
-// links. Everything else dims. Criterion node ids are prefixed so they never
-// collide with requirement ids.
+// it is scored against, and every requirement on its answer-order chain — the
+// depends_on graph walked TRANSITIVELY in both directions, so a focus lights the
+// things it ultimately rests on and everything that ultimately rests on it.
+// Everything else dims. Criterion node ids are prefixed so they never collide
+// with requirement ids.
 export function critNodeId(ref: string): string {
   return `crit:${ref}`;
+}
+
+// Forward/reverse dependency adjacency, built once per requirement set. Hover
+// fires traceSet constantly, so the O(n·deps) index is memoized on the array
+// identity (the callers keep their filtered slice stable between hovers).
+interface DepIndex {
+  byId: Map<string, Requirement>;
+  forward: Map<string, string[]>; // id -> the ids it depends on
+  reverse: Map<string, string[]>; // id -> the ids that depend on it
+}
+
+const depIndexCache = new WeakMap<Requirement[], DepIndex>();
+
+function depIndex(requirements: Requirement[]): DepIndex {
+  const cached = depIndexCache.get(requirements);
+  if (cached) return cached;
+
+  const byId = new Map(requirements.map((r) => [r.id, r]));
+  const forward = new Map<string, string[]>();
+  const reverse = new Map<string, string[]>();
+  for (const r of requirements) {
+    for (const dep of r.depends_on) {
+      if (!byId.has(dep)) continue; // link points outside the visible slice
+      (forward.get(r.id) ?? forward.set(r.id, []).get(r.id)!).push(dep);
+      (reverse.get(dep) ?? reverse.set(dep, []).get(dep)!).push(r.id);
+    }
+  }
+
+  const index = { byId, forward, reverse };
+  depIndexCache.set(requirements, index);
+  return index;
 }
 
 export function traceSet(
@@ -53,14 +86,24 @@ export function traceSet(
   requirements: Requirement[]
 ): Set<string> {
   const set = new Set<string>();
-  const byId = new Map(requirements.map((r) => [r.id, r]));
+  const { byId, forward, reverse } = depIndex(requirements);
   const focus = byId.get(focusId);
   if (!focus) return set;
   set.add(focus.id);
   if (focus.criteria_ref) set.add(critNodeId(focus.criteria_ref));
-  for (const dep of focus.depends_on) if (byId.has(dep)) set.add(dep);
-  for (const r of requirements) {
-    if (r.depends_on.includes(focus.id)) set.add(r.id);
+
+  // BFS each direction from the focus. Visited = the set itself, so shared
+  // ancestors are walked once and cycles cannot loop.
+  for (const adjacency of [forward, reverse]) {
+    const queue = [focus.id];
+    while (queue.length > 0) {
+      const id = queue.shift()!;
+      for (const next of adjacency.get(id) ?? []) {
+        if (set.has(next)) continue;
+        set.add(next);
+        queue.push(next);
+      }
+    }
   }
   return set;
 }

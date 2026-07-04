@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   ReactFlow,
@@ -15,8 +15,10 @@ import {
   type Node,
   type Edge,
   type NodeProps,
+  type Viewport,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
+import styles from "./GraphView.module.css";
 import { useRequirements } from "@/context/RequirementsContext";
 import { isApiEnabled } from "@/lib/api";
 import {
@@ -116,10 +118,16 @@ function SourceTypeBadge({ req }: { req: Requirement }) {
 // that makes the grouping visible instead of merely implied by vertical order.
 // Sits behind the cards (negative z), never interactive.
 function LaneNode({ data }: NodeProps) {
-  const { label, tint } = data as unknown as { label: string; tint: boolean };
+  const { label, tint, intro } = data as unknown as {
+    label: string;
+    tint: boolean;
+    intro?: boolean;
+  };
   return (
     <div
-      className="relative h-full w-full rounded-lg border border-dashed border-hairline"
+      className={`relative h-full w-full rounded-lg border border-dashed border-hairline ${
+        intro ? styles.laneIn : ""
+      }`}
       style={{ background: tint ? "rgba(33,29,23,0.022)" : "transparent" }}
     >
       <span className="absolute left-3 top-2 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted/80">
@@ -132,10 +140,12 @@ function LaneNode({ data }: NodeProps) {
 // A requirement, as a register card. Gating items take the 2px oxblood reading
 // edge. Dimmed when another item's trace is active; ringed when selected.
 function RequirementNode({ data }: NodeProps) {
-  const { req, dim, selected } = data as unknown as {
+  const { req, dim, selected, introDelay } = data as unknown as {
     req: Requirement;
     dim?: boolean;
     selected?: boolean;
+    // Build-in stagger (ms), row-indexed; null once the entrance has played.
+    introDelay?: number | null;
   };
   const gating = req.is_gating;
   const unanswerable = gating && req.status === "pending";
@@ -143,18 +153,22 @@ function RequirementNode({ data }: NodeProps) {
 
   return (
     <div
-      className={`surface-grain w-[256px] rounded-md bg-paper-raised px-3 py-2.5 shadow-[var(--depth-row)] transition-all hover:shadow-[var(--depth-sheet)] ${
+      className={`surface-grain w-[256px] rounded-md bg-paper-raised px-3 py-2.5 shadow-[var(--depth-row)] transition-all duration-150 hover:shadow-[var(--depth-sheet)] ${
         gating
           ? "rounded-l-none border-y border-r border-l-2 border-hairline border-l-signal-oxblood-frame"
           : "border border-hairline"
       } ${dim ? "opacity-35" : "opacity-100"} ${
         selected ? "ring-2 ring-forest ring-offset-1 ring-offset-paper" : ""
-      }`}
-      style={
-        gating
+      } ${introDelay != null ? styles.cardIn : ""}`}
+      style={{
+        ...(gating
           ? undefined
-          : { borderLeftWidth: 2, borderLeftColor: categoryStyle(req.category).hex }
-      }
+          : {
+              borderLeftWidth: 2,
+              borderLeftColor: categoryStyle(req.category).hex,
+            }),
+        ...(introDelay != null ? { animationDelay: `${introDelay}ms` } : undefined),
+      }}
     >
       <Handle id="r" type="source" position={Position.Right} isConnectable={false} style={HANDLE} />
       <Handle
@@ -189,12 +203,14 @@ function RequirementNode({ data }: NodeProps) {
       <p
         className={`mt-1.5 line-clamp-2 text-[12.5px] leading-snug text-ink ${
           gating ? "font-medium" : ""
-        }`}
+        } ${styles.cardBody}`}
       >
         {req.text}
       </p>
 
-      <div className="mt-2 flex items-center justify-between gap-2 font-mono text-[10.5px] text-ink-muted">
+      <div
+        className={`mt-2 flex items-center justify-between gap-2 font-mono text-[10.5px] text-ink-muted ${styles.cardFoot}`}
+      >
         <span>{ref}</span>
         {gating ? (
           <span className="font-medium text-signal-oxblood">Deal-breaker</span>
@@ -212,21 +228,30 @@ function RequirementNode({ data }: NodeProps) {
 }
 
 // An award criterion: the fixed structure of the tender, a tab pressed into the
-// page. Pinned (from the ledger) takes an accent ring; dimmed off-trace.
+// page. Shows the published name + weight when the tender declared them, so the
+// map and the ledger name the same thing. Pinned (from the ledger) takes an
+// accent ring; dimmed off-trace.
 function CriterionNode({ data }: NodeProps) {
-  const { num, count, hasGating, dim, pinned } = data as unknown as {
-    num: string;
-    count: number;
-    hasGating: boolean;
-    dim?: boolean;
-    pinned?: boolean;
-  };
+  const { num, name, weight, count, hasGating, dim, pinned, introDelay } =
+    data as unknown as {
+      num: string;
+      name: string | null;
+      weight: number | null;
+      count: number;
+      hasGating: boolean;
+      dim?: boolean;
+      pinned?: boolean;
+      introDelay?: number | null;
+    };
 
   return (
     <div
-      className={`w-[184px] rounded-md border border-hairline bg-paper-recessed px-3 py-2.5 shadow-[var(--depth-pressed)] transition-all ${
+      className={`w-[184px] rounded-md border border-hairline bg-paper-recessed px-3 py-2.5 shadow-[var(--depth-pressed)] transition-all duration-150 ${
         dim ? "opacity-35" : "opacity-100"
-      } ${pinned ? "ring-2 ring-accent ring-offset-1 ring-offset-paper" : ""}`}
+      } ${pinned ? "ring-2 ring-accent ring-offset-1 ring-offset-paper" : ""} ${
+        introDelay != null ? styles.cardIn : ""
+      }`}
+      style={introDelay != null ? { animationDelay: `${introDelay}ms` } : undefined}
     >
       <Handle id="c" type="target" position={Position.Left} isConnectable={false} style={HANDLE} />
       <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted">
@@ -235,8 +260,14 @@ function CriterionNode({ data }: NodeProps) {
       <p className="mt-0.5 font-mono text-lg font-medium leading-none text-ink">
         {num}
       </p>
+      {name && (
+        <p className="mt-1 line-clamp-2 text-[11.5px] leading-snug text-ink" title={name}>
+          {name}
+        </p>
+      )}
       <p className="mt-1.5 font-mono text-[11px] text-ink-muted">
         {count} requirement{count !== 1 ? "s" : ""}
+        {weight != null && ` · ${weight}% of marks`}
       </p>
       {hasGating && (
         <p className="mt-1.5 inline-flex items-center gap-1.5 font-mono text-[10.5px] text-signal-oxblood">
@@ -252,9 +283,17 @@ function CriterionNode({ data }: NodeProps) {
 }
 
 function ColumnLabelNode({ data }: NodeProps) {
-  const { label, count } = data as unknown as { label: string; count: number };
+  const { label, count, intro } = data as unknown as {
+    label: string;
+    count: number;
+    intro?: boolean;
+  };
   return (
-    <div className="flex items-baseline gap-2 whitespace-nowrap">
+    <div
+      className={`flex items-baseline gap-2 whitespace-nowrap ${
+        intro ? styles.laneIn : ""
+      }`}
+    >
       <span className="font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-ink">
         {label}
       </span>
@@ -298,14 +337,45 @@ function GraphControls() {
   );
 }
 
-// The legend, the key box on an official drawing.
-function GraphKey() {
+// The legend, the key box on an official drawing. In the split pane the full
+// card would crowd the canvas, so `collapsible` folds it behind a small "Key"
+// toggle and only unfolds on demand.
+function GraphKey({ collapsible = false }: { collapsible?: boolean }) {
+  const [open, setOpen] = useState(!collapsible);
+
+  if (!open) {
+    return (
+      <Panel position="top-right">
+        <button
+          type="button"
+          aria-expanded={false}
+          onClick={() => setOpen(true)}
+          className="rounded-md border border-hairline bg-paper-raised px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted shadow-[var(--depth-row)] transition-colors hover:bg-paper-recessed hover:text-ink"
+        >
+          Key
+        </button>
+      </Panel>
+    );
+  }
+
   return (
     <Panel position="top-right">
       <div className="surface-grain w-[208px] rounded-md border border-hairline bg-paper-raised p-3 shadow-[var(--depth-row)]">
-        <p className="mb-2.5 font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted">
-          Key
-        </p>
+        <div className="mb-2.5 flex items-center justify-between">
+          <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted">
+            Key
+          </p>
+          {collapsible && (
+            <button
+              type="button"
+              aria-label="Hide key"
+              onClick={() => setOpen(false)}
+              className="-my-1 px-1 font-mono text-[12px] leading-none text-ink-muted transition-colors hover:text-ink"
+            >
+              ×
+            </button>
+          )}
+        </div>
         <ul className="flex flex-col gap-2 text-[11.5px] text-ink">
           <li className="flex items-center gap-2.5">
             <span className="h-3.5 w-5 shrink-0 rounded-sm rounded-l-none border-y border-r border-l-2 border-hairline border-l-signal-oxblood-frame bg-paper-raised" />
@@ -375,9 +445,34 @@ export function GraphView({
   embedded = false,
   chrome = "full",
 }: GraphViewProps) {
-  const { requirements: allRequirements, tenderId } = useRequirements();
+  const { requirements: allRequirements, tenderId, awardCriteria } =
+    useRequirements();
   const router = useRouter();
   const controlled = Boolean(onSelectRequirement);
+
+  // The one-shot build-in. While it plays, nodes carry stagger delays and edges
+  // carry draw-in classes; once the ~1.5s sequence ends the classes are dropped
+  // so later remounts (viewport culling, filter changes) render plainly instead
+  // of replaying the entrance. The keyframes themselves are gated on
+  // prefers-reduced-motion in the CSS module.
+  const [introDone, setIntroDone] = useState(false);
+
+  // Zoom level-of-detail with hysteresis: cards collapse to source-ref +
+  // confidence dot below 0.55, and only re-expand above 0.65, so hovering the
+  // threshold never flickers. Applied as a data attribute + CSS so panning and
+  // zooming never rebuild the node array.
+  const [lod, setLod] = useState<"full" | "compact">("full");
+  const onViewportMove = useCallback((_e: unknown, viewport: Viewport) => {
+    setLod((cur) =>
+      cur === "full"
+        ? viewport.zoom < 0.55
+          ? "compact"
+          : cur
+        : viewport.zoom > 0.65
+          ? "full"
+          : cur
+    );
+  }, []);
 
   // Uncontrolled (standalone) keeps its own deal-breakers lens; controlled takes
   // the workspace filter instead.
@@ -418,9 +513,13 @@ export function GraphView({
   ]);
 
   // Base layout: lanes, columns, criteria, requirements, and the edges. Rebuilt
-  // only when the visible requirement slice changes.
+  // only when the visible requirement slice changes (and once more when the
+  // entrance finishes, to strip the intro classes).
   const { baseNodes, baseEdges, counts } = useMemo(() => {
     const reqIds = new Set(requirements.map((r) => r.id));
+    // Published award criteria (#27) → real name + weight, keyed by id =
+    // criteria_ref, same as the ledger, so both panes name the same thing.
+    const critMeta = new Map(awardCriteria.map((c) => [c.id, c]));
 
     const critRefs = Array.from(
       new Set(
@@ -438,6 +537,14 @@ export function GraphView({
     ];
     const indexOf = new Map(grouped.map((r, i) => [r.id, i] as const));
 
+    // Build-in stagger: cards land top-to-bottom after the lanes fade in. The
+    // per-row step compresses for big sets so the whole card pass stays inside
+    // ~1.1s (plus the 0.55s settle); delays go null once the entrance played.
+    const intro = !introDone;
+    const step = Math.min(70, Math.max(20, 950 / Math.max(grouped.length, 1)));
+    const cardDelay = (row: number): number | null =>
+      intro ? Math.round(150 + row * step) : null;
+
     // Swimlanes: one faint band per contiguous criterion segment (grouped order
     // makes each criterion's members contiguous), plus one for the unassigned tail.
     const laneNodes: Node[] = [];
@@ -454,6 +561,7 @@ export function GraphView({
           data: {
             label: criterionLabel(prevKey === UNASSIGNED ? null : prevKey),
             tint: laneNodes.length % 2 === 0,
+            intro,
           },
           draggable: false,
           selectable: false,
@@ -471,7 +579,7 @@ export function GraphView({
       id: req.id,
       type: "requirement",
       position: { x: REQ_X, y: i * ROW_GAP },
-      data: { req },
+      data: { req, introDelay: cardDelay(i) },
       initialWidth: 256,
       initialHeight: CARD_H,
     }));
@@ -483,13 +591,23 @@ export function GraphView({
         members.length;
       const num = ref.replace(/\D+/g, "") || ref;
       const hasGating = members.some((m) => m.is_gating);
+      const meta = critMeta.get(ref);
+      const delay = cardDelay(avgIdx);
       return {
         id: critNodeId(ref),
         type: "criterion",
         position: { x: CRIT_X, y: avgIdx * ROW_GAP },
-        data: { num, count: members.length, hasGating },
+        data: {
+          num,
+          name: meta?.name ?? null,
+          weight: meta && meta.weight > 0 ? meta.weight : null,
+          count: members.length,
+          hasGating,
+          // Criteria settle a beat after their feeders reach them.
+          introDelay: delay === null ? null : delay + 120,
+        },
         initialWidth: 184,
-        initialHeight: hasGating ? 100 : 80,
+        initialHeight: (hasGating ? 100 : 80) + (meta?.name ? 20 : 0),
       };
     });
 
@@ -498,7 +616,7 @@ export function GraphView({
         id: "label:req",
         type: "columnLabel",
         position: { x: REQ_X + 2, y: LABEL_Y },
-        data: { label: "Requirements", count: grouped.length },
+        data: { label: "Requirements", count: grouped.length, intro },
         draggable: false,
         selectable: false,
         initialWidth: 132,
@@ -508,7 +626,7 @@ export function GraphView({
         id: "label:crit",
         type: "columnLabel",
         position: { x: CRIT_X + 2, y: LABEL_Y },
-        data: { label: "Award criteria", count: critRefs.length },
+        data: { label: "Award criteria", count: critRefs.length, intro },
         draggable: false,
         selectable: false,
         initialWidth: 132,
@@ -527,6 +645,7 @@ export function GraphView({
           sourceHandle: "r",
           target: critNodeId(req.criteria_ref),
           targetHandle: "c",
+          className: intro ? styles.edgeIntro : undefined,
           style: {
             stroke: req.is_gating ? INK_OXBLOOD : INK_LINK,
             strokeWidth: req.is_gating ? 2 : 1.25,
