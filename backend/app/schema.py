@@ -29,6 +29,26 @@ class ShareRequest(BaseModel):
     email: str
 
 
+class TeamCreate(BaseModel):
+    """Body for POST /teams — create a persistent collaboration team."""
+    name: str
+
+
+class TeamMemberRequest(BaseModel):
+    """Body for POST /teams/{id}/members — add a registered user to a team by email."""
+    email: str
+
+
+class TenderTeamRequest(BaseModel):
+    """Body for POST /tenders/{id}/team — share a tender with a team (team_id=null clears it)."""
+    team_id: Optional[str] = None
+
+
+class CommentCreate(BaseModel):
+    """Body for POST /requirements/{id}/comments — a team note on one requirement."""
+    body: str
+
+
 class Decision(BaseModel):
     action: str
     note: str = ""

@@ -9,6 +9,8 @@ Extraction is pluggable: heuristic with no key, Claude when ANTHROPIC_API_KEY is
 
 from __future__ import annotations
 
+import asyncio
+import json
 import os
 import shutil
 import threading
@@ -29,14 +31,24 @@ load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, UploadFile
 from fastapi.concurrency import run_in_threadpool
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, StreamingResponse
 
 from .auth import current_user
 from .extract import get_extractor
 from .ingest import ingest_pdf, PDFIngestError, SUPPORTED_EXTENSIONS
 from .pipeline import run_pipeline, run_pipeline_multi
-from .schema import Actor, DecisionUpdate, Requirement, ShareRequest, TenderResponse
-from . import auth, pipeline, store
+from .schema import (
+    Actor,
+    CommentCreate,
+    DecisionUpdate,
+    Requirement,
+    ShareRequest,
+    TeamCreate,
+    TeamMemberRequest,
+    TenderTeamRequest,
+    TenderResponse,
+)
+from . import auth, events, pipeline, store
 
 # The generalist's autofill answerers (engine.answer). Guarded like the pipeline import:
 # present at repo-root runtime, absent on a backend-rooted deploy (then /draft returns 503).
@@ -66,6 +78,10 @@ app.add_middleware(
 
 UPLOAD_DIR = Path(__file__).resolve().parent.parent / "data" / "uploads"
 CAPABILITY_DIR = Path(__file__).resolve().parent.parent / "data" / "capability"
+
+
+def _now_iso() -> str:
+    return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
 
 
 def _resolve_answerer(provider: Optional[str]):
@@ -260,6 +276,38 @@ def login(body: auth.LoginRequest):
             "user": {"id": user["id"], "email": user["email"], "name": user.get("name")}}
 
 
+@app.post("/auth/google", response_model=auth.AuthResponse)
+def login_google(body: auth.GoogleLoginRequest):
+    """Sign in with Google. Verify the Google ID token, then find-or-create the account
+    for that email and issue our own bearer token — the same session the password path
+    returns. A first-time email is auto-provisioned (unless GOOGLE_AUTO_PROVISION=0, which
+    keeps it strictly invite-only). 503 when Google sign-in isn't configured on this deploy."""
+    if auth.google_client_id() is None:
+        raise HTTPException(status_code=503, detail="Google sign-in is not configured.")
+    claims = auth.verify_google_id_token(body.id_token)
+    if claims is None:
+        raise HTTPException(status_code=401, detail="Google sign-in could not be verified.")
+    store.init_db()
+    user = store.get_user_by_email(claims["email"])
+    if user is None:
+        if not auth.google_auto_provision():
+            raise HTTPException(
+                status_code=403,
+                detail="No Bidframe account for this Google email. Ask an admin for access.",
+            )
+        store.create_user(
+            user_id=f"usr-{uuid.uuid4().hex[:10]}",
+            email=claims["email"],
+            password_hash=auth.GOOGLE_PASSWORD_SENTINEL,
+            created_at=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+            name=claims.get("name"),
+        )
+        user = store.get_user_by_email(claims["email"])
+    token = auth.create_token(user["id"])
+    return {"token": token,
+            "user": {"id": user["id"], "email": user["email"], "name": user.get("name")}}
+
+
 @app.get("/auth/me", response_model=auth.AuthUser)
 def me(user: dict = Depends(current_user)):
     """Return the signed-in account — the frontend calls this on load to confirm the
@@ -431,8 +479,78 @@ def share_tender(tender_id: str, body: ShareRequest, user: dict = Depends(curren
         raise HTTPException(status_code=404, detail=f"No Bidframe account for {body.email}.")
     if target["id"] == user["id"]:
         raise HTTPException(status_code=400, detail="You already own this tender.")
-    store.add_member(tender_id, target["id"], time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()))
-    return {"members": store.list_members(tender_id)}
+    store.add_member(tender_id, target["id"], _now_iso())
+    members = store.list_members(tender_id)
+    events.publish(tender_id, {"type": "members", "members": members})
+    return {"members": members}
+
+
+# ---- Teams (persistent collaboration groups) ---------------------------------
+
+@app.post("/teams")
+def create_team(body: TeamCreate, user: dict = Depends(current_user)):
+    """Create a team. The caller becomes its owner and first member. Add teammates with
+    POST /teams/{id}/members, then share tenders to the team so everyone sees them."""
+    name = (body.name or "").strip()
+    if not name:
+        raise HTTPException(status_code=400, detail="Give the team a name.")
+    team_id = f"team-{uuid.uuid4().hex[:8]}"
+    store.create_team(team_id, name, user["id"], _now_iso())
+    return {"team": store.get_team(team_id), "members": store.list_team_members(team_id)}
+
+
+@app.get("/teams")
+def list_teams(user: dict = Depends(current_user)):
+    """The teams the signed-in user owns or belongs to (with member counts + their role)."""
+    return {"teams": store.list_teams_for_user(user["id"])}
+
+
+@app.get("/teams/{team_id}/members")
+def list_team_members(team_id: str, user: dict = Depends(current_user)):
+    """Everyone in a team. Any member can view the roster; a non-member gets 404 so team
+    membership can't be probed."""
+    if not store.is_team_member(team_id, user["id"]):
+        raise HTTPException(status_code=404, detail="Team not found.")
+    return {"members": store.list_team_members(team_id)}
+
+
+@app.post("/teams/{team_id}/members")
+def add_team_member(team_id: str, body: TeamMemberRequest, user: dict = Depends(current_user)):
+    """Add a registered user to a team by email (owner-only). Same invite-only rule as
+    tender sharing — the target must already have a Bidframe account (Google sign-in
+    creates one), so there's no silent invite to a stranger."""
+    if not store.is_team_owner(team_id, user["id"]):
+        raise HTTPException(status_code=404, detail="Team not found.")
+    target = store.get_user_by_email(body.email)
+    if target is None:
+        raise HTTPException(status_code=404, detail=f"No Bidframe account for {body.email}.")
+    store.add_team_member(team_id, target["id"], _now_iso())
+    return {"members": store.list_team_members(team_id)}
+
+
+@app.delete("/teams/{team_id}/members/{member_id}")
+def remove_team_member(team_id: str, member_id: str, user: dict = Depends(current_user)):
+    """Remove a member from a team (owner-only). The owner can't be removed."""
+    if not store.is_team_owner(team_id, user["id"]):
+        raise HTTPException(status_code=404, detail="Team not found.")
+    team = store.get_team(team_id)
+    if team and team["owner_id"] == member_id:
+        raise HTTPException(status_code=400, detail="The team owner can't be removed.")
+    store.remove_team_member(team_id, member_id)
+    return {"members": store.list_team_members(team_id)}
+
+
+@app.post("/tenders/{tender_id}/team")
+def share_tender_with_team(tender_id: str, body: TenderTeamRequest, user: dict = Depends(current_user)):
+    """Share a tender with a team, so every team member can open + decide on it (owner-only).
+    Pass team_id=null to unshare. You must own the tender AND belong to the target team."""
+    if store.get_tender_owner(tender_id) != user["id"]:
+        raise HTTPException(status_code=404, detail="Tender not found.")
+    if body.team_id is not None and not store.is_team_member(body.team_id, user["id"]):
+        raise HTTPException(status_code=404, detail="Team not found.")
+    store.set_tender_team(tender_id, body.team_id)
+    events.publish(tender_id, {"type": "members", "members": store.list_members(tender_id)})
+    return {"tender_id": tender_id, "team_id": body.team_id}
 
 
 @app.delete("/tenders/{tender_id}/share")
@@ -609,4 +727,89 @@ def update_requirement(req_id: str, update: DecisionUpdate,
             note=note,
             timestamp=timestamp,
         )
+        # Live collaboration: teammates viewing this tender see the decision immediately.
+        events.publish(tender_id, {
+            "type": "requirement",
+            "req_id": req.id,
+            "status": req.status,
+            "decision": req.decision.model_dump() if req.decision else None,
+        })
     return req
+
+
+# ---- Comments (per-requirement collaboration) --------------------------------
+
+@app.get("/requirements/{req_id}/comments")
+def get_comments(req_id: str, user: dict = Depends(current_user)):
+    """All team comments on a requirement (oldest first). Visible to anyone who can access
+    the tender — owner, shared member, or team member; else 404."""
+    if not store.can_access_requirement(req_id, user["id"]):
+        raise HTTPException(status_code=404, detail="Requirement not found.")
+    return {"comments": store.list_comments(req_id)}
+
+
+@app.post("/requirements/{req_id}/comments")
+def post_comment(req_id: str, body: CommentCreate, user: dict = Depends(current_user)):
+    """Add a team comment to a requirement. Author is stamped server-side (never trusted
+    from the client), and the new comment is broadcast live to everyone on the tender."""
+    if not store.can_access_requirement(req_id, user["id"]):
+        raise HTTPException(status_code=404, detail="Requirement not found.")
+    text = (body.body or "").strip()
+    if not text:
+        raise HTTPException(status_code=400, detail="Write a comment first.")
+    tender_id = store.get_requirement_tender_id(req_id)
+    comment = store.add_comment(
+        comment_id=f"cmt-{uuid.uuid4().hex[:10]}",
+        req_id=req_id,
+        tender_id=tender_id or "",
+        author_id=user["id"],
+        author_name=user.get("name") or user["email"],
+        body=text,
+        created_at=_now_iso(),
+    )
+    if tender_id:
+        events.publish(tender_id, {"type": "comment", "comment": comment})
+    return comment
+
+
+# ---- Live collaboration stream (SSE) -----------------------------------------
+
+@app.get("/tenders/{tender_id}/events")
+async def tender_events(
+    tender_id: str,
+    token: Optional[str] = None,          # a plain EventSource can't set an Authorization header
+    authorization: str = Header(None),
+):
+    """Server-Sent Events stream of live collaboration on a tender: decisions, comments and
+    membership changes as they happen. Auth via `?token=` (EventSource can't send headers),
+    owner/member/team-scoped. Emits a heartbeat every 20s so proxies keep the stream open."""
+    raw = None
+    if authorization and authorization.lower().startswith("bearer "):
+        raw = authorization[7:].strip()
+    elif token:
+        raw = token
+    user = auth.user_from_token(raw)
+    if user is None:
+        raise HTTPException(status_code=401, detail="Sign in to watch this tender.")
+    if not store.can_access(tender_id, user["id"]):
+        raise HTTPException(status_code=404, detail="Tender not found.")
+
+    async def stream():
+        queue = events.subscribe(tender_id)
+        try:
+            yield ": connected\n\n"   # opening comment flushes headers immediately
+            while True:
+                try:
+                    event = await asyncio.wait_for(queue.get(), timeout=20.0)
+                except asyncio.TimeoutError:
+                    yield ": ping\n\n"   # heartbeat keeps intermediaries from closing the idle stream
+                    continue
+                yield f"data: {json.dumps(event)}\n\n"
+        finally:
+            events.unsubscribe(tender_id, queue)
+
+    return StreamingResponse(
+        stream(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no", "Connection": "keep-alive"},
+    )

@@ -78,6 +78,30 @@ def init_db() -> None:
                 FOREIGN KEY (req_id) REFERENCES requirements(id),
                 FOREIGN KEY (actor_id) REFERENCES users(id)
             );
+            CREATE TABLE IF NOT EXISTS teams (
+                id         TEXT PRIMARY KEY,
+                name       TEXT NOT NULL,
+                owner_id   TEXT NOT NULL,
+                created_at TEXT NOT NULL
+            );
+            CREATE TABLE IF NOT EXISTS team_members (
+                team_id  TEXT NOT NULL,
+                user_id  TEXT NOT NULL,
+                role     TEXT NOT NULL DEFAULT 'member',
+                added_at TEXT NOT NULL,
+                PRIMARY KEY (team_id, user_id),
+                FOREIGN KEY (team_id) REFERENCES teams(id)
+            );
+            CREATE TABLE IF NOT EXISTS comments (
+                id          TEXT PRIMARY KEY,
+                req_id      TEXT NOT NULL,
+                tender_id   TEXT NOT NULL,
+                author_id   TEXT NOT NULL,
+                author_name TEXT,
+                body        TEXT NOT NULL,
+                created_at  TEXT NOT NULL
+            );
+            CREATE INDEX IF NOT EXISTS comments_req_idx ON comments (req_id);
             """
         )
         # Additive migration: the bidder's capability docs (autofill envelope). Idempotent,
@@ -99,6 +123,11 @@ def init_db() -> None:
         ucols = [row["name"] for row in c.execute("PRAGMA table_info(users)").fetchall()]
         if "name" not in ucols:
             c.execute("ALTER TABLE users ADD COLUMN name TEXT")
+        # Additive migration: a tender may belong to a team (persistent collaboration).
+        # Nullable — existing per-user/shared tenders are unaffected; access via team is
+        # granted on top of owner + tender_members (see can_access).
+        if "team_id" not in cols:
+            c.execute("ALTER TABLE tenders ADD COLUMN team_id TEXT")
 
 
 def _caps_json(resp: TenderResponse) -> str:
@@ -185,9 +214,11 @@ def list_tenders(owner: str | None = None) -> list[dict]:
         if owner is not None:
             rows = c.execute(
                 base
-                + "WHERE t.owner = ? OR t.id IN (SELECT tender_id FROM tender_members WHERE user_id = ?) "
+                + "WHERE t.owner = ? "
+                + "OR t.id IN (SELECT tender_id FROM tender_members WHERE user_id = ?) "
+                + "OR t.team_id IN (SELECT team_id FROM team_members WHERE user_id = ?) "
                 + "GROUP BY t.id ORDER BY t.id DESC",
-                (owner, owner),
+                (owner, owner, owner),
             ).fetchall()
         else:
             rows = c.execute(base + "GROUP BY t.id ORDER BY t.id DESC").fetchall()
@@ -281,23 +312,158 @@ def is_member(tender_id: str, user_id: str) -> bool:
 
 
 def can_access(tender_id: str, user_id: str) -> bool:
-    """A user may access a tender if they own it OR have been shared into it. The single
-    replacement for the old `owner == user` equality wall — owner still passes, others 404."""
-    return get_tender_owner(tender_id) == user_id or is_member(tender_id, user_id)
+    """A user may access a tender if they own it, have been shared into it, OR belong to
+    the team it's assigned to. Owner still passes; everyone else 404s. Team access is
+    additive on top of the per-user share wall."""
+    if get_tender_owner(tender_id) == user_id or is_member(tender_id, user_id):
+        return True
+    team_id = get_tender_team(tender_id)
+    return team_id is not None and is_team_member(team_id, user_id)
 
 
 def can_access_requirement(req_id: str, user_id: str) -> bool:
-    """Can this user access the tender a requirement belongs to (owner or shared member)?
-    Requirement-level equivalent of can_access, for the PATCH guard."""
+    """Can this user access the tender a requirement belongs to (owner, shared member, or
+    team member)? Requirement-level equivalent of can_access, for the PATCH/comment guard."""
     with _conn() as c:
         row = c.execute(
-            "SELECT t.id AS tid, t.owner FROM requirements r JOIN tenders t ON r.tender_id = t.id "
-            "WHERE r.id = ?",
+            "SELECT t.id AS tid, t.owner, t.team_id FROM requirements r "
+            "JOIN tenders t ON r.tender_id = t.id WHERE r.id = ?",
             (req_id,),
         ).fetchone()
     if row is None:
         return False
-    return row["owner"] == user_id or is_member(row["tid"], user_id)
+    if row["owner"] == user_id or is_member(row["tid"], user_id):
+        return True
+    return row["team_id"] is not None and is_team_member(row["team_id"], user_id)
+
+
+# ---- Teams (persistent collaboration groups) ---------------------------------
+
+def create_team(team_id: str, name: str, owner_id: str, created_at: str) -> None:
+    """Create a team and add its owner as the first (owner-role) member."""
+    with _conn() as c:
+        c.execute(
+            "INSERT INTO teams (id, name, owner_id, created_at) VALUES (?, ?, ?, ?)",
+            (team_id, name.strip(), owner_id, created_at),
+        )
+        c.execute(
+            "INSERT OR IGNORE INTO team_members (team_id, user_id, role, added_at) VALUES (?, ?, 'owner', ?)",
+            (team_id, owner_id, created_at),
+        )
+
+
+def get_team(team_id: str) -> dict | None:
+    with _conn() as c:
+        row = c.execute(
+            "SELECT id, name, owner_id, created_at FROM teams WHERE id = ?", (team_id,)
+        ).fetchone()
+    return dict(row) if row is not None else None
+
+
+def is_team_owner(team_id: str, user_id: str) -> bool:
+    with _conn() as c:
+        row = c.execute(
+            "SELECT 1 FROM teams WHERE id = ? AND owner_id = ?", (team_id, user_id)
+        ).fetchone()
+    return row is not None
+
+
+def is_team_member(team_id: str, user_id: str) -> bool:
+    with _conn() as c:
+        row = c.execute(
+            "SELECT 1 FROM team_members WHERE team_id = ? AND user_id = ?",
+            (team_id, user_id),
+        ).fetchone()
+    return row is not None
+
+
+def user_team_ids(user_id: str) -> list[str]:
+    with _conn() as c:
+        rows = c.execute(
+            "SELECT team_id FROM team_members WHERE user_id = ?", (user_id,)
+        ).fetchall()
+    return [r["team_id"] for r in rows]
+
+
+def list_teams_for_user(user_id: str) -> list[dict]:
+    """Teams the user owns or belongs to, each with a member count and the caller's role."""
+    with _conn() as c:
+        rows = c.execute(
+            "SELECT t.id, t.name, t.owner_id, t.created_at, me.role AS my_role, "
+            "  (SELECT COUNT(*) FROM team_members m2 WHERE m2.team_id = t.id) AS member_count "
+            "FROM teams t JOIN team_members me ON me.team_id = t.id AND me.user_id = ? "
+            "ORDER BY t.created_at DESC",
+            (user_id,),
+        ).fetchall()
+    return [dict(r) for r in rows]
+
+
+def add_team_member(team_id: str, user_id: str, added_at: str, role: str = "member") -> None:
+    """Grant a user membership of a team (idempotent)."""
+    with _conn() as c:
+        c.execute(
+            "INSERT OR IGNORE INTO team_members (team_id, user_id, role, added_at) VALUES (?, ?, ?, ?)",
+            (team_id, user_id, role, added_at),
+        )
+
+
+def remove_team_member(team_id: str, user_id: str) -> None:
+    """Remove a member from a team. The owner can't be removed (guarded in the API)."""
+    with _conn() as c:
+        c.execute(
+            "DELETE FROM team_members WHERE team_id = ? AND user_id = ?",
+            (team_id, user_id),
+        )
+
+
+def list_team_members(team_id: str) -> list[dict]:
+    """Everyone in a team, owner first, with names — mirrors list_members' shape."""
+    with _conn() as c:
+        rows = c.execute(
+            "SELECT u.id, u.email, u.name, m.role, m.added_at "
+            "FROM team_members m JOIN users u ON u.id = m.user_id "
+            "WHERE m.team_id = ? ORDER BY (m.role = 'owner') DESC, m.added_at",
+            (team_id,),
+        ).fetchall()
+    return [dict(r) for r in rows]
+
+
+def get_tender_team(tender_id: str) -> str | None:
+    with _conn() as c:
+        row = c.execute("SELECT team_id FROM tenders WHERE id = ?", (tender_id,)).fetchone()
+    return row["team_id"] if row is not None and row["team_id"] else None
+
+
+def set_tender_team(tender_id: str, team_id: str | None) -> None:
+    """Assign (or clear, with None) the team a tender is shared with."""
+    with _conn() as c:
+        c.execute("UPDATE tenders SET team_id = ? WHERE id = ?", (team_id, tender_id))
+
+
+# ---- Comments (per-requirement collaboration) --------------------------------
+
+def add_comment(comment_id: str, req_id: str, tender_id: str, author_id: str,
+                author_name: str | None, body: str, created_at: str) -> dict:
+    """Insert a comment on a requirement and return it as a dict (for the SSE broadcast)."""
+    with _conn() as c:
+        c.execute(
+            "INSERT INTO comments (id, req_id, tender_id, author_id, author_name, body, created_at) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?)",
+            (comment_id, req_id, tender_id, author_id, author_name, body, created_at),
+        )
+    return {"id": comment_id, "req_id": req_id, "tender_id": tender_id, "author_id": author_id,
+            "author_name": author_name, "body": body, "created_at": created_at}
+
+
+def list_comments(req_id: str) -> list[dict]:
+    """All comments on a requirement, oldest first."""
+    with _conn() as c:
+        rows = c.execute(
+            "SELECT id, req_id, tender_id, author_id, author_name, body, created_at "
+            "FROM comments WHERE req_id = ? ORDER BY created_at",
+            (req_id,),
+        ).fetchall()
+    return [dict(r) for r in rows]
 
 
 def get_requirement_tender_id(req_id: str) -> str | None:
