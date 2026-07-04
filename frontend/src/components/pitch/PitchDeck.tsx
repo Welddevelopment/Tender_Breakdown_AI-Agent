@@ -107,17 +107,16 @@ const SHOWCASE_HANDOFF_HREF = `/showcase?returnTo=${encodeURIComponent(
   PITCH_RETURN_HREF
 )}`;
 
-// The competitor register (s5): four axes of measured trust, four camps.
-// Competitor cells state their own published positioning (checked 4 Jul 2026);
-// Bidframe cells carry claim-ledger numbers only. Every mark is a glyph AND a
-// word, never colour alone (greyscale-safe, per the confidence-bead rule).
+// The competitor register (s5): four axes, four camps, glyphs only — the
+// spoken script carries the detail (bobbyscript.md). Marks are shapes, not
+// colour alone (greyscale-safe).
 type RegisterMark = "yes" | "part" | "no";
 
 const REGISTER_AXES = [
-  "Source-linked matrix",
-  "Deal-breaker floor",
+  "Source-linked",
+  "Deal-breaker catch",
   "Decision record",
-  "SME self-serve",
+  "SME price",
 ] as const;
 
 const REGISTER_GLYPHS: Record<RegisterMark, string> = {
@@ -130,48 +129,28 @@ const REGISTER_ROWS: Array<{
   name: string;
   detail: string;
   us?: boolean;
-  cells: Array<{ mark: RegisterMark; note: string }>;
+  cells: RegisterMark[];
 }> = [
   {
     name: "Bidframe",
-    detail: "the first read, proven",
+    detail: "",
     us: true,
-    cells: [
-      { mark: "yes", note: "every row to its clause" },
-      { mark: "yes", note: "12/12, deterministic" },
-      { mark: "yes", note: "approve / edit / flag kept" },
-      { mark: "yes", note: "built for the first read" },
-    ],
+    cells: ["yes", "yes", "yes", "yes"],
   },
   {
     name: "AI bid writers",
     detail: "AutogenAI · mytender.io",
-    cells: [
-      { mark: "part", note: "extract without proof" },
-      { mark: "no", note: "no pass/fail catch" },
-      { mark: "no", note: "prose out, no trail" },
-      { mark: "no", note: "demo-gated pricing" },
-    ],
+    cells: ["part", "no", "no", "no"],
   },
   {
-    name: "RFP answer libraries",
+    name: "Answer libraries",
     detail: "Loopio · Responsive",
-    cells: [
-      { mark: "no", note: "reuses past answers" },
-      { mark: "no", note: "no tender read" },
-      { mark: "part", note: "content approvals" },
-      { mark: "no", note: "enterprise contracts" },
-    ],
+    cells: ["no", "no", "part", "no"],
   },
   {
     name: "PDF chat",
     detail: "NotebookLM · ChatGPT",
-    cells: [
-      { mark: "no", note: "summary, no proof" },
-      { mark: "no", note: "nothing surfaced" },
-      { mark: "no", note: "nothing recorded" },
-      { mark: "part", note: "free, unmeasured" },
-    ],
+    cells: ["no", "no", "no", "part"],
   },
 ];
 
@@ -971,7 +950,7 @@ export function PitchDeck() {
         },
         {
           bucket: "Competitors",
-          title: "Everyone else writes bids. We make sure you're allowed to.",
+          title: "Competitor analysis",
           speaker: "Bobby",
           zone: "moss",
           light: 0.75,
@@ -980,15 +959,7 @@ export function PitchDeck() {
           body: (
             <div className={`pitch-register ${beat > 0 ? "is-revealed" : ""}`}>
               <div className="pitch-copy pitch-register__copy">
-                <p className="pitch-kicker">The competition</p>
-                <h2>
-                  Everyone else writes bids. We make sure you&rsquo;re allowed
-                  to.
-                </h2>
-                <p>
-                  Chatbots summarise. Writing tools draft. Neither proves the
-                  first read.
-                </p>
+                <h2>Competitor analysis</h2>
               </div>
               <div className="pitch-register__sheet">
                 <table className="pitch-register__table">
@@ -1016,14 +987,14 @@ export function PitchDeck() {
                       >
                         <th scope="row">
                           <strong>{row.name}</strong>
-                          <em>{row.detail}</em>
+                          {row.detail && <em>{row.detail}</em>}
                         </th>
-                        {row.cells.map((cell, cellIndex) => (
-                          <td key={REGISTER_AXES[cellIndex]} data-mark={cell.mark}>
+                        {row.cells.map((mark, cellIndex) => (
+                          <td key={REGISTER_AXES[cellIndex]} data-mark={mark}>
                             <span aria-hidden="true">
-                              {REGISTER_GLYPHS[cell.mark]}
+                              {REGISTER_GLYPHS[mark]}
                             </span>
-                            <em>{cell.note}</em>
+                            <span className="sr-only">{mark}</span>
                           </td>
                         ))}
                       </tr>
@@ -1031,14 +1002,12 @@ export function PitchDeck() {
                   </tbody>
                 </table>
                 <p className="pitch-register__price">
-                  An in-house bid writer runs £35-50k a year; an outsourced
-                  review from £950 a tender. The incumbents do not publish a
-                  price. Bidframe is the first read an SME can afford.
+                  Incumbents: enterprise-priced, demo-gated. Bidframe: the
+                  first read an SME can afford.
                 </p>
                 <p className="pitch-register__source">
-                  Competitor cells: their own published positioning, checked 4
-                  Jul 2026 · Bidframe cells measured: 12/12 deterministic,
-                  42/42 citations, 0 fabrications (demo-claim-ledger.md)
+                  Competitor cells: their published positioning, 4 Jul 2026 ·
+                  Bidframe: measured (claim ledger)
                 </p>
               </div>
             </div>
