@@ -2,12 +2,14 @@
 
 import { useEffect, useId, useState } from "react";
 import Link from "next/link";
-import type { Requirement, RequirementStatus } from "@/types/requirement";
+import type { Requirement } from "@/types/requirement";
 import { AnswerPanel } from "./AnswerPanel";
 import { ApprovalStamp } from "./ApprovalStamp";
 import { ConfidenceIndicator } from "./ConfidenceIndicator";
 import { CategoryTag } from "./CategoryTag";
 import { useRequirements } from "@/context/RequirementsContext";
+import { useAuth } from "@/context/AuthContext";
+import { actorLabel } from "@/lib/collaborators";
 import { tenderPdfPageUrl } from "@/lib/api";
 import {
   hasPdfSource,
@@ -87,26 +89,35 @@ interface RequirementPanelProps {
   onClose: () => void;
 }
 
-// The status word, from the decision-status lexicon (copywriting.md).
-const STATUS_WORD: Record<RequirementStatus, string> = {
-  pending: "Needs your eye",
-  accepted: "Approved by you",
-  edited: "Edited by you",
-  flagged: "Flagged",
-};
-
-// The self-writing audit line, factual and past tense, from the recorded
-// decision (copywriting.md, the self-writing audit line). Dry, no adjectives.
-function auditLine(req: Requirement): string | null {
-  if (!req.decision) return null;
-  const time = formatTime(req.decision.timestamp);
+// The status word (copywriting.md lexicon), attributed to whoever made the decision — "you" when
+// it was the signed-in user or unknown (legacy/frozen demo), else the collaborator's name.
+function statusWord(req: Requirement, currentUserId?: string | null): string {
+  const who = actorLabel(req.decision?.actor, currentUserId);
   switch (req.status) {
     case "accepted":
-      return `Approved by you, ${time}.`;
+      return `Approved by ${who}`;
     case "edited":
-      return "Edited by you. The original draft is kept.";
+      return `Edited by ${who}`;
     case "flagged":
-      return `Flagged by you, ${time}.`;
+      return "Flagged";
+    default:
+      return "Needs your eye";
+  }
+}
+
+// The self-writing audit line, factual and past tense, from the recorded decision — now naming
+// who made it (copywriting.md, the self-writing audit line). Dry, no adjectives.
+function auditLine(req: Requirement, currentUserId?: string | null): string | null {
+  if (!req.decision) return null;
+  const time = formatTime(req.decision.timestamp);
+  const who = actorLabel(req.decision.actor, currentUserId);
+  switch (req.status) {
+    case "accepted":
+      return `Approved by ${who}, ${time}.`;
+    case "edited":
+      return `Edited by ${who}. The original draft is kept.`;
+    case "flagged":
+      return `Flagged by ${who}, ${time}.`;
     default:
       return null;
   }
@@ -163,6 +174,7 @@ export function RequirementPanel({
   onNext,
   onClose,
 }: RequirementPanelProps) {
+  const { user } = useAuth(); // to render decisions as "you" vs a collaborator's name
   // Esc returns to the resting matrix. The drawer shell and the focus overlay
   // own their own Esc, so the panel only wires it up in the split where nothing
   // else does.
@@ -210,8 +222,9 @@ export function RequirementPanel({
         key={`dec-${requirement.id}`}
         variant={variant}
         requirement={requirement}
-        statusWord={STATUS_WORD[requirement.status]}
-        audit={auditLine(requirement)}
+        statusWord={statusWord(requirement, user?.id)}
+        audit={auditLine(requirement, user?.id)}
+        approvedBy={actorLabel(requirement.decision?.actor, user?.id)}
         onApprove={onApprove}
         onEdit={onEdit}
         onFlag={onFlag}
@@ -551,6 +564,7 @@ function DecisionZone({
   variant,
   statusWord,
   audit,
+  approvedBy,
   onApprove,
   onEdit,
   onFlag,
@@ -561,6 +575,7 @@ function DecisionZone({
   variant: PanelVariant;
   statusWord: string;
   audit: string | null;
+  approvedBy: string;
   onApprove: (id: string) => void;
   onEdit: (id: string, note: string) => void;
   onFlag: (id: string, note: string) => void;
@@ -651,7 +666,7 @@ function DecisionZone({
           every other status keeps the quiet word plus its mono audit line. */}
       <div className="mb-3 flex items-baseline justify-between gap-4">
         {requirement.status === "accepted" && requirement.decision ? (
-          <ApprovalStamp time={formatTime(requirement.decision.timestamp)} />
+          <ApprovalStamp by={approvedBy} time={formatTime(requirement.decision.timestamp)} />
         ) : (
           <>
             <span className="text-sm text-ink-muted">{statusWord}</span>

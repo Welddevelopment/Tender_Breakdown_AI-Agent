@@ -221,14 +221,15 @@ def login(body: auth.LoginRequest):
     if user is None or not auth.verify_password(body.password, user["password_hash"]):
         raise HTTPException(status_code=401, detail="Incorrect email or password.")
     token = auth.create_token(user["id"])
-    return {"token": token, "user": {"id": user["id"], "email": user["email"]}}
+    return {"token": token,
+            "user": {"id": user["id"], "email": user["email"], "name": user.get("name")}}
 
 
 @app.get("/auth/me", response_model=auth.AuthUser)
 def me(user: dict = Depends(current_user)):
     """Return the signed-in account — the frontend calls this on load to confirm the
     stored token is still valid before showing the app."""
-    return {"id": user["id"], "email": user["email"]}
+    return {"id": user["id"], "email": user["email"], "name": user.get("name")}
 
 
 @app.get("/tenders")

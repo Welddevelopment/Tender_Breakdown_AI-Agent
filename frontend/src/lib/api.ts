@@ -50,6 +50,15 @@ function authHeaders(): Record<string, string> {
 export interface AuthUser {
   id: string;
   email: string;
+  name?: string | null;
+}
+
+export interface TenderMember {
+  id: string;
+  email: string;
+  name?: string | null;
+  role: "owner" | "member";
+  added_at?: string | null;
 }
 
 // POST /auth/login — exchange email + password for a bearer token, which we store.
@@ -295,4 +304,26 @@ export async function patchRequirement(
     body: JSON.stringify(body),
   });
   if (!res.ok) throw await apiError(res, `Update failed (${res.status})`);
+}
+
+// Collaboration — GET /tenders/{id}/members, POST /tenders/{id}/share {email}.
+export async function listMembers(tenderId: string): Promise<TenderMember[]> {
+  const res = await fetch(`${BASE}/tenders/${tenderId}/members`, {
+    headers: { ...authHeaders() },
+  });
+  if (!res.ok) throw await apiError(res, `Couldn't load collaborators (${res.status})`);
+  return ((await res.json()) as { members: TenderMember[] }).members;
+}
+
+export async function shareTender(
+  tenderId: string,
+  email: string
+): Promise<TenderMember[]> {
+  const res = await fetch(`${BASE}/tenders/${tenderId}/share`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...authHeaders() },
+    body: JSON.stringify({ email }),
+  });
+  if (!res.ok) throw await apiError(res, `Share failed (${res.status})`);
+  return ((await res.json()) as { members: TenderMember[] }).members;
 }

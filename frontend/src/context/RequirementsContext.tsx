@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 import type {
+  Actor,
   AwardCriterion,
   CapabilityDoc,
   Requirement,
@@ -11,6 +12,7 @@ import type {
   SourceDoc,
   Tender,
 } from "@/types/requirement";
+import { useAuth } from "@/context/AuthContext";
 import { mockTender } from "@/data/mock-requirements";
 import {
   draftAnswers as apiDraftAnswers,
@@ -98,6 +100,7 @@ export function RequirementsProvider({
   // autofill action knows which tender to draft against.
   const [tenderId, setTenderId] = useState<string | null>(null);
   const [drafting, setDrafting] = useState(false);
+  const { user } = useAuth(); // for collaboration attribution on decisions (null when signed out)
 
   // Where the answers response workspace persists a human's draft edits + gap
   // answers (localStorage; there's no backend endpoint for answer text yet). Key
@@ -197,15 +200,26 @@ export function RequirementsProvider({
     }
   }
 
+  // Collaboration attribution: stamp the signed-in user onto a decision so the UI shows "who did
+  // what" optimistically. The backend RE-STAMPS this authoritatively on PATCH (client value ignored),
+  // so it can't be forged. Null on the frozen demo / no-auth build → the decision renders as "you".
+  const decisionActor: Actor | null = user
+    ? { id: user.id, email: user.email, name: user.name ?? null }
+    : null;
+  function withActor(d: RequirementDecision): RequirementDecision {
+    return decisionActor ? { ...d, actor: decisionActor } : d;
+  }
+
   // Optimistic in-memory update + best-effort persistence to the API when wired.
   function applyDecision(
     id: string,
     status: RequirementStatus,
     decision: RequirementDecision
   ) {
-    updateRequirement(id, { status, decision });
+    const stamped = withActor(decision);
+    updateRequirement(id, { status, decision: stamped });
     if (isApiEnabled()) {
-      patchRequirement(id, { status, decision }).catch(() => {
+      patchRequirement(id, { status, decision: stamped }).catch(() => {
         toast.error(SAVE_FAILED);
       });
     }
@@ -221,12 +235,13 @@ export function RequirementsProvider({
   ) {
     if (ids.length === 0) return;
     const idSet = new Set(ids);
+    const stamped = withActor(decision);
     setRequirements((prev) =>
-      prev.map((req) => (idSet.has(req.id) ? { ...req, status, decision } : req))
+      prev.map((req) => (idSet.has(req.id) ? { ...req, status, decision: stamped } : req))
     );
     if (isApiEnabled()) {
       for (const id of ids) {
-        patchRequirement(id, { status, decision }).catch(() => {
+        patchRequirement(id, { status, decision: stamped }).catch(() => {
           toast.error(SAVE_FAILED);
         });
       }

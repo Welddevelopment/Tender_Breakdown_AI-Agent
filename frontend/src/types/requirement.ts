@@ -1,10 +1,19 @@
 export type RequirementType = "mandatory" | "optional";
 export type RequirementStatus = "pending" | "accepted" | "edited" | "flagged";
 
+// Who made a decision (collaboration attribution). Stamped server-side on PATCH; optional so
+// legacy/mock decisions (and the frozen demo, where there's no signed-in user) render as "you".
+export interface Actor {
+  id: string;
+  email: string;
+  name?: string | null;
+}
+
 export interface RequirementDecision {
   action: string;
   note: string;
   timestamp: string;
+  actor?: Actor | null;
 }
 
 // --- Auditable-autofill fields (additive, see autofill-scope-decision.md) ---

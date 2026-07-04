@@ -11,9 +11,11 @@
 export function ApprovalStamp({
   time = "14:32",
   settle = true,
+  by = "you",
 }: {
   time?: string;
   settle?: boolean;
+  by?: string;
 }) {
   return (
     <span className="inline-flex items-center gap-3">
@@ -37,7 +39,7 @@ export function ApprovalStamp({
         </span>
       </span>
       <span className="font-mono text-xs text-ink-muted">
-        Approved by you, {time}.
+        Approved by {by}, {time}.
       </span>
     </span>
   );
