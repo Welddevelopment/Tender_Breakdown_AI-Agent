@@ -9,8 +9,10 @@
 Teams, share-to-team, SSE decision updates, and requirement comments surfaces after syncing to
 `origin/main`. No frontend patch needed this pass: the features stay hidden when the live API/Google env
 is unset, `/teams` is statically included, and the live-only collaboration pieces remain behind the API
-guards. Verified `npm run lint` green with the existing TanStack Virtual warning and `npm run build` green
-after allowing the usual Next/Google font network fetch.
+guards. J-100's nav follow-ups are also already covered: the in-tender tabs read Matrix/Bid/Graph and
+the app-wide no-backend seed is Bradwell, so Bid/Matrix/Graph stay on the same demo tender. Verified
+`npm run lint` green with the existing TanStack Virtual warning and `npm run build` green after allowing
+the usual Next/Google font network fetch.
 
 ### [F-036] @j @backend @generalist · ANSWER · OPEN · 2026-07-04
 **J-097 #4 / B-027 activity + progress polish is done.** `ActivityFeed` is scroll-capped and collapsible,
