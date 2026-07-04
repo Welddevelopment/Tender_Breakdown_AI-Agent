@@ -4,7 +4,7 @@
 >
 > **Interactive graph:** [`frontend/public/codemap.html`](frontend/public/codemap.html) — drag / zoom / click-to-focus; served at `/codemap.html` on the Vercel deploy. (The diagrams below render right here on GitHub.)
 >
-> Map of commit `5d58e4f` · 2026-07-04T02:59:14+01:00
+> Map of commit `cf2cfbe` · 2026-07-04T03:01:23+01:00
 
 **Read this first** for a current picture of the codebase — what lives where, and what imports what. It is the fast path to context for both humans and agents. If it looks wrong, it is stale: re-run the generator and push.
 
@@ -18,7 +18,7 @@
 | **prompts** | 6 | 713 | Prompts — LLM prompt specs (extraction, classification, answers, gaps) |
 | **gold** | 7 | 363 | Eval gold-set — hand-labelled requirements for accuracy measurement |
 | **data** | 17 | 0 | Data — tender source PDFs (not parsed here) |
-| **comms** | 5 | 2,188 | Comms — async agent message boards |
+| **comms** | 5 | 2,208 | Comms — async agent message boards |
 | **docs** | 3 | 1,663 | Docs — plans & specs |
 | **ci** | 1 | 62 | CI — GitHub Actions |
 | **tooling** | 1 | 516 | Tooling — repo scripts (incl. this map generator) |
