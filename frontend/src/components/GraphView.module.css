@@ -1,0 +1,91 @@
+/* Motion + level-of-detail for the relationship map. Everything here is
+   presentation the React tree should not churn for: the one-shot build-in on
+   first mount, the 150ms dim/undim sweep while tracing, and the zoom LOD that
+   collapses cards below reading size. All entrance motion is gated on
+   prefers-reduced-motion and uses `backwards` fill, so once an animation
+   finishes the element sits in its ordinary cascade state and the trace
+   styles below take over cleanly. */
+
+/* ---- Dim/undim: tracing sweeps instead of blinking. ---- */
+
+/* Edge groups fade as a whole; nodes carry their own Tailwind opacity classes
+   and only need the transition to stop snapping. */
+.canvas :global(.react-flow__edge) {
+  transition: opacity 150ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.edgeDim {
+  opacity: 0.12;
+}
+
+/* ---- Zoom level-of-detail. Below the readable threshold the container gets
+   data-lod="compact" and requirement cards drop their 2-line body + footer,
+   leaving source-ref, confidence dot, and the category/gating edge. ---- */
+
+.canvas[data-lod="compact"] .cardBody,
+.canvas[data-lod="compact"] .cardFoot {
+  display: none;
+}
+
+/* ---- The build-in. Lanes first, then cards stagger top-to-bottom with the
+   codebase's overshoot settle, then edges draw. Delays arrive inline per node
+   (row-indexed, compressed for big sets); the classes are removed once the
+   sequence ends so remounts (minimap pans, onlyRenderVisibleElements) never
+   replay it. ---- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .laneIn {
+    animation: graph-fade-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  }
+
+  .cardIn {
+    /* animation-delay set inline per node */
+    animation: graph-card-in 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+  }
+
+  /* Solid scored-against links draw left-to-right via dashoffset; the group
+     fades in over the first beats so the arrowhead doesn't float alone. */
+  .edgeIntro {
+    animation: graph-fade-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) 0.6s backwards;
+  }
+  .edgeIntro :global(.react-flow__edge-path) {
+    animation: graph-edge-draw 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.6s backwards;
+  }
+
+  /* Dependency links are dashed (inline dasharray), so a dashoffset draw would
+     just march the dashes — they fade in a beat later instead. */
+  .edgeIntroDep {
+    animation: graph-fade-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.85s backwards;
+  }
+}
+
+@keyframes graph-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes graph-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes graph-edge-draw {
+  from {
+    stroke-dasharray: 900;
+    stroke-dashoffset: 900;
+  }
+  to {
+    stroke-dasharray: 900;
+    stroke-dashoffset: 0;
+  }
+}
