@@ -66,7 +66,7 @@ export function DocumentHeader({
               pill, so the title owns the nameplate. */}
           <div className="flex min-w-0 flex-col gap-1.5">
             <Link href="/tenders" aria-label="Bidframe home" className="w-fit">
-              <BrandLogo className="h-7 w-auto" />
+              <BrandLogo className="h-9 w-auto sm:h-10" />
             </Link>
             <h1 className="truncate font-serif text-2xl font-semibold leading-tight tracking-tight text-ink">
               {title}
