@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import type { Tender } from "@/types/requirement";
 import { RequirementsProvider } from "@/context/RequirementsContext";
 import { PitchDeck } from "@/components/pitch/PitchDeck";
-import spsoPrebake from "@/data/spso-prebake.json";
+import bradwellPrebake from "@/data/bradwell-prebake.json";
 
-const demoTender = spsoPrebake as unknown as Tender;
+const demoTender = bradwellPrebake as unknown as Tender;
 
 export const metadata: Metadata = {
   title: "Bidframe pitch",

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import type { Tender } from "@/types/requirement";
 import { RequirementsProvider } from "@/context/RequirementsContext";
 import { DemoView } from "@/components/DemoView";
-import spsoPrebake from "@/data/spso-prebake.json";
+import bradwellPrebake from "@/data/bradwell-prebake.json";
 import { absoluteUrl, DEFAULT_OG_IMAGE, SITE_URL } from "@/lib/site";
 
 // A non-interactive, read-only showcase of the product (the landing "See the
@@ -10,11 +10,11 @@ import { absoluteUrl, DEFAULT_OG_IMAGE, SITE_URL } from "@/lib/site";
 // the demo tender, with no upload and no interaction. The interactive product
 // stays at /review.
 //
-// The showcase runs on the pre-baked SPSO run (G-021): a real gpt-4o
+// The showcase runs on the pre-baked Bradwell grounds-maintenance run: a real
 // extract + autofill in the GET /requirements shape, so /demo shows a real
 // tender with no backend and no API key. Its own provider freezes it, so the
 // hosted build's live/mock state can't leak in.
-const demoTender = spsoPrebake as unknown as Tender;
+const demoTender = bradwellPrebake as unknown as Tender;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
