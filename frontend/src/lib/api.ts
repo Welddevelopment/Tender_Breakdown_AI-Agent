@@ -9,6 +9,17 @@ export function isApiEnabled(): boolean {
   return BASE.length > 0;
 }
 
+// The Google OAuth client id (Web) for "Sign in with Google". Set
+// NEXT_PUBLIC_GOOGLE_CLIENT_ID to the SAME id the backend verifies against
+// (GOOGLE_CLIENT_ID). Empty → the Google button is hidden; email/password still works.
+export const GOOGLE_CLIENT_ID = (
+  process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? ""
+).trim();
+
+export function isGoogleSignInEnabled(): boolean {
+  return isApiEnabled() && GOOGLE_CLIENT_ID.length > 0;
+}
+
 // ---- Session token -----------------------------------------------------------
 // Bidframe is a paid product: the live API is gated behind an account. We keep the
 // bearer token in localStorage and attach it to every request. (localStorage, not an
@@ -82,6 +93,21 @@ export async function login(
     body: JSON.stringify({ email, password }),
   });
   if (!res.ok) throw await apiError(res, `Sign in failed (${res.status})`);
+  const data = (await res.json()) as { token: string; user: AuthUser };
+  setToken(data.token);
+  return data.user;
+}
+
+// POST /auth/google — exchange a Google ID token (from Google Identity Services) for a
+// bearer token, which we store. Backend verifies the token with Google, then find-or-creates
+// the account. Same session shape as password login, so the app is identical afterwards.
+export async function loginWithGoogle(idToken: string): Promise<AuthUser> {
+  const res = await fetch(`${BASE}/auth/google`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id_token: idToken }),
+  });
+  if (!res.ok) throw await apiError(res, `Google sign in failed (${res.status})`);
   const data = (await res.json()) as { token: string; user: AuthUser };
   setToken(data.token);
   return data.user;
@@ -377,4 +403,152 @@ export async function shareTender(
   });
   if (!res.ok) throw await apiError(res, `Share failed (${res.status})`);
   return ((await res.json()) as { members: TenderMember[] }).members;
+}
+
+// ---- Teams (persistent collaboration groups) ---------------------------------
+// A team is a group you add authenticated users to once; tenders shared to a team are
+// visible to everyone on it (GET /tenders lists them, access is granted server-side).
+
+export interface Team {
+  id: string;
+  name: string;
+  ownerId: string;
+  createdAt: string;
+  myRole: "owner" | "member";
+  memberCount: number;
+}
+
+// Team members share TenderMember's shape (id/email/name/role/added_at), so the same
+// collaborator colour treatment renders both.
+export type TeamMember = TenderMember;
+
+function toTeam(r: Record<string, unknown>): Team {
+  return {
+    id: r.id as string,
+    name: r.name as string,
+    ownerId: r.owner_id as string,
+    createdAt: r.created_at as string,
+    myRole: (r.my_role as Team["myRole"]) ?? "member",
+    memberCount: (r.member_count as number) ?? 1,
+  };
+}
+
+// GET /teams — the teams the signed-in user owns or belongs to.
+export async function getTeams(): Promise<Team[]> {
+  const res = await fetch(`${BASE}/teams`, { headers: { ...authHeaders() } });
+  if (!res.ok) throw await apiError(res, `Couldn't load your teams (${res.status})`);
+  const rows = ((await res.json()) as { teams: Record<string, unknown>[] }).teams;
+  return rows.map(toTeam);
+}
+
+// POST /teams — create a team (caller becomes owner). Returns the new team.
+export async function createTeam(name: string): Promise<Team> {
+  const res = await fetch(`${BASE}/teams`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...authHeaders() },
+    body: JSON.stringify({ name }),
+  });
+  if (!res.ok) throw await apiError(res, `Couldn't create the team (${res.status})`);
+  return toTeam((await res.json()).team);
+}
+
+// GET /teams/{id}/members — everyone on a team (owner first).
+export async function getTeamMembers(teamId: string): Promise<TeamMember[]> {
+  const res = await fetch(`${BASE}/teams/${teamId}/members`, {
+    headers: { ...authHeaders() },
+  });
+  if (!res.ok) throw await apiError(res, `Couldn't load the team (${res.status})`);
+  return ((await res.json()) as { members: TeamMember[] }).members;
+}
+
+// POST /teams/{id}/members — add a registered user by email (owner-only).
+export async function addTeamMember(
+  teamId: string,
+  email: string
+): Promise<TeamMember[]> {
+  const res = await fetch(`${BASE}/teams/${teamId}/members`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...authHeaders() },
+    body: JSON.stringify({ email }),
+  });
+  if (!res.ok) throw await apiError(res, `Couldn't add them (${res.status})`);
+  return ((await res.json()) as { members: TeamMember[] }).members;
+}
+
+// DELETE /teams/{id}/members/{memberId} — remove a member (owner-only; not the owner).
+export async function removeTeamMember(
+  teamId: string,
+  memberId: string
+): Promise<TeamMember[]> {
+  const res = await fetch(`${BASE}/teams/${teamId}/members/${memberId}`, {
+    method: "DELETE",
+    headers: { ...authHeaders() },
+  });
+  if (!res.ok) throw await apiError(res, `Couldn't remove them (${res.status})`);
+  return ((await res.json()) as { members: TeamMember[] }).members;
+}
+
+// POST /tenders/{id}/team — share the tender with a team (teamId=null unshares).
+export async function shareTenderWithTeam(
+  tenderId: string,
+  teamId: string | null
+): Promise<void> {
+  const res = await fetch(`${BASE}/tenders/${tenderId}/team`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...authHeaders() },
+    body: JSON.stringify({ team_id: teamId }),
+  });
+  if (!res.ok) throw await apiError(res, `Couldn't share with the team (${res.status})`);
+}
+
+// ---- Comments (per-requirement collaboration) --------------------------------
+
+export interface Comment {
+  id: string;
+  req_id: string;
+  author_id: string;
+  author_name: string | null;
+  body: string;
+  created_at: string;
+}
+
+// GET /requirements/{id}/comments — the team's notes on one requirement (oldest first).
+export async function getComments(reqId: string): Promise<Comment[]> {
+  const res = await fetch(`${BASE}/requirements/${reqId}/comments`, {
+    headers: { ...authHeaders() },
+  });
+  if (!res.ok) throw await apiError(res, `Couldn't load comments (${res.status})`);
+  return ((await res.json()) as { comments: Comment[] }).comments;
+}
+
+// POST /requirements/{id}/comments — add a note (author stamped server-side).
+export async function postComment(reqId: string, body: string): Promise<Comment> {
+  const res = await fetch(`${BASE}/requirements/${reqId}/comments`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...authHeaders() },
+    body: JSON.stringify({ body }),
+  });
+  if (!res.ok) throw await apiError(res, `Couldn't post the comment (${res.status})`);
+  return (await res.json()) as Comment;
+}
+
+// ---- Live collaboration stream (SSE) -----------------------------------------
+// The EventSource URL for a tender's live event stream (decisions, comments, members).
+// The bearer token rides as a query param because EventSource can't set headers. Empty
+// string when there's no live API, so callers can skip subscribing.
+export function tenderEventsUrl(tenderId: string): string {
+  if (!BASE) return "";
+  const token = getToken();
+  const qs = token ? `?token=${encodeURIComponent(token)}` : "";
+  return `${BASE}/tenders/${tenderId}/events${qs}`;
+}
+
+// One decoded event off that stream. `type` selects the payload the UI reacts to.
+export interface TenderEvent {
+  type: "requirement" | "comment" | "members";
+  req_id?: string;
+  status?: Requirement["status"];
+  decision?: Requirement["decision"];
+  comment?: Comment;
+  members?: TenderMember[];
 }

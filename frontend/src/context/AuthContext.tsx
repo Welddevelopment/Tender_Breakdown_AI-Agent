@@ -5,6 +5,7 @@ import {
   getMe,
   isApiEnabled,
   login as apiLogin,
+  loginWithGoogle as apiLoginWithGoogle,
   logout as apiLogout,
   type AuthUser,
 } from "@/lib/api";
@@ -24,6 +25,7 @@ interface AuthContextValue {
   user: AuthUser | null;
   status: AuthStatus;
   signIn: (email: string, password: string) => Promise<void>;
+  signInWithGoogle: (idToken: string) => Promise<void>;
   signOut: () => void;
 }
 
@@ -67,6 +69,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setStatus("authed");
   }
 
+  async function signInWithGoogle(idToken: string) {
+    const u = await apiLoginWithGoogle(idToken);
+    setUser(u);
+    setStatus("authed");
+  }
+
   function signOut() {
     apiLogout();
     setUser(null);
@@ -74,7 +82,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, status, signIn, signOut }}>
+    <AuthContext.Provider
+      value={{ user, status, signIn, signInWithGoogle, signOut }}
+    >
       {children}
     </AuthContext.Provider>
   );

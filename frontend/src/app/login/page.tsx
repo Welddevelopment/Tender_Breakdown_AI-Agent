@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import { ApiError, isApiEnabled } from "@/lib/api";
+import { ApiError, isApiEnabled, isGoogleSignInEnabled } from "@/lib/api";
+import { GoogleSignInButton } from "@/components/GoogleSignInButton";
 import { SiteHeader } from "@/components/SiteHeader";
 
 // The sign-in page. Bidframe is invite-only, so there is no registration here — an
@@ -19,17 +20,37 @@ function nextTarget(): string {
 }
 
 export default function LoginPage() {
-  const { status, signIn } = useAuth();
+  const { status, signIn, signInWithGoogle } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const showGoogle = isGoogleSignInEnabled();
 
   // Already signed in (or just signed in) → leave the login page for the app.
   useEffect(() => {
     if (status === "authed") router.replace(nextTarget());
   }, [status, router]);
+
+  const onGoogleCredential = useCallback(
+    async (idToken: string) => {
+      setError(null);
+      setSubmitting(true);
+      try {
+        await signInWithGoogle(idToken);
+        router.replace(nextTarget());
+      } catch (err) {
+        setError(
+          err instanceof ApiError
+            ? err.message
+            : "Google sign-in failed. Please try again."
+        );
+        setSubmitting(false);
+      }
+    },
+    [signInWithGoogle, router]
+  );
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -115,6 +136,24 @@ export default function LoginPage() {
               {submitting ? "Signing in…" : "Sign in"}
             </button>
           </form>
+
+          {showGoogle && (
+            <div className="mt-6">
+              <div className="flex items-center gap-3" aria-hidden>
+                <span className="h-px flex-1 bg-hairline" />
+                <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-muted">
+                  or
+                </span>
+                <span className="h-px flex-1 bg-hairline" />
+              </div>
+              <div className="mt-6">
+                <GoogleSignInButton
+                  onCredential={onGoogleCredential}
+                  onError={setError}
+                />
+              </div>
+            </div>
+          )}
 
           <p className="mt-8 text-xs leading-relaxed text-ink-muted">
             No account yet?{" "}

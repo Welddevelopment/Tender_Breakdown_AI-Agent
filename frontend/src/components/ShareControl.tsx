@@ -5,7 +5,15 @@
 // access is shown as a coloured avatar. The backend enforces owner-only + registered-account.
 
 import { useEffect, useRef, useState } from "react";
-import { isApiEnabled, listMembers, shareTender, type TenderMember } from "@/lib/api";
+import {
+  getTeams,
+  isApiEnabled,
+  listMembers,
+  shareTender,
+  shareTenderWithTeam,
+  type Team,
+  type TenderMember,
+} from "@/lib/api";
 import { useRequirements } from "@/context/RequirementsContext";
 import { collaboratorFor } from "@/lib/collaborators";
 
@@ -17,6 +25,8 @@ export function ShareControl() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [teamBusy, setTeamBusy] = useState<string | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -25,7 +35,24 @@ export function ShareControl() {
   useEffect(() => {
     if (!enabled || !tenderId) return;
     listMembers(tenderId).then(setMembers).catch(() => setMembers([]));
+    getTeams().then(setTeams).catch(() => setTeams([]));
   }, [enabled, tenderId]);
+
+  async function shareWithTeam(team: Team) {
+    if (!tenderId || teamBusy) return;
+    setTeamBusy(team.id);
+    setError(null);
+    setSuccess(null);
+    try {
+      await shareTenderWithTeam(tenderId, team.id);
+      setMembers(await listMembers(tenderId));
+      setSuccess(`Shared with ${team.name}.`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Couldn't share with the team.");
+    } finally {
+      setTeamBusy(null);
+    }
+  }
 
   useEffect(() => {
     if (!open) return;
@@ -218,6 +245,39 @@ export function ShareControl() {
                 The server grants access and records who made each decision.
               </p>
             </form>
+
+            {teams.length > 0 && (
+              <div className="mt-5 border-t border-hairline pt-4">
+                <p className="mb-2 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-muted">
+                  Or share with a team
+                </p>
+                <ul className="flex flex-col gap-2">
+                  {teams.map((team) => (
+                    <li
+                      key={team.id}
+                      className="flex items-center gap-2.5 rounded-md border border-hairline bg-paper/80 px-2.5 py-2 text-sm"
+                    >
+                      <span className="min-w-0 truncate text-ink">{team.name}</span>
+                      <span className="font-mono text-[10px] text-ink-muted">
+                        {team.memberCount} member{team.memberCount === 1 ? "" : "s"}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => shareWithTeam(team)}
+                        disabled={teamBusy !== null}
+                        className="ml-auto shrink-0 rounded-md border border-hairline bg-paper px-2.5 py-1 font-mono text-[11px] font-medium text-ink transition-colors hover:border-forest hover:text-forest disabled:opacity-50"
+                      >
+                        {teamBusy === team.id ? "Sharing…" : "Share"}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-2 text-[11px] text-ink-muted">
+                  Everyone on the team gets access. Manage teams under{" "}
+                  <span className="font-medium text-ink">Teams</span> in the header.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       )}

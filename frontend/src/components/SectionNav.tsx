@@ -14,6 +14,8 @@ import { usePathname } from "next/navigation";
 // response with its readiness progress and .docx/PDF export. Matrix = /review and
 // Graph = /graph are the two per-tender views of the same requirements. With no
 // tender selected, Bid/Matrix/Graph show the "pick a tender" empty state.
+// (Teams — a global collaboration destination, not a per-tender view — lives in the
+// account control, not this section switcher.)
 const SECTIONS = [
   { href: "/upload", label: "Tender" },
   { href: "/answers", label: "Bid" },
