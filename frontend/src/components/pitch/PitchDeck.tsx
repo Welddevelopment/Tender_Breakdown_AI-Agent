@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   useCallback,
   useEffect,
@@ -259,6 +260,7 @@ function IconFullscreen() {
 }
 
 export function PitchDeck() {
+  const router = useRouter();
   const stageRef = useRef<HTMLDivElement | null>(null);
   const cursorTimerRef = useRef<number | null>(null);
   const { requirements, title } = useRequirements();
@@ -318,10 +320,16 @@ export function PitchDeck() {
       setBeat(1);
       return;
     }
+    // Advancing past the Ask hands the stage to the live demo: straight to
+    // /showcase. The appendix stays reachable via Q or the trail's side path.
+    if (activeIndex === MAIN_SLIDE_COUNT - 1) {
+      router.push("/showcase");
+      return;
+    }
     setBeat(0);
     setSlideSeconds(0);
     setActiveIndex((current) => Math.min(current + 1, TOTAL_SLIDE_COUNT - 1));
-  }, [activeIndex, beat]);
+  }, [activeIndex, beat, router]);
 
   const previous = useCallback(() => {
     setAutoplay(false);
@@ -522,6 +530,11 @@ export function PitchDeck() {
       );
     }
   }, [activeIndex, beat, elapsedSeconds, notesOpen, restored]);
+
+  // The Ask's NEXT press cuts to the live demo — have /showcase ready.
+  useEffect(() => {
+    router.prefetch("/showcase");
+  }, [router]);
 
   useEffect(() => {
     const interval = window.setInterval(() => {
@@ -850,10 +863,10 @@ export function PitchDeck() {
           light: 1,
           glyph: "seal",
           notes: [
-            "This lands after Joel's 2-minute live demo — take the mic back with the thesis: 10× faster, expert at the wheel.",
+            "Close with the thesis: 10× faster, expert at the wheel.",
             `Say it in full: ${CTA}`,
             "Primary CTA is bidframe.org. Secondary CTA is bidframe.org/demo.",
-            "Leave space for investor/advisor questions on procurement, accuracy and distribution.",
+            "Pressing NEXT here cuts straight to /showcase for Joel's demo. Appendix stays on Q.",
           ],
           body: (
             <div className="pitch-poster pitch-poster--center">
