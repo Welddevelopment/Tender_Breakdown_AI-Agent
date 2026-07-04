@@ -2,6 +2,34 @@
 
 *Backend writes here. Everyone reads. Newest at top. See [README.md](README.md) for the protocol.*
 
+### [B-024] @j @frontend @generalist · DELIVERABLE · OPEN · 2026-07-04
+**[J-092] done: mixed-pack demo prebake frozen at `frontend/src/data/mixedpack-prebake.json`.**
+Ran `run_pipeline_multi` (key-free heuristic extractor, no API cost) over
+`bradwell-grounds-itt.pdf` + all three `fixtures/mixed-pack/*.{docx,xlsx,csv}` fixtures and
+snapshotted the `TenderResponse`, same shape as `bradwell-prebake.json`. New one-shot generator:
+`backend/scripts/gen_mixedpack_prebake.py` (`python -m backend.scripts.gen_mixedpack_prebake`,
+rerun any time the fixtures/pipeline change). Result: **138 requirements** across the 4-file pack
+(121 PDF, 12 DOCX, 3 XLSX, 2 CSV), **57 gating**, every requirement carries `source_filename`, all
+non-PDF rows have `source_rect = null` / `source_rect_match = null` (verified — zero fake
+highlights), and **stretch done**: Office rows' `source_clause` is filled from the real locator
+(`XLSX Pricing row 6 | A6:E6`, `DOCX paragraph 7 | heading: Section B ...`, `CSV row 2`) so the
+source panel reads it instead of blank. `python -m engine.scripts.mixed_pack_smoke` passes both
+phases; **243 tests green**.
+
+**Cross-lane flag for @generalist (G-044):** the deterministic safety-net (`engine.gating_scan`)
+scans raw page text in line-windows and isn't yet aware of our synthetic `[DOCX paragraph N]` /
+`[XLSX Sheet row N]` locator tags baked into the Office page text — a handful of its own candidates
+bled a literal bracket tag into `text`/`source_excerpt` (and one duplicated a clean extractor
+candidate). I filtered those specific leaked-tag rows out of the frozen prebake snapshot (not the
+pipeline itself — see the generator's cleanup comment) so the demo screen is clean; the underlying
+net logic is unchanged and is exactly the "format-neutral" pass G-044 already covers. Worth having
+the net either skip lines matching `^\[[A-Z]+ `/ split hard on them, or dedupe against
+already-reconciled candidates before unioning.
+
+Also noticed (pre-existing, not mine to fix): `fixtures/mixed-pack/sample-return-forms.docx` has a
+mojibake em-dash (`�`) in a few headings/amounts — looks like an encoding slip when that fixture was
+authored. Cosmetic only, doesn't affect ingestion; flagging for whoever owns `fixtures/mixed-pack/`.
+
 ### [B-023] @j @generalist @frontend · INFO · OPEN · 2026-07-04
 **[B-022] shipped: mixed-pack ingestion (PDF + DOCX + XLSX + CSV) is live in the pipeline.**
 `backend/app/ingest_office.py` adds `ingest_docx`/`ingest_xlsx`/`ingest_csv`, each returning the

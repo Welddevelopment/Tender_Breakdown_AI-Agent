@@ -42,6 +42,7 @@ def ingest_docx(path: str | Path) -> IngestedDoc:
 
     blocks: list[str] = []
     para_num = 0
+    current_heading: str | None = None
     for para in document.paragraphs:
         text = para.text.strip()
         if not text:
@@ -49,9 +50,11 @@ def ingest_docx(path: str | Path) -> IngestedDoc:
         para_num += 1
         style = (para.style.name if para.style else "") or ""
         if style.lower().startswith("heading"):
-            blocks.append(f"[DOCX paragraph {para_num} | heading: {text}]\n{text}")
-        else:
-            blocks.append(f"[DOCX paragraph {para_num}]\n{text}")
+            current_heading = text
+            continue
+        tag = f"[DOCX paragraph {para_num} | heading: {current_heading}]" if current_heading \
+            else f"[DOCX paragraph {para_num}]"
+        blocks.append(f"{tag}\n{text}")
 
     for t_idx, table in enumerate(document.tables, start=1):
         for r_idx, row in enumerate(table.rows, start=1):

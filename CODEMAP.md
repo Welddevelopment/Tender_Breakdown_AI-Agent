@@ -4,7 +4,7 @@
 >
 > **Interactive graph:** [`frontend/public/codemap.html`](frontend/public/codemap.html) — drag / zoom / click-to-focus; served at `/codemap.html` on the Vercel deploy. (The diagrams below render right here on GitHub.)
 >
-> Map of commit `26f054a` · 2026-07-04T17:15:59+01:00
+> Map of commit `dc4b2e4` · 2026-07-04T17:42:40+01:00
 
 **Read this first** for a current picture of the codebase — what lives where, and what imports what. It is the fast path to context for both humans and agents. If it looks wrong, it is stale: re-run the generator and push.
 
@@ -12,17 +12,17 @@
 
 | Area | Files | Lines | What it is |
 |------|-------|-------|------------|
-| **frontend** | 178 | 61,344 | Frontend — Next.js 16 / React 19 / Tailwind (compliance matrix UI) |
-| **backend** | 20 | 3,189 | Backend — FastAPI (PDF ingest, extraction, REST API) |
-| **engine** | 75 | 6,187 | Engine — reconcile / eval / answer-draft pipeline + tests |
+| **frontend** | 178 | 61,391 | Frontend — Next.js 16 / React 19 / Tailwind (compliance matrix UI) |
+| **backend** | 21 | 3,314 | Backend — FastAPI (PDF ingest, extraction, REST API) |
+| **engine** | 78 | 6,559 | Engine — reconcile / eval / answer-draft pipeline + tests |
 | **prompts** | 6 | 713 | Prompts — LLM prompt specs (extraction, classification, answers, gaps) |
 | **gold** | 7 | 363 | Eval gold-set — hand-labelled requirements for accuracy measurement |
 | **data** | 17 | 0 | Data — tender source PDFs (not parsed here) |
-| **comms** | 5 | 2,443 | Comms — async agent message boards |
+| **comms** | 5 | 2,489 | Comms — async agent message boards |
 | **docs** | 3 | 1,663 | Docs — plans & specs |
 | **ci** | 1 | 57 | CI — GitHub Actions |
 | **tooling** | 1 | 516 | Tooling — repo scripts (incl. this map generator) |
-| **root** | 599 | 35,929 | Root — docs, config, role briefs |
+| **root** | 600 | 36,008 | Root — docs, config, role briefs |
 
 ## System shape
 
@@ -94,38 +94,40 @@ graph LR
   n36[AnswerCard.tsx] --> n40[ConfidenceIndicator.tsx]
   n36[AnswerCard.tsx] --> n41[OpenQuestions.tsx]
   n36[AnswerCard.tsx] --> n42[answers.ts]
+  n36[AnswerCard.tsx] --> n43[source-doc.ts]
   n36[AnswerCard.tsx] --> n5[requirement.ts]
-  n43[AnswerFilterBar.tsx] --> n44[ExportMenu.tsx]
-  n43[AnswerFilterBar.tsx] --> n42[answers.ts]
-  n43[AnswerFilterBar.tsx] --> n5[requirement.ts]
+  n44[AnswerFilterBar.tsx] --> n45[ExportMenu.tsx]
+  n44[AnswerFilterBar.tsx] --> n42[answers.ts]
+  n44[AnswerFilterBar.tsx] --> n5[requirement.ts]
   n37[AnswerPanel.tsx] --> n38[AnswerStateBadge.tsx]
   n37[AnswerPanel.tsx] --> n4[RequirementsContext.tsx]
   n37[AnswerPanel.tsx] --> n5[requirement.ts]
   n38[AnswerStateBadge.tsx] --> n5[requirement.ts]
-  n45[AnswerWorkspace.tsx] --> n36[AnswerCard.tsx]
-  n45[AnswerWorkspace.tsx] --> n5[requirement.ts]
-  n1[AnswersBody.tsx] --> n43[AnswerFilterBar.tsx]
-  n1[AnswersBody.tsx] --> n45[AnswerWorkspace.tsx]
-  n1[AnswersBody.tsx] --> n46[AutofillButton.tsx]
-  n1[AnswersBody.tsx] --> n47[CapabilityUpload.tsx]
-  n1[AnswersBody.tsx] --> n48[NoTenderLoaded.tsx]
-  n1[AnswersBody.tsx] --> n49[ReadinessLedger.tsx]
+  n46[AnswerWorkspace.tsx] --> n36[AnswerCard.tsx]
+  n46[AnswerWorkspace.tsx] --> n5[requirement.ts]
+  n1[AnswersBody.tsx] --> n44[AnswerFilterBar.tsx]
+  n1[AnswersBody.tsx] --> n46[AnswerWorkspace.tsx]
+  n1[AnswersBody.tsx] --> n47[AutofillButton.tsx]
+  n1[AnswersBody.tsx] --> n48[CapabilityUpload.tsx]
+  n1[AnswersBody.tsx] --> n49[NoTenderLoaded.tsx]
+  n1[AnswersBody.tsx] --> n50[ReadinessLedger.tsx]
   n1[AnswersBody.tsx] --> n4[RequirementsContext.tsx]
   n1[AnswersBody.tsx] --> n42[answers.ts]
   n1[AnswersBody.tsx] --> n19[api.ts]
   n14[AuthGate.tsx] --> n17[AuthContext.tsx]
   n14[AuthGate.tsx] --> n19[api.ts]
-  n46[AutofillButton.tsx] --> n4[RequirementsContext.tsx]
-  n46[AutofillButton.tsx] --> n19[api.ts]
-  n47[CapabilityUpload.tsx] --> n4[RequirementsContext.tsx]
-  n39[CategoryTag.tsx] --> n50[categoryStyle.ts]
-  n51[CommandPalette.tsx] --> n52[matrix-derive.ts]
-  n51[CommandPalette.tsx] --> n53[source-doc.ts]
-  n51[CommandPalette.tsx] --> n54[triage.ts]
+  n47[AutofillButton.tsx] --> n4[RequirementsContext.tsx]
+  n47[AutofillButton.tsx] --> n19[api.ts]
+  n48[CapabilityUpload.tsx] --> n4[RequirementsContext.tsx]
+  n39[CategoryTag.tsx] --> n51[categoryStyle.ts]
+  n52[CommandPalette.tsx] --> n53[matrix-derive.ts]
+  n52[CommandPalette.tsx] --> n43[source-doc.ts]
+  n52[CommandPalette.tsx] --> n54[triage.ts]
   n55[ComplianceMatrix.tsx] --> n39[CategoryTag.tsx]
   n55[ComplianceMatrix.tsx] --> n40[ConfidenceIndicator.tsx]
   n55[ComplianceMatrix.tsx] --> n56[dedupe.ts]
-  n55[ComplianceMatrix.tsx] --> n52[matrix-derive.ts]
+  n55[ComplianceMatrix.tsx] --> n53[matrix-derive.ts]
+  n55[ComplianceMatrix.tsx] --> n43[source-doc.ts]
   n55[ComplianceMatrix.tsx] --> n54[triage.ts]
   n55[ComplianceMatrix.tsx] --> n5[requirement.ts]
   n57[ControlPanel.tsx] --> n4[RequirementsContext.tsx]
@@ -155,11 +157,11 @@ graph LR
   n3[DocumentHeader.tsx] --> n10[BrandLogo.tsx]
   n3[DocumentHeader.tsx] --> n73[SectionNav.tsx]
   n3[DocumentHeader.tsx] --> n4[RequirementsContext.tsx]
-  n3[DocumentHeader.tsx] --> n50[categoryStyle.ts]
+  n3[DocumentHeader.tsx] --> n51[categoryStyle.ts]
   n3[DocumentHeader.tsx] --> n54[triage.ts]
   n74[EvidenceLibrary.tsx] --> n4[RequirementsContext.tsx]
-  n44[ExportMenu.tsx] --> n75[export-response.ts]
-  n44[ExportMenu.tsx] --> n5[requirement.ts]
+  n45[ExportMenu.tsx] --> n75[export-response.ts]
+  n45[ExportMenu.tsx] --> n5[requirement.ts]
   n76[FocusMode.tsx] --> n77[RequirementPanel.tsx]
   n76[FocusMode.tsx] --> n54[triage.ts]
   n76[FocusMode.tsx] --> n5[requirement.ts]
@@ -167,30 +169,34 @@ graph LR
   n78[GapInterview.tsx] --> n39[CategoryTag.tsx]
   n78[GapInterview.tsx] --> n41[OpenQuestions.tsx]
   n78[GapInterview.tsx] --> n4[RequirementsContext.tsx]
+  n78[GapInterview.tsx] --> n43[source-doc.ts]
   n59[GatingHero.tsx] --> n4[RequirementsContext.tsx]
   n59[GatingHero.tsx] --> n56[dedupe.ts]
+  n59[GatingHero.tsx] --> n43[source-doc.ts]
   n59[GatingHero.tsx] --> n5[requirement.ts]
   n60[GraphView.tsx] --> n39[CategoryTag.tsx]
   n60[GraphView.tsx] --> n40[ConfidenceIndicator.tsx]
   n60[GraphView.tsx] --> n4[RequirementsContext.tsx]
   n60[GraphView.tsx] --> n19[api.ts]
-  n60[GraphView.tsx] --> n50[categoryStyle.ts]
+  n60[GraphView.tsx] --> n51[categoryStyle.ts]
+  n60[GraphView.tsx] --> n43[source-doc.ts]
   n60[GraphView.tsx] --> n79[structure.ts]
   n60[GraphView.tsx] --> n5[requirement.ts]
   n80[MarksView.tsx] --> n4[RequirementsContext.tsx]
+  n80[MarksView.tsx] --> n43[source-doc.ts]
   n80[MarksView.tsx] --> n79[structure.ts]
   n80[MarksView.tsx] --> n5[requirement.ts]
   n25[MatrixView.tsx] --> n58[AnimatedNumber.tsx]
   n25[MatrixView.tsx] --> n2[AppMain.tsx]
   n25[MatrixView.tsx] --> n81[ApprovalStamp.tsx]
   n25[MatrixView.tsx] --> n82[BulkActionBar.tsx]
-  n25[MatrixView.tsx] --> n51[CommandPalette.tsx]
+  n25[MatrixView.tsx] --> n52[CommandPalette.tsx]
   n25[MatrixView.tsx] --> n55[ComplianceMatrix.tsx]
   n25[MatrixView.tsx] --> n57[ControlPanel.tsx]
   n25[MatrixView.tsx] --> n3[DocumentHeader.tsx]
   n25[MatrixView.tsx] --> n76[FocusMode.tsx]
   n25[MatrixView.tsx] --> n59[GatingHero.tsx]
-  n25[MatrixView.tsx] --> n48[NoTenderLoaded.tsx]
+  n25[MatrixView.tsx] --> n49[NoTenderLoaded.tsx]
   n25[MatrixView.tsx] --> n83[PdfSourceView.tsx]
   n25[MatrixView.tsx] --> n84[RequirementDrawer.tsx]
   n25[MatrixView.tsx] --> n77[RequirementPanel.tsx]
@@ -198,15 +204,15 @@ graph LR
   n25[MatrixView.tsx] --> n4[RequirementsContext.tsx]
   n25[MatrixView.tsx] --> n19[api.ts]
   n25[MatrixView.tsx] --> n86[export-matrix-xlsx.ts]
-  n25[MatrixView.tsx] --> n52[matrix-derive.ts]
-  n25[MatrixView.tsx] --> n53[source-doc.ts]
+  n25[MatrixView.tsx] --> n53[matrix-derive.ts]
+  n25[MatrixView.tsx] --> n43[source-doc.ts]
   n25[MatrixView.tsx] --> n54[triage.ts]
   n25[MatrixView.tsx] --> n5[requirement.ts]
   n41[OpenQuestions.tsx] --> n4[RequirementsContext.tsx]
   n41[OpenQuestions.tsx] --> n5[requirement.ts]
   n83[PdfSourceView.tsx] --> n56[dedupe.ts]
   n87[ProcessingView.tsx] --> n19[api.ts]
-  n49[ReadinessLedger.tsx] --> n42[answers.ts]
+  n50[ReadinessLedger.tsx] --> n42[answers.ts]
   n84[RequirementDrawer.tsx] --> n77[RequirementPanel.tsx]
   n84[RequirementDrawer.tsx] --> n5[requirement.ts]
   n77[RequirementPanel.tsx] --> n37[AnswerPanel.tsx]
@@ -216,15 +222,16 @@ graph LR
   n77[RequirementPanel.tsx] --> n61[SourceVerifyOverlay.tsx]
   n77[RequirementPanel.tsx] --> n4[RequirementsContext.tsx]
   n77[RequirementPanel.tsx] --> n19[api.ts]
-  n77[RequirementPanel.tsx] --> n53[source-doc.ts]
+  n77[RequirementPanel.tsx] --> n43[source-doc.ts]
   n77[RequirementPanel.tsx] --> n5[requirement.ts]
   n85[RequirementSpine.tsx] --> n40[ConfidenceIndicator.tsx]
   n85[RequirementSpine.tsx] --> n54[triage.ts]
   n61[SourceVerifyOverlay.tsx] --> n83[PdfSourceView.tsx]
+  n61[SourceVerifyOverlay.tsx] --> n43[source-doc.ts]
   n61[SourceVerifyOverlay.tsx] --> n5[requirement.ts]
   n15[StructureView.tsx] --> n60[GraphView.tsx]
   n15[StructureView.tsx] --> n80[MarksView.tsx]
-  n15[StructureView.tsx] --> n48[NoTenderLoaded.tsx]
+  n15[StructureView.tsx] --> n49[NoTenderLoaded.tsx]
   n15[StructureView.tsx] --> n84[RequirementDrawer.tsx]
   n15[StructureView.tsx] --> n4[RequirementsContext.tsx]
   n15[StructureView.tsx] --> n19[api.ts]
@@ -323,15 +330,16 @@ graph LR
   n56[dedupe.ts] --> n5[requirement.ts]
   n86[export-matrix-xlsx.ts] --> n40[ConfidenceIndicator.tsx]
   n86[export-matrix-xlsx.ts] --> n75[export-response.ts]
-  n86[export-matrix-xlsx.ts] --> n53[source-doc.ts]
+  n86[export-matrix-xlsx.ts] --> n43[source-doc.ts]
   n86[export-matrix-xlsx.ts] --> n5[requirement.ts]
+  n75[export-response.ts] --> n43[source-doc.ts]
   n75[export-response.ts] --> n5[requirement.ts]
-  n52[matrix-derive.ts] --> n56[dedupe.ts]
-  n52[matrix-derive.ts] --> n79[structure.ts]
-  n52[matrix-derive.ts] --> n54[triage.ts]
-  n52[matrix-derive.ts] --> n5[requirement.ts]
-  n53[source-doc.ts] --> n19[api.ts]
-  n53[source-doc.ts] --> n5[requirement.ts]
+  n53[matrix-derive.ts] --> n56[dedupe.ts]
+  n53[matrix-derive.ts] --> n79[structure.ts]
+  n53[matrix-derive.ts] --> n54[triage.ts]
+  n53[matrix-derive.ts] --> n5[requirement.ts]
+  n43[source-doc.ts] --> n19[api.ts]
+  n43[source-doc.ts] --> n5[requirement.ts]
   n79[structure.ts] --> n5[requirement.ts]
   n54[triage.ts] --> n5[requirement.ts]
   n111[error.tsx]
@@ -348,71 +356,74 @@ graph LR
   n6[extract_cache.py] --> n4[extract.py]
   n7[graph.py] --> n8[schema.py]
   n3[ingest.py] --> n5[usage_log.py]
-  n9[main.py] --> n1[auth.py]
-  n9[main.py] --> n4[extract.py]
-  n9[main.py] --> n3[ingest.py]
-  n9[main.py] --> n10[pipeline.py]
-  n9[main.py] --> n8[schema.py]
-  n9[main.py] --> n11[answer.py]
-  n10[pipeline.py] --> n2[chunk.py]
-  n10[pipeline.py] --> n4[extract.py]
-  n10[pipeline.py] --> n7[graph.py]
-  n10[pipeline.py] --> n3[ingest.py]
-  n10[pipeline.py] --> n8[schema.py]
-  n10[pipeline.py] --> n11[answer.py]
-  n10[pipeline.py] --> n12[embeddings.py]
-  n10[pipeline.py] --> n13[gating_filter.py]
-  n10[pipeline.py] --> n14[gating_scan.py]
-  n10[pipeline.py] --> n15[reconcile.py]
-  n16[store.py] --> n8[schema.py]
-  n11[answer.py] --> n17[similarity.py]
-  n11[answer.py] --> n5[usage_log.py]
-  n12[embeddings.py] --> n17[similarity.py]
-  n12[embeddings.py] --> n5[usage_log.py]
-  n18[eval.py] --> n19[_io.py]
-  n18[eval.py] --> n17[similarity.py]
-  n20[eval_answers.py] --> n19[_io.py]
-  n20[eval_answers.py] --> n11[answer.py]
-  n20[eval_answers.py] --> n17[similarity.py]
-  n13[gating_filter.py] --> n5[usage_log.py]
-  n14[gating_scan.py] --> n17[similarity.py]
-  n15[reconcile.py] --> n19[_io.py]
-  n15[reconcile.py] --> n12[embeddings.py]
-  n15[reconcile.py] --> n17[similarity.py]
-  n21[calibrate.py] --> n19[_io.py]
-  n21[calibrate.py] --> n18[eval.py]
-  n22[draft_answers.py] --> n19[_io.py]
-  n22[draft_answers.py] --> n11[answer.py]
-  n22[draft_answers.py] --> n18[eval.py]
-  n23[eval_all.py] --> n19[_io.py]
-  n23[eval_all.py] --> n12[embeddings.py]
-  n23[eval_all.py] --> n18[eval.py]
-  n23[eval_all.py] --> n14[gating_scan.py]
-  n23[eval_all.py] --> n15[reconcile.py]
-  n23[eval_all.py] --> n24[run_tender.py]
-  n25[gating_coverage.py] --> n19[_io.py]
-  n25[gating_coverage.py] --> n14[gating_scan.py]
-  n26[gating_recall.py] --> n19[_io.py]
-  n26[gating_recall.py] --> n12[embeddings.py]
-  n26[gating_recall.py] --> n18[eval.py]
-  n26[gating_recall.py] --> n14[gating_scan.py]
-  n26[gating_recall.py] --> n15[reconcile.py]
-  n26[gating_recall.py] --> n24[run_tender.py]
-  n27[net_floor.py] --> n14[gating_scan.py]
-  n28[precision_report.py] --> n19[_io.py]
-  n28[precision_report.py] --> n18[eval.py]
-  n28[precision_report.py] --> n15[reconcile.py]
-  n28[precision_report.py] --> n24[run_tender.py]
-  n28[precision_report.py] --> n17[similarity.py]
-  n24[run_tender.py] --> n2[chunk.py]
-  n24[run_tender.py] --> n4[extract.py]
-  n24[run_tender.py] --> n3[ingest.py]
-  n24[run_tender.py] --> n19[_io.py]
-  n24[run_tender.py] --> n12[embeddings.py]
-  n24[run_tender.py] --> n18[eval.py]
-  n24[run_tender.py] --> n15[reconcile.py]
-  n29[parse_check.py]
-  n30[stress_test.py]
+  n9[ingest_office.py] --> n3[ingest.py]
+  n10[main.py] --> n1[auth.py]
+  n10[main.py] --> n4[extract.py]
+  n10[main.py] --> n3[ingest.py]
+  n10[main.py] --> n11[pipeline.py]
+  n10[main.py] --> n8[schema.py]
+  n10[main.py] --> n12[answer.py]
+  n11[pipeline.py] --> n2[chunk.py]
+  n11[pipeline.py] --> n4[extract.py]
+  n11[pipeline.py] --> n7[graph.py]
+  n11[pipeline.py] --> n3[ingest.py]
+  n11[pipeline.py] --> n8[schema.py]
+  n11[pipeline.py] --> n12[answer.py]
+  n11[pipeline.py] --> n13[embeddings.py]
+  n11[pipeline.py] --> n14[gating_filter.py]
+  n11[pipeline.py] --> n15[gating_scan.py]
+  n11[pipeline.py] --> n16[reconcile.py]
+  n17[store.py] --> n8[schema.py]
+  n12[answer.py] --> n18[similarity.py]
+  n12[answer.py] --> n5[usage_log.py]
+  n13[embeddings.py] --> n18[similarity.py]
+  n13[embeddings.py] --> n5[usage_log.py]
+  n19[eval.py] --> n20[_io.py]
+  n19[eval.py] --> n18[similarity.py]
+  n21[eval_answers.py] --> n20[_io.py]
+  n21[eval_answers.py] --> n12[answer.py]
+  n21[eval_answers.py] --> n18[similarity.py]
+  n14[gating_filter.py] --> n5[usage_log.py]
+  n15[gating_scan.py] --> n18[similarity.py]
+  n16[reconcile.py] --> n20[_io.py]
+  n16[reconcile.py] --> n13[embeddings.py]
+  n16[reconcile.py] --> n18[similarity.py]
+  n22[calibrate.py] --> n20[_io.py]
+  n22[calibrate.py] --> n19[eval.py]
+  n23[draft_answers.py] --> n20[_io.py]
+  n23[draft_answers.py] --> n12[answer.py]
+  n23[draft_answers.py] --> n19[eval.py]
+  n24[eval_all.py] --> n20[_io.py]
+  n24[eval_all.py] --> n13[embeddings.py]
+  n24[eval_all.py] --> n19[eval.py]
+  n24[eval_all.py] --> n15[gating_scan.py]
+  n24[eval_all.py] --> n16[reconcile.py]
+  n24[eval_all.py] --> n25[run_tender.py]
+  n26[gating_coverage.py] --> n20[_io.py]
+  n26[gating_coverage.py] --> n15[gating_scan.py]
+  n27[gating_recall.py] --> n20[_io.py]
+  n27[gating_recall.py] --> n13[embeddings.py]
+  n27[gating_recall.py] --> n19[eval.py]
+  n27[gating_recall.py] --> n15[gating_scan.py]
+  n27[gating_recall.py] --> n16[reconcile.py]
+  n27[gating_recall.py] --> n25[run_tender.py]
+  n28[mixed_pack_smoke.py] --> n3[ingest.py]
+  n28[mixed_pack_smoke.py] --> n15[gating_scan.py]
+  n29[net_floor.py] --> n15[gating_scan.py]
+  n30[precision_report.py] --> n20[_io.py]
+  n30[precision_report.py] --> n19[eval.py]
+  n30[precision_report.py] --> n16[reconcile.py]
+  n30[precision_report.py] --> n25[run_tender.py]
+  n30[precision_report.py] --> n18[similarity.py]
+  n25[run_tender.py] --> n2[chunk.py]
+  n25[run_tender.py] --> n4[extract.py]
+  n25[run_tender.py] --> n3[ingest.py]
+  n25[run_tender.py] --> n20[_io.py]
+  n25[run_tender.py] --> n13[embeddings.py]
+  n25[run_tender.py] --> n19[eval.py]
+  n25[run_tender.py] --> n16[reconcile.py]
+  n31[parse_check.py]
+  n32[stress_test.py]
 ```
 
 ## Files by area
@@ -556,7 +567,7 @@ graph LR
 - `frontend/src/lib/json-ld.ts` — exports `jsonLd`
 - `frontend/src/lib/matrix-derive.ts` — exports `MatrixLens`
 - `frontend/src/lib/site.ts` — exports `SITE_URL`
-- `frontend/src/lib/source-doc.ts` — exports `requirementPdfUrl`
+- `frontend/src/lib/source-doc.ts` — exports `SourceDocumentKind`
 - `frontend/src/lib/structure.ts` — exports `UNASSIGNED`
 - `frontend/src/lib/triage.ts` — exports `GroupKey`
 - `frontend/src/types/requirement.ts` — exports `RequirementType`
@@ -578,6 +589,7 @@ graph LR
 - `backend/app/extract_cache.py` — content-addressed cache for the expensive LLM extraction step.
 - `backend/app/graph.py` — relationship edges (criteria_ref · depends_on).
 - `backend/app/ingest.py` — PDF → page-numbered text.
+- `backend/app/ingest_office.py` — Word / Excel / CSV -> page-numbered text.
 - `backend/app/main.py` — Tender Breakdown API — FastAPI app.
 - `backend/app/pipeline.py` — ingest → chunk → extract → assemble.
 - `backend/app/schema.py` — the locked data contract as Pydantic models.
@@ -618,6 +630,7 @@ graph LR
 - `engine/scripts/eval_all.py` — aggregate accuracy across every labelled tender.
 - `engine/scripts/gating_coverage.py` — gate-FAMILY coverage diagnostic for the public-sector safety-net.
 - `engine/scripts/gating_recall.py` — the TRUE gating-recall number (semantic + auditable).
+- `engine/scripts/mixed_pack_smoke.py` — one-command release gate for the mixed-pack sprint (lane 04 / J).
 - `engine/scripts/net_floor.py` — the deterministic deal-breaker floor, offline and reproducible.
 - `engine/scripts/precision_report.py` — categorise extraction false-positives vs a gold set.
 - `engine/scripts/run_tender.py` — the real closed loop on a real tender.
@@ -651,6 +664,7 @@ graph LR
 - `engine/tests/test_gating_scan.py` — gating_scan safety net: surfaces disqualifier lines extraction missed, stays quiet when covered.
 - `engine/tests/test_grouping.py`
 - `engine/tests/test_ingest_ocr.py` — Deterministic test of the scanned/image-only-PDF vision-OCR fallback in backend.app.ingest.
+- `engine/tests/test_ingest_office.py` — Mixed-pack ingestion (backend lane, B-022): Word/Excel/CSV -> IngestedDoc.
 - `engine/tests/test_io.py`
 - `engine/tests/test_match_score.py` — Eval matcher: paraphrase/granularity tolerance without embeddings.
 - `engine/tests/test_merge.py`
@@ -662,6 +676,7 @@ graph LR
 - `engine/tests/test_similarity.py`
 - `engine/tests/test_source_rect.py` — Regression tests for source_rect highlight coordinates (J-049 P3, backend/app/pipeline.py).
 - `engine/tests/test_to_final.py`
+- `engine/tests/test_upload_mixed_pack.py` — Mixed-pack upload (backend lane, B-022): POST /tenders/upload accepts PDF + Word +
 - `engine/tests/test_usage_log.py` — Regression tests for engine/usage_log.py — OpenAI spend visibility (J-055/J-058).
 - `engine/usage_log.py` — cheap OpenAI spend visibility (J-055) + persistent ledger (J-058).
 
@@ -1242,6 +1257,7 @@ graph LR
 - `ops/mixed-pack-02-engine-eval.md`
 - `ops/mixed-pack-03-frontend-light.md`
 - `ops/mixed-pack-04-release-qa.md`
+- `ops/mixed-pack-05-frontend-ui.md`
 - `ops/mixed-pack-qa-log.md`
 - `ops/standup-day1.md`
 - `ops/tracks-decision.md`
@@ -1283,4 +1299,4 @@ graph LR
 
 ---
 
-*912 tracked files mapped. Generated by `scripts/gen_codemap.py`.*
+*917 tracked files mapped. Generated by `scripts/gen_codemap.py`.*
