@@ -9,6 +9,11 @@ function sourceExtension(filename: string | null | undefined): string | null {
   return dot === -1 ? null : filename.toLowerCase().slice(dot);
 }
 
+function isPdfFilename(filename: string | null | undefined): boolean {
+  const ext = sourceExtension(filename);
+  return ext === null || ext === ".pdf";
+}
+
 export function sourceDocumentKind(req: Requirement): SourceDocumentKind {
   const ext = sourceExtension(req.source_filename);
   if (!ext) return "pdf";
@@ -49,11 +54,20 @@ export function requirementPdfUrl(
   req: Requirement
 ): string | null {
   if (!hasPdfSource(req)) return null;
-  return sourceDocUrl({
+  return sourceDocPdfUrl({
     tenderId,
     docId: req.source_doc_id ?? null,
     filename: req.source_filename ?? null,
   });
+}
+
+export function sourceDocPdfUrl(opts: {
+  tenderId: string | null;
+  docId?: string | null;
+  filename?: string | null;
+}): string | null {
+  if (!isPdfFilename(opts.filename)) return null;
+  return sourceDocUrl(opts);
 }
 
 // The quiet mono reference for a requirement's source location. PDF sources keep
@@ -66,7 +80,8 @@ export function sourceRefLabel(req: Requirement): string {
       ? `${kind} p.${req.source_page} · ${req.source_clause}`
       : `${kind} p.${req.source_page}`;
   }
-  return req.source_clause ? `${kind} · ${req.source_clause}` : kind;
+  if (req.source_clause) return `${kind} · ${req.source_clause}`;
+  return req.source_filename ? `${kind} · ${req.source_filename}` : kind;
 }
 
 export function sourceLocatorLabel(req: Requirement): string {

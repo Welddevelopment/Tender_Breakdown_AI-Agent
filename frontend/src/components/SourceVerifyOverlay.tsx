@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Requirement } from "@/types/requirement";
-import { sourceRefLabel } from "@/lib/source-doc";
+import { hasPdfSource, sourceKindLabel, sourceRefLabel } from "@/lib/source-doc";
 import { PdfSourceView, type MatchKind } from "./PdfSourceView";
 
 // The claim ↔ source split (graph-and-verification-deep-plan.md Part B, #1): click
@@ -38,6 +38,8 @@ export function SourceVerifyOverlay({
   }, [onClose]);
 
   const ref = sourceRefLabel(requirement);
+  const isPdf = hasPdfSource(requirement);
+  const sourceKind = sourceKindLabel(requirement);
   // "Open the page" escape hatch: the raw PDF at the right page, in a new tab.
   const openPageHref = pdfUrl ? `${pdfUrl}#page=${requirement.source_page}` : "";
 
@@ -125,8 +127,9 @@ export function SourceVerifyOverlay({
             />
           ) : (
             <p className="p-6 font-mono text-xs leading-relaxed text-ink-muted">
-              The document isn&rsquo;t available here. The exact wording, above, is
-              what Bidframe read from p.{requirement.source_page}.
+              {isPdf
+                ? "The source PDF is not available here. The exact wording above is what Bidframe read from the tender."
+                : `This ${sourceKind} source is shown as extracted text. Bidframe does not show a PDF highlight for this file type.`}
             </p>
           )}
         </div>

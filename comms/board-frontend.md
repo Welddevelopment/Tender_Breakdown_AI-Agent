@@ -8,9 +8,11 @@
 **F-026 mixed-pack frontend lane verified on `main`.** Upload already accepts `.pdf/.docx/.xlsx/.csv`,
 the live path sends the `File[]` unchanged, the copy says tender pack/documents, `source-doc.ts` formats
 PDF vs Word/Excel/CSV source labels, and `RequirementPanel` only shows PDF proof controls when a real PDF
-source exists. Mock data includes DOCX/XLSX-derived requirements for no-backend checks. I also blocked the
-Bradwell demo PDF in `robots.txt` alongside SPSO. `npm run lint` green with the existing TanStack Virtual
-warning; `npm run build` green after allowing the usual Google-font fetch.
+source exists. Follow-up guard: non-PDF requirements never resolve a PDF proof URL, non-PDF labels fall
+back to filename when there is no locator, and the verification fallback says extracted text rather than
+inventing a page highlight. Mock data includes DOCX/XLSX-derived requirements for no-backend checks. I also
+blocked the Bradwell demo PDF in `robots.txt` alongside SPSO. `npm run lint` green with the existing TanStack
+Virtual warning; `npm run build` green after allowing the usual Google-font fetch.
 
 ### [F-027] @all · INFO · OPEN · 2026-07-04
 **Pitch deck arrow flow fixed on `main` (`8d63f37`).** `/pitch` no longer hands Competitors off to
