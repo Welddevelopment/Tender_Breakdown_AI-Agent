@@ -29,6 +29,8 @@ const ACCEPTED_TENDER_MIME = new Set([
   "application/zip",
   "application/x-zip-compressed",
 ]);
+const MAX_DOCUMENT_BYTES = 50 * 1024 * 1024;
+const MAX_ZIP_BYTES = 200 * 1024 * 1024;
 
 function isAcceptedTenderFile(file: File): boolean {
   const name = file.name.toLowerCase();
@@ -41,6 +43,11 @@ function isAcceptedTenderFile(file: File): boolean {
 function formatFileSize(bytes: number): string {
   if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))}KB`;
   return `${(bytes / (1024 * 1024)).toFixed(bytes < 10 * 1024 * 1024 ? 1 : 0)}MB`;
+}
+
+function uploadKindShortLabel(file: File): string {
+  if (isZipPack(file)) return "ZIP";
+  return sourceKindShortLabel(sourceDocumentKindFromFilename(file.name));
 }
 
 function packLabel(files: File[]): string | null {
@@ -110,11 +117,15 @@ export function UploadDropzone() {
       return;
     }
 
-    const oversized = all.find((f) => f.size > 50 * 1024 * 1024);
+    const oversized = all.find((f) =>
+      f.size > (isZipPack(f) ? MAX_ZIP_BYTES : MAX_DOCUMENT_BYTES)
+    );
     if (oversized) {
       setFileName(oversized.name);
       setErrorMessage(
-        `${oversized.name} is over 50MB. Each document must be under 50MB.`
+        isZipPack(oversized)
+          ? `${oversized.name} is over 200MB. ZIP tender packs must be under 200MB.`
+          : `${oversized.name} is over 50MB. Each document must be under 50MB.`
       );
       setStage("error");
       return;
@@ -393,7 +404,7 @@ export function UploadDropzone() {
           </p>
         )}
         <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.16em] text-ink-muted">
-          PDF · Word · Excel · CSV · ZIP · up to 50MB each
+          PDF · Word · Excel · CSV · ZIP · docs 50MB · ZIP 200MB
         </p>
       </div>
 
@@ -419,11 +430,10 @@ export function UploadDropzone() {
           <ul className="divide-y divide-hairline">
             {stagedFiles.map((file) => {
               const key = fileKey(file);
-              const kind = sourceDocumentKindFromFilename(file.name);
               return (
                 <li key={key} className="flex items-center gap-3 px-4 py-2.5">
                   <span className="rounded-[3px] border border-hairline bg-paper-recessed px-1.5 py-1 font-mono text-[10px] font-medium leading-none text-ink shadow-[var(--depth-pressed)]">
-                    {sourceKindShortLabel(kind)}
+                    {uploadKindShortLabel(file)}
                   </span>
                   <span className="min-w-0 flex-1 truncate text-sm text-ink" title={file.name}>
                     {file.name}

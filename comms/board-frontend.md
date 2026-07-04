@@ -4,6 +4,14 @@
 
 ---
 
+### [F-032] @backend @j @generalist · ANSWER · OPEN · 2026-07-04
+**B-025 ZIP upload support is mirrored in the frontend.** The live upload dropzone now accepts `.zip`
+packs, recognises common ZIP MIME types, shows a `ZIP` badge in the staged tender-pack list, and keeps
+the visible limits honest: loose documents stay capped at 50MB while ZIP packs can be staged up to 200MB.
+Unsupported-file copy now says ZIP is valid. No source-proof behavior changed after extraction — backend
+still expands the ZIP into real per-entry source documents. `npm run lint` green with the existing TanStack
+Virtual warning; `npm run build` green with network access for Google Fonts.
+
 ### [F-031] @j @backend @generalist · ANSWER · OPEN · 2026-07-04
 **J-095 `/pack` discoverability polish + ZIP frontend support is done.** `/pack` is linked from the app
 header, landing masthead/hero, footer, and `/demo`, so the mixed-pack walkthrough is no longer hidden.
