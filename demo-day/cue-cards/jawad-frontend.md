@@ -7,9 +7,13 @@ click ahead of everyone else's. Full timeline: [../run-sheet.md](../run-sheet.md
 ## Before anyone speaks
 
 Pre-open these tabs in order, logged in / loaded, zoom comfortable for the room:
-1. `/review` (or `/upload`) — ready for the drag-drop, file picked but not yet dropped.
-2. The gating row pre-identified so you can click it instantly when Bobby finishes the catch beat.
-3. `/answers` open in a second tab, pre-loaded, ready to flip to.
+1. `/demo` — the **Bradwell prebake** (J-081), the stage surface: key-independent, frozen, can't leak
+   live/mock state. Deal-breakers on top.
+2. The **insurance row** (£5m/£10m gate) pre-identified — it carries the flagship evidence-backed
+   answer; the **references row** carries the open question. Click these instantly on cue.
+3. `/pitch` in a second tab if the deck is part of the slot. Know before rehearsal (verified in code):
+   `/demo` is read-only and `/answers` is auth-gated on the mock/live tender — **neither shows a
+   Bradwell approve click**. If the run includes a live approve, pre-open `/review` as the third tab.
 
 ## Your beats
 
@@ -24,8 +28,9 @@ slides over. Point at the highlighted clause text and the page reference in the 
 for Bobby.
 
 ### 2. AUTOFILL + GAP INTERVIEW (you drive, you open it) — 1:35–2:05
-**Action:** navigate to `/answers`, approve a requirement or two live, surface a drafted answer with its
-evidence citation, then scroll to the open-questions list and its progress bar.
+**Action:** stay in `/demo` — click the **insurance row** to surface the flagship drafted answer with
+its evidence citation, then the **references row** for the open question (the asks-instead-of-guessing
+beat). `/answers` shows the mock/live tender (not Bradwell) — only use it if that's rehearsed.
 
 > "Approve a requirement, and it drafts an answer straight from the bidder's own capability documents —
 > every claim links back to the evidence behind it."

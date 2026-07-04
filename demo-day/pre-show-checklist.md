@@ -1,19 +1,18 @@
 # Pre-Show Checklist
 
-Two open risks carried over from the comms boards as of the last `STATUS.md` update (2026-06-30, Day 3) —
-**resolve or explicitly route around these before the 4th:**
+**Risk update (2026-07-04):** the two open risks from Day 3 are now **resolved via the committed
+prebake path**:
 
-> ⚠️ **J-020 (the pre-bake)** — "run the real LLM extract + autofill once on the demo tenders, commit the
-> cached output" was still **OPEN**, requested by Joel, owned by Bobby. Without it, the on-stage run either
-> needs a live key or falls back to the heuristic extractor (gating recall 0.0 — do not demo on heuristic).
+> ✅ **The pre-bake (was J-020)** — DONE and upgraded: `/demo` + `/pitch` serve the **Bradwell** prebake
+> (`frontend/src/data/bradwell-prebake.json`, J-081) from a frozen provider — real pipeline output,
+> zero live API on stage. SPSO + NHS fixtures remain in the repo.
 >
-> ⚠️ **`OPENAI_API_KEY` on Render** — also still open, blocked on the organisers per Joel's last comms
-> entry (J-026). Same consequence: no key on the deployed API = heuristic only.
+> ✅→⚠️ **`OPENAI_API_KEY` on Render** — the prebake makes the stage demo **key-independent**, so this
+> no longer blocks the demo. It still gates the *live-upload stretch* (mode B) and the hosted live app;
+> if it's still unset on demo day, simply don't offer mode B.
 >
-> **Bottom line:** before rehearsing the live-click version of this run, confirm out loud as a team which
-> of these is true: (a) pre-bake committed + served from cache — safe, no live API on stage, or (b) a real
-> key is live on Render — safe, but slower/costs money per upload, or (c) neither — **do not run live**,
-> use the recorded backup (see [backup-plan.md](backup-plan.md)) instead of the heuristic path.
+> **Bottom line:** mode A (pre-baked `/demo`) is safe by default. Only rehearse mode B if the Render key
+> is confirmed + tested that day; never demo the heuristic extractor as if it were the model.
 
 ---
 
@@ -36,9 +35,12 @@ Write the chosen mode here before the final dry run: `A / B / C = ______`.
 - [ ] Backend owner check (P): hit `/health`, `GET /tenders`, one `GET /tenders/{id}/requirements` on the
       intended demo tender, and one harmless `PATCH /requirements/{id}` on a non-critical/local tender if
       using live mode. Record the result in `comms/board-backend.md`.
-- [ ] Confirm `data/tenders/2013-SPSO-Invitation-to-Tender---Cleaning-Services.pdf` (hero, 13pp) and the
-      NHS framework PDF (messy proof, 66pp) are the exact files used in the pre-bake, downloaded locally on
-      the demo laptop as a fallback even if the plan is to demo from the hosted site.
+- [ ] Confirm `data/tenders/bradwell-grounds-itt.pdf` (hero, 34pp — the J-081 stage tender) is on the
+      demo laptop, plus the SPSO (13pp) and NHS framework (66pp) PDFs as the revert/messy-proof spares,
+      even if the plan is to demo from the hosted site.
+- [ ] Smoke-test `/demo` + `/pitch` per J-081: (1) deal-breakers sit on top, (2) insurance row → the
+      evidence-backed answer, (3) references row → the open question, (4) the deck's stop-sign card
+      shows the insurance gate.
 - [ ] Record the **backup video** (full run-sheet, no live clicking) if it doesn't already exist — see
       [backup-plan.md](backup-plan.md). Confirm it plays offline, no buffering, from the actual demo laptop.
 - [ ] Charge laptop fully; pack the charger anyway.

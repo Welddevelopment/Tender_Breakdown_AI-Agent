@@ -104,6 +104,8 @@ export function tenderPdfPageUrl(
 // Keyed by the source_filename carried on each requirement.
 const DEMO_PDFS: Record<string, string> = {
   "spso-cleaning.pdf": "/demo/spso-cleaning.pdf",
+  // Bradwell — the J-081 stage tender; PDF shipped in /public/demo so the
+  // "See a deal-breaker in the document" proof button renders key-independently.
   "bradwell-grounds-itt.pdf": "/demo/bradwell-grounds-itt.pdf",
 };
 

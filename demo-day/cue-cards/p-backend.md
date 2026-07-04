@@ -10,10 +10,11 @@ Full timeline: [../run-sheet.md](../run-sheet.md).
 **Screen:** `/review` (or `/upload`). Jawad is driving — you narrate while he drags the file in.
 **Point at:** the dropzone, then the row count climbing as the matrix fills.
 
-> "We drop in a real public-sector tender — [SPSO Cleaning Services ITT, 13 pages, the clean hero case].
-> For stage reliability this is the pre-baked run from our real backend pipeline: PDF ingest, chunking,
-> extraction, classification, reconcile, and API response. The important bit is the shape of the output:
-> every requirement pulled out, scored, and sitting in the matrix."
+> "We drop in a real public-sector tender — the Bradwell Common & Heelands grounds-maintenance ITT,
+> 34 pages. For stage reliability this is the pre-baked run from our real backend pipeline: PDF ingest,
+> chunking, extraction, classification, reconcile, and API response. The important bit is the shape of
+> the output: every requirement pulled out, scored, and sitting in the matrix — including twelve
+> deal-breakers, sitting right at the top."
 
 **Only use this alternate line if the Render key is live and tested that day:**
 > "This is running live now: ingest, chunk, extract, classify, reconcile, then return the API response.
@@ -21,11 +22,10 @@ Full timeline: [../run-sheet.md](../run-sheet.md).
 
 **Handoff line:** *"And here's the bit that matters most."* → Bobby steps in at the gating banner.
 
-> ⚠️ **Flag before you rehearse this:** the locked `demo-narrative.md` draft says "137 pages" in this
-> beat, but the locked hero tender everywhere else in `STATUS.md` is **SPSO, 13pp** (messy proof is the
-> NHS framework, 66pp). Use the bracketed numbers above unless the team explicitly re-confirms 137 is a
-> different, intentional opening tender. Worth a 30-second team check before the 4th — don't let this be
-> the one number that contradicts itself on stage.
+> ✅ **Hero tender resolved (J-081, 2026-07-04):** the on-stage tender is **Bradwell** (grounds
+> maintenance, 34pp, 12 deal-breakers), served key-independently from `bradwell-prebake.json` on
+> `/demo` + `/pitch`. SPSO stays in the repo as the two-line revert path. The old "137 pages" /
+> SPSO-13pp contradiction is dead — the number to say is **34 pages**.
 
 ## If asked about your lane
 

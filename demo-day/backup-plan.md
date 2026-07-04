@@ -5,9 +5,10 @@ on stage — the goal is nobody has to improvise a recovery in front of judges.
 
 ## Tiered fallback (pick the deepest tier that still works)
 
-1. **Best: hosted site, pre-baked data.** The default plan — `/review` and `/answers` served from the
-   deployed frontend, hitting the deployed API, which serves cached real-LLM output (J-020). No live model
-   call on stage. This is what the [run-sheet.md](run-sheet.md) assumes.
+1. **Best: hosted site, pre-baked data.** The default plan — **`/demo`** served from the deployed
+   frontend with the **Bradwell prebake baked into the build** (J-081): no backend, no API key, no
+   network dependency beyond loading the page once. Strictly more robust than the old API-cached plan.
+   This is what the [run-sheet.md](run-sheet.md) assumes.
 2. **Good: hosted site, real key, live call.** Only if the `OPENAI_API_KEY` is confirmed live on Render
    *and* the team has explicitly tested it that day. Slower (real extraction takes longer than a cached
    response) — warn the room: "this is running the real model live, give it a few seconds."
@@ -30,7 +31,7 @@ on stage — the goal is nobody has to improvise a recovery in front of judges.
 | Render is asleep / cold (upload hangs 30–50s) | Narrate through it once ("first request wakes the free-tier server, give it a moment") — don't panic-refresh. If it's still hanging past ~60s, switch to tier 3 (local) or tier 4 (video). |
 | Venue wifi is congested / drops | Switch to phone hotspot immediately if pre-arranged, otherwise tier 3 (local) if the laptop has everything installed, otherwise tier 4 (video). |
 | `OPENAI_API_KEY` turns out not to be live after all | Do **not** demo on the heuristic extractor (gating recall 0.0 — this would actively undercut the gating-catch claim). Use tier 1 (pre-baked) or drop to tier 4 (video) for that beat only, then resume live for the UI-only beats (source panel, design) which don't need a live model call. |
-| A judge's own tender is offered for live upload | Only accept on tier 2 (confirmed live key, tested that day). Otherwise: "we run from a fixed pre-baked tender on stage for reliability — happy to run yours live afterwards on [whoever's machine has the key]." Frame this as a deliberate reliability choice (it is one — `demo-narrative.md` says so explicitly), not an excuse. |
+| A judge's own tender is offered for live upload | Only accept on tier 2 (confirmed live key, tested that day). Otherwise: "we run from a fixed pre-baked tender on stage for reliability — happy to run yours live afterwards on [whoever's machine has the key]." Frame this as a deliberate reliability choice (it is one — `demo-narrative.md` says so explicitly), not an excuse. Note the stage tender (Bradwell) is itself a **held-out** tender the pipeline had never seen — say that; it answers the real question behind the request. |
 | A judge's PDF is scanned / malformed and chokes the pipeline | This is itself a legitimate answer, not just a failure: P explains the graceful-failure path (422 with a human-readable message, OCR flagging) rather than pretending it would have worked. Turning a near-failure into "here's how we handle exactly this" is a stronger answer than a clean run. |
 | Someone's beat runs long and the demo is short on time | See "If a beat runs long" in [run-sheet.md](run-sheet.md) — cut order is pre-agreed, not negotiated live. |
 | The presenting laptop itself fails | Whoever has the second-most-rehearsed laptop (ideally Jawad's, since they're the driver) takes over; tier 4 (video) on a phone/tablet is the absolute last resort if no second laptop is available. |

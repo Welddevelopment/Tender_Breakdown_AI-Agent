@@ -9,9 +9,10 @@ have two solo beats and one shared beat. Full timeline: [../run-sheet.md](../run
 **Screen:** the gating "deal-breaker" banner (oxblood). **Point directly at it** — don't let eyes wander.
 
 > "This one's a pass/fail gate. Miss it, you're disqualified — and it's the first thing you see, not
-> buried on page 61. On this tender we caught **every disqualifier**, measured against a hand-labelled
-> answer key: **gating recall 1.0, zero dangerous misses.** That's not a vibe, it's a number from our own
-> eval harness, including an adversarial test suite built specifically to try to break that claim."
+> buried on page 31. Twelve of these on this tender alone. And here's the part that matters: this tender
+> was our **held-out test** — the pipeline had never seen it, and it caught **all ten** hand-labelled
+> deal-breakers, on top of **12/12 deterministically** on our gold tenders. That's not a vibe, it's a
+> number from our own eval harness, including an adversarial test suite built to break exactly that claim."
 
 **Handoff:** *"Don't take our word for it."* → Jawad clicks the row.
 
@@ -28,18 +29,24 @@ have two solo beats and one shared beat. Full timeline: [../run-sheet.md](../run
 Jawad drives `/answers` and talks UI; you land the number right after:
 
 > "And it never bluffs. We built a groundedness check specifically to catch fabricated citations — on
-> this tender, 42 out of 42 citations verified, zero bluffs. Where it genuinely can't answer from your
-> documents, it doesn't guess — it asks. A handful of questions, not a blank page."
+> our full eval run, 42 out of 42 citations verified, zero bluffs. Where it genuinely can't answer from
+> your documents, it doesn't guess — it asks. A handful of questions, not a blank page."
 
-## The numbers, exactly as locked (don't round these up)
+## The numbers, exactly as locked (don't round these up) — full ledger: `demo-claim-ledger.md` §B
 
-- **Gating recall: 1.0** (every disqualifier caught and flagged).
-- **Dangerous misses: 0.**
-- **Bluffs: 0** (42/42 citations verified grounded).
+- **Deal-breaker catch: 12/12** on the SPSO + museum gold tenders — **deterministic, without the model**
+  (`net_alone_floor.py`, verified 2026-07-03).
+- **Held-out Bradwell (the on-stage tender): 10/10** deal-breakers — the pipeline had never seen it.
+- **Held-out Duffield: 0 deal-breakers missed.**
+- **101/101** on a **synthetic** worst-case phrasing bank — always say "synthetic", it's adversarial
+  wordings we authored, not real tenders.
+- **Bluffs: 0** (42/42 citations verified grounded — measured on the SPSO eval run; say "our full eval
+  run", don't attribute it to Bradwell).
 - **Robustness: 7/7** of the ugliest real tenders survive end-to-end (incl. 66pp NHS, 472 reqs — no crash).
-- **Overall extraction recall: ~0.79–0.95**, run-to-run (gpt-4o noise). **Quote the disqualifier catch and
-  groundedness, never this number alone** — it's the one figure in the deck that isn't stable, and a sharp
-  judge will notice if you lean on it.
+- **Broader recall/precision: do NOT headline a %.** Safe wording if pushed: "The strong, validated
+  number is deal-breaker catch — that's what a bid can't afford to miss, proven on gold and unseen
+  tenders. Broader requirement recall is promising but small-sample, so we don't headline it."
+  (The ~20% "precision" is a sparse-gold artifact — only 5 true junk of ~586 flagged; see J-077.)
 
 ## If asked about your lane
 

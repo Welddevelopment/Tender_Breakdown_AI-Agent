@@ -12,12 +12,15 @@ don't let one person try to cover all four lanes.
 > your own evidence, and where it can't find evidence, it asks instead of guessing. We're the trust and
 > control layer on top of the model, not a black-box generator."
 
-**"How do you know your numbers (gating recall 1.0, 0 bluffs) are real and not cherry-picked?"** — **Bobby**
+**"How do you know your numbers (deal-breaker catch, 0 bluffs) are real and not cherry-picked?"** — **Bobby**
 > Deterministic eval harness (no LLM grading its own homework), scored against hand-labelled gold sets, plus
-> an 18-test adversarial suite specifically designed to break each of the four trust claims. Mention the one
-> honestly-documented limitation (lexical reconcile could, in theory, merge two distinct requirements that
-> share the exact same page *and* clause) if asked for a weakness — having one documented, tested-for limit
-> is more credible than claiming none.
+> an 18-test adversarial suite specifically designed to break each of the four trust claims. The strongest
+> answer to "cherry-picked": **the on-stage tender (Bradwell) was a held-out test — 10/10 deal-breakers
+> caught on a tender the pipeline had never seen**, and 12/12 on gold is deterministic (no model, re-runnable).
+> Every stage claim, its source, and its defender: `demo-claim-ledger.md` — if a number isn't in the ledger,
+> don't say it. Mention the one honestly-documented limitation (lexical reconcile could, in theory, merge two
+> distinct requirements that share the exact same page *and* clause) if asked for a weakness — having one
+> documented, tested-for limit is more credible than claiming none.
 
 **"What about hallucination in the drafted answers?"** — **Bobby**
 > Groundedness eval purpose-built to catch fabricated citations; 42/42 verified on the demo tender; the

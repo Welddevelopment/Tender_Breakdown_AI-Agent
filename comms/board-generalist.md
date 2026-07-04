@@ -4,6 +4,35 @@
 
 ---
 
+### [G-040] @frontend @j @backend · DELIVERABLE+FINDING · OPEN · 2026-07-04 · overnight demo-prep pack in `demo/` + Bradwell staleness fixed — ⚠️ one decision needed: the /demo proof button is GONE without the Bradwell PDF
+**Plain English (Bobby-directed overnight run):** full judge-optimized demo pack landed in **`demo/`**
+(strategy, run-of-show, pitch script, Q&A battlecard, final checklist — built ON Pranav's `demo-day/`
+kit, not replacing it), and `demo-day/` + `/pitch` are now **reconciled to the J-081 Bradwell switch**
+(run-sheet, all 4 cue cards, pre-show checklist, backup plan: SPSO→Bradwell 34pp/12 deal-breakers,
+demo date 4→5 Jul, claim-ledger numbers wired into Bobby's beats).
+
+**⚠️ THE ONE DECISION (verified in code — this is the J-081 smoke-test result):** on `/demo`, the
+matrix is `pointer-events-none` — **no row is clickable**, so J-081's "click the insurance row" doesn't
+exist there; the one interactive proof is the **"See a deal-breaker in the document"** button → PDF
+overlay with the exact line highlighted. That button renders only when `DEMO_PDFS`
+(`frontend/src/lib/api.ts`) resolves the tender's PDF — it only mapped `spso-cleaning.pdf`, so **on the
+Bradwell prebake the button silently vanishes = the demo's trust payoff is missing on the deployed site
+right now.** I added the Bradwell mapping (inert until the file exists). The missing piece is ONE
+command, but repo rules say never commit tender PDFs (the SPSO copy in `frontend/public/demo/` is the
+existing precedent), so it's Joel's call, not mine:
+```bash
+cp data/tenders/bradwell-grounds-itt.pdf frontend/public/demo/   # then commit + push → Vercel
+```
+
+**Also fixed (safe text-only):** `/pitch` said "cached **SPSO** output" on the visible Demo-reliability
+slide + 2 speaker notes → now Bradwell (`PitchDeck.tsx`). **Flagged, NOT fixed (Jawad's curated copy):**
+the `/demo` cinematic scrolly still narrates **"SPSO Cleaning Services ITT", 13pp/183 reqs/9
+deal-breakers** (`components/demo/sample.ts` `DEMO_FACTS` + wall prose says "cleaning services") right
+above the **Bradwell** worked example — a visible on-page contradiction; either re-flavor to Bradwell
+(34pp/50 reqs/12 deal-breakers) or genericize the title. Also note `/answers` is auth-gated on the
+mock/live tender (NOT Bradwell) and `/demo` has no approve click — if we want a live approve on stage,
+it's `/review` (rehearsed), per the updated run-sheet.
+
 ### [G-039] @j @backend · INFO · OPEN · 2026-07-02 · PUSHED the G-038 fix (gating_scan)
 **Landed the passfail-never fix in `gating_scan.py` (`8149d42`) — the safety-net now surfaces the museum PQQ Pass/Fail gates (g61-63) it was silently dropping (p23-24 uncovered: 0 → 10). Suite 154 green (+2 tests).** @j it's your file and you were mid-iteration — I applied it on Bobby's call; it's a 6-line change (skip `_covered` when `_PASSFAIL` matches `source_excerpt`, non-pass/fail unchanged) built on your `_PASSFAIL` + framing. Flag me if you'd have done it differently and I'll adjust.
 - **Honest caveat:** it's recall-first, so it over-surfaces (~10 candidates on the PQQ pages, incl. some noise like font-size/appendix lines near "Pass/Fail") — all `needs_review` low-conf, collapsed by reconcile same-page dedup, and only genuine ones get credited by the semantic gating measure. Tightening *which* pass/fail lines qualify is a clean follow-up (precision, paused per J-062).

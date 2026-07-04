@@ -1,6 +1,11 @@
 # Demo Day Kit
 
-> Live-demo materials for the Conduct "Make Legacy Move" hackathon presentation. **Demo = 4 Jul 2026.**
+> Live-demo materials for the Conduct "Make Legacy Move" hackathon presentation.
+> 🚨 **Demo Day = SAT 4 JUL per every official source** (Luma "4 July — Demo Day", DoraHacks end-time,
+> aiagentslab.uk), **Bidframe slot 3:55pm — last of the day** per the running-order sheet. Team notes
+> said Sun 5 Jul — **confirm in the event Discord immediately** (see `demo/judge-research.md`).
+> **Updated 2026-07-04:** reconciled to **J-081** — the on-stage tender is now the **Bradwell** grounds
+> prebake (34pp, 12 deal-breakers) on `/demo` + `/pitch`, key-independent. SPSO stays as the revert path.
 > This folder turns the locked [`demo-narrative.md`](../demo-narrative.md) (the 90-second solo script,
 > the honest numbers, the positioning guardrails) into a **4-person tag-team run** with per-person scripts,
 > screen-by-screen visual cues, a pre-show checklist and a backup plan.

@@ -659,7 +659,7 @@ export function PitchDeck() {
           notes: [
             "Two beats: the slide lands with the clause alone — read it out loud into the pause. The NEXT keypress stamps the green 'caught' line; only then keep talking.",
             "Say it in full: Bidframe turns the tender into a reviewable matrix — deal-breakers first, uncertainty visible, sources attached.",
-            "The card is a real gating requirement from the SPSO run, with its clause and page. This is where the room should understand the wedge.",
+            "The card is a real gating requirement from the Bradwell run (the insurance gate), with its clause and page. This is where the room should understand the wedge.",
             "Avoid claiming universal accuracy. This is a real pre-baked run.",
           ],
           body: (
@@ -784,7 +784,7 @@ export function PitchDeck() {
           light: 0.75,
           notes: [
             "Keep this as a quick route map for the live demo.",
-            "Say it in full: the trusted demo path is a cached real SPSO run, ready on stage without backend or model variance.",
+            "Say it in full: the trusted demo path is a cached real Bradwell run, ready on stage without backend or model variance.",
             "Joel: PDF to matrix and deal-breaker view. Bobby: proof, answer receipts and demo reliability.",
             "Use bidframe.org/demo as the secondary CTA after the pitch.",
           ],
@@ -1069,8 +1069,8 @@ export function PitchDeck() {
                 <p className="pitch-kicker">Demo reliability</p>
                 <h2>Stage-safe without pretending</h2>
                 <p>
-                  /pitch and /demo use cached SPSO output from a real pipeline
-                  run. The live route remains available after the pitch.
+                  /pitch and /demo use cached Bradwell output from a real
+                  pipeline run. The live route remains available after the pitch.
                 </p>
               </div>
               <div className="pitch-reliability-list">
