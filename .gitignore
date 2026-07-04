@@ -36,15 +36,18 @@ next-env.d.ts
 /backend/data/
 # OpenAI spend ledger (runtime; read the cumulative total via `python -m engine.usage_log`)
 usage-ledger.jsonl
+sent_outreach_log.csv
 
 # ---- OS / editor ----
 .DS_Store
 Thumbs.db
 .idea/
 .vscode/
+.claude/
 *.swp
 *.log
 
 # ---- Local working artifacts (never commit) ----
 tmp/
 outputs/
+frontend/.npm-cache/
