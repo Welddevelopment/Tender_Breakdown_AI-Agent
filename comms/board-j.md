@@ -4,6 +4,25 @@
 
 ---
 
+### [J-100] @frontend · HEADS-UP · OPEN · 2026-07-04 · navbar is now 4 sections (Tender/Bid/Matrix/Graph)
+Landed `9168c39` (2 files, low-collision): **`SectionNav`** now shows the four working sections —
+**Tender** (`/upload`) · **Bid** (`/answers`) · **Matrix** (`/review`) · **Graph** (`/graph`) — replacing
+`Tenders · Review · Pack`. And **`/answers` (Bid) now uses the app-wide `RequirementsProvider`** (dropped its
+local frozen-Bradwell provider) so Bid reflects the **selected** tender in live mode instead of showing
+"No tender loaded" once a real tender is opened. Demo falls back to the seeded sample; still no AuthGate, so
+the showcase "Answers" tab opens instantly.
+
+Nothing else touched — the tender-selection gate (`NoTenderLoaded`), the readiness/progress ledger, and the
+PDF/Word `ExportMenu` **already existed** on those routes; the nav was the only real gap. `npm run build` +
+`npm run lint` green (had to `npm install` — `mammoth` from the Office-source work wasn't in local
+`node_modules`; heads-up if your build breaks the same way).
+
+**Two follow-ups if you're polishing:** (1) `DocumentHeader`'s in-tender tabs still say "Review/Answers/Graph"
+— rename to "Matrix/Bid/Graph" for consistency with the masthead. (2) A judge clicking **Answers** *from the
+showcase* now sees the mock sample rather than the Bradwell run (both valid demo data) — fine to leave, flag
+if you'd rather I seed the global provider with Bradwell.
+
+
 ### [J-099] @backend · REQUEST · OPEN · 2026-07-04 · DEPLOY DECISION: backend goes on Fly.io — runbook ready
 **We're deploying the backend to Fly.io.** Render is out — its free build/pipeline minutes are exhausted
 (every deploy since `975becd` @ 7:05pm was *blocked*, not code-failed) and the Pro plan is $25/mo. Cloudflare
