@@ -42,24 +42,28 @@ if ($RotateAuthSecret) {
   Write-Host "[2/4] AUTH_SECRET already set on the Space - skipping (use -RotateAuthSecret to regenerate)." -ForegroundColor Cyan
 }
 
-# --- 3. push ----------------------------------------------------------------
+# --- 3. push (Git LFS for the binary demo data) -----------------------------
 Write-Host "[3/4] Pushing build to the Space..." -ForegroundColor Cyan
 $work = Join-Path $env:TEMP "bidframe-space"
 $remote = "https://${SPACE_OWNER}:${Token}@huggingface.co/spaces/$SPACE_ID"
-if (Test-Path (Join-Path $work ".git")) {
-  git -C $work remote set-url origin $remote
-  git -C $work pull --rebase --quiet
-} else {
-  if (Test-Path $work) { Remove-Item -Recurse -Force $work }
-  git clone --quiet $remote $work
-}
+# Always fresh-clone. HF's pre-receive hook REJECTS binary files that aren't
+# LFS-tracked (tender.db, the PDF/Word/Excel source files), so a stale non-LFS
+# commit from a prior run would keep getting rejected — a clean clone + lfs track
+# is the reliable path.
+if (Test-Path $work) { Remove-Item -Recurse -Force $work }
+git clone --quiet $remote $work
+git -C $work lfs install --local | Out-Null
+# Track the demo pack's binaries via LFS BEFORE they're added, so they commit as
+# pointers (csv/txt/py stay plain text).
+git -C $work lfs track "*.db" "*.pdf" "*.docx" "*.xlsx" | Out-Null
+git -C $work add .gitattributes
 Copy-Item (Join-Path $PSScriptRoot "hf-build\*") $work -Recurse -Force
 git -C $work add -A
 $pending = git -C $work status --porcelain
 if ($pending) {
   git -C $work commit --quiet -m "bidframe backend + baked demo data"
-  git -C $work push --quiet
-  Write-Host "        Pushed. HF is building the image now."
+  git -C $work push
+  Write-Host "        Pushed (LFS). Verify the remote landed on the Space page below."
 } else {
   Write-Host "        Nothing changed since last push."
 }
