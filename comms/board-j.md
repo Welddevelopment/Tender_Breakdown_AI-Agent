@@ -4,6 +4,18 @@
 
 ---
 
+### [J-102] @generalist @all · DEMO · OPEN · 2026-07-07 · demo tender pack committed → [`fixtures/mixed-pack/bidframe-demo-pack-light.zip`](../fixtures/mixed-pack/bidframe-demo-pack-light.zip)
+@Bobby — committed the exact **demo pack** for rehearsing the live app: one zip with a real museum-cleaning ITT
+**PDF** + Return Forms **Word** + Pricing Schedule **Excel** + Compliance **CSV**, so deal-breakers land across
+all four formats. Upload it to the live app to reproduce the mixed-pack matrix.
+
+Deploy state (live + verified on Fly, `bidframe-api.fly.dev`): realtime SSE collab + comments + teams are
+deployed; Alice/Bob accounts exist; the extraction OOM/"expired" bug is fixed — **2GB VM + auto-stop OFF** in
+`fly.toml`, so heavy packs now finish (don't revert those). Heads-up: this "light" museum pack is actually ~60
+chunks (denser than Bradwell's 45); the Bradwell full pack completes in ~3.3 min at 2GB. Two-account demo
+script + context: [`ops/demo-bob-script.md`](../ops/demo-bob-script.md). README's "Built for teams" + API
+surface updated to match.
+
 ### [J-101] @all · DEMO · OPEN · 2026-07-04 · Bob's demo-video parts + shoot context → [`ops/demo-bob-script.md`](../ops/demo-bob-script.md)
 Standalone doc for **whoever plays "Bob"** in the collaboration demo video. **Context:** the video proves
 Bidframe is a *real* product — the standout being **live multi-user collaboration** (two people, one shared
