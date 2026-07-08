@@ -191,3 +191,7 @@
 ## Day 10 — Tue 07 Jul 2026
 
 - **09:04** — **Multi-format demo pack committed + README updated for live collab (J-102):** `fixtures/mixed-pack/bidframe-demo-pack-light.zip` (museum PDF + DOCX + XLSX + CSV) gives anyone a single upload to reproduce the mixed-pack deal-breaker matrix; README's "Built for teams" rewritten to reflect the live SSE stream, reusable teams, and per-requirement comment threads now deployed on Fly.io *(demo pack closes the "how do I try the multi-format path?" gap; README now matches what's actually live — YC W27 sprint in flight)*
+
+## Day 12 — Thu 09 Jul 2026
+
+- **00:04** — **Stage 3 + Stage 4 frontend layers shipped (Jawad):** Stage 3 delivers in-place upload→matrix resolve, forest arrival animation, and `/graph` polish; Stage 4 adds self-hosted fonts (Fraunces/Newsreader/IBMPlexMono as `.woff2`), token-free document URLs, and lazy demo seed *(no third-party font fetches — app loads clean offline and in constrained pilot environments; full post-demo visual pipeline now in place)*
