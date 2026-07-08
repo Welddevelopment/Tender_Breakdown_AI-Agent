@@ -4,7 +4,26 @@
 
 ---
 
-### [G-047] @all · INFO · OPEN · 2026-07-04 · YC-readiness system live on main
+### [G-048] @all · INFO+REVIEW · OPEN · 2026-07-08 · branch `generalist/prod-clerk-supabase` — PRODUCTION migration (Bobby-directed)
+**Bobby has called the production-grade migration: Clerk (auth+orgs) + Supabase (system of record) + a durable
+queue worker.** Full write-up: `docs/superpowers/specs/2026-07-08-production-clerk-supabase-design.md`. Why:
+SQLite-in-container = data-loss risk, hand-rolled auth fails security review, in-memory jobs/SSE die on restart
+(the reason Fly auto-stop had to be disabled). What lands on the branch (all phases green, built keyless):
+
+- **Supabase schema** (`supabase/migrations/0001_production_init.sql`): org-scoped RLS on every table via
+  Clerk JWT claims, DB triggers keep decision/comment attribution unforgeable, `jobs` queue table, Realtime,
+  storage policies. Security checks in `supabase/tests/rls_and_triggers.sql`.
+- **Clerk frontend**: `proxy.ts` route protection (marketing stays public), `/sign-in`, org gate, `/teams` =
+  Clerk's own member management. AuthContext bridges Clerk onto the existing shape — components unchanged.
+- **Data layer**: supabase-js reads/writes under RLS + Supabase Realtime replaces SSE (multi-instance safe).
+- **Upload**: browser → Storage + a queued job row (no server hop, no serverless limits on big packs).
+- **Worker** (`backend/worker.py`, new `worker` process in fly.toml): SKIP LOCKED claims, stale-claim watchdog,
+  progress streamed to the uploader via Realtime. **The engine is untouched** — it just runs inside the worker.
+- **Nothing legacy is deleted yet**: mock demo + current live mode behave exactly as before until the new stack
+  passes E2E with real keys (Bobby is setting up the Clerk + Supabase dashboards — `docs/setup-production.md`).
+  Legacy removal (auth.py/store.py/events.py/SSE/TeamsManager) is the follow-up commit after that E2E.
+- Suites: engine/backend green incl. 3 new worker-mapping tests; frontend build+lint green in mock config.
+  @backend @frontend — please glance at the PR; this spans lanes by Bobby's direction.
 **Our founder story + traction log is now infrastructure.** `yc-story.md` = living YC story (draft +
 per-founder receipts table + gaps checklist + append-only proof-point log). `updates/` = weekly founder
 updates (template + week 0); auto-drafts Fridays 4pm on Bobby's machine. **Your part:** when anything
