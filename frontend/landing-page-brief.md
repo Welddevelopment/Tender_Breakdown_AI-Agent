@@ -8,9 +8,12 @@ docs win and this file is wrong (raise it).
 It inherits, and must obey, all four:
 
 - [DESIGN-SYSTEM.md](DESIGN-SYSTEM.md) — the look and behaviour rules (sections 1 to 14).
-- [design-language.md](design-language.md) — the Civic Record (masthead, rules, register, mono record voice, stamp).
+- [design-language.md](design-language.md) — the forest-led civic record: forest for customer feeling,
+  record for proof.
 - [copywriting.md](copywriting.md) — how Bidframe talks. Every string on this page passes the copy check.
 - [SLOP-CHECK.md](SLOP-CHECK.md) — the banned list and the pre-build gate.
+- [QA.md](<UI/UX/Motion Overhaul/QA.md>) — the measurement and acceptance layer for the overhaul.
+- [delete.md](<UI/UX/Motion Overhaul/delete.md>) — the deletion backlog to check before adding UI.
 
 Supporting context, for the people writing copy and wiring the CTA:
 [positioning-and-traction.md](../positioning-and-traction.md) (the buyer and the wedge),
@@ -25,10 +28,11 @@ Supporting context, for the people writing copy and wiring the CTA:
 
 ## 1. The one idea
 
-**The landing page is itself a civic record.** It is an official-looking document about an official
-document. Same paper, same masthead, same rules, same mono record voice as the product. When a bid writer
-lands, the medium has already made the credibility argument before they read a word. Page and product
-speak one language, with no separate "marketing skin" that the product would then contradict.
+**The landing page is the fullest forest-led civic record expression.** Forest leads the first feeling:
+calm, capable, protective, and memorable. The record layer proves the claim: same paper, same masthead,
+same rules, same mono source voice as the product. When a bid writer lands, the medium has already made
+the credibility argument before they read a word. Page and product speak one language, with no separate
+"marketing skin" that the product would then contradict.
 
 The page has exactly one job: **get the right person to book a demo.** Everything else serves that.
 
@@ -76,7 +80,7 @@ check". Any "no" is a rewrite.
 ## 5. Where it lives, and the routing change it forces
 
 The page lives **inside the Next.js app as the new root route `/`**, so it inherits `globals.css`, the
-Civic Record tokens, and the `next/font` faces for free, and the CTA can flow straight into the live
+forest-led civic record tokens, and the `next/font` faces for free, and the CTA can flow straight into the live
 product.
 
 This relocates the current home. Today `frontend/src/app/page.tsx` renders the demo matrix
@@ -131,7 +135,7 @@ few words.
 
 ### 7.1 Masthead (the page header)
 
-Purpose: establish "official record" in the first glance. Reuses the Civic Record masthead device, not
+Purpose: establish "official record" in the first glance. Reuses the record masthead device, not
 the product `DocumentHeader`.
 
 - A mono running head, uppercase, tracked: `BIDFRAME` (mono record).
@@ -298,10 +302,12 @@ Minimal, mono record voice. The product name, a contact email, and nothing that 
 proof we do not have, no fake logos, no testimonials we cannot attribute. A quiet link to `/review` ("See
 the demo") is fine.
 
-## 8. Design language application (the Civic Record on the page)
+## 8. Design language application (forest-led civic record)
 
 Apply [design-language.md](design-language.md) directly:
 
+- **Forest leads first feeling:** pine/moss grounds, botanicals, and forest CTAs are part of the brand
+  expression, not a page-only exception.
 - **Masthead** leads (section 7.1), with the one 2px ink rule beneath it.
 - **Rule hierarchy, three weights by meaning:** the 2px ink masthead rule once; `--rule-section` between
   major page sections; `--rule-hair` for the smallest dividers and the before/after table rows. Lines do
@@ -311,7 +317,7 @@ Apply [design-language.md](design-language.md) directly:
 - **Warmth at the 45% tokens, capped.** Paper background (never pure white), one soft ink-tinted shadow
   language on raised surfaces only (the hero resolve card, any lifted panel). Paper grain only on raised
   surfaces, never on the page or on scanning rows.
-- **One forest button per viewport.** Forest is the only brand accent and it means "primary action".
+- **One forest button per viewport.** Forest is the primary action and guidance colour.
   Signal hues (oxblood, amber, yellow, light-green) appear only on their status carriers in the embedded
   product visuals, never on page furniture.
 - **Light paper only. No dark mode**, no theme toggle. The document is paper.
@@ -368,10 +374,10 @@ Set in `app/page.tsx` metadata, in voice, British spelling, no hype:
 - **Route:** new `app/page.tsx` is the landing page; current home body moves to `app/review/page.tsx`
   (section 5). Update `SectionNav` and `DocumentHeader` matrix links from `/` to `/review`.
 - **Reuse, do not rebuild:** the hero resolve uses the real `ComplianceMatrix` / `RequirementSpine` /
-  `GatingHero` over `mockTender`. The masthead reuses the Civic Record masthead treatment (it may be a
+  `GatingHero` over `mockTender`. The masthead reuses the record masthead treatment (it may be a
   trimmed variant of `DocumentHeader`, or a small dedicated `LandingMasthead`, builder's call, but it
   shares the tokens).
-- **Tokens and fonts are already wired:** Civic Record material tokens in `globals.css` `@theme`, the
+- **Tokens and fonts are already wired:** forest-led civic record material tokens in `globals.css` `@theme`, the
   three faces via `next/font`. Do not introduce new fonts, new colours, or off-token shadows.
 - **Copy lives in the component**, in the exact strings above. If any string is reused from the product,
   import it rather than retyping, so the two never drift.
@@ -424,19 +430,21 @@ the copy check.
 8. **Build green.** `npm run build` and `npm run lint` pass; `/` is the landing page and `/review` is the
    matrix; no in-product link points back at `/`.
 
-## 18. Landing departures (forest uplift)
+## 18. Forest-led landing expression
 
-The forest uplift deliberately relaxes five constraints, on this page only. Each is named here so it is a
-documented departure, not drift. The product screens keep the original rules in full; where a rule below
-conflicts with an earlier section of this brief, this section wins for the landing page and nowhere else.
+The forest uplift is no longer treated as an isolated exception. It is the strongest expression of the
+brand layer in [design-language.md](design-language.md): forest leads first feeling, the record leads
+proof. The app should inherit the same logic in controlled places, while matrix/source/evidence surfaces
+keep the stricter record discipline.
 
 **Forest family as band ground.** The landing's dark bands (the proof band, the closing band, the footer)
 stand on pine (`--color-pine`, `--color-pine-deep`) instead of the product's near-black ink. Reason: the
 page's heaviest surfaces should carry the brand's own hue rather than a generic dark, so the record reads
 unmistakably as Bidframe even in a screenshot. Paper on pine clears AAA (11.1:1); body text on pine stays
-at 70% paper opacity or above, small mono at 60% or above. The product's `bg-ink` bands are untouched.
+at 70% paper opacity or above, small mono at 60% or above. Product proof surfaces still avoid dark bands
+unless a forest-led arrival/demo moment earns one.
 
-**A sanctioned engraved-botanical illustration programme.** The page carries one illustration language,
+**Engraved-botanical illustration programme.** The page carries one illustration language,
 grown from the existing hero sprig: stroke-based line art in `currentColor`, `aria-hidden`, faint
 `fillOpacity` leaf bodies, round linecaps. Ferns, pine branches, pressed leaves, a treeline and a seal all
 speak this single grammar. Reason: the page needed visual warmth beyond two buttons and four ghost sprigs,
@@ -459,7 +467,8 @@ a default, and the counts remain plain counts, never animated.
 `--color-moss-line` as its hairline), a pale green-grey surface for the honesty band and the "With
 Bidframe" table column. Reason: the middle of the page was a monotone beige corridor, and a third surface
 tone lets sections alternate ground without reaching for boxes, borders or gradients. Moss is a landing
-surface only; the product keeps its two-surface paper system.
+and demo surface by default; the product may use it sparingly for arrival, processing, or collaboration
+surfaces, not for dense matrix rows.
 
 ---
 
@@ -467,6 +476,8 @@ surface only; the product keeps its two-surface paper system.
 - *2026-06-29 — v1, Frontend. Headline and section copy locked, routing change to `/review` specified,
   hero resolve reuses the named design-system transition, proof translated to plain counts. Open items:
   booking link, live-key confirmation, proof-tender naming.*
-- *2026-07-01 — v1.1, Frontend. Added section 18, the landing departures for the forest uplift: pine and
+- *2026-07-01 — v1.1, Frontend. Added section 18, the forest uplift: pine and
   moss as landing surfaces, the engraved-botanical illustration programme, draw-on stroke motion,
   poster-scale moments. Tokens and motion CSS landed in `globals.css`; components follow.*
+- *2026-07-05 — v1.2, Codex. Reframed the forest uplift as the full brand expression, not a page-only
+  departure, to match the forest-led civic record system.*
