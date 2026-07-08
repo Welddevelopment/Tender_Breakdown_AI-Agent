@@ -12,14 +12,20 @@ export interface Collaborator {
 }
 
 // Assigned stably per person by hashing their email.
+// Forest leads; the whole family stays earthy/warm so no avatar reads as a risk
+// signal. Oxblood is reserved exclusively for deal-breaker alarm states and is
+// intentionally absent here. Greyscale-safe: sorted by simple luminance (L =
+// 0.299R + 0.587G + 0.114B) — deep-pine ≈49, warm-bark ≈76, forest ≈94,
+// terracotta ≈106, sage ≈109, amber ≈114 — adjacent pair separation ≥18 at
+// the dark end; the terracotta/sage/amber top cluster differs by hue as well as
+// the moderate L gap so actors remain distinguishable.
 const PALETTE = [
-  "#3f6f57", // forest
-  "#8a2d2a", // oxblood
-  "#a06b1a", // amber-ink
-  "#3d5a80", // slate
-  "#6b4e71", // plum
-  "#557a6b", // sage
-  "#9a5a3c", // terracotta
+  "#3f6f57", // forest — leads the earthy rotation (L ≈ 94)
+  "#1c3d2c", // deep pine — dark green anchor, pulls the range wide (L ≈ 49)
+  "#6b4425", // warm bark — brown mid-tone between pine and forest (L ≈ 76)
+  "#a06b1a", // amber-ink (L ≈ 114)
+  "#557a6b", // sage (L ≈ 109)
+  "#9a5a3c", // terracotta (L ≈ 106)
 ];
 
 function hash(s: string): number {

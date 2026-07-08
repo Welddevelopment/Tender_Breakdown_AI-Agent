@@ -1,40 +1,15 @@
-import { AppMain } from "@/components/AppMain";
 import { AuthGate } from "@/components/AuthGate";
-import { DocumentHeader } from "@/components/DocumentHeader";
-import { TendersList } from "@/components/TendersList";
-import { UploadDropzone } from "@/components/UploadDropzone";
+import { UploadWorkspace } from "@/components/UploadWorkspace";
 
 export const metadata = { title: "Tender library · Bidframe" };
 
+// A thin shell: UploadWorkspace owns the library composition AND the in-place
+// upload→matrix resolve (the extracted tender mounts here, then the URL flips
+// to /review without a page swap — layout.md §9's one showpiece transition).
 export default function UploadPage() {
   return (
     <AuthGate>
-      <DocumentHeader title="Tender library" showReference={false} />
-      <AppMain>
-        {/* One page, two halves: drop a new tender pack at the top, and the
-            library of every tender you have uploaded directly beneath it —
-            both visible without scrolling. */}
-        <div className="mx-auto max-w-2xl pt-6">
-          <UploadDropzone />
-        </div>
-        <section
-          id="your-tenders"
-          aria-label="Your tenders"
-          className="mx-auto mt-10 max-w-2xl scroll-mt-24"
-        >
-          <div className="flex items-baseline justify-between gap-3 border-b-2 border-ink pb-2">
-            <h2 className="font-serif text-lg font-semibold leading-snug text-ink">
-              Your tenders
-            </h2>
-            <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-muted">
-              Click to reopen
-            </p>
-          </div>
-          <div className="mt-3">
-            <TendersList />
-          </div>
-        </section>
-      </AppMain>
+      <UploadWorkspace />
     </AuthGate>
   );
 }

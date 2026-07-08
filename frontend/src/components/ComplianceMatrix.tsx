@@ -21,7 +21,6 @@ import {
   sourceDocumentKind,
   sourceKindLabel,
   sourceKindShortLabel,
-  sourceLocatorLabel,
   sourceRefLabel,
 } from "@/lib/source-doc";
 import { useAuth } from "@/context/AuthContext";
@@ -124,11 +123,16 @@ export interface MatrixSelection {
 
 // The row grid. With selection live, the ref margin widens to make room for the
 // checkbox; without it the original geometry is untouched. Full literal strings.
+// Ref column is 64px (plain) / 82px (selectable): narrowed from 80/98px per
+// design-language.md device 3 (~52px target). 64px chosen because the longest
+// realistic stripped Bradwell clause — "Spec 6.4" at 8 chars × ~7.2px/char ≈
+// 58px — renders un-clipped on a non-gating row; gating rows add a ~12px pennant
+// overhead and clip at that width, handled by the existing truncate + title tooltip.
 const ROW_GRID: Record<"plain" | "selectable", string> = {
   plain:
-    "grid-cols-[80px_22px_minmax(0,1fr)] sm:grid-cols-[92px_26px_minmax(0,1fr)_auto]",
+    "grid-cols-[64px_22px_minmax(0,1fr)] sm:grid-cols-[72px_26px_minmax(0,1fr)_auto]",
   selectable:
-    "grid-cols-[98px_22px_minmax(0,1fr)] sm:grid-cols-[112px_26px_minmax(0,1fr)_auto]",
+    "grid-cols-[82px_22px_minmax(0,1fr)] sm:grid-cols-[90px_26px_minmax(0,1fr)_auto]",
 };
 
 // The resting row wash, keyed to the confidence tier so the worklist carries a
@@ -231,9 +235,15 @@ function SourceTypeBadge({ req }: { req: Requirement }) {
   );
 }
 
+// The register ref: show the real source_clause when present (stripping a
+// "Section " prefix for the compact cell; the full string stays in the title
+// tooltip via fullRef / sourceRefLabel). Falls back to the page locator only
+// when source_clause is absent, inverting the old PDF-only page-first logic.
 function matrixSourceRefLabel(req: Requirement): string {
-  if (sourceDocumentKind(req) === "pdf") return `p.${req.source_page}`;
-  return sourceLocatorLabel(req);
+  if (req.source_clause) {
+    return req.source_clause.replace(/^Section\s+/i, "");
+  }
+  return `p.${req.source_page}`;
 }
 
 function DecisionActorChip({ req }: { req: Requirement }) {
@@ -343,10 +353,12 @@ function MatrixRow({
       {/* The register margin: the selection checkbox (when selection is live),
           a gating pennant, then the clause ref, right-aligned in mono. The
           pennant marks the deal-breaker even on decided rows, where the alarm
-          meter no longer shows. */}
+          meter no longer shows. Colour is ink-muted (not accent teal) per
+          design-language.md device 3: the register ref is a quiet ledger edge,
+          subordinate to the text; teal stays on click-to-source actions only. */}
       <span
         title={fullRef}
-        className="flex min-w-0 items-start justify-end gap-1 overflow-hidden pt-1 text-right font-mono text-[11px] leading-tight text-accent/85"
+        className="flex min-w-0 items-start justify-end gap-1 overflow-hidden pt-1 text-right font-mono text-[12px] leading-tight text-ink-muted"
       >
         {selection && (
           <input
@@ -742,9 +754,10 @@ function MatrixGroup({
     <>
       {/* The group header stays with its rows: sticky to the top of the scroll
           so the label and count remain legible while the section runs long. A
-          paper ground and a hairline keep it reading as a register rule, not a
-          floating bar. */}
-      <div className="sticky top-0 z-10 -mx-1 border-b border-hairline bg-paper px-1 pb-2 pt-2">
+          paper ground and a hair rule keep it reading as a register divider, not
+          a floating bar. Tokens: --rule-hair (row/minor divider, same 1px
+          hairline colour — no pixel change). */}
+      <div className="sticky top-0 z-10 -mx-1 [border-bottom:var(--rule-hair)] bg-paper px-1 pb-2 pt-2">
         <div className="flex items-center justify-between gap-3">
         {collapsible ? (
           <button
@@ -1067,7 +1080,13 @@ export function ComplianceMatrix({
 
   return (
     <div className="flex w-full flex-col gap-10">
-      <div className="flex flex-col gap-2 border-b border-hairline pb-4 sm:flex-row sm:items-center sm:justify-between">
+      {/* Toolbar/search zone separator. Semantically a major panel zone divider
+          (toolbar → matrix content) that ideally maps to --rule-section, but
+          --rule-section is #d9cfbb (one step darker than hairline #e4ddce), so
+          converting would change the rendered colour. Using --rule-hair instead
+          to preserve pixels; this border can be upgraded to --rule-section in a
+          dedicated colour pass if the distinction becomes desired. */}
+      <div className="flex flex-col gap-2 [border-bottom:var(--rule-hair)] pb-4 sm:flex-row sm:items-center sm:justify-between">
         <label className="max-w-md flex-1">
           <span className="sr-only">Search requirements</span>
           <input

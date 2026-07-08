@@ -37,11 +37,13 @@ export function SiteHeader({
   return (
     <header
       className={
-        // App chrome carries a whisper of forest via the moss ground (the brand
-        // frame); the matrix core below stays paper (record-led), and forest
-        // itself stays reserved for actions. Marketing masthead keeps paper.
+        // App chrome carries the forest frame as a graded moss stack: this
+        // masthead band sits one notch deeper (moss-deep) than the title row's
+        // moss, so the frame reads as forest depth receding into the paper
+        // record below. Forest itself stays reserved for actions. Marketing
+        // masthead keeps paper.
         isApp
-          ? "border-b-2 border-ink bg-moss"
+          ? "border-b-2 border-ink bg-moss-deep"
           : "landing-masthead sticky border-b-2 border-ink bg-paper/90 backdrop-blur-sm"
       }
     >

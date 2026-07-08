@@ -65,18 +65,24 @@ const REQUIREMENT_COPY: Record<PanelVariant, string> = {
   focus: "min-w-0 flex-1 @2xl:pr-8",
 };
 
+// Token: --rule-hair — the ruled margin (design-language.md device 4) that
+// separates the 64ch prose column from the mono margin. design-language
+// explicitly names this rule --rule-hair; same colour as border-hairline.
+// @2xl:border-t-0 remains a Tailwind utility (a width reset, no token needed).
 const REQUIREMENT_META: Record<PanelVariant, string> = {
   split:
-    "flex min-w-0 flex-col gap-2 border-t border-hairline pt-4 @2xl:w-56 @2xl:shrink-0 @2xl:border-l @2xl:border-t-0 @2xl:pl-8 @2xl:pt-0",
-  drawer: "flex min-w-0 flex-col gap-2 border-t border-hairline pt-4",
+    "flex min-w-0 flex-col gap-2 [border-top:var(--rule-hair)] pt-4 @2xl:w-56 @2xl:shrink-0 @2xl:[border-left:var(--rule-hair)] @2xl:border-t-0 @2xl:pl-8 @2xl:pt-0",
+  drawer: "flex min-w-0 flex-col gap-2 [border-top:var(--rule-hair)] pt-4",
   focus:
-    "flex min-w-0 flex-col gap-2 border-t border-hairline pt-4 @2xl:w-64 @2xl:shrink-0 @2xl:border-l @2xl:border-t-0 @2xl:pl-8 @2xl:pt-0",
+    "flex min-w-0 flex-col gap-2 [border-top:var(--rule-hair)] pt-4 @2xl:w-64 @2xl:shrink-0 @2xl:[border-left:var(--rule-hair)] @2xl:border-t-0 @2xl:pl-8 @2xl:pt-0",
 };
 
+// Token: --rule-hair (1px hairline) — minor zone divider between body scroll
+// and the pinned decision footer. Same colour as border-hairline; no pixel change.
 const DECISION_PADDING: Record<PanelVariant, string> = {
-  split: "border-t border-hairline bg-paper-raised px-5 py-4 sm:px-6",
-  drawer: "border-t border-hairline bg-paper-raised px-5 py-4 sm:px-6",
-  focus: "border-t border-hairline bg-paper-raised px-6 py-5 sm:px-10 lg:px-14",
+  split: "[border-top:var(--rule-hair)] bg-paper-raised px-5 py-4 sm:px-6",
+  drawer: "[border-top:var(--rule-hair)] bg-paper-raised px-5 py-4 sm:px-6",
+  focus: "[border-top:var(--rule-hair)] bg-paper-raised px-6 py-5 sm:px-10 lg:px-14",
 };
 
 const GATING_CONFIRM_TEXT = "CONFIRM";
@@ -248,9 +254,10 @@ export function RequirementPanel({
   );
 }
 
-// A flat zone, separated from the one above it by a single hairline (layout.md
-// section 7: hairlines divide kinds of content). The label is set in the quiet
-// mono margin style so it reads as the document talking, not a heading.
+// A flat zone, separated from the one above it by a single hair rule (layout.md
+// section 7: hairlines divide kinds of content). Token: --rule-hair (minor zone
+// separator; same 1px hairline colour — no pixel change). The label is set in
+// the quiet mono margin style so it reads as the document talking, not a heading.
 function Zone({
   title,
   children,
@@ -259,7 +266,7 @@ function Zone({
   children: React.ReactNode;
 }) {
   return (
-    <section className="border-t border-hairline pt-4 first:border-t-0 first:pt-0">
+    <section className="[border-top:var(--rule-hair)] pt-4 first:border-t-0 first:pt-0">
       <h3 className="mb-2 font-mono text-[12.5px] font-medium uppercase tracking-wide text-ink-muted">
         {title}
       </h3>

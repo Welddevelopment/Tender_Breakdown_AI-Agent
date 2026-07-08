@@ -126,6 +126,36 @@ body {
   }
 }
 
+/* The forest arrival ground (design-language: upload/processing is a
+   forest-led moment). A canopy shadow falls from above onto a moss clearing;
+   the paper record forms inside it — the two-layer handoff made visible.
+   Abstract and greyscale-safe (the gradient is a lightness change, no literal
+   leaves), and static: the motion belongs to the record inking itself in. */
+.arrival-ground {
+  background:
+    radial-gradient(
+      130% 95% at 50% -25%,
+      rgba(22, 48, 31, 0.18),
+      rgba(29, 58, 43, 0.05) 55%,
+      transparent 75%
+    ),
+    var(--color-moss);
+  border: 1px solid var(--color-moss-line);
+}
+
+/* The upload workspace filing itself away as the matrix resolves in its place
+   (layout.md §9: the one showpiece plays in place, no page swap). Motion-safe:
+   reduced motion skips this phase entirely and lands on the composed matrix. */
+@media (prefers-reduced-motion: no-preference) {
+  .resolve-filing {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition:
+      opacity var(--motion-process) var(--ease-exit),
+      transform var(--motion-process) var(--ease-exit);
+  }
+}
+
 /* The landing-page hero resolve (landing-page-brief §6): the register settles
    into place once on load. Motion-safe only, so reduced motion and no-JS land on
    the final resolved state (the rows are simply already in place). Per-element
@@ -166,6 +196,11 @@ body {
   --color-pine-deep: #16301f;
   --color-moss: #e8ebdd;
   --color-moss-line: #cdd5bd;
+  /* One notch deeper than moss, for the app masthead band only (Stage 3): the
+     chrome grades masthead (moss-deep) -> title row (moss) -> paper matrix, so
+     the forest frame reads as depth receding into the record. Greyscale-safe:
+     the two moss steps differ in lightness, not just hue. */
+  --color-moss-deep: #dde3c9;
   --depth-sheet-pine: 0 18px 44px -18px rgba(22, 48, 31, 0.42);
   --depth-hero-sheet: 0 30px 76px -30px rgba(22, 48, 31, 0.6),
     0 12px 26px -20px rgba(33, 29, 23, 0.42);

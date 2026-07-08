@@ -72,7 +72,7 @@ export function RequirementDrawer({
         aria-modal="true"
         aria-label="Requirement detail"
         tabIndex={-1}
-        className={`absolute inset-y-0 right-0 flex w-full max-w-md flex-col bg-paper-raised shadow-xl outline-none transition-transform duration-150 ${
+        className={`absolute inset-y-0 right-0 flex w-full max-w-md flex-col bg-paper-raised shadow-[var(--depth-sheet)] outline-none transition-transform duration-[var(--motion-panel)] ease-[var(--ease-record)] ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >

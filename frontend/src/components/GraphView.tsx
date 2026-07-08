@@ -156,7 +156,7 @@ function RequirementNode({ data }: NodeProps) {
 
   return (
     <div
-      className={`surface-grain w-[256px] rounded-md bg-paper-raised px-3 py-2.5 shadow-[var(--depth-row)] transition-all duration-150 hover:shadow-[var(--depth-sheet)] ${
+      className={`surface-grain w-[256px] rounded-md bg-paper-raised px-3 py-2.5 shadow-[var(--depth-row)] transition-all duration-[var(--motion-fast)] ease-[var(--ease-record)] hover:shadow-[var(--depth-sheet)] ${
         gating
           ? "rounded-l-none border-y border-r border-l-2 border-hairline border-l-signal-oxblood-frame"
           : "border border-hairline"
@@ -251,7 +251,7 @@ function CriterionNode({ data }: NodeProps) {
 
   return (
     <div
-      className={`w-[184px] rounded-md border border-hairline bg-paper-recessed px-3 py-2.5 shadow-[var(--depth-pressed)] transition-all duration-150 ${
+      className={`w-[184px] rounded-md border border-hairline bg-paper-recessed px-3 py-2.5 shadow-[var(--depth-pressed)] transition-all duration-[var(--motion-fast)] ease-[var(--ease-record)] ${
         dim ? "opacity-35" : "opacity-100"
       } ${pinned ? "ring-2 ring-accent ring-offset-1 ring-offset-paper" : ""} ${
         introDelay != null ? styles.cardIn : ""

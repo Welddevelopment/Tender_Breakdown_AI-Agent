@@ -114,7 +114,10 @@ export function StructureView() {
   // the action the next item in the criterion walk needs, matching the matrix.
   const nextDrawerLabel = useMemo(() => {
     const ordered = orderByCriterion(requirements.filter(filter));
-    if (ordered.length === 0 || !selectedId) return "Back to matrix";
+    // "Back to matrix" was the old label but goNext never navigates to /review —
+  // it calls setSelectedId within the workspace. When there is nothing to step
+  // to, "Close" is honest: the natural next move is to dismiss the drawer.
+  if (ordered.length === 0 || !selectedId) return "Close";
     const idx = ordered.findIndex((r) => r.id === selectedId);
     return labelForRequirementAction(ordered[(idx + 1) % ordered.length]);
   }, [requirements, filter, selectedId]);
@@ -379,7 +382,7 @@ function Segmented({
             aria-selected={active}
             type="button"
             onClick={() => onChange(o.key)}
-            className={`rounded-[5px] px-3 py-1 font-mono text-[12px] uppercase tracking-wide transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-forest focus-visible:ring-offset-1 focus-visible:ring-offset-paper-recessed ${
+            className={`rounded-[5px] px-3 py-1 font-mono text-[12px] uppercase tracking-wide transition-colors duration-[var(--motion-fast)] ease-[var(--ease-standard)] focus:outline-none focus-visible:ring-2 focus-visible:ring-forest focus-visible:ring-offset-1 focus-visible:ring-offset-paper-recessed ${
               active
                 ? "bg-paper-raised text-ink shadow-[var(--depth-row)]"
                 : "text-ink-muted hover:text-ink"

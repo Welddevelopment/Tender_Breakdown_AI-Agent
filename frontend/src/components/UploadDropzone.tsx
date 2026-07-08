@@ -174,7 +174,14 @@ function mockReplayFrames(): { at: number; job: JobStatus }[] {
   });
 }
 
-export function UploadDropzone() {
+export function UploadDropzone({
+  onResolve,
+}: {
+  // The in-place resolve (layout.md §9): the parent workspace swaps itself for
+  // the mounted matrix, no page swap. When absent (an unexpected standalone
+  // mount) the component falls back to plain navigation.
+  onResolve?: () => void;
+} = {}) {
   const { loadTender } = useRequirements();
   const [stage, setStage] = useState<UploadStage>("idle");
   const [isDragging, setIsDragging] = useState(false);
@@ -196,15 +203,20 @@ export function UploadDropzone() {
   // The scripted replay must not keep firing into an unmounted component.
   useEffect(() => clearMockTimers, []);
 
-  // #2: on a live extraction, flow straight into the matrix after a brief reveal,
-  // so upload resolves into the worklist rather than dead-ending on a button. The
-  // demo replay deliberately holds instead — the presenter opens the matrix when
-  // the room is ready for it.
+  // #2: on a live extraction, flow straight into the matrix, so upload resolves
+  // into the worklist rather than dead-ending on a button. The delay is the
+  // choreography's, not a spinner's: long enough for the filed card to settle
+  // and the register's last rows to ink, then the in-place resolve takes over.
+  // The demo replay deliberately holds instead — the presenter opens the matrix
+  // when the room is ready for it.
   useEffect(() => {
     if (stage !== "done" || !isApiEnabled()) return;
-    const timer = window.setTimeout(() => router.push("/review"), 1800);
+    const timer = window.setTimeout(() => {
+      if (onResolve) onResolve();
+      else router.push("/review");
+    }, 1100);
     return () => window.clearTimeout(timer);
-  }, [stage, router]);
+  }, [stage, router, onResolve]);
 
   function stageFiles(fileList: FileList | null, append = true) {
     if (stage === "extracting") return;
@@ -337,10 +349,13 @@ export function UploadDropzone() {
       job?.requirementCount ?? (isApiEnabled() ? undefined : MOCK_REQUIREMENT_TOTAL);
     const dealBreakers =
       job?.dealBreakerCount ?? (isApiEnabled() ? undefined : MOCK_GATING_TOTAL);
-    // No auto-redirect: the presenter opens the matrix deliberately, on the
-    // forest button, when the room is ready for it.
+    // The filed card sits on the forest arrival ground: the record formed
+    // inside the guidance layer (the two-layer handoff, design-language). On
+    // the demo path there is no auto-resolve — the presenter opens the matrix
+    // deliberately, on the forest button, when the room is ready for it.
     return (
-      <div className="surface-grain mx-auto w-full max-w-xl rounded-2xl border border-hairline bg-paper-raised p-6 shadow-[var(--depth-sheet)]">
+      <div className="arrival-ground mx-auto w-full max-w-2xl rounded-2xl px-5 py-8 sm:px-8">
+        <div className="surface-grain mx-auto w-full max-w-xl rounded-2xl border border-hairline bg-paper-raised p-6 shadow-[var(--depth-sheet)]">
         <h2 className="text-base font-semibold text-ink">
           {isApiEnabled() ? "Requirements extracted" : "Sample compliance matrix ready"}
         </h2>
@@ -389,12 +404,22 @@ export function UploadDropzone() {
           )}
         </p>
         <div className="mt-5 flex items-center gap-4">
-          <Link
-            href="/review"
-            className="inline-flex items-center rounded-md bg-forest px-4 py-2 text-sm font-semibold text-paper transition-colors hover:bg-forest-hover"
-          >
-            {isApiEnabled() ? "View extracted requirements" : "View sample matrix"}
-          </Link>
+          {onResolve ? (
+            <button
+              type="button"
+              onClick={onResolve}
+              className="inline-flex items-center rounded-md bg-forest px-4 py-2 text-sm font-semibold text-paper shadow-[var(--depth-control)] transition-colors hover:bg-forest-hover"
+            >
+              {isApiEnabled() ? "Open the matrix" : "Open the sample matrix"}
+            </button>
+          ) : (
+            <Link
+              href="/review"
+              className="inline-flex items-center rounded-md bg-forest px-4 py-2 text-sm font-semibold text-paper shadow-[var(--depth-control)] transition-colors hover:bg-forest-hover"
+            >
+              {isApiEnabled() ? "View extracted requirements" : "View sample matrix"}
+            </Link>
+          )}
           <button
             type="button"
             onClick={reset}
@@ -402,6 +427,7 @@ export function UploadDropzone() {
           >
             Upload another
           </button>
+        </div>
         </div>
       </div>
     );
@@ -438,8 +464,10 @@ export function UploadDropzone() {
     // driven by the polled job, mock by the scripted replay — with the idle
     // screen's blank register held underneath, inking itself in as the
     // requirement count climbs: the empty form becoming the filled matrix.
+    // The whole moment stands on the forest arrival ground (a canopy shadow on
+    // moss): the guidance layer holds the paper record while it forms.
     return (
-      <div className="w-full">
+      <div className="arrival-ground w-full rounded-2xl px-5 py-8 sm:px-8">
         <div className="mx-auto max-w-xl">
           <ProcessingView
             job={job}
@@ -537,7 +565,7 @@ export function UploadDropzone() {
               <button
                 type="button"
                 onClick={startUpload}
-                className="shrink-0 rounded-md bg-forest px-4 py-2 text-sm font-semibold text-paper transition-colors hover:bg-forest-hover"
+                className="shrink-0 rounded-md bg-forest px-4 py-2 text-sm font-semibold text-paper shadow-[var(--depth-control)] transition-colors hover:bg-forest-hover"
               >
                 Read tender pack
               </button>

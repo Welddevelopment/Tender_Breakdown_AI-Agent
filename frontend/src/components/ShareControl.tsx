@@ -30,13 +30,59 @@ export function ShareControl() {
   const panelRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
+  // Moss-pulse gate (MOTION.md §Collaboration): IDs currently in their pulse window.
+  // State (not ref) so it is safe to read during render. Refs below are private to
+  // event handlers — they track which IDs are already seen (initial load snapshot).
+  const [pulsingMemberIds, setPulsingMemberIds] = useState<ReadonlySet<string>>(
+    new Set()
+  );
+  // IDs present in the initial listMembers call — chips from this load must never pulse.
+  const initialMemberIdsRef = useRef<Set<string>>(new Set());
+  const membersLoadedRef = useRef(false);
+
   const enabled = isApiEnabled() && !!tenderId;
 
   useEffect(() => {
     if (!enabled || !tenderId) return;
-    listMembers(tenderId).then(setMembers).catch(() => setMembers([]));
+    listMembers(tenderId)
+      .then((m) => {
+        setMembers(m);
+        // Snapshot initial member IDs once — chips from this load are pre-existing
+        // and must never pulse.
+        if (!membersLoadedRef.current) {
+          membersLoadedRef.current = true;
+          initialMemberIdsRef.current = new Set(m.map((mem) => mem.id));
+        }
+      })
+      .catch(() => setMembers([]));
     getTeams().then(setTeams).catch(() => setTeams([]));
   }, [enabled, tenderId]);
+
+  // Mark newly-added member IDs for a one-time moss-pulse, then clear after the
+  // animation window (--motion-panel 240ms + buffer). Called from async handlers,
+  // not during render, so ref access here is safe.
+  function markNewMembers(nextMembers: TenderMember[]) {
+    const newIds = nextMembers
+      .map((m) => m.id)
+      .filter((id) => !initialMemberIdsRef.current.has(id));
+    if (newIds.length === 0) return;
+    setPulsingMemberIds((prev) => {
+      const next = new Set(prev);
+      newIds.forEach((id) => next.add(id));
+      return next;
+    });
+    window.setTimeout(() => {
+      setPulsingMemberIds((prev) => {
+        const next = new Set(prev);
+        newIds.forEach((id) => {
+          next.delete(id);
+          // Promote to initialIds so reopening the dialog never re-pulses the chip.
+          initialMemberIdsRef.current.add(id);
+        });
+        return next;
+      });
+    }, 280); // slightly past --motion-panel (240ms) so animation completes cleanly
+  }
 
   async function shareWithTeam(team: Team) {
     if (!tenderId || teamBusy) return;
@@ -45,7 +91,9 @@ export function ShareControl() {
     setSuccess(null);
     try {
       await shareTenderWithTeam(tenderId, team.id);
-      setMembers(await listMembers(tenderId));
+      const nextMembers = await listMembers(tenderId);
+      markNewMembers(nextMembers);
+      setMembers(nextMembers);
       setSuccess(`Shared with ${team.name}.`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Couldn't share with the team.");
@@ -99,6 +147,7 @@ export function ShareControl() {
     try {
       const nextMembers = await shareTender(tenderId, email.trim());
       const sharedWith = email.trim();
+      markNewMembers(nextMembers);
       setMembers(nextMembers);
       setEmail("");
       setSuccess(`Shared with ${sharedWith}.`);
@@ -184,10 +233,13 @@ export function ShareControl() {
             <ul className="mb-4 flex flex-col gap-2">
               {members.map((m) => {
                 const c = collaboratorFor(m);
+                // Pulse once when a newly-invited member chip first appears.
+                // Chips present in the initial listMembers response never pulse.
+                const isNew = pulsingMemberIds.has(m.id);
                 return (
                   <li
                     key={m.id}
-                    className="flex items-center gap-2.5 rounded-md border border-hairline bg-paper/80 px-2.5 py-2 text-sm"
+                    className={`flex items-center gap-2.5 rounded-md border border-hairline bg-paper/80 px-2.5 py-2 text-sm${isNew ? " moss-pulse" : ""}`}
                   >
                     <span
                       aria-hidden="true"

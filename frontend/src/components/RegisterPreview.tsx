@@ -67,7 +67,10 @@ export function RegisterPreview({
           return (
             <li
               key={i}
-              className="grid grid-cols-[46px_30px_1fr] items-center gap-x-3 border-t border-hairline px-2.5 py-3.5 first:border-t-0"
+              // Column rhythm matches the real matrix grid (ref 64 · bead 22 ·
+              // line), so the sketch resolves into the register as a near
+              // overlay rather than a reflow.
+              className="grid grid-cols-[64px_22px_1fr] items-center gap-x-3 border-t border-hairline px-2.5 py-3.5 first:border-t-0"
             >
               {/* the register margin: blank rule until read, then the clause
                   ref's place takes accent — traceable to source */}

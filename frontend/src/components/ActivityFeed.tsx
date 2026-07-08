@@ -4,7 +4,7 @@
 // backend's append-only activity timeline; mock/frozen tenders derive a small
 // personal log from each requirement's latest decision.
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRequirements } from "@/context/RequirementsContext";
 import { useAuth } from "@/context/AuthContext";
 import {
@@ -50,6 +50,15 @@ export function ActivityFeed() {
     tenderId: string;
     events: TenderActivityEvent[];
   } | null>(null);
+
+  // Moss-pulse gate (MOTION.md §Collaboration): IDs currently in their pulse window.
+  // State (not ref) so it is safe to read during render. Refs below are private to
+  // effects — they track which IDs are already seen and whether the gate is open.
+  const [pulsingIds, setPulsingIds] = useState<ReadonlySet<string>>(new Set());
+  // IDs visible at mount or on the first server load — these are stale and must never pulse.
+  const seenIdsRef = useRef<Set<string>>(new Set());
+  // Opens once the initial server batch is absorbed; only after that do new IDs pulse.
+  const liveGateRef = useRef(false);
 
   const requirementsById = useMemo(
     () => new Map(requirements.map((req) => [req.id, req])),
@@ -104,6 +113,46 @@ export function ActivityFeed() {
   const entries =
     serverEntries && serverEntries.length > 0 ? serverEntries : derivedEntries;
 
+  // Seed seenIds with whatever entries are visible at initial mount (derived from
+  // local decision state). These are pre-existing and must never pulse.
+  // Intentional empty-deps: one-time snapshot; entries closure value at mount is correct.
+  useEffect(() => {
+    entries.forEach((e) => seenIdsRef.current.add(e.id));
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Each time server activity arrives: on first call (gate closed) absorb the full
+  // batch without pulsing — those are the initial stale load. On subsequent calls
+  // (gate open) new IDs are not yet in seenIds so they pulse; this effect then
+  // marks them seen and schedules cleanup after --motion-panel (240ms) + buffer.
+  // Intentional [activity] only: entries is derived from activity so closure is fresh.
+  useEffect(() => {
+    if (!activity) return;
+    if (!liveGateRef.current) {
+      // First server load: absorb without pulsing, open the gate.
+      entries.forEach((e) => seenIdsRef.current.add(e.id));
+      liveGateRef.current = true;
+      return;
+    }
+    const newIds = entries
+      .map((e) => e.id)
+      .filter((id) => !seenIdsRef.current.has(id));
+    entries.forEach((e) => seenIdsRef.current.add(e.id));
+    if (newIds.length === 0) return;
+    setPulsingIds((prev) => {
+      const next = new Set(prev);
+      newIds.forEach((id) => next.add(id));
+      return next;
+    });
+    const t = window.setTimeout(() => {
+      setPulsingIds((prev) => {
+        const next = new Set(prev);
+        newIds.forEach((id) => next.delete(id));
+        return next;
+      });
+    }, 280); // outlasts --motion-panel (240ms) so animation completes cleanly
+    return () => window.clearTimeout(t);
+  }, [activity]); // eslint-disable-line react-hooks/exhaustive-deps
+
   if (entries.length === 0) return null;
 
   return (
@@ -136,8 +185,14 @@ export function ActivityFeed() {
               entry.text.length > 64
                 ? `${entry.text.slice(0, 64)}...`
                 : entry.text;
+            // Pulse once when this entry arrives after the live gate opens.
+            // Pre-existing entries (seeded at mount or on first server load) never pulse.
+            const isNew = pulsingIds.has(entry.id);
             return (
-              <li key={entry.id} className="flex items-start gap-2.5">
+              <li
+                key={entry.id}
+                className={`flex items-start gap-2.5${isNew ? " moss-pulse" : ""}`}
+              >
                 <span
                   aria-hidden="true"
                   className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold text-paper"

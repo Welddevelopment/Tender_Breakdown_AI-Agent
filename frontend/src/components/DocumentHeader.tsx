@@ -74,6 +74,16 @@ export function DocumentHeader({
       <div className="border-b border-moss-line bg-moss">
         <div className="mx-auto flex max-w-[1160px] flex-wrap items-center justify-between gap-x-6 gap-y-3 px-6 py-4">
           <div className="flex min-w-0 flex-col gap-1">
+            {/* The nameplate running head (design-language device 1): faux
+                small-caps by tracking, since Plex Mono has no true small-caps.
+                With the Fraunces title and the mono reference line below it,
+                the title zone reads as an official letterhead. */}
+            <span
+              aria-hidden
+              className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-muted"
+            >
+              Bidframe
+            </span>
             <h1 className="font-serif text-2xl font-semibold leading-tight tracking-tight text-ink">
               {title}
             </h1>
@@ -100,7 +110,7 @@ export function DocumentHeader({
               <button
                 type="button"
                 onClick={triage.onNext}
-                className="shrink-0 rounded-md bg-forest px-4 py-1.5 text-sm font-semibold text-paper transition-colors hover:bg-forest-hover"
+                className="shrink-0 rounded-md bg-forest px-4 py-1.5 text-sm font-semibold text-paper shadow-[var(--depth-control)] transition-colors hover:bg-forest-hover"
               >
                 {triage.nextLabel}
               </button>

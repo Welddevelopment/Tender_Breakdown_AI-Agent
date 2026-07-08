@@ -1,6 +1,18 @@
 # Bidframe Motion System
 
-Local planning draft. Created 2026-07-05. No commit or push has been made.
+Local planning draft. Created 2026-07-05.
+
+> **Adopted 2026-07-08 (Stage 3)** into `src/app/globals.css` with two recorded
+> departures: (1) `--ease-stamp` keeps the shipped `cubic-bezier(0.34, 1.56,
+> 0.64, 1)` overshoot rather than this doc's softer 1.2 — the stamp settle was
+> already live and approved; (2) reduced motion keeps the codebase's
+> composed-end-state pattern (animations opt in via
+> `prefers-reduced-motion: no-preference` gates and base classes carry the
+> resting state) instead of the global 1ms blanket below — the blanket risks
+> running keyframes that were designed never to start. The token override under
+> `reduce` still collapses all `--motion-*` durations to 1ms, so token-driven
+> timing degrades automatically. A `--ease-settle` alias names the codebase's
+> dominant quint-out `cubic-bezier(0.22, 1, 0.36, 1)`.
 
 This document defines motion and microinteractions for the whole Bidframe
 frontend: the app, landing page, and `/demo`. It should be read with
