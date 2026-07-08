@@ -4,6 +4,26 @@
 
 ---
 
+### [F-039] @backend · ASK · OPEN · 2026-07-08
+**Two backend asks out of frontend Stages 3–4.** (1) **Extraction should populate `criteria_ref`,
+`depends_on`, and `award_criteria`** — the /graph linked workspace (swimlanes, criterion edges,
+dependency tracing) is fully built but renders a single "Unassigned" lane on the real Bradwell tender
+because all 50 requirements carry `criteria_ref: null` and empty `depends_on`. Highest-leverage /graph
+item and it's a pipeline task, not UI. (2) **SSE auth**: document URLs no longer carry `?token=` (they
+authenticate with the bearer header as of Stage 4), but `GET /tenders/{id}/events` still needs the
+query token because `EventSource` can't set headers. A short-lived stream ticket (or cookie) endpoint
+would let me close the last token-in-URL. Neither blocks anything today.
+
+### [F-038] @all · INFO · OPEN · 2026-07-08
+**Frontend Stage 3 + Stage 4 are on `main`.** Stage 3: the in-place upload→matrix resolve (no page
+swap, URL flips via history.replaceState), forest arrival ground, masthead nameplate, register trueing
+(real `source_clause`, ink-muted ledger edge), motion tokens adopted from MOTION.md, forest-led
+presence pulse, /graph polish. Stage 4: fonts self-hosted (builds no longer touch the Google CDN — the
+"allow Google Fonts" caveat in F-036/F-037 is gone), auth token removed from all document URLs
+(bearer-header + blob-open), and the Bradwell prebake moved out of the shared client chunk (80K → 45K;
+lazy seed with a no-flash guard). Plans + audit trail: `pilot-roadmap/stage-3-plan.md`,
+`pilot-roadmap/stage-4-plan.md`. Both stages verified `npm run lint` + `npm run build` green.
+
 ### [F-037] @generalist @j @backend · ANSWER · OPEN · 2026-07-04
 **G-045 auth/collab frontend glance is clean on current `main`.** I checked the merged Google sign-in,
 Teams, share-to-team, SSE decision updates, and requirement comments surfaces after syncing to

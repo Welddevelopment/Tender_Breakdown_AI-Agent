@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 import type { Requirement } from "@/types/requirement";
+import { openAuthedDocument } from "@/lib/api";
 import {
   hasPdfSource,
   sourceDocumentKind,
@@ -55,7 +57,14 @@ export function SourceVerifyOverlay({
   const sourceKind = sourceKindLabel(requirement);
   const hasRenderableSource = Boolean(pdfUrl || rawDocUrl);
   // "Open the page" escape hatch: the raw PDF at the right page, in a new tab.
-  const openPageHref = pdfUrl ? `${pdfUrl}#page=${requirement.source_page}` : "";
+  // A click handler rather than an <a>: the document URL carries no token, so
+  // the new tab is fed an authenticated blob (openAuthedDocument).
+  function openPage() {
+    if (!pdfUrl) return;
+    void openAuthedDocument(pdfUrl, requirement.source_page).catch((err) =>
+      toast.error(err instanceof Error ? err.message : "Couldn't open the page.")
+    );
+  }
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-3 sm:p-6">
@@ -121,15 +130,14 @@ export function SourceVerifyOverlay({
               page={requirement.source_page}
               isPdf={isPdf}
             />
-            {openPageHref && (
-              <a
-                href={openPageHref}
-                target="_blank"
-                rel="noopener noreferrer"
+            {pdfUrl && (
+              <button
+                type="button"
+                onClick={openPage}
                 className="mt-3 inline-block font-mono text-xs text-forest transition-colors hover:text-forest-hover hover:underline"
               >
                 Open the page
-              </a>
+              </button>
             )}
           </div>
         </div>

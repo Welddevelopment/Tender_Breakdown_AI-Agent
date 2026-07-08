@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Fraunces, IBM_Plex_Mono, Newsreader } from "next/font/google";
 import localFont from "next/font/local";
 import { Toaster } from "sonner";
 import "./globals.css";
@@ -9,23 +8,33 @@ import { SITE_URL } from "@/lib/site";
 
 // Bidframe type system (DESIGN-SYSTEM.md §11): Fraunces headings, Chillax body,
 // IBM Plex Mono for evidence and source references.
-const fraunces = Fraunces({
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
+//
+// All three Google Fonts are self-hosted as woff2 under src/fonts/ so that the
+// production build never depends on the Google CDN (which can hang or be blocked
+// in CI / restricted networks). Same variable names, weights, and display strategy
+// as before — no CSS or component changes required.
+const fraunces = localFont({
+  src: [
+    // Fraunces is a variable font; one file covers the full 500–700 weight range.
+    { path: "../fonts/Fraunces-500-700.woff2", weight: "500 700", style: "normal" },
+  ],
   variable: "--font-head",
   display: "swap",
 });
 
-const newsreader = Newsreader({
-  subsets: ["latin"],
-  weight: ["400"],
+const newsreader = localFont({
+  src: [
+    { path: "../fonts/Newsreader-400.woff2", weight: "400", style: "normal" },
+  ],
   variable: "--font-hero",
   display: "swap",
 });
 
-const plexMono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
+const plexMono = localFont({
+  src: [
+    { path: "../fonts/IBMPlexMono-400.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/IBMPlexMono-500.woff2", weight: "500", style: "normal" },
+  ],
   variable: "--font-mono-ibm",
   display: "swap",
 });

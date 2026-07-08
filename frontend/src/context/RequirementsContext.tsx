@@ -13,7 +13,7 @@ import type {
   Tender,
 } from "@/types/requirement";
 import { useAuth } from "@/context/AuthContext";
-import bradwellPrebake from "@/data/bradwell-prebake.json";
+import { loadDemoTender } from "@/data/demo-tender";
 import {
   draftAnswers as apiDraftAnswers,
   getTender,
@@ -30,12 +30,13 @@ import {
 } from "@/lib/answer-store";
 import { compareWeakestFirst, hasDraft } from "@/lib/answers";
 
-// The no-backend demo default: the same real Bradwell tender the /showcase runs
-// on, so every app surface (Matrix / Bid / Graph) shows one coherent tender until
-// a live one is loaded — a judge clicking between tabs never jumps to a different
-// sample. Live mode never renders this: the NoTenderLoaded gate intercepts until
-// a real tender is fetched.
-export const DEMO_DEFAULT_TENDER = bradwellPrebake as unknown as Tender;
+// The no-backend demo default is the same real Bradwell tender the /showcase
+// runs on, so every app surface (Matrix / Bid / Graph) shows one coherent
+// tender until a live one is loaded. It is LAZY now (loadDemoTender): the
+// prebake JSON used to be imported at module top level, which shipped the demo
+// tender in this provider's chunk on every authed route (frontend-jawad.md A2).
+// Live mode never renders it: the NoTenderLoaded gate intercepts until a real
+// tender is fetched.
 
 const SAVE_FAILED =
   "Couldn't save that change to the server. It shows here, but may not have been kept. Check your connection, then redo it.";
@@ -60,6 +61,10 @@ export interface DecisionSnapshot {
 
 interface RequirementsContextValue {
   requirements: Requirement[];
+  // True only for the moment the mock demo seed is still lazy-loading (no
+  // backend, no frozen tender). Work surfaces hold a calm shell instead of
+  // mounting empty — which would also burn their one-shot entrance choreography.
+  seeding: boolean;
   capabilityDocs: CapabilityDoc[];
   sourceDocs: SourceDoc[];
   awardCriteria: AwardCriterion[];
@@ -105,25 +110,67 @@ export function RequirementsProvider({
   // with no backend or API key, independent of the app's live/mock state.
   initialTender?: Tender;
 }) {
-  // Seeded from the mock so the app works with no backend (demo-safe default),
-  // or from initialTender when a caller freezes it on a specific tender.
-  // loadTender() swaps in a real tender when the API is wired up.
-  const seed = initialTender ?? DEMO_DEFAULT_TENDER;
+  // Seeded from initialTender synchronously when a caller freezes the provider
+  // on a specific tender (demo/pitch/pack pages — no flash there), or lazily
+  // from the demo prebake in mock mode (the effect below), so the JSON stays
+  // out of the shared bundle. loadTender() swaps in a real tender when the API
+  // is wired up.
+  const [seed, setSeed] = useState<Tender | null>(initialTender ?? null);
   const [requirements, setRequirements] = useState<Requirement[]>(
-    () => seed.requirements
+    () => initialTender?.requirements ?? []
   );
   const [capabilityDocs, setCapabilityDocs] = useState<CapabilityDoc[]>(
-    () => seed.capability_docs ?? []
+    () => initialTender?.capability_docs ?? []
   );
   const [sourceDocs, setSourceDocs] = useState<SourceDoc[]>(
-    () => seed.source_docs ?? []
+    () => initialTender?.source_docs ?? []
   );
   // The tender's published award criteria (name + weight, #27) — the matrix
   // lens and the graph both read real names + weights from here. Empty until
   // the tender publishes them; refreshed alongside requirements on load/draft.
   const [awardCriteria, setAwardCriteria] = useState<AwardCriterion[]>(
-    () => seed.award_criteria ?? []
+    () => initialTender?.award_criteria ?? []
   );
+
+  // Mock mode with no frozen tender: pull the demo seed the moment the provider
+  // hydrates (the chunk fetch is the price of the lighter first load; it starts
+  // immediately, not on user action). Live mode skips this — NoTenderLoaded
+  // gates until a real tender is fetched.
+  useEffect(() => {
+    if (seed || isApiEnabled()) return;
+    let cancelled = false;
+    loadDemoTender().then((tender) => {
+      if (!cancelled) setSeed(tender);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [seed]);
+
+  // Adopt the lazy seed when it lands: the four data states fill from it, with
+  // any locally-persisted answer edits merged in (this replaces the old
+  // synchronous mount merge, which assumed the seed was already in state).
+  // Never runs for a frozen initialTender (already seeded synchronously) and
+  // never overwrites a live tender that loaded first.
+  const seedAdoptedRef = useRef(false);
+  useEffect(() => {
+    if (!seed || initialTender || seedAdoptedRef.current) return;
+    seedAdoptedRef.current = true;
+    setRequirements((prev) => {
+      if (prev.length > 0) return prev; // a live tender won the race
+      const stored = loadAnswerStore(seed.tender_id);
+      return Object.keys(stored).length > 0
+        ? mergeStoreIntoRequirements(seed.requirements, stored)
+        : seed.requirements;
+    });
+    setCapabilityDocs((prev) =>
+      prev.length > 0 ? prev : (seed.capability_docs ?? [])
+    );
+    setSourceDocs((prev) => (prev.length > 0 ? prev : (seed.source_docs ?? [])));
+    setAwardCriteria((prev) =>
+      prev.length > 0 ? prev : (seed.award_criteria ?? [])
+    );
+  }, [seed, initialTender]);
   // The live tender currently loaded (null on the mock default). Needed so the
   // autofill action knows which tender to draft against.
   const [tenderId, setTenderId] = useState<string | null>(null);
@@ -134,8 +181,12 @@ export function RequirementsProvider({
   // answers (localStorage; there's no backend endpoint for answer text yet). Key
   // by the live tender when one is loaded, else the seed's id so the mock/demo
   // build keeps edits across a refresh. A frozen /demo showcase (initialTender)
-  // stays read-only: null disables persistence entirely.
-  const persistKey = tenderId ?? (initialTender ? null : seed.tender_id);
+  // stays read-only, and there is no key while the lazy seed is still loading
+  // (requirements empty) — otherwise the persist effect below would overwrite
+  // the stored edits with an empty projection before adoption merges them back.
+  const persistKey =
+    tenderId ??
+    (initialTender || requirements.length === 0 ? null : (seed?.tender_id ?? null));
 
   function updateRequirement(id: string, patch: Partial<Requirement>) {
     setRequirements((prev) =>
@@ -190,19 +241,9 @@ export function RequirementsProvider({
     }
   }, [initialTender]);
 
-  // Restore locally-saved answer edits for the mock/demo default. The live app
-  // restores through loadTender (keyed by the live tender id) instead, and a
-  // frozen /demo showcase stays read-only. Runs once on mount.
-  useEffect(() => {
-    if (initialTender || isApiEnabled()) return;
-    const stored = loadAnswerStore(seed.tender_id);
-    if (Object.keys(stored).length === 0) return;
-    // Synchronous merge over the seed on mount; deps are intentionally empty so
-    // it runs exactly once (mirrors the sessionStorage restore above).
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setRequirements((prev) => mergeStoreIntoRequirements(prev, stored));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // (Locally-saved answer edits for the mock/demo default are merged when the
+  // lazy seed is adopted, above. The live app restores through loadTender,
+  // keyed by the live tender id, and a frozen /demo showcase stays read-only.)
 
   // Persist the human-mutable subset (edited/written answers + gap answers)
   // whenever requirements change. No-op when persistence is disabled (frozen
@@ -582,10 +623,11 @@ export function RequirementsProvider({
     <RequirementsContext.Provider
       value={{
         requirements,
+        seeding: !initialTender && !isApiEnabled() && seed === null,
         capabilityDocs,
         sourceDocs,
         awardCriteria,
-        title: seed.title,
+        title: seed?.title ?? "",
         tenderId,
         drafting,
         updateRequirement,

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { docRequestHeaders } from "@/lib/api";
 import type { MatchKind } from "@/lib/text-match";
 import { locate } from "@/lib/text-match";
 
@@ -84,7 +85,8 @@ function getCachedSheet(url: string, isCsv: boolean, wantSheet: string | null): 
   let entry = sheetCache.get(key);
   if (!entry) {
     entry = (async () => {
-      const res = await fetch(url);
+      // Bearer header for live-backend files; static /demo copies need none.
+      const res = await fetch(url, { headers: docRequestHeaders(url) });
       if (!res.ok) throw new Error(`could not fetch ${url}: ${res.status}`);
       if (isCsv) {
         const text = await res.text();

@@ -11,7 +11,8 @@ import {
   type JobStatus,
 } from "@/lib/api";
 import { useRequirements } from "@/context/RequirementsContext";
-import { DEMO_DEFAULT_TENDER } from "@/context/RequirementsContext";
+import { loadDemoTender } from "@/data/demo-tender";
+import type { Tender } from "@/types/requirement";
 import {
   sourceDocumentKindFromFilename,
   sourceKindShortLabel,
@@ -139,29 +140,30 @@ async function pollJob(
 // the live path uses. Hand-timed like a cue sheet, ~8 seconds end to end.
 // Clause references in the messages are real ones from the sample tender —
 // the same Bradwell seed the matrix opens on, so the numbers the replay lands
-// on are exactly the numbers the judge then sees in the register.
-const DEMO_SEED = DEMO_DEFAULT_TENDER.requirements;
-const MOCK_REQUIREMENT_TOTAL = DEMO_SEED.length;
-const MOCK_GATING_TOTAL = DEMO_SEED.filter((r) => r.is_gating).length;
-const MOCK_PAGES = Math.max(...DEMO_SEED.map((r) => r.source_page), 1);
-const MOCK_SECTIONS = 12;
-const MOCK_CLAUSE_A = DEMO_SEED.find((r) => r.is_gating) ?? DEMO_SEED[0];
-const MOCK_CLAUSE_B = DEMO_SEED[Math.floor(DEMO_SEED.length / 2)] ?? MOCK_CLAUSE_A;
-
-function mockReplayFrames(): { at: number; job: JobStatus }[] {
-  const req = (share: number) => Math.round(MOCK_REQUIREMENT_TOTAL * share);
+// on are exactly the numbers the judge then sees in the register. The tender
+// arrives as an argument (lazy-loaded at replay start) so the prebake JSON
+// stays out of the upload route's bundle (frontend-jawad.md A2).
+function mockReplayFrames(demoTender: Tender): { at: number; job: JobStatus }[] {
+  const seed = demoTender.requirements;
+  const total = seed.length;
+  const gatingTotal = seed.filter((r) => r.is_gating).length;
+  const pages = Math.max(...seed.map((r) => r.source_page), 1);
+  const sections = 12;
+  const clauseA = seed.find((r) => r.is_gating) ?? seed[0];
+  const clauseB = seed[Math.floor(seed.length / 2)] ?? clauseA;
+  const req = (share: number) => Math.round(total * share);
   const cues: [number, Partial<JobStatus>][] = [
     [0, { stage: "reading", progress: 0.04, message: "Opening the tender…" }],
-    [700, { progress: 0.1, pageCount: MOCK_PAGES, message: `Reading ${MOCK_PAGES} pages…` }],
-    [1450, { stage: "chunking", progress: 0.18, sectionCount: MOCK_SECTIONS, message: `Splitting into ${MOCK_SECTIONS} sections…` }],
-    [2150, { stage: "extract", progress: 0.28, chunkDone: 2, chunkTotal: MOCK_SECTIONS, requirementCount: req(0.15), message: `Reading ${MOCK_CLAUSE_A.source_clause} on page ${MOCK_CLAUSE_A.source_page}…` }],
+    [700, { progress: 0.1, pageCount: pages, message: `Reading ${pages} pages…` }],
+    [1450, { stage: "chunking", progress: 0.18, sectionCount: sections, message: `Splitting into ${sections} sections…` }],
+    [2150, { stage: "extract", progress: 0.28, chunkDone: 2, chunkTotal: sections, requirementCount: req(0.15), message: `Reading ${clauseA.source_clause} on page ${clauseA.source_page}…` }],
     [2850, { progress: 0.4, chunkDone: 4, requirementCount: req(0.3), message: "Extracting mandatory requirements…" }],
-    [3550, { progress: 0.52, chunkDone: 7, requirementCount: req(0.55), message: `Reading ${MOCK_CLAUSE_B.source_clause} on page ${MOCK_CLAUSE_B.source_page}…` }],
+    [3550, { progress: 0.52, chunkDone: 7, requirementCount: req(0.55), message: `Reading ${clauseB.source_clause} on page ${clauseB.source_page}…` }],
     [4250, { progress: 0.64, chunkDone: 10, requirementCount: req(0.75), message: "Extracting service-level requirements…" }],
-    [4950, { progress: 0.74, chunkDone: MOCK_SECTIONS, requirementCount: req(0.9), message: "Last section read…" }],
-    [5650, { stage: "reconcile", progress: 0.82, requirementCount: MOCK_REQUIREMENT_TOTAL, message: "Merging duplicates across sections…" }],
+    [4950, { progress: 0.74, chunkDone: sections, requirementCount: req(0.9), message: "Last section read…" }],
+    [5650, { stage: "reconcile", progress: 0.82, requirementCount: total, message: "Merging duplicates across sections…" }],
     [6350, { stage: "graph", progress: 0.89, dealBreakerCount: 1, message: "Flagging deal-breakers…" }],
-    [6950, { progress: 0.93, dealBreakerCount: MOCK_GATING_TOTAL, message: "Mapping award criteria…" }],
+    [6950, { progress: 0.93, dealBreakerCount: gatingTotal, message: "Mapping award criteria…" }],
     [7550, { stage: "autofill", progress: 0.97, message: "Drafting first answers from your evidence…" }],
     [8250, { status: "done", stage: "done", progress: 1, message: "Compliance matrix ready." }],
   ];
@@ -262,10 +264,12 @@ export function UploadDropzone({
     setStage("extracting");
 
     // No API configured → the scripted replay drives the same ProcessingView,
-    // ending on the sample tender's real counts.
+    // ending on the sample tender's real counts. The demo tender lazy-loads
+    // here (a same-origin chunk, milliseconds) so it never rides the bundle.
     if (!isApiEnabled()) {
       clearMockTimers();
-      for (const { at, job: frame } of mockReplayFrames()) {
+      const demoTender = await loadDemoTender();
+      for (const { at, job: frame } of mockReplayFrames(demoTender)) {
         mockTimersRef.current.push(
           window.setTimeout(() => {
             setJob(frame);
@@ -342,13 +346,11 @@ export function UploadDropzone({
   }
 
   if (stage === "done") {
-    // The mock replay's final frame carries the sample counts, so both paths
-    // read their totals off the job; the constants are only a belt-and-braces
-    // fallback for the demo build.
-    const found =
-      job?.requirementCount ?? (isApiEnabled() ? undefined : MOCK_REQUIREMENT_TOTAL);
-    const dealBreakers =
-      job?.dealBreakerCount ?? (isApiEnabled() ? undefined : MOCK_GATING_TOTAL);
+    // The mock replay's final frame always carries the sample counts (the last
+    // cue sets requirementCount and dealBreakerCount), so both paths read
+    // their totals straight off the job.
+    const found = job?.requirementCount;
+    const dealBreakers = job?.dealBreakerCount;
     // The filed card sits on the forest arrival ground: the record formed
     // inside the guidance layer (the two-layer handoff, design-language). On
     // the demo path there is no auto-resolve — the presenter opens the matrix

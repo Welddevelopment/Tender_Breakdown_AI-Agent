@@ -46,7 +46,7 @@ function useIsWide(): boolean {
 }
 
 export function StructureView() {
-  const { requirements, tenderId, approve, editRequirement, flag } =
+  const { requirements, seeding, tenderId, approve, editRequirement, flag } =
     useRequirements();
   const router = useRouter();
 
@@ -157,6 +157,10 @@ export function StructureView() {
       />
     );
   }
+
+  // Mock demo seed still lazy-loading (milliseconds): hold an empty shell so
+  // the workspace never flashes a false "no requirements" state.
+  if (seeding) return null;
 
   const paneProps = {
     filter,

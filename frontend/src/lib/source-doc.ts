@@ -154,7 +154,7 @@ const DEMO_OFFICE_FILES: Record<string, string> = {
 
 // The source DOCX/XLSX/CSV URL for the claim/source verification view — the Office
 // sibling of sourceDocPdfUrl. A live tender streams the real file from the backend
-// (owner-scoped, token as a query param, via the generic /source endpoint); the
+// (owner-scoped, bearer-header auth via docRequestHeaders, through the generic /source endpoint); the
 // mock/demo build falls back to a static public copy for a known demo fixture.
 // Null when this requirement isn't Office-sourced or no copy is available.
 export function sourceDocRawUrl(

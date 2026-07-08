@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { PDFDocumentProxy } from "pdfjs-dist";
+import { docRequestHeaders } from "@/lib/api";
 import { locate, type MatchKind } from "@/lib/text-match";
 
 // Loaded documents, cached for the session keyed by URL, so the persistent
@@ -18,7 +19,12 @@ function getCachedDocument(
 ): Promise<PDFDocumentProxy> {
   let entry = documentCache.get(url);
   if (!entry) {
-    entry = pdfjs.getDocument({ url }).promise;
+    // Live-backend documents authenticate with the bearer header (the URL
+    // carries no token any more); static /demo copies get no headers.
+    entry = pdfjs.getDocument({
+      url,
+      httpHeaders: docRequestHeaders(url),
+    }).promise;
     entry.catch(() => documentCache.delete(url));
     documentCache.set(url, entry);
   }

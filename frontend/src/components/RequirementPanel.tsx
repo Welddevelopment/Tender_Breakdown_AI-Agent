@@ -11,7 +11,8 @@ import { CategoryTag } from "./CategoryTag";
 import { useRequirements } from "@/context/RequirementsContext";
 import { useAuth } from "@/context/AuthContext";
 import { actorLabel } from "@/lib/collaborators";
-import { isApiEnabled, tenderPdfPageUrl } from "@/lib/api";
+import { isApiEnabled, openAuthedDocument, tenderPdfPageUrl } from "@/lib/api";
+import { toast } from "sonner";
 import {
   hasPdfSource,
   requirementPdfUrl,
@@ -473,14 +474,21 @@ function SourceRef({ requirement }: { requirement: Requirement }) {
         </p>
       )}
       {pdfUrl && (
-        <a
-          href={pdfUrl}
-          target="_blank"
-          rel="noopener noreferrer"
+        // A click handler rather than an <a>: the document URL carries no
+        // token, so the new tab is fed an authenticated blob.
+        <button
+          type="button"
+          onClick={() =>
+            void openAuthedDocument(pdfUrl).catch((err) =>
+              toast.error(
+                err instanceof Error ? err.message : "Couldn't open the page."
+              )
+            )
+          }
           className="mt-1.5 inline-block text-forest transition-colors hover:text-forest-hover hover:underline"
         >
           Open the page
-        </a>
+        </button>
       )}
     </div>
   );

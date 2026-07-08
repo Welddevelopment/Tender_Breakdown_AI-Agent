@@ -166,6 +166,7 @@ export function MatrixView({
 }) {
   const {
     requirements,
+    seeding,
     tenderId,
     sourceDocs,
     approve,
@@ -605,6 +606,18 @@ export function MatrixView({
         <AppMain>
           <NoTenderLoaded />
         </AppMain>
+      </>
+    );
+  }
+
+  // Mock demo seed still lazy-loading (milliseconds): hold a calm shell so the
+  // matrix mounts once, with data — mounting empty would burn the one-shot
+  // staged entrance and tick the summary counters against zero rows.
+  if (seeding) {
+    return (
+      <>
+        <DocumentHeader title={title} />
+        <AppMain>{null}</AppMain>
       </>
     );
   }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { docRequestHeaders } from "@/lib/api";
 import type { MatchKind } from "@/lib/text-match";
 import { highlightExcerptInHtml } from "@/lib/dom-highlight";
 
@@ -31,7 +32,11 @@ function getCachedHtml(url: string): Promise<string> {
   let entry = htmlCache.get(url);
   if (!entry) {
     entry = (async () => {
-      const [mammoth, res] = await Promise.all([import("mammoth"), fetch(url)]);
+      const [mammoth, res] = await Promise.all([
+        import("mammoth"),
+        // Bearer header for live-backend files; static /demo copies need none.
+        fetch(url, { headers: docRequestHeaders(url) }),
+      ]);
       if (!res.ok) throw new Error(`could not fetch ${url}: ${res.status}`);
       const arrayBuffer = await res.arrayBuffer();
       const result = await mammoth.convertToHtml({ arrayBuffer });

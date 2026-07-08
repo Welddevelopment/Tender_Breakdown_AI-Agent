@@ -58,6 +58,50 @@ function authHeaders(): Record<string, string> {
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
+// Headers for fetching a DOCUMENT by URL: the bearer header when the URL points
+// at the live backend, nothing for the static /demo copies (same-origin public
+// files need no auth, and the token must never leak to any other origin). This
+// is how source viewers authenticate now that document URLs carry no ?token=.
+export function docRequestHeaders(url: string): Record<string, string> {
+  return BASE && url.startsWith(BASE) ? authHeaders() : {};
+}
+
+// Open a source document in a new tab WITHOUT a token in the URL. A plain <a>
+// navigation cannot set an Authorization header, so: open the window
+// synchronously (inside the click, so popup blockers allow it), fetch the file
+// with the bearer header, and point the window at a blob URL — the #page
+// fragment still lands in the browser's PDF viewer. Static /demo copies skip
+// the fetch and navigate directly.
+export async function openAuthedDocument(
+  url: string,
+  page?: number
+): Promise<void> {
+  // The URL may already carry a #page fragment (tenderPdfPageUrl does); an
+  // explicit `page` argument wins. The fragment never travels on the fetch.
+  const hashAt = url.indexOf("#");
+  const file = hashAt === -1 ? url : url.slice(0, hashAt);
+  const fragment = page
+    ? `#page=${page}`
+    : hashAt === -1
+      ? ""
+      : url.slice(hashAt);
+  const needsAuth = Object.keys(docRequestHeaders(file)).length > 0;
+  if (!needsAuth) {
+    window.open(`${file}${fragment}`, "_blank", "noopener");
+    return;
+  }
+  const win = window.open("about:blank", "_blank");
+  try {
+    const res = await fetch(file, { headers: docRequestHeaders(file) });
+    if (!res.ok) throw await apiError(res, `Couldn't open the document (${res.status})`);
+    const blobUrl = URL.createObjectURL(await res.blob());
+    if (win) win.location.href = `${blobUrl}${fragment}`;
+  } catch (error) {
+    win?.close();
+    throw error;
+  }
+}
+
 export interface AuthUser {
   id: string;
   email: string;
@@ -128,8 +172,9 @@ export function logout(): void {
 // Absolute URL to a PDF source document in the tender pack, opened at a given
 // page. Browser PDF viewers honour the #page fragment. Empty string when no live
 // API is configured, so callers can hide the link. `docId` selects the document
-// in the pack; the session token rides as a query param because a plain
-// <iframe>/link navigation cannot set an Authorization header.
+// in the pack. NO token in the URL (tokens in query strings land in history and
+// access logs): callers open this via openAuthedDocument, which authenticates
+// with the bearer header and hands the browser a blob URL.
 export function tenderPdfPageUrl(
   tenderId: string,
   page: number,
@@ -138,8 +183,6 @@ export function tenderPdfPageUrl(
   if (!BASE) return "";
   const params = new URLSearchParams();
   if (docId) params.set("doc", docId);
-  const token = getToken();
-  if (token) params.set("token", token);
   const qs = params.toString();
   return `${BASE}/tenders/${tenderId}/pdf${qs ? `?${qs}` : ""}#page=${page}`;
 }
@@ -156,8 +199,9 @@ const DEMO_PDFS: Record<string, string> = {
 
 // The source PDF URL for the claim/source verification view, WITHOUT the #page
 // fragment (PDF.js selects the page itself). A live PDF tender streams from the
-// backend (owner-scoped, token as a query param); the mock/demo build falls back
-// to a static public copy for a known demo tender. Null when no PDF is available.
+// backend (owner-scoped, authenticated by bearer header — see docRequestHeaders;
+// no token in the URL); the mock/demo build falls back to a static public copy
+// for a known demo tender. Null when no PDF is available.
 export function sourceDocUrl(opts: {
   tenderId: string | null;
   docId?: string | null;
@@ -167,8 +211,6 @@ export function sourceDocUrl(opts: {
   if (BASE && tenderId) {
     const params = new URLSearchParams();
     if (docId) params.set("doc", docId);
-    const token = getToken();
-    if (token) params.set("token", token);
     const qs = params.toString();
     return `${BASE}/tenders/${tenderId}/pdf${qs ? `?${qs}` : ""}`;
   }
@@ -189,8 +231,6 @@ export function sourceDocRawFileUrl(opts: {
   if (!BASE || !tenderId) return null;
   const params = new URLSearchParams();
   if (docId) params.set("doc", docId);
-  const token = getToken();
-  if (token) params.set("token", token);
   const qs = params.toString();
   return `${BASE}/tenders/${tenderId}/source${qs ? `?${qs}` : ""}`;
 }

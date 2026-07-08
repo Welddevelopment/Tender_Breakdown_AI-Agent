@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
-import { DEMO_DEFAULT_TENDER } from "@/context/RequirementsContext";
+import { DEMO_TENDER_TITLE } from "@/data/demo-tender";
 import { AppMain } from "./AppMain";
 import { DocumentHeader } from "./DocumentHeader";
 import { TendersList } from "./TendersList";
@@ -61,7 +61,7 @@ export function UploadWorkspace() {
   }
 
   if (phase === "matrix") {
-    return <MatrixView title={DEMO_DEFAULT_TENDER.title} />;
+    return <MatrixView title={DEMO_TENDER_TITLE} />;
   }
 
   return (

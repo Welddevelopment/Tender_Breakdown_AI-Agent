@@ -23,7 +23,7 @@ import { NoTenderLoaded } from "./NoTenderLoaded";
 // bar, and the answer cards (drafted prose + evidence receipts + inline gaps).
 // The mock showcase build runs the same surface on the seeded sample.
 export function AnswersBody() {
-  const { requirements, capabilityDocs, tenderId, title, drafting } =
+  const { requirements, seeding, capabilityDocs, tenderId, title, drafting } =
     useRequirements();
   const [active, setActive] = useState<Set<AnswerFilterKey>>(new Set());
   const [weakestFirst, setWeakestFirst] = useState(true);
@@ -80,6 +80,10 @@ export function AnswersBody() {
       />
     );
   }
+
+  // Mock demo seed still lazy-loading (milliseconds): hold an empty shell so
+  // the workspace never flashes a false "no answers" state.
+  if (seeding) return null;
 
   function selectFilter(key: AnswerFilterKey | null) {
     setActive(key ? new Set([key]) : new Set());
