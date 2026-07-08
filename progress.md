@@ -185,6 +185,7 @@
 ## Day 11 — Wed 08 Jul 2026
 
 - **19:04** — **Stage 1 frontend UX overhaul shipped:** workspace-orientation sweep across `TendersList`, `UploadDropzone`, `DocumentHeader`, `NoTenderLoaded`, new `RegisterPreview` component; motion-overhaul plan + `ops/pilot-readiness-roadmap.md` committed *(first post-demo UX sprint — sets ergonomics baseline for the pilot phase)*
+- **20:06** — **Four role-specific pilot roadmaps committed** (`pilot-roadmap/frontend-jawad`, `backend-pranav`, `generalist-bobby`, `gtm-crm-joe`): per-role path to 70-point production-readiness baseline + 75-stretch, keyed to master `ops/pilot-readiness-roadmap.md` *(each contributor now has a concrete, owned action list for the YC W27 concierge-pilot sprint)*
 
 ## Day 10 — Tue 07 Jul 2026
 
