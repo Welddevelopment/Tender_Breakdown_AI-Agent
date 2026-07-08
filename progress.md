@@ -182,6 +182,10 @@
 - **22:04** — **Collaboration demo video prep locked + Fly.io backend hardened** (`e53c6cb`, `f905a10`, `c007378`, `016c53d`, `448d4c5`): Bob's two-person video script committed (setup, spoken lines, live approve + flag actions for the real-time collab shoot); Fly.io VM bumped to 2GB + auto-stop disabled — full-pack extraction now completes without OOM (~3.3 min, 232 reqs / 73 deal-breakers confirmed); tender-library upload page + header polish shipped; account chip + icon tidied *(the collab video can be recorded cleanly — backend won't die mid-extraction, both roles have their parts, product is submission-video-ready)*
 - **23:03** — **Fly.io live upload path verified end-to-end (B-029):** `bidframe-api.fly.dev` confirmed healthy (`extractor: openai`); real `sample-pack.zip` → job done: **21 reqs · 18 deal-breakers · 3 source docs** (DOCX/XLSX/CSV) with per-file progress stages all on the live public frontend *(the full production user path — bidframe.org → Fly API → ZIP/mixed-pack extraction — is proven working, not just in tests; nothing left to do before recording the collab video)*
 
+## Day 11 — Wed 08 Jul 2026
+
+- **19:04** — **Stage 1 frontend UX overhaul shipped:** workspace-orientation sweep across `TendersList`, `UploadDropzone`, `DocumentHeader`, `NoTenderLoaded`, new `RegisterPreview` component; motion-overhaul plan + `ops/pilot-readiness-roadmap.md` committed *(first post-demo UX sprint — sets ergonomics baseline for the pilot phase)*
+
 ## Day 10 — Tue 07 Jul 2026
 
 - **09:04** — **Multi-format demo pack committed + README updated for live collab (J-102):** `fixtures/mixed-pack/bidframe-demo-pack-light.zip` (museum PDF + DOCX + XLSX + CSV) gives anyone a single upload to reproduce the mixed-pack deal-breaker matrix; README's "Built for teams" rewritten to reflect the live SSE stream, reusable teams, and per-requirement comment threads now deployed on Fly.io *(demo pack closes the "how do I try the multi-format path?" gap; README now matches what's actually live — YC W27 sprint in flight)*
