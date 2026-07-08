@@ -11,6 +11,7 @@ import { useRequirements } from "@/context/RequirementsContext";
 import { isApiEnabled } from "@/lib/api";
 import type { Requirement } from "@/types/requirement";
 import { orderByCriterion } from "@/lib/structure";
+import { labelForRequirementAction } from "@/lib/triage";
 import { MarksView } from "./MarksView";
 import { GraphView } from "./GraphView";
 import { RequirementDrawer } from "./RequirementDrawer";
@@ -109,6 +110,15 @@ export function StructureView() {
     setSelectedId(nextItem.id);
   }, [requirements, filter, selectedId]);
 
+  // Task-specific copy for the drawer's Next control (Stage 1): label it after
+  // the action the next item in the criterion walk needs, matching the matrix.
+  const nextDrawerLabel = useMemo(() => {
+    const ordered = orderByCriterion(requirements.filter(filter));
+    if (ordered.length === 0 || !selectedId) return "Back to matrix";
+    const idx = ordered.findIndex((r) => r.id === selectedId);
+    return labelForRequirementAction(ordered[(idx + 1) % ordered.length]);
+  }, [requirements, filter, selectedId]);
+
   const filtersActive =
     gatingOnly || reviewOnly || activeCats.size > 0 || query.trim().length > 0;
   const resetFilters = useCallback(() => {
@@ -140,7 +150,7 @@ export function StructureView() {
     return (
       <NoTenderLoaded
         heading="Nothing to map yet"
-        body="Upload a tender to map its requirements."
+        body="Pick a tender from the library or upload a tender pack before reviewing marks and structure."
       />
     );
   }
@@ -234,6 +244,7 @@ export function StructureView() {
         onEdit={editRequirement}
         onFlag={flag}
         onNext={goNext}
+        nextLabel={nextDrawerLabel}
         onClose={() => setSelectedId(null)}
       />
 

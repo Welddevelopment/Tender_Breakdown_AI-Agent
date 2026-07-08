@@ -177,9 +177,9 @@ export function ControlPanel() {
 
     return {
       total: requirements.length,
-      dealBreakers: requirements.filter((r) => r.is_gating).length,
-      toVerify: triage.counts["to-verify"],
-      needsYou: triage.counts["needs-you"],
+      dealBreakers: triage.counts["deal-breakers"],
+      secondLook: triage.counts["second-look"],
+      needsInput: triage.counts["needs-input"],
       openQ,
       accepted,
       edited,
@@ -208,21 +208,21 @@ export function ControlPanel() {
             </dd>
           </div>
           <div>
-            <dt className="text-ink-muted">Deal-breakers</dt>
+            <dt className="text-ink-muted">Deal-breakers to clear</dt>
             <dd className="mt-0.5 font-mono text-xl leading-none text-signal-oxblood">
               {s.dealBreakers}
             </dd>
           </div>
           <div>
-            <dt className="text-ink-muted">Need verification</dt>
+            <dt className="text-ink-muted">Worth second look</dt>
             <dd className="mt-0.5 font-mono text-xl leading-none text-ink">
-              {s.toVerify}
+              {s.secondLook}
             </dd>
           </div>
           <div>
-            <dt className="text-ink-muted">Need your input</dt>
+            <dt className="text-ink-muted">Need your answer</dt>
             <dd className="mt-0.5 font-mono text-xl leading-none text-ink">
-              {s.needsYou}
+              {s.needsInput}
             </dd>
           </div>
         </dl>

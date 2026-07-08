@@ -1,0 +1,43 @@
+/* Motion for the extraction panel, colocated because the nearest globals
+   equivalents (gating-flare-once, the hero settles) carry the landing's
+   register-row lift and sheet shadows — too heavy for an inline count or a
+   14px check mark. Both are one-shots that fire on mount (each element only
+   appears when its moment arrives) and are motion-gated, so reduced motion
+   simply shows the resolved state. */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* The first deal-breaker lands under a brief oxblood ring: the flash is the
+     alarm, the frame border is what remains. */
+  .gateFlare {
+    animation: gate-flare 0.95s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* A completed step's check settles in with a small overshoot instead of
+     swapping in the instant the spinner leaves. */
+  .stepSettle {
+    animation: step-settle 0.38s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+}
+
+@keyframes gate-flare {
+  0% {
+    box-shadow: 0 0 0 0 rgba(180, 45, 36, 0.38);
+  }
+  55% {
+    box-shadow: 0 0 0 7px rgba(180, 45, 36, 0.12);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(180, 45, 36, 0);
+  }
+}
+
+@keyframes step-settle {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

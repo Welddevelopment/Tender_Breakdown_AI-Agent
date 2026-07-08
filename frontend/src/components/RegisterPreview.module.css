@@ -1,0 +1,49 @@
+/* The register inking itself in during extraction. Each cell materialises once
+   as its row is filled, staggered within the row (ref → bead → line) so the
+   fill reads left to right, like a pen crossing the ledger. Motion-safe only:
+   under reduced motion the row is simply already filled — the state change
+   itself carries the information. */
+
+@media (prefers-reduced-motion: no-preference) {
+  .inkRef {
+    animation: ink-fade 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .inkBead {
+    animation: ink-bead 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.14s both;
+  }
+  .inkLine {
+    transform-origin: left center;
+    animation: ink-line 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
+  }
+}
+
+@keyframes ink-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ink-bead {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes ink-line {
+  from {
+    opacity: 0;
+    transform: scaleX(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}

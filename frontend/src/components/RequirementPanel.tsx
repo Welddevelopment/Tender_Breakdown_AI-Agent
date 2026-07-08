@@ -88,6 +88,7 @@ interface RequirementPanelProps {
   onEdit: (id: string, note: string) => void;
   onFlag: (id: string, note: string) => void;
   onNext: () => void;
+  nextLabel: string;
   onClose: () => void;
 }
 
@@ -174,6 +175,7 @@ export function RequirementPanel({
   onEdit,
   onFlag,
   onNext,
+  nextLabel,
   onClose,
 }: RequirementPanelProps) {
   const { user } = useAuth(); // to render decisions as "you" vs a collaborator's name
@@ -239,6 +241,7 @@ export function RequirementPanel({
         onEdit={onEdit}
         onFlag={onFlag}
         onNext={onNext}
+        nextLabel={nextLabel}
         onClose={onClose}
       />
     </div>
@@ -584,6 +587,7 @@ function DecisionZone({
   onEdit,
   onFlag,
   onNext,
+  nextLabel,
   onClose,
 }: {
   requirement: Requirement;
@@ -595,6 +599,7 @@ function DecisionZone({
   onEdit: (id: string, note: string) => void;
   onFlag: (id: string, note: string) => void;
   onNext: () => void;
+  nextLabel: string;
   onClose: () => void;
 }) {
   const { reopen } = useRequirements();
@@ -792,7 +797,7 @@ function DecisionZone({
                 onClick={onNext}
                 className="text-sm text-ink-muted transition-colors hover:text-ink"
               >
-                Next
+                {nextLabel}
               </button>
               <button
                 type="button"

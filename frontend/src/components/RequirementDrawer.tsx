@@ -16,6 +16,7 @@ interface RequirementDrawerProps {
   onEdit: (id: string, note: string) => void;
   onFlag: (id: string, note: string) => void;
   onNext: () => void;
+  nextLabel: string;
   onClose: () => void;
 }
 
@@ -25,6 +26,7 @@ export function RequirementDrawer({
   onEdit,
   onFlag,
   onNext,
+  nextLabel,
   onClose,
 }: RequirementDrawerProps) {
   const panelRef = useRef<HTMLDivElement>(null);
@@ -84,6 +86,7 @@ export function RequirementDrawer({
             onEdit={onEdit}
             onFlag={onFlag}
             onNext={onNext}
+            nextLabel={nextLabel}
             onClose={onClose}
           />
         )}

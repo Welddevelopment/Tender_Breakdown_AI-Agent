@@ -35,7 +35,7 @@ import { compareWeakestFirst, hasDraft } from "@/lib/answers";
 // a live one is loaded — a judge clicking between tabs never jumps to a different
 // sample. Live mode never renders this: the NoTenderLoaded gate intercepts until
 // a real tender is fetched.
-const DEMO_DEFAULT_TENDER = bradwellPrebake as unknown as Tender;
+export const DEMO_DEFAULT_TENDER = bradwellPrebake as unknown as Tender;
 
 const SAVE_FAILED =
   "Couldn't save that change to the server. It shows here, but may not have been kept. Check your connection, then redo it.";

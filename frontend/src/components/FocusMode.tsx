@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { Requirement } from "@/types/requirement";
 import {
   isConfidentNonGating,
+  labelForRequirementAction,
   orderedWorklist,
   type Triage,
 } from "@/lib/triage";
@@ -230,6 +231,14 @@ export function FocusMode({
               onEdit={editAndAdvance}
               onFlag={flagAndAdvance}
               onNext={() => move(1)}
+              nextLabel={labelForRequirementAction(
+                worklist[
+                  Math.min(
+                    worklist.length - 1,
+                    worklist.findIndex((req) => req.id === currentId) + 1
+                  )
+                ]
+              )}
               onClose={onClose}
             />
           </div>
