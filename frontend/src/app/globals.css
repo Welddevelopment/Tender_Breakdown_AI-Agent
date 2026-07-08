@@ -62,10 +62,68 @@
   --rule-hair: 1px solid var(--hairline);
 }
 
+/* Motion tokens (UI/UX/Motion Overhaul/MOTION.md, adopted Stage 3).
+   Durations ladder from pressed states to the one hero resolve; new motion
+   consumes these instead of inline literals, existing keyframes migrate
+   opportunistically. Two deliberate departures from MOTION.md, recorded there:
+   --ease-stamp keeps the shipped 1.56 overshoot (not the softer 1.2), and
+   reduced motion keeps the composed-end-state pattern (opt-in no-preference
+   gates) rather than a global 1ms blanket; the token override below only
+   degrades token-driven timing. --ease-settle names the codebase's dominant
+   quint-out so taste work can ask for "the settle" by name. */
+:root {
+  --motion-instant: 80ms;
+  --motion-fast: 120ms;
+  --motion-standard: 180ms;
+  --motion-panel: 240ms;
+  --motion-process: 360ms;
+  --motion-feature: 520ms;
+  --motion-hero: 700ms;
+
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-enter: cubic-bezier(0, 0, 0.2, 1);
+  --ease-exit: cubic-bezier(0.3, 0, 1, 0.3);
+  --ease-forest: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-record: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-settle: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-stamp: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-instant: 1ms;
+    --motion-fast: 1ms;
+    --motion-standard: 1ms;
+    --motion-panel: 1ms;
+    --motion-process: 1ms;
+    --motion-feature: 1ms;
+    --motion-hero: 1ms;
+  }
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-body), system-ui, sans-serif;
+}
+
+/* Collaboration presence pulse (MOTION.md "Collaboration"): a one-time moss
+   glow when a member chip or activity entry arrives. Fires once and settles to
+   the static record; never loops, never on stale events. Reduced motion lands
+   on the settled state (the base class carries no animation). */
+@media (prefers-reduced-motion: no-preference) {
+  .moss-pulse {
+    animation: moss-pulse var(--motion-panel) var(--ease-forest) 1 both;
+  }
+}
+@keyframes moss-pulse {
+  from {
+    box-shadow: 0 0 0 6px rgba(205, 213, 189, 0.9);
+    background-color: var(--color-moss);
+  }
+  to {
+    box-shadow: 0 0 0 0 rgba(205, 213, 189, 0);
+  }
 }
 
 /* The landing-page hero resolve (landing-page-brief §6): the register settles
