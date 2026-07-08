@@ -4,13 +4,15 @@ Bidframe turns weeks of specialist tender work into an afternoon for a normal pe
 of this design system is to make a non-expert feel confident and unstuck at every step: calm,
 guided, and honest. This document is the source of truth for how Bidframe looks and behaves.
 [SLOP-CHECK.md](SLOP-CHECK.md) is the enforceable subset: the banned list and the gate you run a
-wireframe against.
+wireframe against. The wider overhaul is measured by [QA.md](<UI/UX/Motion Overhaul/QA.md>) and
+trimmed by [delete.md](<UI/UX/Motion Overhaul/delete.md>) before new surfaces are added.
 
 **Status:** living draft, open for team feedback. Exact color values are provisional and will be tuned
 by frontend. The typeface is locked: Fraunces for headings, Chillax for body (see section 11). The layout
 is settled: split open state, a Next-led header, one-line matrix rows (see section 12 and
-[layout.md](layout.md)). The design language is locked: the civic record, brutalist and editorial over
-warmed paper at 45% (see section 13 and [design-language.md](design-language.md)).
+[layout.md](layout.md)). The design language is locked: **forest-led civic record**. Forest is the
+brand/emotional layer; the civic record is the proof/work-surface layer; warmed paper connects them (see
+section 13 and [design-language.md](design-language.md)).
 
 ## 1. Philosophy: confident calm
 
@@ -173,17 +175,21 @@ single trivial open question may be answered inline.
 
 ## 9. Motion
 
-Calm and still almost everywhere. **One hero transition:** upload to extract to triaged matrix, where
-raw PDF resolves into the structured matrix and the triage summary lands. That is the demo showpiece.
-Everywhere else, motion only on a genuine state change (a suggestion appearing, light-green settling
-to forest on approval).
+Motion is defined in [MOTION.md](<UI/UX/Motion Overhaul/MOTION.md>). The short rule: **forest motion guides, record motion
+proves, serious places stay still.**
+
+The original restraint still holds for work surfaces. Matrix review, source proof, evidence, approvals,
+marks, and export review should move only on genuine state change. The expanded motion language belongs
+in arrival, upload, processing, collaboration presence, success states, the landing page, and `/demo`.
+The hero transition remains upload to extract to triaged matrix, where the tender pack resolves into the
+structured register and the triage summary lands.
 
 ## 10. Surfaces and shape
 
 - Backgrounds are warm paper, never pure white or pure black.
-- Warmed paper with depth that means focus (the civic record, see section 13). One soft shadow language,
-  ink-tinted, used only on raised surfaces (the lifted sheet, the gating callout, the upload card), never
-  on the scanning list or the page. A faint paper grain lives on those raised surfaces only.
+- Warmed paper with depth that means focus (the forest-led civic record, see section 13). One soft shadow
+  language, ink-tinted, used only on raised surfaces (the lifted sheet, the gating callout, the upload
+  card), never on the scanning list or the page. A faint paper grain lives on those raised surfaces only.
 - Modest radii. No oversized bezels or chunky rounded accent bars (see SLOP-CHECK).
 - Accent edges are thin (hairline up to 2px) and near square. Structural rules come in three weights only
   (a 2px ink masthead rule at most once per screen, a section rule, a hairline), see section 13.
@@ -227,8 +233,9 @@ This extends section 8 from interaction into layout.
   standing left sidebar. A persistent rail on a single-document app is the number one dashboard tell.
 - **Header: three zones, one action.** Tender title and back link on the left, the triage line as an
   in-page router in the centre, and exactly one primary action on the right: **Next**, which always routes
-  to the highest-priority unresolved item and becomes "Export response" when the work is done. The bulk
-  "approve all confident" sweep is not here, it sits scoped at the head of the Ready group.
+  to the highest-priority unresolved item and becomes "Export" when the work is done. The export menu then
+  names the artifact: compliance matrix, bid response draft, or audit/evidence pack. The bulk "approve all
+  confident" sweep is not here, it sits scoped at the head of the Ready group.
 - **The matrix is a contents page, not a table.** One line per requirement on a shared grid (dot, text,
   status), grouped by the ask. The drafted-answer preview shows on hover or focus, never as a permanent
   second line. Gating items look heavier and never get the inline approve.
@@ -246,24 +253,36 @@ This extends section 8 from interaction into layout.
 
 Full structure, every rule in technical and plain-English form, plus the slop-layout gate:
 [layout.md](layout.md). The layout commits to "depth means focus" (the panel sits above the matrix,
-nothing else floats), and the paper treatment that builds on it is now defined as the civic record in
-section 13.
+nothing else floats), and the visual treatment that builds on it is now defined as forest-led civic
+record in section 13.
 
-## 13. Design language: the civic record
+## 13. Design language: forest-led civic record
 
 The visual identity over the top of the layout. Where section 12 decides structure, this decides feel.
-The principle: **Bidframe presents your bid as an official record in progress**, a public document with a
-masthead, ruled structure, numbered clauses, a margin of citations, and an approval stamp. Three
-ingredients, in order of authority: **editorial structure** (the form), **brutalist honesty** (the
-discipline, the form is the function, which is the same promise as auditability), and **warmed paper at
-45%** (the material).
+The principle: **Bidframe is guided by forest, verified by the record.** Forest is the emotional brand
+world: calm, capable, protective, and memorable. The civic record is the proof grammar: masthead, ruled
+structure, numbered clauses, a margin of citations, and an approval stamp. Warmed paper at 45% keeps those
+two layers in the same product world.
 
-The two pull in opposite directions on purpose. Warmth stops the civic record going cold (a cold one reads
-like a forbidding tax form), and the civic record stops the warmth going twee. The holding rule: **warmth
-is the material, the civic record is the form, and the form leads. Where they conflict, structure wins.**
+This is not an IA or UX-ordering rule. It does not change the workflow in section 12. It changes how the
+product feels to a potential user or customer: guided enough to trust, solid enough to take seriously, and
+continuous between landing, demo, and app.
+
+The layer rule:
+
+- **Forest leads first feeling.** It is strongest on the landing, `/demo`, `/pack`, upload/processing
+  resolve, app header accents, primary calls to action, and collaboration presence.
+- **The record leads proof.** It is strongest in the matrix, requirement panel, source viewer, evidence
+  blocks, approval trail, marks/criteria evidence, and export readiness.
+- **Warm paper connects them.** Paper, raised sheets, restrained grain, and ink-tinted depth stop the app
+  from splitting into a marketing world and a work world.
 
 - **The masthead.** The header reads like an official letterhead: a mono running head, the tender title in
-  Fraunces, a mono reference line from real metadata, one 2px ink rule beneath. It is the focal anchor.
+  Fraunces, a mono reference line from real metadata, one 2px ink rule beneath. It is the focal anchor,
+  but it can carry controlled forest guidance through current tender, people/share, activity, and next
+  action.
+- **Forest guidance.** Forest and pine can create arrival, demo momentum, upload resolve, live
+  collaboration, and primary action. They must not become random green decoration.
 - **A rule hierarchy.** Three weights by meaning: a 2px ink masthead rule (once per screen), a section
   rule, a hairline. Lines do the structural work.
 - **The register.** The matrix carries each row's real clause reference down a quiet mono left margin, so
@@ -274,11 +293,18 @@ is the material, the civic record is the form, and the form leads. Where they co
   Chillax is the human draft, Fraunces is the titles. Three voices, three jobs.
 - **The approval stamp.** Approving stamps the sheet: a clean forest mark set slightly off-axis that
   settles into place, with your name and the time in mono beside it. The signature moment.
+- **The collaboration record.** People, comments, invites, and activity are part of the tender record, not
+  social decoration. Edge cases need visible states: invite pending, invite failed, access removed,
+  reconnecting, simultaneous edit, unknown actor, and unresolved comment before export.
+- **The exported artifact.** Files leaving Bidframe are record-led, not forest-led. The compliance matrix,
+  bid response draft, and audit/evidence pack should feel official, editable, and honest. Brand presence is
+  restrained; unresolved gaps and missing evidence remain visible instead of being polished away.
 
 Depth and the paper grain live only on raised surfaces (the lifted sheet, the gating callout, the upload
-card), never on the scanning rows or the page. Warmth is capped at the 45% tokens. The light-paper
+card), never on the scanning rows or the page. Forest-led surfaces can be deeper or more atmospheric only
+when they are arrival, demo, or processing moments. Warmth is capped at the 45% tokens. The light-paper
 identity has no dark mode. Full manual, with the material tokens (the concrete 45% values), the device
-specs in technical and plain form, the guardrails, and the civic-record check:
+specs in technical and plain form, the guardrails, and the forest-led record check:
 [design-language.md](design-language.md).
 
 ## 14. Relationship to the slop check

@@ -17,7 +17,11 @@ export default function UploadPage() {
         <div className="mx-auto max-w-2xl pt-6">
           <UploadDropzone />
         </div>
-        <section aria-label="Your tenders" className="mx-auto mt-10 max-w-2xl">
+        <section
+          id="your-tenders"
+          aria-label="Your tenders"
+          className="mx-auto mt-10 max-w-2xl scroll-mt-24"
+        >
           <div className="flex items-baseline justify-between gap-3 border-b-2 border-ink pb-2">
             <h2 className="font-serif text-lg font-semibold leading-snug text-ink">
               Your tenders

@@ -2,7 +2,9 @@
 
 How Bidframe arranges a screen. This is the structural companion to
 [DESIGN-SYSTEM.md](DESIGN-SYSTEM.md) (the intent) and [SLOP-CHECK.md](SLOP-CHECK.md) (the gate). Colour
-and type are settled elsewhere; this file is about where things sit, how the screen reacts, and why.
+and type are settled elsewhere; [QA.md](<UI/UX/Motion Overhaul/QA.md>) measures whether the layout
+works, and [delete.md](<UI/UX/Motion Overhaul/delete.md>) catches surfaces that should be removed or
+merged. This file is about where things sit, how the screen reacts, and why.
 Every rule is given twice: the technical version a builder works to, and the plain version so anyone on
 the team can hold us to it.
 
@@ -40,7 +42,8 @@ navigate to while you work. Killing it reclaims the whole column for the work.
   a quiet button that filters and scrolls the matrix to that group. This is navigation *within* the page,
   not to another page.
 - **Right:** exactly one primary action, "Next", which routes to the highest-priority unresolved item
-  (see the priority order below). When nothing is unresolved it becomes "Export response".
+  (see the priority order below). When nothing is unresolved it becomes "Export" and opens the artifact
+  choices: compliance matrix, bid response draft, audit/evidence pack, and all files if supported.
 
 Priority order for Next: (1) gating, unresolved, (2) needs you (`open_questions`), (3) low confidence to
 verify, (4) anything else still pending. When all are resolved, Next becomes Export.
@@ -152,15 +155,15 @@ lands. No page swap.
 **Technical (the material identity).** This layout commits to a *depth grammar*: depth means focus and
 nothing else. The panel sits above the matrix, nothing else floats. The mental model is surfaces on a
 desk: the matrix is the open folder, the panel is the lifted sheet, approval settles it back down. The
-paper treatment that builds on this grammar is now defined as the civic record (warmed paper at 45%, plus
-the editorial and brutalist devices) in [design-language.md](design-language.md) and DESIGN-SYSTEM
-section 13. It adds texture, real lift, and weight to these same relationships, so it is a change of
-volume, not a U-turn.
+visual treatment that builds on this grammar is now defined as the forest-led civic record in
+[design-language.md](design-language.md) and DESIGN-SYSTEM section 13. Forest guides arrival, momentum,
+and continuity; the record proves source, evidence, and approval. It adds texture, real lift, and weight
+to these same relationships, so it is a change of volume, not a U-turn.
 
 **Plain.** You start by dropping the tender in, and it resolves in the same spot into the worklist. That
-resolve is the one bit of theatre and it earns it. Think of the whole thing as a desk with one folder open
-and one sheet pulled out to read. The full paper look is the civic record (design-language.md), and it
-reuses these same relationships, so nothing has to be undone.
+resolve is the one bit of theatre and it earns it. Think of the whole thing as a guided approach into a
+desk with one folder open and one sheet pulled out to read. The forest-led record look
+([design-language.md](design-language.md)) reuses these same relationships, so nothing has to be undone.
 
 ## 10. Accessibility and honesty checks
 

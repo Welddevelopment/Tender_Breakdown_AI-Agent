@@ -10,17 +10,16 @@ import { usePathname } from "next/navigation";
 // tab, nothing that reads as a dashboard nav.
 
 // The four working sections. Tender = /upload: pick which tender to work in (or
-// add a new pack) — the selection the other three read. Bid = /answers: the full
-// response with its readiness progress and .docx/PDF export. Matrix = /review and
-// Graph = /graph are the two per-tender views of the same requirements. With no
-// tender selected, Bid/Matrix/Graph show the "pick a tender" empty state.
+// add a new pack). Bid = /answers: the response with readiness and export.
+// Matrix = /review: requirement review. Marks = /graph: award criteria and
+// structure. With no tender selected, Bid/Matrix/Marks show the recovery state.
 // (Teams — a global collaboration destination, not a per-tender view — lives in the
 // account control, not this section switcher.)
 const SECTIONS = [
   { href: "/upload", label: "Tender" },
   { href: "/answers", label: "Bid" },
   { href: "/review", label: "Matrix" },
-  { href: "/graph", label: "Graph" },
+  { href: "/graph", label: "Marks" },
 ];
 
 export function SectionNav() {

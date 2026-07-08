@@ -1,8 +1,11 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { GROUP_LABELS, type GroupKey, type SortKey } from "@/lib/triage";
+import {
+  GROUP_LABELS,
+  GROUP_ORDER,
+  type GroupKey,
+  type SortKey,
+} from "@/lib/triage";
 import { categoryStyle } from "@/lib/categoryStyle";
 import { useRequirements } from "@/context/RequirementsContext";
 import { SiteHeader } from "./SiteHeader";
@@ -11,18 +14,9 @@ import { SiteHeader } from "./SiteHeader";
 // SectionNav, account control, the one 2px ink rule) with a title row beneath
 // it. The title row carries the page title in Fraunces — full width, allowed
 // to wrap, never truncated — the mono tender reference (tender id, never
-// invented), the per-tender view switcher (Matrix · Bid · Graph) on workspace
-// views, and the page's controls (filter, sort, Next) on views with a
-// worklist.
-
-// The per-tender views that live below the masthead: siblings of the loaded
-// tender, not global destinations, so they sit in the title row instead of
-// the four-link SectionNav.
-const TENDER_VIEWS = [
-  { href: "/review", label: "Matrix" },
-  { href: "/answers", label: "Bid" },
-  { href: "/graph", label: "Graph" },
-];
+// invented), tender pack facts, and the page's controls (filter, sort, Next)
+// on views with a worklist. Navigation lives in the masthead SectionNav so the
+// user does not have to choose between duplicate view switchers.
 
 interface TriageHeader {
   counts: Record<GroupKey, number>;
@@ -54,10 +48,19 @@ export function DocumentHeader({
   // and the line appears once a real tender is open in the app.
   showReference?: boolean;
 }) {
-  const { tenderId } = useRequirements();
-  const pathname = usePathname();
-  const reference = tenderId ?? null;
-  const showViews = TENDER_VIEWS.some((view) => pathname.startsWith(view.href));
+  const { tenderId, requirements, sourceDocs } = useRequirements();
+  const referenceParts = [];
+  if (tenderId) referenceParts.push(tenderId);
+  if (sourceDocs.length > 0) {
+    referenceParts.push(
+      `${sourceDocs.length} source document${sourceDocs.length === 1 ? "" : "s"}`
+    );
+  }
+  if (requirements.length > 0) {
+    referenceParts.push(
+      `${requirements.length} requirement${requirements.length === 1 ? "" : "s"}`
+    );
+  }
 
   return (
     <>
@@ -73,33 +76,10 @@ export function DocumentHeader({
               {title}
             </h1>
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-              {showReference && reference && (
+              {showReference && referenceParts.length > 0 && (
                 <span className="font-mono text-[11px] text-ink-muted">
-                  {reference}
+                  {referenceParts.join(" · ")}
                 </span>
-              )}
-              {showViews && (
-                <nav
-                  aria-label="Tender views"
-                  className="flex items-center gap-1.5 font-mono text-[11px]"
-                >
-                  {TENDER_VIEWS.map((view) => (
-                    <Link
-                      key={view.href}
-                      href={view.href}
-                      aria-current={
-                        pathname.startsWith(view.href) ? "page" : undefined
-                      }
-                      className={
-                        pathname.startsWith(view.href)
-                          ? "rounded-md border border-forest bg-forest px-2.5 py-1 font-medium text-paper"
-                          : "rounded-md border border-hairline bg-paper px-2.5 py-1 text-ink-muted shadow-[var(--depth-row)] transition-colors hover:border-forest hover:text-ink"
-                      }
-                    >
-                      {view.label}
-                    </Link>
-                  ))}
-                </nav>
               )}
             </div>
           </div>
@@ -171,18 +151,11 @@ function MatrixFilterControl({ triage }: { triage: TriageHeader }) {
         className="rounded border border-hairline bg-paper px-1.5 py-0.5 text-[11px] text-ink outline-none transition-colors focus:border-forest focus:ring-1 focus:ring-forest"
       >
         <option value="all">All requirements</option>
-        <option value="flow:needs-you">
-          {GROUP_LABELS["needs-you"]} ({triage.counts["needs-you"]})
-        </option>
-        <option value="flow:to-verify">
-          {GROUP_LABELS["to-verify"]} ({triage.counts["to-verify"]})
-        </option>
-        <option value="flow:ready">
-          {GROUP_LABELS.ready} ({triage.counts.ready})
-        </option>
-        <option value="flow:decided">
-          {GROUP_LABELS.decided} ({triage.counts.decided})
-        </option>
+        {GROUP_ORDER.map((key) => (
+          <option key={key} value={`flow:${key}`}>
+            {GROUP_LABELS[key]} ({triage.counts[key]})
+          </option>
+        ))}
         {activeCategoryCount > 1 && (
           <option value="category:mixed" disabled>
             Multiple categories

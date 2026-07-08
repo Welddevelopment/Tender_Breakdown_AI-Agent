@@ -2,7 +2,9 @@
 
 A subset of the Bidframe design system (see [DESIGN-SYSTEM.md](DESIGN-SYSTEM.md)). Read this
 before you add a wireframe of any screen. It exists so the UI looks chosen by a person with taste, not generated. If your
-screen passes this, the frontend handoff is faster and there is less for Jawad to redo.
+screen passes this, the frontend handoff is faster and there is less for Jawad to redo. Use
+[QA.md](<UI/UX/Motion Overhaul/QA.md>) for stage acceptance and
+[delete.md](<UI/UX/Motion Overhaul/delete.md>) before adding another surface.
 
 ## Why this exists
 
@@ -21,9 +23,10 @@ that usually means it is worth trying, then editing back.
 
 ## Foundation (the settled part)
 
-- **Palette: Paper and Forest.** Warm paper background, never pure white. Deep earthy
-  forest green as the one accent, earned not sprayed (primary actions and real emphasis
-  only). Ink near black for text. No second brand color.
+- **Palette: Paper, Forest, and Pine.** Warm paper background, never pure white. Deep earthy
+  forest green is the action and guidance colour, earned not sprayed. Pine/moss are the deeper
+  forest-led grounds used for landing, demo, pack, upload resolve, and other arrival moments. Ink near
+  black for text. No second generic brand colour.
 - **Voice: calm and specific.** Plain language for a busy non expert. Say the real thing,
   not the benefit. Example: "We drafted this from your last bid. Check it before it is
   submitted."
@@ -34,9 +37,10 @@ that usually means it is worth trying, then editing back.
   matrix that reads like a contents page, and a split open state (the matrix shrinks to an index spine,
   the panel takes the room). Interactivity scales with stakes. See DESIGN-SYSTEM section 12 and
   [layout.md](layout.md).
-- **Design language: the civic record.** Brutalist and editorial over warmed paper at 45%: the bid
-  presented as an official record (masthead, three-weight rules, a numbered register, a ruled margin, the
-  mono record voice, an approval stamp). Warmth is the material, the record is the form, the form leads.
+- **Design language: forest-led civic record.** Bidframe is guided by forest, verified by the record.
+  Forest is the brand/emotional layer: memorable, protective, and continuous across landing, demo, upload,
+  collaboration, and primary action. The civic record is the proof/work layer: masthead, three-weight
+  rules, numbered register, ruled margin, mono record voice, approval stamp. Warm paper connects them.
   See DESIGN-SYSTEM section 13 and [design-language.md](design-language.md).
 
 ## The slop check (run before you commit a wireframe)
@@ -113,9 +117,12 @@ so treat these as starting points, not walls. Depart deliberately, and be able t
   yellow, green) stay off buttons, nav, headings, and backgrounds, so status reads clean and survives
   the greyscale test (see DESIGN-SYSTEM section 3). Explore other emphasis freely, just keep status
   legible without colour.
+- **Forest must have a job.** It can carry first impression, guidance, primary action, live
+  collaboration, upload/processing resolve, and demo momentum. It cannot be sprayed as a decorative green
+  tint on every card, table, badge, or border.
 - **Grain and depth on raised surfaces.** Default: grain and lift on the lifted sheet, gating callout,
   and upload card, kept off the scanning rows and the page so the rows still scan. A hero surface can
-  carry more material as a named departure.
+  carry more material as a named forest-led surface.
 - **Depth means focus.** By default nothing floats decoratively and only the worked surface lifts. A
   deliberate focal moment (a hero, the upload resolve) can break this.
 - **One heavy (2px ink) rule per screen.** A good default for rhythm; the masthead rule is the one. A
@@ -137,7 +144,7 @@ so treat these as starting points, not walls. Depart deliberately, and be able t
   its density, a confident asymmetry, a bold focal move. This is the exploration the doc wants.
 - **Navigation stays in the header** on this single-document app, no persistent left rail (see
   DESIGN-SYSTEM section 12). One tender fills the screen. This one holds.
-- **Nostalgia costume stays out.** No drop caps, halftone, sepia, faux-newsprint. The civic look comes
+- **Nostalgia costume stays out.** No drop caps, halftone, sepia, faux-newsprint. The record look comes
   from structure, not period pastiche, and the approval mark stays a clean geometric stamp, never a
   distressed texture. This one holds too.
 

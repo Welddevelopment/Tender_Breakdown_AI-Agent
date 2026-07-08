@@ -76,7 +76,7 @@ export function AnswersBody() {
     return (
       <NoTenderLoaded
         heading="No answers to draft yet"
-        body="Upload a tender to draft answers from your documents."
+        body="Pick a tender from the library or upload a tender pack before drafting the response."
       />
     );
   }

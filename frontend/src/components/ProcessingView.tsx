@@ -1,12 +1,16 @@
 "use client";
 
 import type { JobStatus } from "@/lib/api";
+import { AnimatedNumber } from "./AnimatedNumber";
+import styles from "./ProcessingView.module.css";
 
 // The "watch it read your tender" processing view (#5). A staged, live-updating
-// panel shown while the backend extracts a real tender, so a 30–120s wait reads as
-// sophisticated work rather than a frozen spinner. Driven entirely by the polled
-// job status: the bar tracks real chunk completion, the counts tick up as
-// requirements (and deal-breakers) are found, each stage lights up in turn.
+// panel shown while a tender is extracted, so a 30–120s wait reads as
+// sophisticated work rather than a frozen spinner. Driven entirely by the job
+// status it is handed — the live polled job or the demo build's scripted replay,
+// it cannot tell the difference: the bar tracks chunk completion, the counts
+// tick up as requirements (and deal-breakers) are found, each stage lights up
+// in turn, and the pipeline narrates itself through the job's message line.
 
 const STEPS: { key: string; label: string }[] = [
   { key: "reading", label: "Read the document" },
@@ -117,24 +121,42 @@ export function ProcessingView({
         />
       </div>
 
+      {/* The pipeline narrating its own work — "Reading clause 4.2.1 on page
+          14…" — so the wait reads as a machine leafing through the document. */}
+      {job?.message && (
+        <p aria-live="polite" className="mt-2 truncate font-mono text-xs text-ink-muted">
+          {job.message}
+        </p>
+      )}
+
       {(found != null || (dealBreakers != null && dealBreakers > 0)) && (
         <p className="mt-3 text-sm text-ink">
           {found != null && (
             <>
-              <span className="font-semibold">{found}</span> requirement
+              <AnimatedNumber value={found} from={0} className="font-semibold" />{" "}
+              requirement
               {found === 1 ? "" : "s"} found
               {isPack
                 ? ` across ${isArchive ? "the archive" : documentLabel}`
                 : ""}
             </>
           )}
+          {/* The deal-breaker count wears the two-tone alarm: oxblood figure
+              inside an oxblood-frame edge, arriving under a one-shot ring flash
+              the moment the first one is flagged. */}
           {dealBreakers != null && dealBreakers > 0 && (
             <>
               {" · "}
-              <span className="font-semibold text-signal-oxblood">
-                {dealBreakers}
-              </span>{" "}
-              deal-breaker{dealBreakers === 1 ? "" : "s"}
+              <span
+                className={`inline-flex items-baseline gap-1 rounded-full border border-signal-oxblood-frame/45 px-2 text-signal-oxblood ${styles.gateFlare}`}
+              >
+                <AnimatedNumber
+                  value={dealBreakers}
+                  from={0}
+                  className="font-semibold"
+                />
+                deal-breaker{dealBreakers === 1 ? "" : "s"}
+              </span>
             </>
           )}
         </p>
@@ -205,8 +227,10 @@ export function ProcessingView({
 function StepIcon({ state }: { state: StepState }) {
   if (state === "done") {
     return (
+      // The check mounts the moment its step completes, so the module's
+      // one-shot settle plays exactly once per step.
       <span
-        className="flex h-4 w-4 shrink-0 items-center justify-center text-forest"
+        className={`flex h-4 w-4 shrink-0 items-center justify-center text-forest ${styles.stepSettle}`}
         aria-hidden
       >
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none">

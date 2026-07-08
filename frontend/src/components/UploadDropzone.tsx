@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import {
   ApiError,
   getJob,
@@ -11,13 +11,44 @@ import {
   type JobStatus,
 } from "@/lib/api";
 import { useRequirements } from "@/context/RequirementsContext";
+import { DEMO_DEFAULT_TENDER } from "@/context/RequirementsContext";
 import {
   sourceDocumentKindFromFilename,
   sourceKindShortLabel,
 } from "@/lib/source-doc";
 import { ProcessingView } from "./ProcessingView";
+import { RegisterPreview } from "./RegisterPreview";
 
 type UploadStage = "idle" | "extracting" | "done" | "error";
+
+// Why an upload failed, carried as a discriminant instead of sniffed back out
+// of the message string (the old substring test keyed on "pdf"/"file" and broke
+// the moment a .docx was rejected). The first three kinds are client-side
+// rejections and never reach the full error screen — they surface inline on the
+// offending file's own row while the rest of the pack stays staged — so the
+// error state only ever wears "server" or "unknown".
+type UploadErrorKind = "type" | "size" | "zip-size" | "server" | "unknown";
+type RejectionKind = Extract<UploadErrorKind, "type" | "size" | "zip-size">;
+
+interface StagedRejection {
+  key: string;
+  name: string;
+  kind: RejectionKind;
+}
+
+const ERROR_HEADINGS: Record<UploadErrorKind, string> = {
+  type: "We cannot read that file format yet.",
+  size: "That document is too large.",
+  "zip-size": "That ZIP pack is too large.",
+  server: "We couldn't process this tender pack.",
+  unknown: "Couldn't complete the upload.",
+};
+
+const REJECTION_NOTES: Record<RejectionKind, string> = {
+  type: "Not a format we can read — use PDF, Word, Excel, CSV or ZIP",
+  size: "Over the 50MB per-document limit",
+  "zip-size": "Over the 200MB limit for ZIP tender packs",
+};
 
 const ACCEPTED_TENDER_EXTENSIONS = [".pdf", ".docx", ".xlsx", ".csv", ".zip"];
 const ACCEPTED_TENDER_MIME = new Set([
@@ -39,6 +70,15 @@ function isAcceptedTenderFile(file: File): boolean {
   );
 }
 
+// Why this file couldn't join the pack, or null if it can.
+function rejectionKindFor(file: File): RejectionKind | null {
+  if (!isAcceptedTenderFile(file)) return "type";
+  if (file.size > (isZipPack(file) ? MAX_ZIP_BYTES : MAX_DOCUMENT_BYTES)) {
+    return isZipPack(file) ? "zip-size" : "size";
+  }
+  return null;
+}
+
 function formatFileSize(bytes: number): string {
   if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))}KB`;
   return `${(bytes / (1024 * 1024)).toFixed(bytes < 10 * 1024 * 1024 ? 1 : 0)}MB`;
@@ -47,6 +87,14 @@ function formatFileSize(bytes: number): string {
 function uploadKindShortLabel(file: File): string {
   if (isZipPack(file)) return "ZIP";
   return sourceKindShortLabel(sourceDocumentKindFromFilename(file.name));
+}
+
+// A chip label for a rejected file: its raw extension, since a file we can't
+// read has no source-document kind to map to.
+function rejectedChipLabel(name: string): string {
+  const dot = name.lastIndexOf(".");
+  const ext = dot > 0 ? name.slice(dot + 1) : "";
+  return ext ? ext.slice(0, 4).toUpperCase() : "FILE";
 }
 
 function packLabel(files: File[]): string | null {
@@ -83,19 +131,75 @@ async function pollJob(
   }
 }
 
+// The demo build's extraction, replayed rather than skipped. With no API
+// configured the PDF-in → requirements-out beat still has to play on stage, so
+// this scripts the JobStatus frames the live pipeline would emit — pages read,
+// sections split, the counts climbing to the sample tender's real totals, the
+// deal-breakers landing late — and feeds them to the very same ProcessingView
+// the live path uses. Hand-timed like a cue sheet, ~8 seconds end to end.
+// Clause references in the messages are real ones from the sample tender —
+// the same Bradwell seed the matrix opens on, so the numbers the replay lands
+// on are exactly the numbers the judge then sees in the register.
+const DEMO_SEED = DEMO_DEFAULT_TENDER.requirements;
+const MOCK_REQUIREMENT_TOTAL = DEMO_SEED.length;
+const MOCK_GATING_TOTAL = DEMO_SEED.filter((r) => r.is_gating).length;
+const MOCK_PAGES = Math.max(...DEMO_SEED.map((r) => r.source_page), 1);
+const MOCK_SECTIONS = 12;
+const MOCK_CLAUSE_A = DEMO_SEED.find((r) => r.is_gating) ?? DEMO_SEED[0];
+const MOCK_CLAUSE_B = DEMO_SEED[Math.floor(DEMO_SEED.length / 2)] ?? MOCK_CLAUSE_A;
+
+function mockReplayFrames(): { at: number; job: JobStatus }[] {
+  const req = (share: number) => Math.round(MOCK_REQUIREMENT_TOTAL * share);
+  const cues: [number, Partial<JobStatus>][] = [
+    [0, { stage: "reading", progress: 0.04, message: "Opening the tender…" }],
+    [700, { progress: 0.1, pageCount: MOCK_PAGES, message: `Reading ${MOCK_PAGES} pages…` }],
+    [1450, { stage: "chunking", progress: 0.18, sectionCount: MOCK_SECTIONS, message: `Splitting into ${MOCK_SECTIONS} sections…` }],
+    [2150, { stage: "extract", progress: 0.28, chunkDone: 2, chunkTotal: MOCK_SECTIONS, requirementCount: req(0.15), message: `Reading ${MOCK_CLAUSE_A.source_clause} on page ${MOCK_CLAUSE_A.source_page}…` }],
+    [2850, { progress: 0.4, chunkDone: 4, requirementCount: req(0.3), message: "Extracting mandatory requirements…" }],
+    [3550, { progress: 0.52, chunkDone: 7, requirementCount: req(0.55), message: `Reading ${MOCK_CLAUSE_B.source_clause} on page ${MOCK_CLAUSE_B.source_page}…` }],
+    [4250, { progress: 0.64, chunkDone: 10, requirementCount: req(0.75), message: "Extracting service-level requirements…" }],
+    [4950, { progress: 0.74, chunkDone: MOCK_SECTIONS, requirementCount: req(0.9), message: "Last section read…" }],
+    [5650, { stage: "reconcile", progress: 0.82, requirementCount: MOCK_REQUIREMENT_TOTAL, message: "Merging duplicates across sections…" }],
+    [6350, { stage: "graph", progress: 0.89, dealBreakerCount: 1, message: "Flagging deal-breakers…" }],
+    [6950, { progress: 0.93, dealBreakerCount: MOCK_GATING_TOTAL, message: "Mapping award criteria…" }],
+    [7550, { stage: "autofill", progress: 0.97, message: "Drafting first answers from your evidence…" }],
+    [8250, { status: "done", stage: "done", progress: 1, message: "Compliance matrix ready." }],
+  ];
+  // Later frames inherit everything earlier ones established (the page count,
+  // the climbing requirement total), exactly as the live job status would.
+  let acc: JobStatus = { status: "processing", stage: "reading", progress: 0 };
+  return cues.map(([at, patch]) => {
+    acc = { ...acc, ...patch };
+    return { at, job: acc };
+  });
+}
+
 export function UploadDropzone() {
   const { loadTender } = useRequirements();
   const [stage, setStage] = useState<UploadStage>("idle");
   const [isDragging, setIsDragging] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
   const [stagedFiles, setStagedFiles] = useState<File[]>([]);
+  const [rejections, setRejections] = useState<StagedRejection[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [errorKind, setErrorKind] = useState<UploadErrorKind | null>(null);
   const [job, setJob] = useState<JobStatus | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const mockTimersRef = useRef<number[]>([]);
+
+  function clearMockTimers() {
+    for (const id of mockTimersRef.current) window.clearTimeout(id);
+    mockTimersRef.current = [];
+  }
+
+  // The scripted replay must not keep firing into an unmounted component.
+  useEffect(() => clearMockTimers, []);
 
   // #2: on a live extraction, flow straight into the matrix after a brief reveal,
-  // so upload resolves into the worklist rather than dead-ending on a button.
+  // so upload resolves into the worklist rather than dead-ending on a button. The
+  // demo replay deliberately holds instead — the presenter opens the matrix when
+  // the room is ready for it.
   useEffect(() => {
     if (stage !== "done" || !isApiEnabled()) return;
     const timer = window.setTimeout(() => router.push("/review"), 1800);
@@ -106,36 +210,33 @@ export function UploadDropzone() {
     if (stage === "extracting") return;
     const all = fileList ? Array.from(fileList) : [];
     if (all.length === 0) return;
-    setErrorMessage(null);
 
-    const unsupported = all.find((file) => !isAcceptedTenderFile(file));
-    if (unsupported) {
-      setFileName(unsupported.name);
-      setErrorMessage("Use PDF, Word, Excel, CSV or ZIP tender-pack files.");
-      setStage("error");
-      return;
-    }
-
-    const oversized = all.find((f) =>
-      f.size > (isZipPack(f) ? MAX_ZIP_BYTES : MAX_DOCUMENT_BYTES)
-    );
-    if (oversized) {
-      setFileName(oversized.name);
-      setErrorMessage(
-        isZipPack(oversized)
-          ? `${oversized.name} is over 200MB. ZIP tender packs must be under 200MB.`
-          : `${oversized.name} is over 50MB. Each document must be under 50MB.`
-      );
-      setStage("error");
-      return;
+    // Partition rather than veto: one bad file must not nuke the whole staged
+    // pack. Valid documents join the pack; rejects get their own row with the
+    // reason, and the presenter carries on.
+    const accepted: File[] = [];
+    const rejected: StagedRejection[] = [];
+    for (const file of all) {
+      const kind = rejectionKindFor(file);
+      if (kind) {
+        rejected.push({ key: fileKey(file), name: file.name, kind });
+      } else {
+        accepted.push(file);
+      }
     }
 
     setStagedFiles((current) => {
-      const merged = append ? [...current, ...all] : all;
+      const merged = append ? [...current, ...accepted] : accepted;
       return Array.from(
         new Map(merged.map((file) => [fileKey(file), file])).values()
       );
     });
+    setRejections((current) => {
+      const merged = [...current, ...rejected];
+      return Array.from(new Map(merged.map((r) => [r.key, r])).values());
+    });
+    setErrorMessage(null);
+    setErrorKind(null);
     setJob(null);
     setStage("idle");
   }
@@ -145,11 +246,21 @@ export function UploadDropzone() {
 
     const all = stagedFiles;
     setFileName(packLabel(all));
+    setJob(null);
     setStage("extracting");
 
-    // No API configured → wireframe path (fake extraction, mock stays in place).
+    // No API configured → the scripted replay drives the same ProcessingView,
+    // ending on the sample tender's real counts.
     if (!isApiEnabled()) {
-      window.setTimeout(() => setStage("done"), 1800);
+      clearMockTimers();
+      for (const { at, job: frame } of mockReplayFrames()) {
+        mockTimersRef.current.push(
+          window.setTimeout(() => {
+            setJob(frame);
+            if (frame.status === "done") setStage("done");
+          }, at)
+        );
+      }
       return;
     }
 
@@ -159,6 +270,7 @@ export function UploadDropzone() {
       const finalJob = await pollJob(jobId, setJob);
       if (finalJob.status === "error") {
         setErrorMessage(finalJob.detail || "We could not process this tender pack.");
+        setErrorKind("server");
         setStage("error");
         return;
       }
@@ -170,6 +282,7 @@ export function UploadDropzone() {
           ? error.message
           : "The server did not respond. Check that the API is running, then try again."
       );
+      setErrorKind(error instanceof ApiError ? "server" : "unknown");
       setStage("error");
     }
   }
@@ -197,35 +310,55 @@ export function UploadDropzone() {
   }
 
   function reset() {
+    clearMockTimers();
     setStage("idle");
     setFileName(null);
     setStagedFiles([]);
+    setRejections([]);
     setErrorMessage(null);
+    setErrorKind(null);
     setJob(null);
     if (inputRef.current) inputRef.current.value = "";
   }
 
   function removeStagedFile(key: string) {
-    setStagedFiles((current) => {
-      const next = current.filter((file) => fileKey(file) !== key);
-      return next;
-    });
+    setStagedFiles((current) => current.filter((file) => fileKey(file) !== key));
+  }
+
+  function removeRejection(key: string) {
+    setRejections((current) => current.filter((r) => r.key !== key));
   }
 
   if (stage === "done") {
-    const found = job?.requirementCount;
-    const dealBreakers = job?.dealBreakerCount;
+    // The mock replay's final frame carries the sample counts, so both paths
+    // read their totals off the job; the constants are only a belt-and-braces
+    // fallback for the demo build.
+    const found =
+      job?.requirementCount ?? (isApiEnabled() ? undefined : MOCK_REQUIREMENT_TOTAL);
+    const dealBreakers =
+      job?.dealBreakerCount ?? (isApiEnabled() ? undefined : MOCK_GATING_TOTAL);
+    // No auto-redirect: the presenter opens the matrix deliberately, on the
+    // forest button, when the room is ready for it.
     return (
-      <div className="w-full max-w-xl">
+      <div className="surface-grain mx-auto w-full max-w-xl rounded-2xl border border-hairline bg-paper-raised p-6 shadow-[var(--depth-sheet)]">
         <h2 className="text-base font-semibold text-ink">
-          {isApiEnabled() ? "Requirements extracted" : "Sample matrix ready"}
+          {isApiEnabled() ? "Requirements extracted" : "Sample compliance matrix ready"}
         </h2>
         <p className="mt-1 text-sm text-ink-muted">
           {!isApiEnabled() ? (
             <>
-              We did not parse{" "}
-              <span className="font-medium text-ink">{fileName}</span> because no
-              live API is configured on this deployment.
+              <span className="font-medium text-ink">{found}</span> requirement
+              {found === 1 ? "" : "s"} filed into the matrix
+              {dealBreakers != null && dealBreakers > 0 ? (
+                <>
+                  {", "}
+                  <span className="font-medium text-signal-oxblood">
+                    {dealBreakers}
+                  </span>{" "}
+                  flagged as deal-breaker{dealBreakers === 1 ? "" : "s"}
+                </>
+              ) : null}
+              . Ready to review.
             </>
           ) : found != null ? (
             <>
@@ -255,11 +388,6 @@ export function UploadDropzone() {
             </>
           )}
         </p>
-        {isApiEnabled() && (
-          <p className="mt-1 font-mono text-xs text-ink-muted">
-            Opening your compliance matrix…
-          </p>
-        )}
         <div className="mt-5 flex items-center gap-4">
           <Link
             href="/review"
@@ -280,14 +408,13 @@ export function UploadDropzone() {
   }
 
   if (stage === "error") {
+    // Only server/network failures land here now; a bad file never leaves the
+    // staged list. Same raised-paper idiom as the dropzone, so failure still
+    // looks like part of the same stationery.
     return (
-      <div className="w-full max-w-xl">
+      <div className="surface-grain mx-auto w-full max-w-xl rounded-2xl border border-hairline bg-paper-raised p-6 shadow-[var(--depth-sheet)]">
         <h2 className="text-base font-semibold text-ink">
-          {errorMessage?.toLowerCase().includes("pdf") ||
-          errorMessage?.toLowerCase().includes("50mb") ||
-          errorMessage?.toLowerCase().includes("file")
-            ? "We cannot parse that file yet."
-            : "Couldn't complete the upload."}
+          {ERROR_HEADINGS[errorKind ?? "unknown"]}
         </h2>
         <p className="mt-1 text-sm text-ink-muted">
           {errorMessage ??
@@ -307,34 +434,22 @@ export function UploadDropzone() {
   }
 
   if (stage === "extracting") {
-    // Live: the staged "watch it read your tender" view, driven by the polled job.
-    if (isApiEnabled()) {
-      return (
-        <ProcessingView
-          job={job}
-          fileName={fileName}
-          fileCount={stagedFiles.length}
-          isArchive={isZipPack(stagedFiles[0])}
-        />
-      );
-    }
-    // Mock: a brief sample-open moment (no live extraction to show).
+    // Both paths run the same staged "watch it read your tender" view — live
+    // driven by the polled job, mock by the scripted replay — with the idle
+    // screen's blank register held underneath, inking itself in as the
+    // requirement count climbs: the empty form becoming the filled matrix.
     return (
-      <div className="flex w-full max-w-xl items-center gap-3">
-        <span
-          className="inline-block h-5 w-5 shrink-0 animate-spin rounded-full border-[3px] border-hairline border-t-forest"
-          aria-hidden
-        />
-        <div className="min-w-0">
-          <h2 className="text-base font-semibold text-ink">
-            Opening the sample matrix…
-          </h2>
-          <p
-            className="truncate text-sm text-ink-muted"
-            title={fileName ?? undefined}
-          >
-            {fileName}
-          </p>
+      <div className="w-full">
+        <div className="mx-auto max-w-xl">
+          <ProcessingView
+            job={job}
+            fileName={fileName}
+            fileCount={stagedFiles.length}
+            isArchive={isZipPack(stagedFiles[0])}
+          />
+        </div>
+        <div className="mx-auto mt-8 max-w-md">
+          <RegisterPreview filled={job?.requirementCount ?? 0} />
         </div>
       </div>
     );
@@ -344,7 +459,9 @@ export function UploadDropzone() {
 
   return (
     // Centred intake: one prominent slot as the single focal action, grounded on
-    // the blank register it files into.
+    // the blank register it files into. The hero-enter stagger (shared, unscoped
+    // in globals.css, motion-safe) settles glyph → headline → register once on
+    // load, so the page arrives like a form being laid on the desk.
     <div className="w-full text-center">
       <div
         role="button"
@@ -368,7 +485,7 @@ export function UploadDropzone() {
         {/* A document being filed, not a generic upload arrow: a sheet with a
             folded corner and ruled lines, echoing the register below. */}
         <span
-          className={`inline-flex h-20 w-20 items-center justify-center rounded-full bg-paper-recessed shadow-[var(--depth-pressed)] transition-colors ${
+          className={`hero-enter inline-flex h-20 w-20 items-center justify-center rounded-full bg-paper-recessed shadow-[var(--depth-pressed)] transition-colors ${
             isDragging ? "text-forest" : "text-ink-muted group-hover:text-forest"
           }`}
         >
@@ -389,43 +506,51 @@ export function UploadDropzone() {
           </svg>
         </span>
 
-        <p className="mt-6 font-serif text-2xl font-semibold leading-tight text-ink">
+        <p className="hero-enter-2 mt-6 font-serif text-2xl font-semibold leading-tight text-ink">
           {isDragging
             ? "Let go to file it"
             : stagedCount > 0
               ? "Add more tender documents"
               : "Drop your tender pack"}
         </p>
-        <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.16em] text-ink-muted">
+        <p className="hero-enter-2 mt-2 max-w-[52ch] text-sm leading-relaxed text-ink-muted">
+          One document or the whole tender pack. We read them into a compliance
+          matrix and flag the deal-breakers.
+        </p>
+        <p className="hero-enter-2 mt-4 font-mono text-[11px] uppercase tracking-[0.16em] text-ink-muted">
           PDF · Word · Excel · CSV · ZIP
         </p>
       </div>
 
-      {stagedCount > 0 && (
+      {(stagedCount > 0 || rejections.length > 0) && (
         <div className="mx-auto mt-5 max-w-2xl rounded-md border border-hairline bg-paper-raised text-left shadow-[var(--depth-row)]">
-          <div className="flex items-center justify-between gap-3 border-b border-hairline px-4 py-3">
-            <div>
-              <p className="font-mono text-[11px] font-medium uppercase tracking-wide text-ink-muted">
-                Tender pack staged
-              </p>
-              <p className="mt-0.5 text-sm text-ink-muted">
-                {stagedCount} document{stagedCount === 1 ? "" : "s"} ready to read
-              </p>
+          {stagedCount > 0 && (
+            <div className="flex items-center justify-between gap-3 border-b border-hairline px-4 py-3">
+              <div>
+                <p className="font-mono text-[11px] font-medium uppercase tracking-wide text-ink-muted">
+                  Tender pack staged
+                </p>
+                <p className="mt-0.5 text-sm text-ink-muted">
+                  {stagedCount} document{stagedCount === 1 ? "" : "s"} ready to read
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={startUpload}
+                className="shrink-0 rounded-md bg-forest px-4 py-2 text-sm font-semibold text-paper transition-colors hover:bg-forest-hover"
+              >
+                Read tender pack
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={startUpload}
-              className="shrink-0 rounded-md bg-forest px-4 py-2 text-sm font-semibold text-paper transition-colors hover:bg-forest-hover"
-            >
-              Read tender pack
-            </button>
-          </div>
+          )}
           <ul className="divide-y divide-hairline">
             {stagedFiles.map((file) => {
               const key = fileKey(file);
               return (
                 <li key={key} className="flex items-center gap-3 px-4 py-2.5">
-                  <span className="rounded-[3px] border border-hairline bg-paper-recessed px-1.5 py-1 font-mono text-[10px] font-medium leading-none text-ink shadow-[var(--depth-pressed)]">
+                  {/* Accent = traceable to source: these chips name the source
+                      documents everything downstream will cite. */}
+                  <span className="rounded-[3px] border border-accent/30 bg-accent-soft px-1.5 py-1 font-mono text-[10px] font-medium leading-none text-accent shadow-[var(--depth-pressed)]">
                     {uploadKindShortLabel(file)}
                   </span>
                   <span className="min-w-0 flex-1 truncate text-sm text-ink" title={file.name}>
@@ -445,6 +570,31 @@ export function UploadDropzone() {
                 </li>
               );
             })}
+            {/* Files that couldn't join the pack keep their row — set aside with
+                a reason in the margin, not thrown out with the whole pack. */}
+            {rejections.map((rejection) => (
+              <li key={rejection.key} className="flex items-start gap-3 px-4 py-2.5">
+                <span className="rounded-[3px] border border-signal-oxblood-frame/40 bg-paper-recessed px-1.5 py-1 font-mono text-[10px] font-medium leading-none text-signal-oxblood shadow-[var(--depth-pressed)]">
+                  {rejectedChipLabel(rejection.name)}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm text-ink-muted" title={rejection.name}>
+                    {rejection.name}
+                  </p>
+                  <p className="mt-0.5 font-mono text-[11px] text-signal-oxblood">
+                    {REJECTION_NOTES[rejection.kind]}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => removeRejection(rejection.key)}
+                  className="rounded px-1.5 py-0.5 font-mono text-xs text-ink-muted transition-colors hover:bg-paper-recessed hover:text-ink"
+                  aria-label={`Dismiss ${rejection.name}`}
+                >
+                  ×
+                </button>
+              </li>
+            ))}
           </ul>
           <div className="flex items-center justify-between gap-3 px-4 py-3">
             <button

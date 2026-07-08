@@ -1,50 +1,135 @@
-# Bidframe Design Language: The Civic Record
+# Bidframe Design Language: Forest-Led Civic Record
 
 The visual identity that sits on top of the layout. This is the deep manual behind section 13 of
 [DESIGN-SYSTEM.md](DESIGN-SYSTEM.md). [layout.md](layout.md) decides where things sit, this decides what
 they feel like. [copywriting.md](copywriting.md) decides what they say. Colour values live in
 [design/colours.html](design/colours.html), and the material tokens defined here are the companion to
-those. Every rule is given twice: the technical version a builder works to, and the plain version anyone
-on the team can hold us to.
+those. The overhaul's quality gates live in [QA.md](<UI/UX/Motion Overhaul/QA.md>), and deletion
+decisions live in [delete.md](<UI/UX/Motion Overhaul/delete.md>).
+
+This document is not an information-architecture brief. It does not decide the user's workflow or the
+order of the product. It decides how Bidframe feels to a potential user or customer: guided, solid,
+continuous, inspectable, and serious without becoming cold.
 
 ## The one idea
 
-**Bidframe presents your bid as an official record in progress.** A public document with a masthead, ruled
-structure, numbered clauses, a margin of citations, and an approval stamp. It reads credible the instant a
-procurement person sees it, because it looks like the official register it effectively is.
+**Bidframe is guided by forest, verified by the record.**
 
-Three ingredients, in order of authority:
+The forest layer is the brand world: calm, capable, protective, and memorable. It is what a potential
+customer feels first on the landing page, the demo, the upload resolve, and the product chrome. It says
+"we can guide you through dense tender risk."
 
-1. **Editorial structure** (the form): masthead, rules, columns, marginalia, a register.
-2. **Brutalist honesty** (the discipline): exposed structure, the mono record voice, raw rules, no
+The civic record layer is the proof grammar: masthead, ruled structure, numbered clauses, source margin,
+evidence blocks, and approval stamp. It is what a user sees when they need to trust the work. It says
+"this line can be inspected, challenged, approved, and exported."
+
+Four ingredients, in order of authority:
+
+1. **Forest guidance** (the brand world): deep forest/pine grounds, botanical or treeline moments, and
+   a sense of moving through complexity with a capable guide.
+2. **Editorial record** (the proof form): masthead, rules, columns, marginalia, a register.
+3. **Brutalist honesty** (the discipline): exposed structure, the mono record voice, raw rules, no
    decoration. The form is the function, which is the same promise as auditability.
-3. **Warmed paper at 45%** (the material): soft depth and a faint grain so it never feels machine-cold.
+4. **Warmed paper at 45%** (the material): soft depth and a faint grain so it never feels machine-cold.
 
 ## The bet, and who it serves
 
-This is a deliberate bet, recorded so it can be defended or revisited. It serves two readers at once:
+This is a deliberate bet, recorded so it can be defended or revisited. It serves three readers at once:
 
-- **The procurement buyer** reads it as credible immediately. It looks like a serious, submittable
-  official document, not a startup dashboard.
+- **The potential customer** remembers the forest-led world. It feels ownable, not like another grey B2B
+  dashboard.
+- **The procurement buyer** reads the work surfaces as credible immediately. They look like serious,
+  submittable records, not speculative AI output.
 - **The SME bid writer** (a nervous non-expert) is reassured that what they are producing looks legitimate.
-  The civic structure lowers their anxiety, and the warmth keeps it from feeling forbidding.
+  The forest layer lowers anxiety, the record layer makes the work inspectable, and the warmth keeps it
+  from feeling forbidding.
 
 ## The tension, and the rule that holds it
 
-Brutalism and warming pull in opposite directions. Brutalism is raw, stark, anti-decoration. Warming is
-soft, paper, comfort. They are paired on purpose, because each fixes the other's failure mode:
+Forest, record, brutalism, and warming pull in different directions:
 
-- **Warmth stops the civic record going cold.** A pure brutalist document reads like a tax form: credible
-  but forbidding, the last thing a nervous user needs.
-- **The civic record stops the warmth going twee.** Paper and softness alone drift toward scrapbook-cosy,
-  which wrecks credibility.
+- **Forest can become decorative** if it is sprayed everywhere. It must carry guidance, arrival, momentum,
+  or brand memory.
+- **The record can become a tax form** if it owns the whole product. It must lead where proof is being
+  tested, not where the user needs encouragement.
+- **Brutalist honesty can become harsh** if it is not softened. It must expose the structure without
+  punishing the user.
+- **Warmth can become twee** if it is not held by rules, real references, and serious typography.
 
-The holding rule: **warmth is the material, the civic record is the form, and the form leads by default.
-Where they conflict, structure usually wins, but not always.** A surface with a reason to let warmth or
-expression lead can take it, the way the landing page does (a sanctioned departure, below). That default
-keeps this from becoming a cold form or a craft project. Watch for two failure modes, not one: the cold
-tax-form, whose antidote is warmth at 45%, and the flat, timid screen that risked nothing, whose antidote
-is a deliberate bold move. Restraint is a tool here, not the goal.
+The holding rule:
+
+**Forest leads the first feeling. The record leads the proof. Warm paper connects them.**
+
+Where a surface is selling trust, onboarding the user, showing motion through complexity, or making a
+customer remember Bidframe, the forest layer can lead. Where a surface is verifying a requirement,
+showing evidence, approving a line, or exporting the bid record, the civic record leads.
+
+Exported artifacts are the sharpest version of that rule. The compliance matrix, bid response draft,
+and audit/evidence pack are record-led: official, editable, and honest. Forest can guide the export
+moment in the app, but the files themselves keep restrained branding and keep unresolved gaps visible.
+
+This replaces the older idea that the landing page is a one-off exception. The landing and `/demo` are
+the full brand expression. The app should inherit that expression in
+controlled ways: header chrome, primary calls to action, upload/processing, collaboration presence, and
+state transitions. The proof surfaces keep the record discipline.
+
+## The layer model
+
+### 1. Forest-led brand layer
+
+Used most strongly on:
+
+- `/` landing
+- `/demo` and other client-facing walkthroughs
+- `/pack`
+- upload and processing resolve moments
+- app masthead accents
+- collaboration presence and live activity
+- primary CTAs
+
+Technical:
+
+Use the existing forest/pine/moss family already present in `globals.css`. Forest can be environmental
+ground, CTA tone, active guidance, or transition surface. It should not become random green decoration.
+
+Plain:
+
+This is the guided-through-the-woods feeling. It makes Bidframe feel calm, capable, and memorable before
+the user studies the record.
+
+### 2. Civic record work layer
+
+Used most strongly on:
+
+- `/review` matrix rows
+- `RequirementPanel`
+- source proof overlays
+- evidence blocks
+- approval stamps and audit lines
+- export readiness
+- marks/criteria evidence
+
+Technical:
+
+Use masthead, three rule weights, register refs, mono source voice, ruled margin, paper-raised sheets,
+pressed evidence, and clean approval marks.
+
+Plain:
+
+This is the prove-it layer. It makes the AI output feel inspectable, not magical.
+
+### 3. Warm material layer
+
+Used everywhere, but with restraint:
+
+- paper as the base
+- paper-raised only for active sheets and earned focal surfaces
+- grain only on raised paper or forest product objects
+- soft ink-tinted shadows only where depth means focus
+
+Plain:
+
+This is what keeps forest and record in the same world.
 
 ## The material: warmth at 45%
 
@@ -68,7 +153,8 @@ URI of fractal noise at `--grain` opacity, `mix-blend-mode: multiply`), never a 
 
 **The shadow rule.** One soft shadow language, ink-tinted (`rgba(33,29,23,...)`), never pure black, used
 only on raised surfaces. Depth always means focus: if a surface is not the thing you are working on, it
-does not lift. Nothing floats decoratively.
+does not lift. Nothing floats decoratively. Forest-led surfaces can be deeper or more atmospheric only
+when they are arrival, demo, or processing moments, not ordinary work rows.
 
 ## The device kit
 
@@ -164,24 +250,27 @@ The test is the same throughout: can you name the reason.
   everywhere. The civic look comes from structure and restraint, not period pastiche. This is what keeps
   "the civic record" from becoming "old newspaper" slop.
 - **The stamp is a clean mark**, never a texture.
+- **Forest is a layer, not green spray.** Forest can lead first impressions, demo moments, upload resolve,
+  collaboration presence, and primary action. It should not become a green border on every component.
 - **Warmth sits around the 45% tokens by default.** The brutalist discipline keeps depth from creeping up
-  everywhere by habit. One soft shadow language on raised surfaces is the resting state, but a hero surface
-  (a landing, the upload resolve) may push past it on purpose, as a named departure.
+  everywhere by habit. One soft shadow language on raised surfaces is the resting state, but a forest-led
+  hero, demo, upload resolve, or processing surface may push past it on purpose.
 - **Grain only on raised surfaces**, never on the page or the scanning rows.
 - **Light paper only. There is no dark mode**: the document is paper.
 
 ## Relationship to the current build
 
 This restyles the components the layout pass already shipped, it does not re-architect them.
-`DocumentHeader` becomes the masthead. The matrix grid (in the matrix and `RequirementSpine`) gains the
-reference column and the rule hierarchy. `RequirementPanel` gains the lifted sheet, the ruled margin, the
-pressed evidence block, and the stamp on approve. The deal-breaker rows and the flattened `GatingHero`
-gain weight; the reading edge is the deep `oxblood-frame` tone (the `GatingHero` spine at 3px) while the
-bright `oxblood` carries the dots and the bead — a fill/frame two-tone. `SectionNav` is unchanged. The material tokens above go into
-`globals.css` `@theme`. Where this document and the build disagree, treat it as intent to grow into, and
-raise anything expensive on the frontend comms board.
+`DocumentHeader` becomes the masthead, but it should also carry a controlled forest-led sense of guidance:
+the selected tender, live people, share/activity, and the next action should feel current rather than
+archival. The matrix grid (in the matrix and `RequirementSpine`) gains the reference column and the rule
+hierarchy. `RequirementPanel` gains the lifted sheet, the ruled margin, the pressed evidence block, and
+the stamp on approve. The deal-breaker rows and the flattened `GatingHero` gain weight; the reading edge
+is the deep `oxblood-frame` tone while the bright `oxblood` carries the dots and the bead. The material
+and forest tokens already live in `globals.css` `@theme`. Where this document and the build disagree,
+treat it as intent to grow into, and raise anything expensive on the frontend comms board.
 
-## The linked workspace (the /graph surface — a named departure)
+## The linked workspace (the /graph surface)
 
 **Technical.** The `/graph` surface is one workspace, not two hidden tabs. The ledger
 (`MarksView`, "where the marks live") and the relationship map (`GraphView`) are the same
@@ -204,30 +293,31 @@ top instead of throwing you to another page. A clear switch lets you widen eithe
 search box filters both. This is a deliberate swing away from the flat two-tab version, made
 because "easier to move between the list and the map" was the whole point of the surface.
 
-**Why it's allowed.** The holding rule says structure leads by default, but a surface with a
-reason to let expression lead can take it. Here the reason is nameable: the two-tab version was
-the sixth failure mode — flat and safe, the switch so quiet nobody found it. The workspace keeps
-every civic-record device (the register cards, the oxblood reading edge on deal-breakers, the
-mono record voice, the shared confidence bead, the drawer as lifted sheet); it reorganises how
-they sit together, it does not decorate over them.
+**Why it fits.** `/graph` is a mixed surface. The record layer proves the criteria, refs, and
+dependencies; the forest-led layer can make the space feel navigable and alive. The reason is nameable:
+the two-tab version was flat and safe, the switch so quiet nobody found it. The workspace keeps every
+civic-record device (the register cards, the oxblood reading edge on deal-breakers, the mono record
+voice, the shared confidence bead, the drawer as lifted sheet); it reorganises how they sit together and
+may use controlled forest guidance to show movement through the work.
 
 ## What motion will animate (named here, specced later)
 
 Two hero moments belong to the motion pass, but the design language names them so they are not invented
 from scratch later:
 
-1. **The upload-to-matrix resolve**: the raw document being filed into the register.
+1. **The upload-to-matrix resolve**: the raw document moving from forest-led guidance into the record.
 2. **The approval stamp settle**: the mark landing and settling onto the sheet.
 
-## The civic-record check
+## The forest-led record check
 
 Run a screen past these. Treat a "no" as a prompt to check your intent, not an automatic veto: a
-deliberate, nameable departure can answer "no" and still be right. An accidental "no", or a sixth "the
-screen is flat and safe", is the real blocker.
+deliberate, nameable departure can answer "no" and still be right. An accidental "no", or a screen that
+is flat and safe, is the real blocker.
 
-1. Does it read as an official record at a glance (a masthead, one firm rule, references present)?
-2. Are depth and grain earning their place, kept off the scanning rows so they still scan?
-3. Is every official flourish backed by real data, with no decorative numbering and no nostalgia costume?
-4. Is the warmth deliberate rather than crept-up, with one coherent shadow language?
-5. Does it still pass the base slop check and the greyscale test?
-6. Did the screen take at least one real swing, or did it play flat and safe?
+1. Does the surface know which layer leads: forest for guidance/customer feeling, record for proof?
+2. Does it read as an official record where inspection matters (masthead, rule, refs, source proof)?
+3. Does forest add guidance, arrival, memory, collaboration, or momentum rather than random decoration?
+4. Are depth and grain earning their place, kept off the scanning rows so they still scan?
+5. Is every official flourish backed by real data, with no decorative numbering and no nostalgia costume?
+6. Does it still pass the base slop check and the greyscale test?
+7. Did the screen take at least one real swing, or did it play flat and safe?

@@ -321,22 +321,40 @@ export interface TenderSummary {
   tenderId: string;
   title: string;
   requirementCount: number;
+  // Optional per-tender signals. The backend's GET /tenders sends only the three
+  // fields above today; these are parsed when present so the list lights up the
+  // moment the API starts sending them, and renders complete without them.
+  dealBreakerCount?: number;
+  decidedCount?: number;
+  uploadedAt?: string; // ISO timestamp
 }
 
-// GET /tenders — a summary of every uploaded tender (id, title, requirement count).
+// GET /tenders — a summary of every uploaded tender (id, title, requirement count,
+// plus any optional signals the backend has started sending — see TenderSummary).
 export async function getTenders(): Promise<TenderSummary[]> {
   const res = await fetch(`${BASE}/tenders`, { headers: { ...authHeaders() } });
   if (!res.ok) throw await apiError(res, `Couldn't load your tenders (${res.status})`);
-  const rows = (await res.json()) as Array<{
-    tender_id: string;
-    title: string;
-    requirement_count: number;
-  }>;
-  return rows.map((r) => ({
-    tenderId: r.tender_id,
-    title: r.title,
-    requirementCount: r.requirement_count,
-  }));
+  const rows = (await res.json()) as Array<Record<string, unknown>>;
+  return rows.map((r) => {
+    const summary: TenderSummary = {
+      tenderId: r.tender_id as string,
+      title: r.title as string,
+      requirementCount: r.requirement_count as number,
+    };
+    // Defensive optional parsing: only adopt a signal when it arrives with the
+    // right type, so a half-rolled-out backend can never break the list.
+    if (typeof r.deal_breaker_count === "number" && r.deal_breaker_count >= 0) {
+      summary.dealBreakerCount = r.deal_breaker_count;
+    }
+    if (typeof r.decided_count === "number" && r.decided_count >= 0) {
+      summary.decidedCount = r.decided_count;
+    }
+    const uploaded = r.uploaded_at ?? r.created_at;
+    if (typeof uploaded === "string" && uploaded.trim()) {
+      summary.uploadedAt = uploaded;
+    }
+    return summary;
+  });
 }
 
 // POST /tenders/{id}/draft — auditable autofill: draft a grounded answer per

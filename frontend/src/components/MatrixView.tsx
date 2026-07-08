@@ -18,6 +18,9 @@ import {
   deriveTriage,
   isConfidentNonGating,
   nextPriorityId,
+  nextPriorityLabel,
+  nextUnresolvedAfter,
+  nextUnresolvedLabelAfter,
   orderedWorklist,
   type GroupKey,
   type SortKey,
@@ -417,12 +420,15 @@ export function MatrixView({
   ).sort((a, b) => a.localeCompare(b));
   const selected = requirements.find((r) => r.id === selectedId) ?? null;
   const priorityId = nextPriorityId(requirements);
-  // What still needs a human: gaps to fill + deal-breakers / low-confidence to verify.
+  // What still needs a human: deal-breakers, gaps to fill, and low-confidence drafts.
   // Everything else, Bidframe has "handled" (ready to approve, or already decided).
   // Deliberately "handled", not "verified" — a flagged low-confidence item is off your
   // plate but was never verified, so counting it as verified would over-claim.
-  const needInput = triage.counts["needs-you"] + triage.counts["to-verify"];
-  const handledCount = requirements.length - needInput;
+  const unresolvedCount =
+    triage.counts["deal-breakers"] +
+    triage.counts["needs-input"] +
+    triage.counts["second-look"];
+  const handledCount = requirements.length - unresolvedCount;
   const isMixedPackSurface = sourceDocs.length > 1;
 
   // Live product, no tender loaded yet → show an onboarding empty state rather than
@@ -467,23 +473,19 @@ export function MatrixView({
     exportRequirements(requirements);
   }, [requirements]);
 
-  // The header Next routes to the highest-priority unresolved item and opens it.
-  // When nothing is pending it becomes Export response — the styled workbook.
+  // The header action routes to the highest-priority unresolved item and names
+  // the task. When nothing is pending it becomes Export: the styled workbook.
   function onNext() {
     if (priorityId) setSelectedId(priorityId);
     else exportXlsx();
   }
 
-  // The panel Next advances to the next item within its current triage group,
-  // rolling to the first item of the next non-empty group at the end (deriveTriage
-  // order). It keeps the worklist flowing: approve, next, approve, next.
+  // The panel Next advances to the next unresolved item in Stage-2 priority
+  // order. When nothing remains, it returns to the resting matrix.
   const goNext = useCallback(
     (currentId: string) => {
-      const ordered = orderedWorklist(triage);
-      const index = ordered.findIndex((r) => r.id === currentId);
-      if (index === -1 || ordered.length === 0) return;
-      const nextItem = ordered[(index + 1) % ordered.length];
-      setSelectedId(nextItem.id);
+      const nextItem = nextUnresolvedAfter(triage, currentId);
+      setSelectedId(nextItem?.id ?? null);
     },
     [triage]
   );
@@ -521,7 +523,7 @@ export function MatrixView({
         return;
       }
       if (event.metaKey || event.ctrlKey || event.altKey) return;
-      const ordered = triage.groups.flatMap((group) => group.items);
+      const ordered = orderedWorklist(triage);
       if (ordered.length === 0) return;
       if (event.key === "F" && event.shiftKey) {
         event.preventDefault();
@@ -620,7 +622,7 @@ export function MatrixView({
           activeFilter,
           onFilter: setActiveFilter,
           onNext,
-          nextLabel: priorityId ? "Next" : "Export response",
+          nextLabel: nextPriorityLabel(requirements),
           categories: availableCategories,
           activeCategories,
           onSetCategory: setCategoryFilter,
@@ -742,6 +744,7 @@ export function MatrixView({
                   onEdit={editWithUndo}
                   onFlag={flagWithUndo}
                   onNext={() => goNext(selected.id)}
+                  nextLabel={nextUnresolvedLabelAfter(triage, selected.id)}
                   onClose={close}
                 />
               </div>
@@ -807,10 +810,10 @@ export function MatrixView({
                   —{" "}
                   <AnimatedNumber
                     key={`need-${revealSeed}`}
-                    value={needInput}
+                    value={unresolvedCount}
                     from={0}
                   />{" "}
-                  still need your input.
+                  still need your review.
                 </p>
                 {/* A slim derived progress track: forest fill on a hairline
                     rule, showing how much Bidframe has already carried. No new
@@ -858,10 +861,6 @@ export function MatrixView({
               revealKey={revealSeed}
               getExitDelay={getExitDelay}
             />
-            <p className="mt-6 font-mono text-[11px] text-ink-muted/70">
-              Keys: j / k to move, a to approve a confident item, Shift+F to
-              focus, ⌘K for commands.
-            </p>
           </motion.div>
         )}
       </AppMain>
@@ -876,6 +875,9 @@ export function MatrixView({
           onEdit={editWithUndo}
           onFlag={flagWithUndo}
           onNext={selected ? () => goNext(selected.id) : () => {}}
+          nextLabel={
+            selected ? nextUnresolvedLabelAfter(triage, selected.id) : "Back to matrix"
+          }
           onClose={close}
         />
       )}

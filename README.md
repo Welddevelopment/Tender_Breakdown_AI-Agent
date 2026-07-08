@@ -73,9 +73,16 @@ The AI reads and drafts. It never decides, approves, or submits.
 ## Built for teams
 
 A tender is reviewed by a team — bid, compliance, and commercial. In the live product you can **share a
-tender with a colleague** and work it together: every approve / edit / flag is **attributed to who made it**
-(stamped server-side, so it can't be forged), a shared **activity feed** shows the team's decisions as they
-happen, and each row carries the initials of whoever signed it off. The audit trail *is* the collaboration.
+tender with a colleague or a standing team** and work it together **in real time**: when one reviewer
+approves, edits, flags, or comments on a requirement, it appears on the others' screens **live, no refresh**
+(streamed over Server-Sent Events). Every decision is **attributed to who made it** — stamped server-side, so
+it can't be forged — a shared **activity feed** shows the team's actions as they happen, each row carries the
+initials of whoever signed it off, and any requirement can hold a **comment thread** for the back-and-forth.
+Reusable **teams** mean you set your bid group up once instead of re-inviting per tender. The audit trail
+*is* the collaboration.
+
+Two people on one tender, live: [`ops/demo-bob-script.md`](ops/demo-bob-script.md) walks the two-account
+flow end to end.
 
 ## Why It Fits The Track
 
@@ -224,6 +231,10 @@ NEXT_PUBLIC_API_BASE_URL=http://localhost:8000 npm run dev
 | `POST` | `/tenders/{id}/draft` | Draft evidence-backed answers from uploaded capability documents. |
 | `POST` | `/tenders/{id}/share` | Share a tender with another account by email (owner-only). |
 | `GET` | `/tenders/{id}/members` | List everyone with access to a tender. |
+| `POST` | `/tenders/{id}/team` | Share a tender with a whole team. |
+| `GET` `POST` | `/teams` | List or create reusable teams; `POST /teams/{id}/members` adds people. |
+| `GET` `POST` | `/requirements/{id}/comments` | Read or post a comment on a requirement. |
+| `GET` | `/tenders/{id}/events` | Live SSE stream of decisions, comments, and members. |
 | `PATCH` | `/requirements/{id}` | Save an approve / edit / flag decision — attributed server-side to the signed-in user. |
 
 Full backend details are in [`backend/README.md`](backend/README.md).

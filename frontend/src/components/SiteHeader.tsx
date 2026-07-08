@@ -16,7 +16,7 @@ import { BookDemoButton } from "./landing/BookDemoButton";
 // Two variants:
 // - "marketing": See the demo · Sign in · Book a demo. Sticky, translucent
 //   paper over a blur, the same letterhead on every public page.
-// - "app": the SectionNav (Tenders · Review · Pack) and the quiet account
+// - "app": the SectionNav (Tender · Bid · Matrix · Marks) and the quiet account
 //   control. NOT sticky — the app's fullscreen overlays (FocusMode,
 //   SourceVerifyOverlay) sit at z-60, below the masthead's z-80, so a sticky
 //   app bar would float over them.
