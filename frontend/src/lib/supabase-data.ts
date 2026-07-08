@@ -11,7 +11,7 @@ import type {
   SourceDoc,
   Tender,
 } from "@/types/requirement";
-import type { TenderSummary } from "@/lib/api";
+import type { JobStatus, TenderSummary } from "@/lib/api";
 
 // Production data access: the queries the app runs against Supabase, mirroring the
 // legacy api.ts surface so RequirementsContext/TendersList route by mode without the
@@ -179,6 +179,154 @@ export async function persistDecision(
     .eq("tender_id", tenderId)
     .eq("req_id", reqId);
   if (error) throw new Error(error.message);
+}
+
+// ---- Upload + job queue -------------------------------------------------------------
+// Production upload goes browser → Supabase directly: the pack lands in Storage under
+// the org's folder, a tender row is created as `processing`, and a `jobs` row is queued
+// for the Python worker. No server hop, so serverless time limits never touch a
+// 200-page tender pack — the worker (an always-on process) does the long work.
+
+const BUCKET = "tender-docs";
+
+export async function uploadTenderPack(
+  supabase: SupabaseClient,
+  files: File[],
+  title: string
+): Promise<{ tenderId: string; jobId: string }> {
+  // 1. The tender row. org_id/created_by default from the JWT in the database.
+  const { data: tender, error: tenderError } = await supabase
+    .from("tenders")
+    .insert({ title, filename: files[0]?.name ?? null, status: "processing" })
+    .select("id, org_id")
+    .single();
+  if (tenderError) throw new Error(tenderError.message);
+
+  // 2. The documents, at <org>/<tender>/<doc_id><ext> (the path RLS checks the org on).
+  const docs: { doc_id: string; path: string; filename: string }[] = [];
+  for (const [i, file] of files.entries()) {
+    const docId = `d${i + 1}`;
+    const ext = file.name.includes(".")
+      ? `.${file.name.split(".").pop()!.toLowerCase()}`
+      : "";
+    const path = `${tender.org_id}/${tender.id}/${docId}${ext}`;
+    const { error: uploadError } = await supabase.storage
+      .from(BUCKET)
+      .upload(path, file, { contentType: file.type || undefined });
+    if (uploadError) {
+      // Leave an honest failed tender rather than a phantom processing one.
+      await supabase
+        .from("tenders")
+        .update({ status: "failed", error: `Upload failed: ${uploadError.message}` })
+        .eq("id", tender.id);
+      throw new Error(uploadError.message);
+    }
+    docs.push({ doc_id: docId, path, filename: file.name });
+  }
+
+  // 3. The queued job the worker claims.
+  const { data: job, error: jobError } = await supabase
+    .from("jobs")
+    .insert({
+      tender_id: tender.id,
+      kind: "extract",
+      payload: { title, docs },
+    })
+    .select("id")
+    .single();
+  if (jobError) throw new Error(jobError.message);
+
+  return { tenderId: tender.id, jobId: job.id };
+}
+
+// Map a jobs row onto the JobStatus shape ProcessingView already renders — the worker
+// writes the same snake_case progress fields the old backend registry used.
+export function jobRowToStatus(row: {
+  status: string;
+  progress: Record<string, unknown> | null;
+  error: string | null;
+}): JobStatus {
+  const p = row.progress ?? {};
+  return {
+    status:
+      row.status === "done"
+        ? "done"
+        : row.status === "error"
+          ? "error"
+          : "processing",
+    stage: (p.stage as string) ?? (row.status === "queued" ? "queued" : ""),
+    message: p.message as string | undefined,
+    progress: (p.progress as number) ?? 0,
+    tenderId: p.tender_id as string | undefined,
+    requirementCount: p.requirement_count as number | undefined,
+    dealBreakerCount: p.deal_breaker_count as number | undefined,
+    rawCount: p.raw_count as number | undefined,
+    chunkDone: p.done as number | undefined,
+    chunkTotal: p.total as number | undefined,
+    pageCount: p.page_count as number | undefined,
+    sectionCount: p.section_count as number | undefined,
+    detail: row.error ?? (p.detail as string | undefined),
+  };
+}
+
+// Watch a job to completion: Realtime UPDATE stream + a slow poll as belt-and-braces
+// (a dropped websocket must never strand the progress bar). Resolves on done/error.
+export function watchJob(
+  supabase: SupabaseClient,
+  jobId: string,
+  onUpdate: (job: JobStatus) => void
+): Promise<JobStatus> {
+  return new Promise((resolve, reject) => {
+    let settled = false;
+    let pollTimer: ReturnType<typeof setInterval> | null = null;
+
+    const finish = (status: JobStatus) => {
+      if (settled) return;
+      settled = true;
+      if (pollTimer) clearInterval(pollTimer);
+      void supabase.removeChannel(channel);
+      resolve(status);
+    };
+
+    const handleRow = (row: {
+      status: string;
+      progress: Record<string, unknown> | null;
+      error: string | null;
+    }) => {
+      const status = jobRowToStatus(row);
+      onUpdate(status);
+      if (status.status === "done" || status.status === "error") finish(status);
+    };
+
+    const channel = supabase
+      .channel(`job-${jobId}`)
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "jobs", filter: `id=eq.${jobId}` },
+        (payload) => handleRow(payload.new as JobRow)
+      )
+      .subscribe();
+
+    const poll = async () => {
+      const { data, error } = await supabase
+        .from("jobs")
+        .select("status, progress, error")
+        .eq("id", jobId)
+        .single();
+      if (error) {
+        if (!settled) {
+          settled = true;
+          if (pollTimer) clearInterval(pollTimer);
+          void supabase.removeChannel(channel);
+          reject(new Error(error.message));
+        }
+        return;
+      }
+      handleRow(data);
+    };
+    void poll();
+    pollTimer = setInterval(() => void poll(), 5000);
+  });
 }
 
 // ---- Comments ---------------------------------------------------------------------

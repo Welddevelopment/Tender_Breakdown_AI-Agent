@@ -12,6 +12,9 @@ import {
 } from "@/lib/api";
 import { useRequirements } from "@/context/RequirementsContext";
 import { DEMO_DEFAULT_TENDER } from "@/context/RequirementsContext";
+import { supabaseEnabled } from "@/lib/env";
+import { useSupabase } from "@/lib/supabase";
+import { uploadTenderPack, watchJob } from "@/lib/supabase-data";
 import {
   sourceDocumentKindFromFilename,
   sourceKindShortLabel,
@@ -186,6 +189,7 @@ export function UploadDropzone() {
   const [job, setJob] = useState<JobStatus | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const supabase = useSupabase();
   const mockTimersRef = useRef<number[]>([]);
 
   function clearMockTimers() {
@@ -201,7 +205,7 @@ export function UploadDropzone() {
   // demo replay deliberately holds instead — the presenter opens the matrix when
   // the room is ready for it.
   useEffect(() => {
-    if (stage !== "done" || !isApiEnabled()) return;
+    if (stage !== "done" || (!supabaseEnabled && !isApiEnabled())) return;
     const timer = window.setTimeout(() => router.push("/review"), 1800);
     return () => window.clearTimeout(timer);
   }, [stage, router]);
@@ -249,9 +253,9 @@ export function UploadDropzone() {
     setJob(null);
     setStage("extracting");
 
-    // No API configured → the scripted replay drives the same ProcessingView,
+    // No backend configured → the scripted replay drives the same ProcessingView,
     // ending on the sample tender's real counts.
-    if (!isApiEnabled()) {
+    if (!supabaseEnabled && !isApiEnabled()) {
       clearMockTimers();
       for (const { at, job: frame } of mockReplayFrames()) {
         mockTimersRef.current.push(
@@ -264,10 +268,18 @@ export function UploadDropzone() {
       return;
     }
 
-    // Live path: upload the pack → background job → poll for live progress → load.
+    // Live path: upload the pack → durable background job → live progress → load.
+    // Production: browser → Supabase Storage + a queued jobs row the Python worker
+    // claims; progress streams back over Realtime. Legacy: the old REST + poll pair.
     try {
-      const { jobId, tenderId } = await uploadTender(all, all[0].name);
-      const finalJob = await pollJob(jobId, setJob);
+      const { jobId, tenderId } =
+        supabaseEnabled && supabase
+          ? await uploadTenderPack(supabase, all, all[0].name)
+          : await uploadTender(all, all[0].name);
+      const finalJob =
+        supabaseEnabled && supabase
+          ? await watchJob(supabase, jobId, setJob)
+          : await pollJob(jobId, setJob);
       if (finalJob.status === "error") {
         setErrorMessage(finalJob.detail || "We could not process this tender pack.");
         setErrorKind("server");
