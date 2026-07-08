@@ -127,6 +127,10 @@ export function RequirementsProvider({
   // The live tender currently loaded (null on the mock default). Needed so the
   // autofill action knows which tender to draft against.
   const [tenderId, setTenderId] = useState<string | null>(null);
+  // The loaded tender's display title. Seeded from the mock/demo default, then
+  // swapped to the real tender's title by loadTender — so a live tender shows its
+  // own name (not the "(Demo)" seed) in the matrix header, Bid view and exports.
+  const [title, setTitle] = useState<string>(seed.title);
   const [drafting, setDrafting] = useState(false);
   const { user } = useAuth(); // for collaboration attribution on decisions (null when signed out)
 
@@ -154,6 +158,7 @@ export function RequirementsProvider({
     setCapabilityDocs(tender.capability_docs ?? []);
     setSourceDocs(tender.source_docs ?? []);
     setAwardCriteria(tender.award_criteria ?? []);
+    setTitle(tender.title);
     setTenderId(id);
     try {
       window.sessionStorage.setItem("bf-tender", id);
@@ -585,7 +590,7 @@ export function RequirementsProvider({
         capabilityDocs,
         sourceDocs,
         awardCriteria,
-        title: seed.title,
+        title,
         tenderId,
         drafting,
         updateRequirement,

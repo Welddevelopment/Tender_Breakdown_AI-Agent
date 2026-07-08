@@ -26,14 +26,35 @@ actions are the proof. Everything is genuinely saved and streamed — nothing is
 
 ## Setup — before recording (mostly done for you)
 
-The tender is **already pre-loaded in Alice's account** — extracted, answers drafted from the capability
-docs, and **already shared to Bob**. Nothing to upload on camera.
+The tender is **already pre-loaded in Alice's account** — a real mixed pack extracted end-to-end,
+answers drafted from the capability docs, and **already shared to Bob** via the team. Nothing to
+upload on camera.
 
-- **Film on** the **new Vercel URL** (the one with realtime + comments). Both of you on that same URL.
-- **Alice:** `alice@bidframe.co.uk` / `alicepw123` → open **"Bradwell Common Grounds Maintenance ITT."**
-- **Bob (you):** `bob@bidframe.co.uk` / `bobpw12345` on your own laptop → open the same shared tender.
-  *(throwaway demo accounts — fine to rotate after.)*
+- **Accounts** (created; passwords are ≥8 chars):
+  - **Alice:** `alice@bidframe.io` / `alice1234`  (display name *Alice Chen*)
+  - **Bob (you):** `bob@bidframe.io` / `bob12345`  (display name *Bob Ellis*)
+  - *(spare: `demo@bidframe.io` / `demo1234`)*
+- **The tender:** **"Landscape Maintenance Services 2026-2029 - Bradwell Parish Council"**
+  (`tnd-9da46fbf`) — **205 requirements, 32 deal-breakers**, a 4-file mixed pack
+  (PDF · Word · Excel · CSV). Team **"Verdant Landscapes - Bid Team"** (Alice owner, Bob member).
+- **Where to film:**
+  - **Hosted (for two real recorders):** deploy the backend per `ops/deploy-runbook.md`
+    (Hugging Face Space), point Vercel at it, then both open the Vercel URL. *(Backend deploy is
+    prepared but not yet live — do this before the shoot.)*
+  - **Local check / same-machine dry run:** frontend `http://localhost:3000`, backend on `:8000`.
+    Alice in a normal window, Bob in an **Incognito** window (tokens live in localStorage, so a
+    second tab won't do — use Incognito or a second browser).
+- **Nav:** the top bar has **Tender** (library), **Bid** (`/answers`), **Matrix** (`/review`),
+  Graph, Teams. Open the tender from the library → lands on the **Matrix**.
 - Land on the **Matrix** and wait. Don't click anything until Part 4. Mic on from the start.
+
+**The three hero deal-breakers are real and sourced** (call them out in Part 2 / Part 4):
+- **£10,000,000 public-liability minimum** → from the **Word** return form (*Appendix D*)
+- **"price every line or be rejected"** → from the **Excel** pricing schedule (*Appendix E*)
+- **Certificate of Non-Collusion** → from the **CSV** compliance checklist (*Appendix F*)
+
+The **Bid** view has **14 grounded answers with evidence receipts + 34 open questions**, backed by
+3 Verdant Landscapes capability docs — enough for Part 3.
 
 ---
 
@@ -51,7 +72,7 @@ Legend: **ALICE** = drives + records · **`▶ BOB`** = you (speak throughout, a
 **ALICE:** "I dropped the whole pack into Bidframe. It read every file — weeks of manual combing, done in minutes."
 
 ### Part 2 — deal-breakers, first and proven
-**ALICE:** "[X] requirements — and the [Y] **deal-breakers** sit right at the top, because those are what kill a bid."
+**ALICE:** "205 requirements — and the 32 **deal-breakers** sit right at the top, because those are what kill a bid."
 
 **`▶ BOB`:** "That's the first thing I check as compliance lead. This £10m public-liability minimum came out of the **Word** return form; this 'price every line or be rejected' rule out of the **Excel** schedule; this anti-collusion certificate out of the **CSV**."
 
@@ -119,4 +140,4 @@ Two actions. Everything else is voice.
 - **Don't refresh or navigate away** mid-take — just approve / flag / comment on the matrix.
 - If a live update **doesn't** appear on Alice's screen, stop: check you're both on the **same tender**
   and the **new Vercel URL** (realtime only exists there).
-- `[X]` / `[Y]` = read the real requirement / deal-breaker counts off screen before the take.
+- Counts are **205 requirements / 32 deal-breakers** — but glance at the screen before the take in case they've been curated further.

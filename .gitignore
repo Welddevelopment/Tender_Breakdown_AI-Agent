@@ -34,6 +34,8 @@ next-env.d.ts
 /data/*
 !/data/tenders/
 /backend/data/
+# Assembled Hugging Face Space build (contains baked tender.db + source files — never commit here; push it to the Space repo instead)
+/deploy/hf-build/
 # OpenAI spend ledger (runtime; read the cumulative total via `python -m engine.usage_log`)
 usage-ledger.jsonl
 sent_outreach_log.csv

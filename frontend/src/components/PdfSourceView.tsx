@@ -12,13 +12,30 @@ import { locate, type MatchKind } from "@/lib/text-match";
 type PdfjsModule = typeof import("pdfjs-dist");
 const documentCache = new Map<string, Promise<PDFDocumentProxy>>();
 
+// We fetch the PDF bytes ourselves and hand pdf.js a `{ data }` buffer instead of
+// a `{ url }`. Letting pdf.js fetch the URL makes it stream cross-origin RANGE
+// requests from inside the worker, which is where the live tender PDF failed in
+// production ("Couldn't open the document"): a plain authenticated GET returns the
+// whole valid PDF with the right CORS headers, but the worker's ranged/streamed
+// fetch does not. One ordinary same-origin-shaped fetch (the token rides in the
+// URL, so no custom header, no preflight) is exactly the request the rest of the
+// app already makes successfully. A non-2xx response throws so the load shows the
+// honest error + "Open the page" fallback rather than a blank canvas.
+async function fetchPdfData(url: string): Promise<Uint8Array> {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`PDF fetch failed (${res.status})`);
+  return new Uint8Array(await res.arrayBuffer());
+}
+
 function getCachedDocument(
   pdfjs: PdfjsModule,
   url: string
 ): Promise<PDFDocumentProxy> {
   let entry = documentCache.get(url);
   if (!entry) {
-    entry = pdfjs.getDocument({ url }).promise;
+    entry = fetchPdfData(url).then(
+      (data) => pdfjs.getDocument({ data }).promise
+    );
     entry.catch(() => documentCache.delete(url));
     documentCache.set(url, entry);
   }
