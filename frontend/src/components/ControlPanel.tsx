@@ -193,9 +193,12 @@ export function ControlPanel() {
   }, [members, requirements, sourceDocs]);
 
   return (
+    // Moss band = the forest-tinted chrome frame; the tally cards inside stay
+    // paper (record). Completes the moss chrome stack (masthead → title → this)
+    // that gives way to the pure-paper matrix below.
     <section
       aria-label="How Bidframe keeps you in control"
-      className="surface-grain border-b border-hairline bg-paper-raised/75 px-6 py-3 shadow-[var(--depth-row)]"
+      className="surface-grain border-b border-moss-line bg-moss px-6 py-3 shadow-[var(--depth-row)]"
     >
       <div className="mx-auto max-w-6xl">
         {/* What Bidframe found — the headline read of the tender, above the

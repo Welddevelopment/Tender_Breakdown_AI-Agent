@@ -67,9 +67,11 @@ export function DocumentHeader({
       <SiteHeader variant="app" />
 
       {/* The title row: nameplate on the left (title never truncates — it may
-          wrap), the page's controls gathered on the right. A hairline rule
-          closes it; the 2px ink rule belongs to the masthead above. */}
-      <div className="border-b border-hairline bg-paper">
+          wrap), the page's controls gathered on the right. A moss ground + moss
+          hairline give the chrome a faint forest tint (the brand frame); the
+          matrix core below stays paper. The 2px ink rule belongs to the
+          masthead above. */}
+      <div className="border-b border-moss-line bg-moss">
         <div className="mx-auto flex max-w-[1160px] flex-wrap items-center justify-between gap-x-6 gap-y-3 px-6 py-4">
           <div className="flex min-w-0 flex-col gap-1">
             <h1 className="font-serif text-2xl font-semibold leading-tight tracking-tight text-ink">
