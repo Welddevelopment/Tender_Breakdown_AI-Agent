@@ -4,7 +4,7 @@
 >
 > **Interactive graph:** [`frontend/public/codemap.html`](frontend/public/codemap.html) — drag / zoom / click-to-focus; served at `/codemap.html` on the Vercel deploy. (The diagrams below render right here on GitHub.)
 >
-> Map of commit `b1a6a58` · 2026-07-08T23:20:02+01:00
+> Map of commit `2146624` · 2026-07-08T23:04:53Z
 
 **Read this first** for a current picture of the codebase — what lives where, and what imports what. It is the fast path to context for both humans and agents. If it looks wrong, it is stale: re-run the generator and push.
 
@@ -12,7 +12,7 @@
 
 | Area | Files | Lines | What it is |
 |------|-------|-------|------------|
-| **frontend** | 205 | 80,102 | Frontend — Next.js 16 / React 19 / Tailwind (compliance matrix UI) |
+| **frontend** | 210 | 80,125 | Frontend — Next.js 16 / React 19 / Tailwind (compliance matrix UI) |
 | **backend** | 23 | 4,378 | Backend — FastAPI (PDF ingest, extraction, REST API) |
 | **engine** | 85 | 7,528 | Engine — reconcile / eval / answer-draft pipeline + tests |
 | **prompts** | 7 | 778 | Prompts — LLM prompt specs (extraction, classification, answers, gaps) |
@@ -22,7 +22,7 @@
 | **docs** | 7 | 2,130 | Docs — plans & specs |
 | **ci** | 1 | 57 | CI — GitHub Actions |
 | **tooling** | 2 | 1,109 | Tooling — repo scripts (incl. this map generator) |
-| **root** | 621 | 39,584 | Root — docs, config, role briefs |
+| **root** | 622 | 39,694 | Root — docs, config, role briefs |
 
 ## System shape
 
@@ -289,6 +289,7 @@ graph LR
   n99[UploadDropzone.tsx] --> n95[ProcessingView.tsx]
   n99[UploadDropzone.tsx] --> n100[RegisterPreview.tsx]
   n99[UploadDropzone.tsx] --> n6[RequirementsContext.tsx]
+  n99[UploadDropzone.tsx] --> n101[demo-tender.ts]
   n99[UploadDropzone.tsx] --> n19[api.ts]
   n99[UploadDropzone.tsx] --> n44[source-doc.ts]
   n99[UploadDropzone.tsx] --> n8[requirement.ts]
@@ -297,88 +298,91 @@ graph LR
   n34[UploadWorkspace.tsx] --> n21[MatrixView.tsx]
   n34[UploadWorkspace.tsx] --> n98[TendersList.tsx]
   n34[UploadWorkspace.tsx] --> n99[UploadDropzone.tsx]
+  n34[UploadWorkspace.tsx] --> n101[demo-tender.ts]
   n67[DemoScrolly.tsx] --> n69[MountOnView.tsx]
-  n67[DemoScrolly.tsx] --> n101[ScrollyStage.tsx]
-  n67[DemoScrolly.tsx] --> n102[steps.ts]
-  n67[DemoScrolly.tsx] --> n103[useScrollTimeline.ts]
+  n67[DemoScrolly.tsx] --> n102[ScrollyStage.tsx]
+  n67[DemoScrolly.tsx] --> n103[steps.ts]
+  n67[DemoScrolly.tsx] --> n104[useScrollTimeline.ts]
   n67[DemoScrolly.tsx] --> n71[BookDemoButton.tsx]
   n68[DemoTitleCard.tsx] --> n70[sample.ts]
   n68[DemoTitleCard.tsx] --> n78[TreelineDivider.tsx]
-  n101[ScrollyStage.tsx] --> n87[ApprovalStamp.tsx]
-  n101[ScrollyStage.tsx] --> n40[CategoryTag.tsx]
-  n101[ScrollyStage.tsx] --> n41[ConfidenceIndicator.tsx]
-  n101[ScrollyStage.tsx] --> n64[GatingHero.tsx]
-  n101[ScrollyStage.tsx] --> n65[GraphView.tsx]
-  n101[ScrollyStage.tsx] --> n104[GhostCursor.tsx]
-  n101[ScrollyStage.tsx] --> n105[StageChrome.tsx]
-  n101[ScrollyStage.tsx] --> n70[sample.ts]
-  n101[ScrollyStage.tsx] --> n102[steps.ts]
-  n101[ScrollyStage.tsx] --> n77[FernFrond.tsx]
-  n101[ScrollyStage.tsx] --> n106[PineBranch.tsx]
+  n102[ScrollyStage.tsx] --> n87[ApprovalStamp.tsx]
+  n102[ScrollyStage.tsx] --> n40[CategoryTag.tsx]
+  n102[ScrollyStage.tsx] --> n41[ConfidenceIndicator.tsx]
+  n102[ScrollyStage.tsx] --> n64[GatingHero.tsx]
+  n102[ScrollyStage.tsx] --> n65[GraphView.tsx]
+  n102[ScrollyStage.tsx] --> n105[GhostCursor.tsx]
+  n102[ScrollyStage.tsx] --> n106[StageChrome.tsx]
+  n102[ScrollyStage.tsx] --> n70[sample.ts]
+  n102[ScrollyStage.tsx] --> n103[steps.ts]
+  n102[ScrollyStage.tsx] --> n77[FernFrond.tsx]
+  n102[ScrollyStage.tsx] --> n107[PineBranch.tsx]
   n70[sample.ts] --> n8[requirement.ts]
   n73[ClosingArrival.tsx] --> n71[BookDemoButton.tsx]
   n73[ClosingArrival.tsx] --> n74[DrawOn.tsx]
   n73[ClosingArrival.tsx] --> n75[Reveal.tsx]
-  n73[ClosingArrival.tsx] --> n106[PineBranch.tsx]
-  n73[ClosingArrival.tsx] --> n107[Seal.tsx]
+  n73[ClosingArrival.tsx] --> n107[PineBranch.tsx]
+  n73[ClosingArrival.tsx] --> n108[Seal.tsx]
   n73[ClosingArrival.tsx] --> n78[TreelineDivider.tsx]
-  n108[ForestHeroLayers.tsx] --> n107[Seal.tsx]
-  n109[HeroResolve.tsx] --> n61[ComplianceMatrix.tsx]
-  n109[HeroResolve.tsx] --> n64[GatingHero.tsx]
-  n109[HeroResolve.tsx] --> n6[RequirementsContext.tsx]
-  n109[HeroResolve.tsx] --> n59[triage.ts]
+  n109[ForestHeroLayers.tsx] --> n108[Seal.tsx]
+  n110[HeroResolve.tsx] --> n61[ComplianceMatrix.tsx]
+  n110[HeroResolve.tsx] --> n64[GatingHero.tsx]
+  n110[HeroResolve.tsx] --> n6[RequirementsContext.tsx]
+  n110[HeroResolve.tsx] --> n59[triage.ts]
   n23[Landing.tsx] --> n41[ConfidenceIndicator.tsx]
   n23[Landing.tsx] --> n10[SiteHeader.tsx]
   n23[Landing.tsx] --> n71[BookDemoButton.tsx]
   n23[Landing.tsx] --> n73[ClosingArrival.tsx]
-  n23[Landing.tsx] --> n110[CredibilityBand.tsx]
+  n23[Landing.tsx] --> n111[CredibilityBand.tsx]
   n23[Landing.tsx] --> n74[DrawOn.tsx]
-  n23[Landing.tsx] --> n108[ForestHeroLayers.tsx]
-  n23[Landing.tsx] --> n109[HeroResolve.tsx]
-  n23[Landing.tsx] --> n111[HowItWorks.tsx]
-  n23[Landing.tsx] --> n112[ProductShots.tsx]
-  n23[Landing.tsx] --> n113[ProofScrolly.tsx]
+  n23[Landing.tsx] --> n109[ForestHeroLayers.tsx]
+  n23[Landing.tsx] --> n110[HeroResolve.tsx]
+  n23[Landing.tsx] --> n112[HowItWorks.tsx]
+  n23[Landing.tsx] --> n113[ProductShots.tsx]
+  n23[Landing.tsx] --> n114[ProofScrolly.tsx]
   n23[Landing.tsx] --> n75[Reveal.tsx]
   n23[Landing.tsx] --> n76[SiteFooter.tsx]
-  n23[Landing.tsx] --> n114[TrailDescent.tsx]
-  n23[Landing.tsx] --> n106[PineBranch.tsx]
-  n23[Landing.tsx] --> n115[PressedLeaf.tsx]
-  n23[Landing.tsx] --> n107[Seal.tsx]
+  n23[Landing.tsx] --> n115[TrailDescent.tsx]
+  n23[Landing.tsx] --> n107[PineBranch.tsx]
+  n23[Landing.tsx] --> n116[PressedLeaf.tsx]
+  n23[Landing.tsx] --> n108[Seal.tsx]
   n23[Landing.tsx] --> n78[TreelineDivider.tsx]
-  n112[ProductShots.tsx] --> n87[ApprovalStamp.tsx]
-  n113[ProofScrolly.tsx] --> n54[AnimatedNumber.tsx]
-  n113[ProofScrolly.tsx] --> n116[ProofNumbers.tsx]
-  n113[ProofScrolly.tsx] --> n75[Reveal.tsx]
+  n113[ProductShots.tsx] --> n87[ApprovalStamp.tsx]
+  n114[ProofScrolly.tsx] --> n54[AnimatedNumber.tsx]
+  n114[ProofScrolly.tsx] --> n117[ProofNumbers.tsx]
+  n114[ProofScrolly.tsx] --> n75[Reveal.tsx]
   n76[SiteFooter.tsx] --> n96[BrandLogo.tsx]
   n76[SiteFooter.tsx] --> n71[BookDemoButton.tsx]
-  n76[SiteFooter.tsx] --> n106[PineBranch.tsx]
-  n76[SiteFooter.tsx] --> n107[Seal.tsx]
+  n76[SiteFooter.tsx] --> n107[PineBranch.tsx]
+  n76[SiteFooter.tsx] --> n108[Seal.tsx]
   n76[SiteFooter.tsx] --> n78[TreelineDivider.tsx]
-  n107[Seal.tsx] --> n72[BotanicalSprig.tsx]
+  n108[Seal.tsx] --> n72[BotanicalSprig.tsx]
   n25[PitchDeck.tsx] --> n54[AnimatedNumber.tsx]
   n25[PitchDeck.tsx] --> n96[BrandLogo.tsx]
   n25[PitchDeck.tsx] --> n61[ComplianceMatrix.tsx]
   n25[PitchDeck.tsx] --> n64[GatingHero.tsx]
   n25[PitchDeck.tsx] --> n21[MatrixView.tsx]
-  n25[PitchDeck.tsx] --> n112[ProductShots.tsx]
-  n25[PitchDeck.tsx] --> n117[PitchScene.tsx]
-  n25[PitchDeck.tsx] --> n118[TenderGlyph.tsx]
-  n25[PitchDeck.tsx] --> n119[TenderPageFacsimile.tsx]
-  n25[PitchDeck.tsx] --> n120[TrailMap.tsx]
-  n25[PitchDeck.tsx] --> n121[TrailSteps.tsx]
+  n25[PitchDeck.tsx] --> n113[ProductShots.tsx]
+  n25[PitchDeck.tsx] --> n118[PitchScene.tsx]
+  n25[PitchDeck.tsx] --> n119[TenderGlyph.tsx]
+  n25[PitchDeck.tsx] --> n120[TenderPageFacsimile.tsx]
+  n25[PitchDeck.tsx] --> n121[TrailMap.tsx]
+  n25[PitchDeck.tsx] --> n122[TrailSteps.tsx]
   n25[PitchDeck.tsx] --> n6[RequirementsContext.tsx]
   n25[PitchDeck.tsx] --> n59[triage.ts]
-  n117[PitchScene.tsx] --> n77[FernFrond.tsx]
-  n117[PitchScene.tsx] --> n106[PineBranch.tsx]
-  n117[PitchScene.tsx] --> n107[Seal.tsx]
+  n118[PitchScene.tsx] --> n77[FernFrond.tsx]
+  n118[PitchScene.tsx] --> n107[PineBranch.tsx]
+  n118[PitchScene.tsx] --> n108[Seal.tsx]
   n16[AuthContext.tsx] --> n19[api.ts]
   n6[RequirementsContext.tsx] --> n16[AuthContext.tsx]
-  n6[RequirementsContext.tsx] --> n122[answer-store.ts]
+  n6[RequirementsContext.tsx] --> n101[demo-tender.ts]
+  n6[RequirementsContext.tsx] --> n123[answer-store.ts]
   n6[RequirementsContext.tsx] --> n43[answers.ts]
   n6[RequirementsContext.tsx] --> n19[api.ts]
   n6[RequirementsContext.tsx] --> n8[requirement.ts]
-  n123[mock-requirements.ts] --> n8[requirement.ts]
-  n122[answer-store.ts] --> n8[requirement.ts]
+  n101[demo-tender.ts] --> n8[requirement.ts]
+  n124[mock-requirements.ts] --> n8[requirement.ts]
+  n123[answer-store.ts] --> n8[requirement.ts]
   n43[answers.ts] --> n59[triage.ts]
   n43[answers.ts] --> n8[requirement.ts]
   n19[api.ts] --> n8[requirement.ts]
@@ -400,8 +404,8 @@ graph LR
   n85[structure.ts] --> n8[requirement.ts]
   n81[text-match.ts] --> n62[dedupe.ts]
   n59[triage.ts] --> n8[requirement.ts]
-  n124[error.tsx]
-  n125[tenders/page.tsx]
+  n125[error.tsx]
+  n126[tenders/page.tsx]
 ```
 
 ## Backend + Engine module graph (Python, tests excluded)
@@ -643,6 +647,7 @@ graph LR
 - `frontend/src/context/AuthContext.tsx` — exports `AuthProvider`
 - `frontend/src/context/RequirementsContext.tsx` — exports `DraftRun`
 - `frontend/src/data/bradwell-prebake.json`
+- `frontend/src/data/demo-tender.ts` — exports `loadDemoTender`
 - `frontend/src/data/mixedpack-prebake.json`
 - `frontend/src/data/mock-requirements.ts` — exports `mockTender`
 - `frontend/src/data/nhs-prebake.json`
@@ -666,7 +671,7 @@ graph LR
 - `frontend/src/types/requirement.ts` — exports `RequirementType`
 - `frontend/tsconfig.json`
 - `frontend/vercel.json`
-- *(+34 binary/asset file(s))*
+- *(+38 binary/asset file(s))*
 
 ### backend — Backend — FastAPI (PDF ingest, extraction, REST API)
 
@@ -1395,6 +1400,7 @@ graph LR
 - `pilot-roadmap/generalist-bobby.md`
 - `pilot-roadmap/gtm-crm-joe.md`
 - `pilot-roadmap/stage-3-plan.md`
+- `pilot-roadmap/stage-4-plan.md`
 - `pitch-assets/canva/README.md`
 - `pitch-before-after.md`
 - `pitch-competitor-analysis.md`
@@ -1426,4 +1432,4 @@ graph LR
 
 ---
 
-*981 tracked files mapped. Generated by `scripts/gen_codemap.py`.*
+*987 tracked files mapped. Generated by `scripts/gen_codemap.py`.*
