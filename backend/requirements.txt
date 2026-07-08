@@ -15,3 +15,6 @@ PyJWT>=2.8
 # The heuristic extractor runs without any key. anthropic is an optional alternative.
 openai
 anthropic
+# Production queue worker (worker.py): Supabase Postgres + Storage REST.
+psycopg[binary]
+httpx
