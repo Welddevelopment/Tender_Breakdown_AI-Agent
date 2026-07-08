@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { OrganizationSwitcher } from "@clerk/nextjs";
 import { useAuth } from "@/context/AuthContext";
+import { clerkEnabled } from "@/lib/env";
 
 // The account control for the header: a Teams link, then an unmistakable
 // account chip — initial avatar + first name (the email's local part) in a
@@ -50,6 +52,11 @@ export function AccountMenu() {
 
   return (
     <div ref={rootRef} className="relative flex items-center gap-3 text-xs">
+      {/* Production: every row is scoped to the ACTIVE org, so multi-team users
+          switch here. hidePersonal — Bidframe data always lives in a team. */}
+      {clerkEnabled && (
+        <OrganizationSwitcher hidePersonal afterSelectOrganizationUrl="/upload" />
+      )}
       <Link
         href="/teams"
         className="rounded-sm font-mono text-ink-muted underline decoration-hairline decoration-1 underline-offset-4 transition-colors hover:text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-forest focus-visible:ring-offset-2 focus-visible:ring-offset-paper"

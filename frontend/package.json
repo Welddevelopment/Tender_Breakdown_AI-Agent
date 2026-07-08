@@ -9,6 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@clerk/nextjs": "^7.5.14",
+    "@supabase/supabase-js": "^2.110.1",
     "@tanstack/react-virtual": "^3.14.5",
     "@xyflow/react": "^12.11.1",
     "cmdk": "^1.1.1",

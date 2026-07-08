@@ -1,11 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { ApiError, isApiEnabled, isGoogleSignInEnabled } from "@/lib/api";
 import { GoogleSignInButton } from "@/components/GoogleSignInButton";
 import { SiteHeader } from "@/components/SiteHeader";
+import { clerkEnabled } from "@/lib/env";
 
 // The sign-in page. Bidframe is invite-only, so there is no registration here — an
 // account is created for a customer by an admin. On success we return the person to
@@ -20,6 +21,13 @@ function nextTarget(): string {
 }
 
 export default function LoginPage() {
+  // Production: Clerk owns sign-in — this legacy page forwards there. Old links
+  // and the marketing header's "Sign in" keep working either way.
+  if (clerkEnabled) redirect("/sign-in");
+  return <LegacyLoginPage />;
+}
+
+function LegacyLoginPage() {
   const { status, signIn, signInWithGoogle } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState("");

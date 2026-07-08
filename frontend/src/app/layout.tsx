@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { Fraunces, IBM_Plex_Mono, Newsreader } from "next/font/google";
 import localFont from "next/font/local";
+import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { RequirementsProvider } from "@/context/RequirementsContext";
+import { clerkEnabled } from "@/lib/env";
 import { SITE_URL } from "@/lib/site";
 
 // Bidframe type system (DESIGN-SYSTEM.md §11): Fraunces headings, Chillax body,
@@ -57,15 +59,21 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Production auth: ClerkProvider wraps the tree only when Clerk is configured, so
+  // the mock/legacy builds render exactly as before with zero auth dependencies.
+  const providers = (
+    <AuthProvider>
+      <RequirementsProvider>{children}</RequirementsProvider>
+    </AuthProvider>
+  );
+
   return (
     <html
       lang="en"
       className={`${fraunces.variable} ${newsreader.variable} ${chillax.variable} ${plexMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-paper">
-        <AuthProvider>
-          <RequirementsProvider>{children}</RequirementsProvider>
-        </AuthProvider>
+        {clerkEnabled ? <ClerkProvider>{providers}</ClerkProvider> : providers}
         {/* Undo toasts for decisions + save-failure notices, restyled from
             sonner's defaults into the register: raised paper on a hairline
             rule, mono small text; an error carries the oxblood reading edge. */}
