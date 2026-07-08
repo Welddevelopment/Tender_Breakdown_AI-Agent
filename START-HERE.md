@@ -31,6 +31,14 @@ contract**: [`tender-master-plan.md`](tender-master-plan.md) + the schema in [`A
 `README.md`. Roles: `role-J.md`, `role-backend.md`, `role-frontend.md`, `role-generalist.md`.
 Comms: `comms/README.md` + `comms/board-*.md`.
 
+**Pilot roadmap (`/pilot-roadmap`):** per-role plans that split the master
+[`ops/pilot-readiness-roadmap.md`](ops/pilot-readiness-roadmap.md) into standalone lanes, each written
+through business / UI-UX / engineering lenses — path to **70** (pilot gate) then the extra 5 points to
+**75**: [`frontend-jawad.md`](pilot-roadmap/frontend-jawad.md) (design system + FE reliability),
+[`gtm-crm-joe.md`](pilot-roadmap/gtm-crm-joe.md) (outreach, CRM, first pilot demo + Pilot OS),
+[`backend-pranav.md`](pilot-roadmap/backend-pranav.md) (access control, token hardening, jobs, uploads),
+[`generalist-bobby.md`](pilot-roadmap/generalist-bobby.md) (verification path, eval spine, cross-lane job UX).
+
 **Frontend** (`/frontend`): `frontend/AGENTS.md`, `frontend/CLAUDE.md`, `frontend/README.md`,
 `frontend/DESIGN-SYSTEM.md`, `frontend/design-language.md`, `frontend/layout.md`,
 `frontend/copywriting.md`, `frontend/SLOP-CHECK.md` (anti-slop bar), `frontend/landing-page-brief.md`,
