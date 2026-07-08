@@ -29,6 +29,14 @@ import {
   saveAnswerStore,
 } from "@/lib/answer-store";
 import { compareWeakestFirst, hasDraft } from "@/lib/answers";
+import { supabaseEnabled } from "@/lib/env";
+import { useSupabase } from "@/lib/supabase";
+import {
+  fetchTender,
+  persistDecision,
+  rowToRequirement,
+  type RequirementRow,
+} from "@/lib/supabase-data";
 
 // The no-backend demo default: the same real Bradwell tender the /showcase runs
 // on, so every app surface (Matrix / Bid / Graph) shows one coherent tender until
@@ -129,6 +137,29 @@ export function RequirementsProvider({
   const [tenderId, setTenderId] = useState<string | null>(null);
   const [drafting, setDrafting] = useState(false);
   const { user } = useAuth(); // for collaboration attribution on decisions (null when signed out)
+  // Production data path (Clerk + Supabase). Null in legacy/mock modes, and briefly
+  // null in production while the Clerk session loads.
+  const supabase = useSupabase();
+
+  // Persist a decision change to whichever backend is live (production Supabase or
+  // the legacy API); a mock build persists nothing. One seam so every decision path
+  // — single, batch, restore, reopen — behaves identically. Recreated each render,
+  // so the closure always sees the current client + tender.
+  function persistPatch(
+    id: string,
+    patch: { status?: RequirementStatus; decision?: RequirementDecision | null }
+  ) {
+    if (supabaseEnabled) {
+      if (!supabase || !tenderId) return;
+      persistDecision(supabase, tenderId, id, patch).catch(() => {
+        toast.error(SAVE_FAILED);
+      });
+    } else if (isApiEnabled()) {
+      patchRequirement(id, patch).catch(() => {
+        toast.error(SAVE_FAILED);
+      });
+    }
+  }
 
   // Where the answers response workspace persists a human's draft edits + gap
   // answers (localStorage; there's no backend endpoint for answer text yet). Key
@@ -143,9 +174,13 @@ export function RequirementsProvider({
     );
   }
 
-  // Replace the in-memory tender with one fetched from the live backend.
+  // Replace the in-memory tender with one fetched from the live backend
+  // (production Supabase when configured, else the legacy API).
   async function loadTender(id: string) {
-    const tender = await getTender(id);
+    const tender =
+      supabaseEnabled && supabase
+        ? await fetchTender(supabase, id)
+        : await getTender(id);
     // Merge any locally-saved answer edits + gap answers for this tender back
     // over the fresh server data (evidence and machine fields stay from the API).
     setRequirements(
@@ -165,11 +200,16 @@ export function RequirementsProvider({
   // #28: restore the last live tender on a refresh — its decisions come back too,
   // since the backend persists them. sessionStorage keeps it tab-scoped (cleared
   // when the tab closes). The mock/demo (no API) is unaffected.
+  // In production mode the Supabase client only exists once the Clerk session has
+  // loaded, so the restore waits for it (and must run once, not per client identity).
+  const didRestore = useRef(false);
   useEffect(() => {
     // A seeded demo is frozen — never override it with a live/restored tender,
-    // even when NEXT_PUBLIC_API_BASE_URL is set on the hosted build.
-    if (initialTender) return;
-    if (!isApiEnabled()) return;
+    // even when the live env vars are set on the hosted build.
+    if (initialTender || didRestore.current) return;
+    if (supabaseEnabled && !supabase) return; // Clerk session still loading
+    if (!supabaseEnabled && !isApiEnabled()) return;
+    didRestore.current = true;
     let saved: string | null = null;
     try {
       saved = window.sessionStorage.getItem("bf-tender");
@@ -188,13 +228,14 @@ export function RequirementsProvider({
         }
       });
     }
-  }, [initialTender]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialTender, supabase]);
 
   // Restore locally-saved answer edits for the mock/demo default. The live app
   // restores through loadTender (keyed by the live tender id) instead, and a
   // frozen /demo showcase stays read-only. Runs once on mount.
   useEffect(() => {
-    if (initialTender || isApiEnabled()) return;
+    if (initialTender || isApiEnabled() || supabaseEnabled) return;
     const stored = loadAnswerStore(seed.tender_id);
     if (Object.keys(stored).length === 0) return;
     // Synchronous merge over the seed on mount; deps are intentionally empty so
@@ -268,12 +309,57 @@ export function RequirementsProvider({
     );
   }
 
-  // Live collaboration: subscribe to the loaded tender's event stream so a teammate's
-  // decision lands here without a refresh. setState happens in the SSE onmessage
-  // callback (an external subscription), the pattern the lint rule permits. The stream
-  // is per-tender; comment threads open their own stream. EventSource auto-reconnects.
+  // Live collaboration, production mode: Supabase Realtime on this tender's rows.
+  // A teammate's decision UPDATE (or the worker's post-extraction INSERTs) lands
+  // without a refresh; subscriptions run under RLS so only the org's rows stream.
+  // Replaces the legacy SSE below — multi-instance safe, survives backend restarts.
   useEffect(() => {
-    if (initialTender || !tenderId || !isApiEnabled()) return;
+    if (initialTender || !tenderId || !supabase) return;
+    const channel = supabase
+      .channel(`tender-${tenderId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "requirements",
+          filter: `tender_id=eq.${tenderId}`,
+        },
+        (payload) => {
+          const row = payload.new as RequirementRow;
+          setRequirements((prev) =>
+            prev.map((req) => (req.db_id === row.pk ? rowToRequirement(row) : req))
+          );
+        }
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "requirements",
+          filter: `tender_id=eq.${tenderId}`,
+        },
+        (payload) => {
+          const row = payload.new as RequirementRow;
+          setRequirements((prev) =>
+            prev.some((req) => req.db_id === row.pk)
+              ? prev
+              : [...prev, rowToRequirement(row)].sort(
+                  (a, b) => a.id.localeCompare(b.id)
+                )
+          );
+        }
+      )
+      .subscribe();
+    return () => {
+      void supabase.removeChannel(channel);
+    };
+  }, [supabase, tenderId, initialTender]);
+
+  // Live collaboration, legacy mode (SSE) — retired at cutover.
+  useEffect(() => {
+    if (initialTender || !tenderId || supabaseEnabled || !isApiEnabled()) return;
     const url = tenderEventsUrl(tenderId);
     if (!url || typeof window === "undefined" || !("EventSource" in window)) return;
     const source = new EventSource(url);
@@ -307,6 +393,8 @@ export function RequirementsProvider({
   // tender, optionally against freshly-uploaded capability docs. The non-answer
   // fields swap in at once; the drafted answers land through playReveal.
   async function draftAnswers(provider: "openai" | "mock" = "openai", files?: File[]) {
+    // Production mode: autofill becomes a 'draft' job through the queue worker —
+    // wired in phase 5 of the migration; until then the button no-ops there.
     if (!tenderId || !isApiEnabled()) return;
     setDrafting(true);
     // While the request is in flight we don't yet know which cards will get a
@@ -389,11 +477,7 @@ export function RequirementsProvider({
   ) {
     const stamped = withActor(decision);
     updateRequirement(id, { status, decision: stamped });
-    if (isApiEnabled()) {
-      patchRequirement(id, { status, decision: stamped }).catch(() => {
-        toast.error(SAVE_FAILED);
-      });
-    }
+    persistPatch(id, { status, decision: stamped });
   }
 
   // The batch counterpart of applyDecision: one setRequirements pass for the
@@ -410,12 +494,8 @@ export function RequirementsProvider({
     setRequirements((prev) =>
       prev.map((req) => (idSet.has(req.id) ? { ...req, status, decision: stamped } : req))
     );
-    if (isApiEnabled()) {
-      for (const id of ids) {
-        patchRequirement(id, { status, decision: stamped }).catch(() => {
-          toast.error(SAVE_FAILED);
-        });
-      }
+    for (const id of ids) {
+      persistPatch(id, { status, decision: stamped });
     }
   }
 
@@ -457,15 +537,8 @@ export function RequirementsProvider({
           : req;
       })
     );
-    if (isApiEnabled()) {
-      for (const entry of snapshot) {
-        patchRequirement(entry.id, {
-          status: entry.status,
-          decision: entry.decision,
-        }).catch(() => {
-          toast.error(SAVE_FAILED);
-        });
-      }
+    for (const entry of snapshot) {
+      persistPatch(entry.id, { status: entry.status, decision: entry.decision });
     }
   }
 
@@ -497,11 +570,7 @@ export function RequirementsProvider({
   // decision. Optimistic in-memory, best-effort persistence like applyDecision.
   function reopen(id: string) {
     updateRequirement(id, { status: "pending", decision: null });
-    if (isApiEnabled()) {
-      patchRequirement(id, { status: "pending", decision: null }).catch(() => {
-        toast.error(SAVE_FAILED);
-      });
-    }
+    persistPatch(id, { status: "pending", decision: null });
   }
 
   // Draft-edit sessions for the answers workspace, keyed by requirement id and

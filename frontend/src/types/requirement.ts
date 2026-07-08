@@ -47,6 +47,9 @@ export interface CapabilityDoc {
 
 export interface Requirement {
   id: string;
+  // Supabase row pk (production mode only; frontend-side convenience, NOT part of
+  // the locked wire schema — comment threads key on it).
+  db_id?: string;
   text: string;
   source_page: number;
   source_clause: string | null; // nullable — raw extraction may have no detectable clause heading

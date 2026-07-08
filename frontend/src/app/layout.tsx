@@ -7,6 +7,7 @@ import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { RequirementsProvider } from "@/context/RequirementsContext";
 import { clerkEnabled } from "@/lib/env";
+import { SupabaseProvider } from "@/lib/supabase";
 import { SITE_URL } from "@/lib/site";
 
 // Bidframe type system (DESIGN-SYSTEM.md §11): Fraunces headings, Chillax body,
@@ -73,7 +74,13 @@ export default function RootLayout({
       className={`${fraunces.variable} ${newsreader.variable} ${chillax.variable} ${plexMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-paper">
-        {clerkEnabled ? <ClerkProvider>{providers}</ClerkProvider> : providers}
+        {clerkEnabled ? (
+          <ClerkProvider>
+            <SupabaseProvider>{providers}</SupabaseProvider>
+          </ClerkProvider>
+        ) : (
+          providers
+        )}
         {/* Undo toasts for decisions + save-failure notices, restyled from
             sonner's defaults into the register: raised paper on a hairline
             rule, mono small text; an error carries the oxblood reading edge. */}

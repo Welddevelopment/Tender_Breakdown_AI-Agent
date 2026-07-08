@@ -12,6 +12,7 @@ import { useRequirements } from "@/context/RequirementsContext";
 import { useAuth } from "@/context/AuthContext";
 import { actorLabel } from "@/lib/collaborators";
 import { isApiEnabled, tenderPdfPageUrl } from "@/lib/api";
+import { supabaseEnabled } from "@/lib/env";
 import {
   hasPdfSource,
   requirementPdfUrl,
@@ -221,11 +222,11 @@ export function RequirementPanel({
           )}
         </Zone>
 
-        {/* Team discussion — live-product only (needs the backend to store + stream
+        {/* Team discussion — live-product only (needs a backend to store + stream
             comments). Hidden on the mock/frozen-demo build, which has no accounts. */}
-        {isApiEnabled() && (
+        {(supabaseEnabled || isApiEnabled()) && (
           <Zone title="Team comments">
-            <CommentThread key={`cmt-${requirement.id}`} reqId={requirement.id} />
+            <CommentThread key={`cmt-${requirement.id}`} requirement={requirement} />
           </Zone>
         )}
       </div>
