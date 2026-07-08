@@ -5,6 +5,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getTenders, isApiEnabled, type TenderSummary } from "@/lib/api";
 import { useRequirements } from "@/context/RequirementsContext";
+import { supabaseEnabled } from "@/lib/env";
+import { useSupabase } from "@/lib/supabase";
+import { fetchTenderSummaries } from "@/lib/supabase-data";
 
 // #29: the app-level tenders list. Every tender uploaded to the live backend, so a
 // bid writer can reopen one where they left off instead of re-uploading. Live-only
@@ -208,14 +211,18 @@ function SampleCard({
 export function TendersList() {
   const { loadTender } = useRequirements();
   const router = useRouter();
+  const supabase = useSupabase();
   const [tenders, setTenders] = useState<TenderSummary[] | null>(null);
   const [error, setError] = useState(false);
   const [opening, setOpening] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!isApiEnabled()) return; // mock is handled at render time
+    // Production: the org's library from Supabase (RLS-scoped, so the whole team
+    // sees the same list). Legacy: the old API. Mock is handled at render time.
+    if (supabaseEnabled && !supabase) return; // Clerk session still loading
+    if (!supabaseEnabled && !isApiEnabled()) return;
     let cancelled = false;
-    getTenders()
+    (supabase ? fetchTenderSummaries(supabase) : getTenders())
       .then((t) => {
         if (!cancelled) setTenders(t);
       })
@@ -225,7 +232,7 @@ export function TendersList() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [supabase]);
 
   async function open(id: string) {
     setOpening(id);
@@ -238,7 +245,7 @@ export function TendersList() {
     }
   }
 
-  if (!isApiEnabled()) {
+  if (!supabaseEnabled && !isApiEnabled()) {
     return (
       <div>
         <p className="max-w-[60ch] text-sm text-ink-muted">
