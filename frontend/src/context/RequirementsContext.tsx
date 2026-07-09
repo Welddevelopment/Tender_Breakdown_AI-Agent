@@ -118,6 +118,12 @@ interface RequirementsContextValue {
   beginAnswerEdit: (id: string, initial: string) => void;
   updateAnswerEdit: (id: string, text: string) => void;
   endAnswerEdit: (id: string) => void;
+  // In-progress gap answers, keyed by open-question id and held here (not in the
+  // card) so a half-typed answer survives the gap panel collapsing or the card
+  // unmounting on a re-sort/filter — the same reason answerEdits is lifted.
+  gapDrafts: Record<string, string>;
+  setGapDraft: (questionId: string, text: string) => void;
+  clearGapDraft: (questionId: string) => void;
 }
 
 const RequirementsContext = createContext<RequirementsContextValue | null>(null);
@@ -586,6 +592,21 @@ export function RequirementsProvider({
     });
   }
 
+  // In-progress gap answers, kept across the gap panel closing / card unmounting.
+  // Cleared once the gap is actually saved (its text then lives on the question).
+  const [gapDrafts, setGapDrafts] = useState<Record<string, string>>({});
+  function setGapDraft(questionId: string, text: string) {
+    setGapDrafts((prev) => ({ ...prev, [questionId]: text }));
+  }
+  function clearGapDraft(questionId: string) {
+    setGapDrafts((prev) => {
+      if (!(questionId in prev)) return prev;
+      const next = { ...prev };
+      delete next[questionId];
+      return next;
+    });
+  }
+
   // Human revises the drafted answer — record it as human-edited and keep the
   // deprecated draft_answer alias in sync. When no answer exists yet (a
   // requirement the autofill left blank), CREATE one from the human's text so
@@ -764,6 +785,9 @@ export function RequirementsProvider({
         beginAnswerEdit,
         updateAnswerEdit,
         endAnswerEdit,
+        gapDrafts,
+        setGapDraft,
+        clearGapDraft,
       }}
     >
       {children}

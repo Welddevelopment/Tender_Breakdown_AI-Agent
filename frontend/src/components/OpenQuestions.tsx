@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { toast } from "sonner";
 import type { OpenQuestion, Requirement } from "@/types/requirement";
 import { useRequirements } from "@/context/RequirementsContext";
@@ -48,9 +47,18 @@ export function OpenQuestionItem({
   requirementId: string;
   question: OpenQuestion;
 }) {
-  const { answerOpenQuestion, requirements, updateRequirement } =
-    useRequirements();
-  const [value, setValue] = useState(question.answer ?? "");
+  const {
+    answerOpenQuestion,
+    requirements,
+    updateRequirement,
+    gapDrafts,
+    setGapDraft,
+    clearGapDraft,
+  } = useRequirements();
+  // The live value is the in-progress draft when one exists (held in context so a
+  // half-typed answer survives the panel collapsing), otherwise the saved answer.
+  const draft = gapDrafts[question.id];
+  const value = draft ?? question.answer ?? "";
   const answered = question.answer !== null;
   const trimmed = value.trim();
   const dirty = trimmed.length > 0 && trimmed !== (question.answer ?? "");
@@ -59,6 +67,7 @@ export function OpenQuestionItem({
   function saveAnswer() {
     if (!requirement) {
       answerOpenQuestion(requirementId, question.id, trimmed);
+      clearGapDraft(question.id);
       toast("Answer saved", {
         description: "The draft notes your input for review.",
       });
@@ -95,6 +104,8 @@ export function OpenQuestionItem({
           }
         : requirement.answer,
     });
+    // The answer now lives on the question — drop the in-progress draft.
+    clearGapDraft(question.id);
 
     // Confirmation rides the app's toaster (restyled sonner) rather than an
     // inline line, and reports honest per-requirement progress.
@@ -130,7 +141,7 @@ export function OpenQuestionItem({
       <div className="mt-2 flex items-start gap-2 pl-4">
         <textarea
           value={value}
-          onChange={(event) => setValue(event.target.value)}
+          onChange={(event) => setGapDraft(question.id, event.target.value)}
           placeholder="Type your answer"
           rows={answered || value.includes("\n") ? 3 : 2}
           className="min-w-0 flex-1 resize-y rounded-md border border-hairline px-2.5 py-1.5 text-sm leading-relaxed text-ink outline-none transition-colors focus:border-forest focus:ring-1 focus:ring-forest"
