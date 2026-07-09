@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { BookDemoButton, SeeItRunLink } from "./BookDemoButton";
 import { ClosingArrival } from "./ClosingArrival";
 import { ForestHeroLayers } from "./ForestHeroLayers";
@@ -47,7 +46,7 @@ import { Seal } from "./art/Seal";
 const CONTAINER = "mx-auto w-full max-w-[1160px] px-4 sm:px-6";
 
 const COMPARISON_ROWS = [
-  { label: "Time", before: "1–2 days of expert first-read", after: "Minutes" },
+  { label: "Time", before: "1 to 2 days of expert first-read", after: "Minutes" },
   {
     label: "The deal-breaker",
     before: "A missed gate voids the whole bid",
@@ -105,31 +104,11 @@ export function Landing() {
               requirements, and links every flag to its exact clause. You
               approve every call.
             </p>
+            {/* One primary, one secondary (landing-page-brief §3). The tender-pack
+                entry lives in the footer, not the hero. */}
             <div className="hero-enter-3 mt-8 flex flex-wrap items-center justify-center gap-x-7 gap-y-4">
               <BookDemoButton location="hero" size="lg" />
               <SeeItRunLink size="lg" />
-              <Link
-                href="/pack"
-                className="link-draw group inline-flex items-center gap-1 rounded-sm text-sm text-ink-muted transition-colors hover:text-forest focus:outline-none focus-visible:ring-2 focus-visible:ring-forest focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
-              >
-                See a tender pack
-                <svg
-                  width="11"
-                  height="11"
-                  viewBox="0 0 14 14"
-                  fill="none"
-                  aria-hidden="true"
-                  className="transition-transform group-hover:translate-x-0.5"
-                >
-                  <path
-                    d="M2.5 7h9M8 3.5 11.5 7 8 10.5"
-                    stroke="currentColor"
-                    strokeWidth="1.7"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </Link>
             </div>
           </section>
 

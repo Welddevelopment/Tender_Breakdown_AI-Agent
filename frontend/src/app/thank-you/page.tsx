@@ -37,7 +37,7 @@ export default function ThankYouPage() {
             href="/demo"
             className="rounded-sm text-base text-forest underline decoration-forest/30 decoration-1 underline-offset-4 transition-colors hover:text-forest-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-forest focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
           >
-            See a worked example while you wait
+            See it run while you wait
           </Link>
           <Link
             href="/"

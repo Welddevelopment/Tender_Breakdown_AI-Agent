@@ -115,7 +115,7 @@ export function HeroResolve() {
           aria-hidden (an illustration); the Link carries the accessible name. */}
       <Link
         href="/demo"
-        aria-label="Open the worked example on the demo tender"
+        aria-label="See it run on the demo tender"
         className="hero-product-halo relative isolate block [perspective:1600px] rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-forest focus-visible:ring-offset-4 focus-visible:ring-offset-paper"
       >
         <div

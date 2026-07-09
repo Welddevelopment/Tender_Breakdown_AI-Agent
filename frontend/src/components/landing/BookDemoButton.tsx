@@ -9,7 +9,7 @@ import Link from "next/link";
 // product's near-black ink (DemoView's closing band) and "pine" for the
 // landing page's forest bands, which differ only in the focus ring offset
 // matching the ground behind it. The secondary is a quiet "See it run" link
-// into the preloaded demo at /review. Each fires one analytics event; nothing
+// into the guided demo at /demo. Each fires one analytics event; nothing
 // else is instrumented.
 //
 // The destination is a scheduling link. Default is Joel's live Cal.com booking
@@ -126,7 +126,7 @@ export function SeeItRunLink({
       onClick={() => track("see_it_run_click")}
       className={`link-draw group inline-flex items-center gap-1 rounded-sm ${size === "lg" ? "text-sm" : "text-xs"} transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${t} ${className}`}
     >
-      See a worked example
+      See it run
       <svg
         width="11"
         height="11"
