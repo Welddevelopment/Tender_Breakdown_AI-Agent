@@ -109,3 +109,9 @@ A wider audit surfaced heavier options. They're deferred, not forgotten — each
 ## Changelog
 
 - 2026-07-09 — plan drafted; Step 0 audit folded in. Export is ~60% built (Response Draft + Matrix XLSX + print-PDF exist); the real Stage 6 work is **export honesty/blockers** (unlocked by Stage 5's `answer.decision`), the **Audit/Evidence Pack** artifact, a unified **artifact-first ExportMenu**, and the **client-ready vs internal** toggle. No backend dependency; likely no Fable.
+- 2026-07-09 — **shipped end-to-end, A → B → C → D, one commit each on `main`.** Built against the project UX gates (SLOP-CHECK, design-language device kit, QA.md acceptance, delete.md, copywriting). Client-side only; no Fable; no backend.
+  - **A** (`6bcfe49`) — `lib/export-readiness.ts` (one source of truth) + `ExportReadinessSummary`: blockers shown before any format, each carried by a dot AND a word (greyscale-verified), calm counts-not-scores copy.
+  - **B** (`08b2746`) — Audit/Evidence Pack builders (MD/DOCX); answer verdict + audit lines carried into the response builders; "Answer verdict" column added to the matrix XLSX.
+  - **C** (`da77325`) — artifact-first ExportMenu (Response draft · Compliance matrix · Audit/evidence pack), readiness pinned on top; matrix CSV added as the XLSX's lockstep sibling (`matrixCells` shared).
+  - **D** (`5dce55b`) — client-ready vs internal toggle on the response draft; client-ready is approved-answers-only and clean, and is **withheld while blocked** (effective audience falls back to internal), so a blocked tender can never emit a client-ready pack.
+  - QA: build + lint green per commit; export menu screenshot-verified (readiness + three artifacts + gated toggle); greyscale gate passed. **The UX overhaul is complete through Stage 6**; the UI-improvement plan is the separate next track.
