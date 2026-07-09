@@ -47,14 +47,26 @@ const HEADERS = [
   "Confidence",
   "Status",
   "Decision note",
+  "Answer verdict",
   "Drafted answer",
   "Evidence refs",
 ];
 
-const COLUMN_WIDTHS = [16, 26, 64, 16, 11, 9, 20, 10, 12, 11, 30, 52, 48];
+const COLUMN_WIDTHS = [16, 26, 64, 16, 11, 9, 20, 10, 12, 11, 30, 16, 52, 48];
 
-// Columns whose cells hold running prose and should wrap.
-const WRAP_COLUMNS = new Set([3, 11, 12, 13]);
+// Columns whose cells hold running prose and should wrap. (1-indexed exceljs cols;
+// shifted by the new "Answer verdict" column: requirement 3, decision note 11,
+// drafted answer 13, evidence 14.)
+const WRAP_COLUMNS = new Set([3, 11, 13, 14]);
+
+// The answer's own verdict (Stage 5), as a plain word for the sheet — a state,
+// never a score. Blank until a human rules on the draft.
+function answerVerdictWord(req: Requirement): string {
+  const verdict = req.answer?.decision?.verdict;
+  if (verdict === "approved") return "Approved";
+  if (verdict === "flagged") return "Flagged";
+  return "";
+}
 
 function evidenceLabel(req: Requirement): string {
   return (
@@ -123,6 +135,7 @@ export async function exportMatrixXlsx(input: MatrixXlsxInput): Promise<void> {
       TIER_EXPORT_WORD[tier],
       req.status,
       req.decision?.note ?? "",
+      answerVerdictWord(req),
       req.answer?.text ?? req.draft_answer ?? "",
       evidenceLabel(req),
     ]);
@@ -150,6 +163,10 @@ export async function exportMatrixXlsx(input: MatrixXlsxInput): Promise<void> {
     // A settled decision reads in forest — the one earned colour.
     if (req.status === "accepted") {
       row.getCell(10).font = { size: 10, bold: true, color: { argb: FOREST } };
+    }
+    // An approved answer verdict earns forest too; the word carries it in greyscale.
+    if (req.answer?.decision?.verdict === "approved") {
+      row.getCell(12).font = { size: 10, bold: true, color: { argb: FOREST } };
     }
   }
 
