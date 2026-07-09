@@ -111,6 +111,13 @@ Stage 4 left one recorded exception: the SSE `tenderEventsUrl` still carries `?t
   - **B** (`4bbe186`) — half-typed gap answers lifted to context (`gapDrafts`),
     surviving panel collapse / card unmount.
   - **D-frontend** (`89afba8`) — requirement status shown beside answer state on
-    the card; answer edits undoable (same snapshot seam). **Still open (Pranav):**
-    the backend answer-persistence endpoint — answer content remains
-    localStorage-only until it lands.
+    the card; answer edits undoable (same snapshot seam).
+- 2026-07-09 — **backend answer-persistence endpoint landed** (`911aba7` backend,
+  `a5c3e3e` frontend wiring), closing D's last open item. `PATCH
+  /requirements/{id}/answer` persists answer text + gap answers + the answer
+  verdict (was localStorage-only); actor stamped server-side, cross-account
+  access 404s, requirement status untouched (verified end-to-end). Frontend
+  syncs best-effort from every answer mutation + undo, with localStorage kept as
+  the offline/mock fallback. Stage 5 is now complete end-to-end; the only
+  remaining backend note is the pre-existing SSE `?token=` stream-ticket item
+  (Stage 4 carry-over, unrelated).
