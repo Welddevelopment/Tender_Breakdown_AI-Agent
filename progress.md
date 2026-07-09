@@ -33,7 +33,7 @@
 - **Headline number:** SPSO tender (pp.1–6), OpenAI extractor → **recall 0.947 (18/19), gating
   recall 1.0 · gating accuracy 1.0 (both disqualifiers caught, zero over-flagging), 0 dangerous
   misses. Autofill: 109/183 grounded · 0 bluffs.**
-- **Next up:** Stage 6 Export & Handoff (response pack, structured export, handoff flow); YC W27 application — weekly founder updates + proof-point log running; outreach execution (474 named leads in CRM).
+- **Next up:** pilot onboarding + concierge-pilot outreach execution (474 named leads in CRM); YC W27 application — weekly founder updates + proof-point log running. **Stage 6 Export & Handoff complete** — full upload→review→answer→export loop end-to-end.
 
 ---
 
@@ -199,3 +199,4 @@
 - **20:04** — **Stage 5 `/answers` plan locked (Jawad):** answer & gap review flow spec committed — mirror-of-matrix worklist, gap-fill form, civic-record evidence panel parity, cross-surface state coherence; Step 0 audit + C→A→B→D build order; Pranav answer-persistence backend gate identified *(the pilot `/answers` build order is concrete — next sprint has a locked spec covering the full upload→review→answer→export loop)*
 - **21:04** — **Stage 5C shipped (Jawad):** answer-level decision actions (Approve/Flag the drafted answer independently of the requirement status, self-writing audit line, localStorage-persisted); `AnswerEvidenceOverlay` claim↔evidence split consolidating every "Backed by" receipt; device-kit trueing on answer margin — build + lint green *(the `/answers` panel now has independent answer-level decisions with a traceable audit trail — the answer column is no longer read-only)*
 - **22:04** — **Stage 5 complete end-to-end (Jawad + Pranav):** Stage 5A bulk-approve ready answers, 5B protect half-typed gap answers, 5D answer/requirement coherence + edit undo all shipped; backend `PATCH /requirements/{id}/answer` + frontend `patchAnswer` wire answer decisions to the server; answer verdict refactored to `/answers` only (not duplicated in the matrix); Stage 6 Export & Handoff plan committed *(the full upload→review→answer→export loop is now server-persisted and audit-complete — Stage 6 is the last mile before pilot)*
+- **23:04** — **Stage 6 Export & Handoff fully shipped (Jawad, 6A–6D):** export readiness + honest blockers (6A), Audit/Evidence Pack with verdicts in every artifact (6B), artifact-first ExportMenu (6C), client-ready vs internal-detailed export variants (6D) *(the upload→review→answer→export loop is now end-to-end complete — Bidframe can hand a bid manager a submission-ready pack; pilot-readiness roadmap UX overhaul marked done)*
