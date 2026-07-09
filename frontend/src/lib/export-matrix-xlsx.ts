@@ -76,6 +76,51 @@ function evidenceLabel(req: Requirement): string {
   );
 }
 
+// The 14 cell values for one requirement's row, in HEADERS order. Shared by the
+// XLSX and CSV exports so the two matrix formats can never drift.
+function matrixCells(
+  req: Requirement,
+  criteriaById: Map<string, AwardCriterion>
+): (string | number)[] {
+  const criterion = req.criteria_ref ? criteriaById.get(req.criteria_ref) : undefined;
+  const tier = confidenceTier(req.confidence, { needsReview: req.needs_review });
+  return [
+    sourceRefLabel(req),
+    req.source_filename ?? "",
+    req.text,
+    req.category,
+    req.type === "mandatory" ? "Yes" : "No",
+    req.is_gating ? "Yes" : "No",
+    criterion?.name ?? (req.criteria_ref ?? ""),
+    criterion?.weight ?? "",
+    TIER_EXPORT_WORD[tier],
+    req.status,
+    req.decision?.note ?? "",
+    answerVerdictWord(req),
+    req.answer?.text ?? req.draft_answer ?? "",
+    evidenceLabel(req),
+  ];
+}
+
+// CSV fallback for the compliance matrix (brief: XLSX first, CSV fallback). Same
+// columns as the XLSX via matrixCells; RFC-4180 quoting. Plain record, no styling.
+export function exportMatrixCsv(input: MatrixXlsxInput): void {
+  const { title, requirements, awardCriteria } = input;
+  const criteriaById = new Map(awardCriteria.map((c) => [c.id, c]));
+  const esc = (value: string | number): string => {
+    const s = String(value ?? "");
+    return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  };
+  const lines = [HEADERS.map(esc).join(",")];
+  for (const req of requirements) {
+    lines.push(matrixCells(req, criteriaById).map(esc).join(","));
+  }
+  const blob = new Blob([lines.join("\r\n")], {
+    type: "text/csv;charset=utf-8",
+  });
+  triggerDownload(blob, `${slugifyTitle(title)}-compliance-matrix.csv`);
+}
+
 export async function exportMatrixXlsx(input: MatrixXlsxInput): Promise<void> {
   // Dynamic import keeps exceljs out of the main bundle (see header comment).
   const { Workbook } = await import("exceljs");
@@ -117,28 +162,7 @@ export async function exportMatrixXlsx(input: MatrixXlsxInput): Promise<void> {
   };
 
   for (const req of requirements) {
-    const criterion = req.criteria_ref
-      ? criteriaById.get(req.criteria_ref)
-      : undefined;
-    const tier = confidenceTier(req.confidence, {
-      needsReview: req.needs_review,
-    });
-    const row = sheet.addRow([
-      sourceRefLabel(req),
-      req.source_filename ?? "",
-      req.text,
-      req.category,
-      req.type === "mandatory" ? "Yes" : "No",
-      req.is_gating ? "Yes" : "No",
-      criterion?.name ?? (req.criteria_ref ?? ""),
-      criterion?.weight ?? "",
-      TIER_EXPORT_WORD[tier],
-      req.status,
-      req.decision?.note ?? "",
-      answerVerdictWord(req),
-      req.answer?.text ?? req.draft_answer ?? "",
-      evidenceLabel(req),
-    ]);
+    const row = sheet.addRow(matrixCells(req, criteriaById));
 
     row.eachCell({ includeEmpty: true }, (cell, col) => {
       cell.alignment = {

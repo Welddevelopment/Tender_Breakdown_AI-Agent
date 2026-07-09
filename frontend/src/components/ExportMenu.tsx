@@ -2,29 +2,74 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { CapabilityDoc, Requirement } from "@/types/requirement";
+import { useRequirements } from "@/context/RequirementsContext";
 import {
   buildDocx,
+  buildEvidencePackDocx,
+  buildEvidencePackMarkdown,
   buildMarkdown,
   buildText,
   slugifyTitle,
   triggerDownload,
   type ExportInput,
 } from "@/lib/export-response";
+import { exportMatrixCsv, exportMatrixXlsx } from "@/lib/export-matrix-xlsx";
 import { deriveExportReadiness } from "@/lib/export-readiness";
 import { ExportReadinessSummary } from "./ExportReadinessSummary";
 
-// "Export response pack" — a forest button that opens a small dropdown of four
-// formats, each with an icon. PDF prints via the browser (the print stylesheet
-// strips the app chrome); DOCX/MD/TXT build client-side and download. Escape and
-// click-outside close it; open/close is instant (reduced-motion safe).
+// The one export surface (delete.md: one obvious "ready to export" area). It is
+// artifact-first — pick what you need (the bid response, the compliance matrix,
+// or the audit/evidence pack), then its format — with the honest readiness read
+// shown first, before any format is chosen. Record-led: the forest lives on the
+// export moment (the button), never sprayed across the emitted files.
 
-type Format = "pdf" | "docx" | "md" | "txt";
+type Artifact = "response" | "matrix" | "evidence";
+type Format = "pdf" | "docx" | "md" | "txt" | "xlsx" | "csv";
 
-const ITEMS: { format: Format; label: string; hint: string }[] = [
-  { format: "pdf", label: "PDF", hint: "Print / save as PDF" },
-  { format: "docx", label: "Word", hint: ".docx" },
-  { format: "md", label: "Markdown", hint: ".md" },
-  { format: "txt", label: "Plain text", hint: ".txt" },
+interface FormatItem {
+  format: Format;
+  label: string;
+  hint: string;
+}
+interface ArtifactGroup {
+  key: Artifact;
+  title: string;
+  blurb: string;
+  formats: FormatItem[];
+}
+
+// Three artifact types, each with its job (UX-OVERHAUL-BRIEF): the response draft
+// to hand over, the matrix for internal tracking, the audit pack for proof.
+const GROUPS: ArtifactGroup[] = [
+  {
+    key: "response",
+    title: "Bid response draft",
+    blurb: "The drafted answers, with their evidence.",
+    formats: [
+      { format: "pdf", label: "PDF", hint: "print / save as PDF" },
+      { format: "docx", label: "Word", hint: ".docx" },
+      { format: "md", label: "Markdown", hint: ".md" },
+      { format: "txt", label: "Plain text", hint: ".txt" },
+    ],
+  },
+  {
+    key: "matrix",
+    title: "Compliance matrix",
+    blurb: "Every requirement, for internal tracking.",
+    formats: [
+      { format: "xlsx", label: "Excel", hint: ".xlsx" },
+      { format: "csv", label: "CSV", hint: ".csv" },
+    ],
+  },
+  {
+    key: "evidence",
+    title: "Audit and evidence pack",
+    blurb: "The decision trail and the evidence behind each answer.",
+    formats: [
+      { format: "docx", label: "Word", hint: ".docx" },
+      { format: "md", label: "Markdown", hint: ".md" },
+    ],
+  },
 ];
 
 export function ExportMenu({
@@ -36,6 +81,7 @@ export function ExportMenu({
   capabilityDocs: CapabilityDoc[];
   tenderTitle: string;
 }) {
+  const { awardCriteria } = useRequirements();
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -62,39 +108,66 @@ export function ExportMenu({
     };
   }, [open]);
 
-  async function run(format: Format) {
-    const input: ExportInput = {
-      title: tenderTitle,
-      requirements,
-      capabilityDocs,
-    };
+  async function run(artifact: Artifact, format: Format) {
+    const input: ExportInput = { title: tenderTitle, requirements, capabilityDocs };
     const base = slugifyTitle(tenderTitle);
     setOpen(false);
 
-    if (format === "pdf") {
-      // Defer so the menu is closed (and unmounted from print) before printing.
-      setTimeout(() => window.print(), 0);
+    // Response draft.
+    if (artifact === "response") {
+      if (format === "pdf") {
+        // Defer so the menu is closed (unmounted from print) before printing.
+        setTimeout(() => window.print(), 0);
+        return;
+      }
+      if (format === "md") {
+        triggerDownload(
+          new Blob([buildMarkdown(input)], { type: "text/markdown;charset=utf-8" }),
+          `${base}.md`
+        );
+        return;
+      }
+      if (format === "txt") {
+        triggerDownload(
+          new Blob([buildText(input)], { type: "text/plain;charset=utf-8" }),
+          `${base}.txt`
+        );
+        return;
+      }
+      await withBusy(async () => triggerDownload(await buildDocx(input), `${base}.docx`));
       return;
     }
+
+    // Compliance matrix (its builders set their own filenames).
+    if (artifact === "matrix") {
+      const matrixInput = { title: tenderTitle, requirements, awardCriteria };
+      if (format === "csv") {
+        exportMatrixCsv(matrixInput);
+        return;
+      }
+      await withBusy(async () => exportMatrixXlsx(matrixInput));
+      return;
+    }
+
+    // Audit / evidence pack.
     if (format === "md") {
       triggerDownload(
-        new Blob([buildMarkdown(input)], { type: "text/markdown;charset=utf-8" }),
-        `${base}.md`
+        new Blob([buildEvidencePackMarkdown(input)], {
+          type: "text/markdown;charset=utf-8",
+        }),
+        `${base}-audit-pack.md`
       );
       return;
     }
-    if (format === "txt") {
-      triggerDownload(
-        new Blob([buildText(input)], { type: "text/plain;charset=utf-8" }),
-        `${base}.txt`
-      );
-      return;
-    }
-    // docx — dynamically imported inside buildDocx.
+    await withBusy(async () =>
+      triggerDownload(await buildEvidencePackDocx(input), `${base}-audit-pack.docx`)
+    );
+  }
+
+  async function withBusy(fn: () => Promise<void>) {
     try {
       setBusy(true);
-      const blob = await buildDocx(input);
-      triggerDownload(blob, `${base}.docx`);
+      await fn();
     } finally {
       setBusy(false);
     }
@@ -110,31 +183,47 @@ export function ExportMenu({
         onClick={() => setOpen((prev) => !prev)}
         className="inline-flex items-center gap-2 rounded-md bg-forest px-4 py-2 text-sm font-semibold text-paper transition-colors hover:bg-forest-hover disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {busy ? "Preparing…" : "Export response pack"}
+        {busy ? "Preparing…" : "Export"}
         <ChevronIcon />
       </button>
 
       {open && (
         <div
           role="menu"
-          className="absolute right-0 z-20 mt-1 w-72 overflow-hidden rounded-md border border-hairline bg-paper-raised py-1 shadow-[var(--depth-sheet)]"
+          className="absolute right-0 z-20 mt-1 max-h-[min(70vh,32rem)] w-80 overflow-y-auto rounded-md border border-hairline bg-paper-raised py-1 shadow-[var(--depth-sheet)]"
         >
-          {/* Blockers first, before any format is picked. */}
+          {/* Blockers first, before any artifact or format is picked. */}
           <ExportReadinessSummary readiness={readiness} />
-          {ITEMS.map((item) => (
-            <button
-              key={item.format}
-              type="button"
-              role="menuitem"
-              onClick={() => run(item.format)}
-              className="flex w-full items-center gap-2.5 px-3 py-2 text-left text-sm text-ink transition-colors hover:bg-paper-recessed"
+
+          {GROUPS.map((group) => (
+            <div
+              key={group.key}
+              className="px-1 py-1.5 [&:not(:last-child)]:[border-bottom:var(--rule-hair)]"
             >
-              <FormatIcon format={item.format} />
-              <span className="flex-1">{item.label}</span>
-              <span className="font-mono text-xs text-ink-muted">
-                {item.hint}
-              </span>
-            </button>
+              <div className="px-2 pb-1">
+                <p className="font-mono text-[11px] font-medium uppercase tracking-wide text-ink">
+                  {group.title}
+                </p>
+                <p className="text-xs leading-snug text-ink-muted">
+                  {group.blurb}
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-1 px-1">
+                {group.formats.map((item) => (
+                  <button
+                    key={`${group.key}-${item.format}`}
+                    type="button"
+                    role="menuitem"
+                    onClick={() => run(group.key, item.format)}
+                    title={item.hint}
+                    className="inline-flex items-center gap-1.5 rounded-md border border-hairline bg-paper px-2.5 py-1.5 text-sm text-ink shadow-[var(--depth-control)] transition-colors hover:border-forest hover:text-forest"
+                  >
+                    <FormatIcon format={item.format} />
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       )}
@@ -186,6 +275,9 @@ function FormatIcon({ format }: { format: Format }) {
       )}
       {format === "txt" && (
         <path d="M5.5 8.5h5M5.5 10.5h5M5.5 12.5h3" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
+      )}
+      {(format === "xlsx" || format === "csv") && (
+        <path d="M5 8h6M5 10.5h6M5 13h6M8 8v5" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
       )}
     </svg>
   );
