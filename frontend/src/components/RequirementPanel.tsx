@@ -224,7 +224,13 @@ export function RequirementPanel({
           {needsInput ? (
             <NeedsInputNotice requirement={requirement} />
           ) : (
-            <AnswerPanel key={`ans-${requirement.id}`} requirement={requirement} />
+            <AnswerPanel
+              key={`ans-${requirement.id}`}
+              requirement={requirement}
+              // The matrix owns the requirement decision (DecisionZone below); the
+              // answer verdict is offered on /answers, not stacked here.
+              showDecision={false}
+            />
           )}
         </Zone>
 

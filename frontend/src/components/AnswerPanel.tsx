@@ -27,7 +27,18 @@ import styles from "./AnswerPanel.module.css";
 // itself, recorded with a self-writing audit line. That verdict is INDEPENDENT
 // of the requirement's own status (device kit + copywriting.md audit voice).
 
-export function AnswerPanel({ requirement }: { requirement: Requirement }) {
+// `showDecision` gates the answer-verdict footer. It's on by default (the
+// /answers surface, where you review answers) and off when the panel is embedded
+// in the matrix's RequirementPanel — that surface owns the REQUIREMENT decision,
+// and stacking a second decision zone under it reads as two conflicting Approves.
+// The state badge, evidence, and Show-evidence still show in both.
+export function AnswerPanel({
+  requirement,
+  showDecision = true,
+}: {
+  requirement: Requirement;
+  showDecision?: boolean;
+}) {
   const {
     capabilityDocs,
     editAnswer,
@@ -215,7 +226,7 @@ export function AnswerPanel({ requirement }: { requirement: Requirement }) {
           Flag the drafted response itself — separate from the requirement
           decision — with the self-writing audit line. A workspace control, so
           it stays off the printed response. */}
-      {answer && !pending && !editing && (
+      {showDecision && answer && !pending && !editing && (
         <AnswerDecisionZone
           answer={answer}
           currentUserId={user?.id}
