@@ -96,3 +96,21 @@ Stage 4 left one recorded exception: the SSE `tenderEventsUrl` still carries `?t
   is decoupled and gated on a **new backend answer-persistence endpoint**
   (answer text is localStorage-only today — `answer-store.ts:3-9`), handed to
   Pranav. Sequencing reset to C → A → B → D-frontend. Still no Fable.
+- 2026-07-09 — **frontend shipped: C → A → B → D-frontend, one commit each on `main`.**
+  Design fork resolved with Jawad: the answer's Approve/Flag is **answer-scoped
+  and independent** of the requirement decision (new `answer.decision`), so
+  "requirement approved · answer still needs input" is a real displayed state.
+  - **C** (`c4e632e`) — answer-scoped Approve/Flag/Reopen with a self-writing
+    audit line; Show-evidence overlay (`AnswerEvidenceOverlay`, the answer-side
+    mirror of `SourceVerifyOverlay`, honest that it can't render the capability
+    doc — no fetch URL yet); margin trued to the `--rule-hair` token. Verdict
+    persists independent of `answer.state`.
+  - **A** (`5d491dd`) — bulk-approve of ready drafts (`isAnswerApprovable`:
+    gap-free, confident, undecided); Undo toast on a new `snapshotAnswers`/
+    `restoreAnswers` seam.
+  - **B** (`4bbe186`) — half-typed gap answers lifted to context (`gapDrafts`),
+    surviving panel collapse / card unmount.
+  - **D-frontend** (`89afba8`) — requirement status shown beside answer state on
+    the card; answer edits undoable (same snapshot seam). **Still open (Pranav):**
+    the backend answer-persistence endpoint — answer content remains
+    localStorage-only until it lands.
