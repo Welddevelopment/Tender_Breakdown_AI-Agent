@@ -93,6 +93,20 @@ export function deriveReadiness(reqs: Requirement[]): ReadinessCounts {
   return counts;
 }
 
+// Eligible for the /answers bulk-approve: a ready draft (gap-free, drafted, no
+// open deal-breaker) that is also confident and not yet decided. Bulk approval
+// never touches an answer with an open gap, a shaky draft, or one a human has
+// already ruled on — those need an individual look. Single-sources the
+// confidence bar from LOW_CONFIDENCE.
+export function isAnswerApprovable(req: Requirement): boolean {
+  return (
+    readinessOf(req) === "ready" &&
+    !req.needs_review &&
+    (req.answer?.confidence ?? req.confidence) >= LOW_CONFIDENCE &&
+    !req.answer?.decision
+  );
+}
+
 // --- answer filters (empty set = show all; the UI selects one at a time) ---
 
 export type AnswerFilterKey = "deal-breakers" | "needs-input" | "unbacked";

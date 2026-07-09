@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
 import { useRequirements } from "@/context/RequirementsContext";
 import { isApiEnabled } from "@/lib/api";
 import {
   compareWeakestFirst,
   deriveReadiness,
+  isAnswerApprovable,
   matchesFilters,
   type AnswerFilterKey,
 } from "@/lib/answers";
@@ -23,8 +25,17 @@ import { NoTenderLoaded } from "./NoTenderLoaded";
 // bar, and the answer cards (drafted prose + evidence receipts + inline gaps).
 // The mock showcase build runs the same surface on the seeded sample.
 export function AnswersBody() {
-  const { requirements, seeding, capabilityDocs, tenderId, title, drafting } =
-    useRequirements();
+  const {
+    requirements,
+    seeding,
+    capabilityDocs,
+    tenderId,
+    title,
+    drafting,
+    approveAnswers,
+    snapshotAnswers,
+    restoreAnswers,
+  } = useRequirements();
   const [active, setActive] = useState<Set<AnswerFilterKey>>(new Set());
   const [weakestFirst, setWeakestFirst] = useState(true);
 
@@ -72,6 +83,25 @@ export function AnswersBody() {
 
   const counts = useMemo(() => deriveReadiness(requirements), [requirements]);
 
+  // The ready drafts a human can bless in one gesture — gap-free, confident, not
+  // yet decided. Reads the full list (not the filtered slice) so the count is the
+  // honest total, and re-derives as gaps close / verdicts land.
+  const approvableIds = useMemo(
+    () => requirements.filter(isAnswerApprovable).map((req) => req.id),
+    [requirements]
+  );
+
+  function bulkApprove() {
+    if (approvableIds.length === 0) return;
+    // Snapshot BEFORE the change so Undo restores each exact prior answer.
+    const snapshot = snapshotAnswers(approvableIds);
+    const n = approvableIds.length;
+    approveAnswers(approvableIds);
+    toast(`Approved ${n} ready ${n === 1 ? "answer" : "answers"}`, {
+      action: { label: "Undo", onClick: () => restoreAnswers(snapshot) },
+    });
+  }
+
   if (isApiEnabled() && !tenderId) {
     return (
       <NoTenderLoaded
@@ -113,6 +143,26 @@ export function AnswersBody() {
           tenderTitle={title}
         />
       </div>
+
+      {/* Bulk sign-off for the ready drafts — a quiet control, not a slab, that
+          only appears when there is something safe to approve. It never touches
+          an answer with an open gap, a shaky draft, or one already decided. */}
+      {approvableIds.length > 0 && (
+        <div className="no-print mt-6 flex flex-wrap items-center gap-x-3 gap-y-2">
+          <button
+            type="button"
+            onClick={bulkApprove}
+            className="bg-forest px-4 py-1.5 text-sm font-semibold text-paper transition-colors hover:bg-forest-hover"
+          >
+            Approve {approvableIds.length} ready{" "}
+            {approvableIds.length === 1 ? "answer" : "answers"}
+          </button>
+          <span className="text-xs text-ink-muted">
+            Gap-free, confident drafts only. Anything with an open gap is left for
+            you to read. Undo stays available.
+          </span>
+        </div>
+      )}
 
       {/* The consolidated gap triage: one line when questions remain, expanding
           to the grouped interview. Renders nothing when there are none, and is

@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import type {
   Actor,
+  Answer,
   AnswerDecision,
   AwardCriterion,
   CapabilityDoc,
@@ -60,6 +61,15 @@ export interface DecisionSnapshot {
   decision: RequirementDecision | null;
 }
 
+// The undo seam for answer content: the whole answer object + the deprecated
+// draft_answer alias, captured before an edit or a bulk answer-approve so Undo
+// restores the exact prior draft, state, verdict, and evidence.
+export interface AnswerSnapshot {
+  id: string;
+  answer: Answer | null;
+  draftAnswer: string | null;
+}
+
 interface RequirementsContextValue {
   requirements: Requirement[];
   // True only for the moment the mock demo seed is still lazy-loading (no
@@ -88,6 +98,11 @@ interface RequirementsContextValue {
   approveAnswer: (id: string) => void;
   flagAnswer: (id: string, note: string) => void;
   reopenAnswer: (id: string) => void;
+  // Bulk answer-approve (the /answers ready-drafts control) + the answer-content
+  // undo seam it and the panel's edit share.
+  approveAnswers: (ids: string[]) => void;
+  snapshotAnswers: (ids: string[]) => AnswerSnapshot[];
+  restoreAnswers: (snapshot: AnswerSnapshot[]) => void;
   answerOpenQuestion: (
     reqId: string,
     questionId: string,
@@ -639,6 +654,55 @@ export function RequirementsProvider({
     setAnswerDecision(id, null);
   }
 
+  // Batch answer-approve for the /answers ready-drafts control: one setState
+  // pass, one stamp, only rows that actually hold an answer. Callers pass the
+  // already-filtered eligible set (isAnswerApprovable). No PATCH — answer content
+  // has no backend endpoint yet; it rides the localStorage persist effect.
+  function approveAnswers(ids: string[]) {
+    if (ids.length === 0) return;
+    const idSet = new Set(ids);
+    const decision: AnswerDecision = {
+      verdict: "approved",
+      note: "",
+      timestamp: new Date().toISOString(),
+    };
+    const stamped = decisionActor ? { ...decision, actor: decisionActor } : decision;
+    setRequirements((prev) =>
+      prev.map((req) =>
+        idSet.has(req.id) && req.answer
+          ? { ...req, answer: { ...req.answer, decision: stamped } }
+          : req
+      )
+    );
+  }
+
+  // Capture answer content for a set of ids BEFORE an edit or bulk approve, so
+  // Undo can put the exact prior draft/state/verdict back. State mechanics only —
+  // the toast/undo UI lives with the caller (mirrors snapshotDecisions).
+  function snapshotAnswers(ids: string[]): AnswerSnapshot[] {
+    const idSet = new Set(ids);
+    return requirements
+      .filter((req) => idSet.has(req.id))
+      .map((req) => ({
+        id: req.id,
+        answer: req.answer ?? null,
+        draftAnswer: req.draft_answer,
+      }));
+  }
+
+  function restoreAnswers(snapshot: AnswerSnapshot[]) {
+    if (snapshot.length === 0) return;
+    const byId = new Map(snapshot.map((entry) => [entry.id, entry]));
+    setRequirements((prev) =>
+      prev.map((req) => {
+        const entry = byId.get(req.id);
+        return entry
+          ? { ...req, answer: entry.answer, draft_answer: entry.draftAnswer }
+          : req;
+      })
+    );
+  }
+
   // Human answers a gap question the tool flagged. (No backend endpoint yet — in-memory.)
   function answerOpenQuestion(
     reqId: string,
@@ -688,6 +752,9 @@ export function RequirementsProvider({
         approveAnswer,
         flagAnswer,
         reopenAnswer,
+        approveAnswers,
+        snapshotAnswers,
+        restoreAnswers,
         answerOpenQuestion,
         loadTender,
         draftAnswers,
