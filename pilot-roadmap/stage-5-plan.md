@@ -29,34 +29,36 @@ empty ──draft──▶ auto ──edit──▶ human_edited
 open_questions:   unanswered ──answer──▶ answered
 ```
 
-The answer worklist groups by *what each answer needs* — the `deriveTriage`/`pendingStatusWord` pattern, ported to answers:
-**Gaps to fill** (needs_input / unanswered questions) → **Drafts to check** (auto, low-confidence) → **Ready** (auto, confident) → **Approved / edited**. No impossible states (never `auto` + unanswered required question presented as "ready").
+**Audit correction:** the answer worklist grouping **already exists** and — importantly — uses its *own* completeness model in `lib/answers.ts` (`readinessOf`: deal-breaker → no-draft → needs-input → ready, ordered `compareWeakestFirst`, visualized by `ReadinessLedger.tsx`). This is deliberately **not** the matrix's decision-status triage: answers ask "is the drafted response submittable?", the matrix asks "what decision does this need?". Do **not** port `deriveTriage`/`pendingStatusWord` over it — the distinct model is correct. Keep the FSM above as the *decision* overlay only.
 
-## Workstreams
+## Workstreams (revised against the audit — `/answers` is ~65% built)
 
-**A · Answer worklist + grouping** — port Stage 2's triage/worklist to `/answers`: group by need (gaps first), a triage line ("6 gaps to fill · 12 to check · 40 ready"), Next routes to the highest-priority gap. Likely a new pure `lib/answer-triage.ts` mirroring `triage.ts`.
-· Model: **Sonnet** (spec-driven mirror of existing triage). Opus reviews the state model.
-· Done when: `/answers` groups by need, gaps lead, Next walks the gap worklist; pure functions unit-testable.
+**A · Answer worklist + grouping** — *Current state: done, and correctly distinct.* `lib/answers.ts` + `ReadinessLedger.tsx` + `AnswersBody.tsx` already group and order by answer-completeness. **Genuine gap:** no bulk-approve UI on `/answers` (context has `approveMany`, it's just not wired here) and fewer filter chips than the matrix.
+· Scope: wire a bulk-approve affordance that excludes any answer with an open gap; optional filter-chip parity. Do **not** rebuild the grouping.
+· Model: **Sonnet** (small). Done when: bulk-approve on `/answers` touches only gap-free, confident, drafted answers.
 
-**B · The gap-fill experience** (form-design lens) — the open questions are forms that complete an answer. Apply: single column; top-aligned persistent labels; "why we're asking" helper text; resizable textarea for prose; **auto-save so a partial gap answer is never lost**; validate on blur; honest copy; a review beat before it flips the answer. `GapInterview.tsx` is the home; filling a gap transitions `needs_input → human_edited`.
-· Model: **Sonnet** (forms). Opus for the gap→answer wiring; trust-critical "why we're asking" copy = Jawad/Opus review.
-· Done when: a gap can be filled, auto-saved (survives refresh), and flips the answer state; validation + a11y (label/`aria-describedby`) pass.
+**B · The gap-fill experience** — *Current state: fully present.* `GapInterview.tsx` + `OpenQuestions.tsx` surface, collect, persist (localStorage), and transition `auto → human_edited` when all gaps close (shared save path inline + consolidated). **Genuine gap:** partial per-gap input is transient — lost if you close the expansion mid-answer.
+· Scope (optional/small): protect partial input (auto-save the in-progress gap draft, or confirm-before-discard per form-design). Nothing else.
+· Model: **Sonnet/Haiku**. Done when: a half-typed gap answer survives closing the panel.
 
-**C · Answer review + evidence (civic-record parity)** — the draft is record-led: answer text (Chillax) with `evidence_refs` in the mono margin (which capability doc backs the claim + page), confidence bead, two-sided traceability (requirement ↔ answer ↔ evidence). Bring Stage 3's device kit (ruled margin, mono record voice) to the answer panel. Actions: Approve · Edit · Flag · **Show evidence** (mirror the matrix "Show source"). Honest bulk approve = only confident, fully-grounded, gap-free answers.
-· Model: **Sonnet** restyle against the existing device kit; **Haiku** for badges/tokens/copy tables.
-· Done when: answer panel matches matrix panel discipline; Show-evidence opens the capability-doc source; bulk approve excludes anything with an open gap.
+**C · Answer review + evidence (civic-record parity)** — *Current state: partial — THE main frontend build.* `AnswerPanel.tsx` shows the draft in a 64ch column with evidence receipts ("Backed by your {doc}, p.{page}") down a mono margin, plus a settle animation and inline text-edit. **Genuine gaps:** (1) **no decision actions** — it has answer-text edit but no Approve/Flag; (2) **no "Show evidence"** link opening the capability doc (the mirror of the matrix's `SourceVerifyOverlay` "Show source"); (3) plainer than `RequirementPanel` — no ruled `--rule-hair` margin, no audit line.
+· Scope: add Approve/Flag decision actions to the answer panel; add Show-evidence → capability-doc overlay; true up to the Stage 3 device kit (ruled margin, mono record voice, audit line).
+· Model: **Sonnet** restyle against the existing device kit; **Haiku** for badges/tokens; trust-critical decision copy = Jawad/Opus review.
+· Done when: answer panel matches `RequirementPanel` discipline; Show-evidence opens the backing doc; decisions recorded with an audit line.
 
-**D · Cross-surface state coherence** — matrix and answers are two views of the same requirements. A decision on one reflects on the other; both route through the same `RequirementsContext` handlers + undo; `answer.state` stays in sync with `requirement.status`; the `ControlPanel` tally (already reads both) never disagrees.
-· Model: **Opus** (eliminating impossible states across two surfaces is the one genuinely hard, cross-cutting piece).
-· Done when: approve/edit/flag on either surface updates both + the tally; undo works from both; two-account isolation holds.
+**D · Cross-surface state coherence** — *Current state: decoupled, and gated on a backend gap.* `answer.state` and `requirement.status` are independent branches; editing an answer doesn't touch the requirement and vice-versa; **answer text + gap answers persist to localStorage only — there is no backend endpoint for them yet** (`answer-store.ts:3-9`); there's no undo for answer edits (undo exists for decisions).
+· **⚠ Backend prerequisite (Pranav, not frontend):** a persistence endpoint for answer text + gap answers. Without it, a pilot user's drafted answers are lost across devices and invisible to collaborators — a real data-loss risk, arguably the single most pilot-critical Stage 5 item. Coordinate on `comms/board-backend.md`.
+· Frontend scope: decide + make legible the intended relationship (recommendation: keep `answer.state` and `requirement.status` **independent** but show both honestly — "requirement accepted · answer still needs input" is a valid displayed state, not a bug); add undo for answer edits (mirror `snapshotDecisions/restoreDecisions`).
+· Model: **Opus** (cross-surface state; eliminating impossible states). Backend endpoint: **Pranav**.
+· Done when: the answer/requirement relationship is legible and consistent; answer edits are undoable; answers persist server-side (once the endpoint lands).
 
 ## Motion
 
 No new hero motion. Reuse Stage 3's tokens (`ease-settle`, the approval stamp) for the gap-filled → answer-complete beat. `prefers-reduced-motion` composed end-state is mandatory. **No Fable this stage.**
 
-## Sequencing (riskiest-appropriate)
+## Sequencing (revised — A/B mostly done, C is the real work)
 
-Step 0 audit → **A** (grouping) → **C** (answer device-kit) → **B** (gap forms) → **D last** (the integration hub). One commit per workstream; `npm run build` + `npm run lint` green per commit; trunk to `main` per repo rules. Any single change large enough to risk `main` goes on a `frontend/<name>` branch + PR (unlikely at this granularity).
+**C first** (the main frontend build — decision actions + Show-evidence + device-kit trueing; no blocker) → **A** (bulk-approve UI, small) → **B** (protect partial gap input, optional) → **D-frontend** (answer/requirement legibility + undo for answer edits). In parallel and off the frontend critical path: **hand the backend answer-persistence endpoint to Pranav** on `comms/board-backend.md` — it unblocks D's server-side persistence but not the frontend coherence work, so the two proceed independently. One commit per workstream; `npm run build` + `npm run lint` green per commit; trunk to `main`.
 
 ## Verification
 
@@ -86,3 +88,11 @@ Stage 4 left one recorded exception: the SSE `tenderEventsUrl` still carries `?t
 ## Changelog
 
 - 2026-07-09 — plan drafted; Step 0 audit launched to fill per-workstream "current state".
+- 2026-07-09 — **audit complete; `/answers` is ~65% built.** Findings folded in:
+  A grouping already exists via a *distinct, correct* answer-completeness model
+  (`lib/answers.ts`) — plan corrected to NOT port matrix triage; B gap-fill is
+  fully present (only partial-input protection missing); C (answer decision
+  actions + Show-evidence + device-kit trueing) is the real frontend build; D
+  is decoupled and gated on a **new backend answer-persistence endpoint**
+  (answer text is localStorage-only today — `answer-store.ts:3-9`), handed to
+  Pranav. Sequencing reset to C → A → B → D-frontend. Still no Fable.
