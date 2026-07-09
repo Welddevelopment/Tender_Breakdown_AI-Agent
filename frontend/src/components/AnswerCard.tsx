@@ -3,6 +3,8 @@
 import type { Requirement } from "@/types/requirement";
 import { hasDraft, isOpenDealBreaker } from "@/lib/answers";
 import { sourceRefLabel } from "@/lib/source-doc";
+import { useAuth } from "@/context/AuthContext";
+import { actorLabel } from "@/lib/collaborators";
 import { AnswerPanel } from "./AnswerPanel";
 import { CategoryTag } from "./CategoryTag";
 import { ConfidenceIndicator } from "./ConfidenceIndicator";
@@ -15,6 +17,7 @@ import { OpenQuestions } from "./OpenQuestions";
 // a scroll anchor so the ledger/filters and future deep links can jump to it.
 
 export function AnswerCard({ requirement: req }: { requirement: Requirement }) {
+  const { user } = useAuth();
   const answer = req.answer ?? null;
   // A gating item with no draft can't be answered from source — read it as the
   // oxblood alarm, not a low meter.
@@ -48,6 +51,11 @@ export function AnswerCard({ requirement: req }: { requirement: Requirement }) {
             source ref and the evidence refs share the one "traceable to
             source" colour. */}
         <span className="font-mono text-accent">{sourceRefLabel(req)}</span>
+        {/* Cross-surface coherence: the requirement's OWN decision, shown beside
+            the answer state so a divergence reads honestly — "requirement
+            approved · answer still needs input" is a real state, not a bug. Only
+            shown once the requirement is actually decided on the matrix. */}
+        <RequirementStatusNote req={req} currentUserId={user?.id} />
       </div>
 
       <p className="mb-3 max-w-[64ch] text-sm font-medium leading-snug text-ink">
@@ -63,4 +71,28 @@ export function AnswerCard({ requirement: req }: { requirement: Requirement }) {
       </div>
     </li>
   );
+}
+
+// The requirement's own matrix decision, rendered on the answer card so the two
+// independent tracks (requirement status vs answer state) are both legible here.
+// Nothing while pending — an undecided requirement adds no signal, and the answer
+// state already carries the review. Attributed like the matrix's status word.
+function RequirementStatusNote({
+  req,
+  currentUserId,
+}: {
+  req: Requirement;
+  currentUserId?: string | null;
+}) {
+  if (req.status === "pending") return null;
+  const who = actorLabel(req.decision?.actor, currentUserId);
+  const label =
+    req.status === "accepted"
+      ? `Requirement approved by ${who}`
+      : req.status === "edited"
+        ? `Requirement edited by ${who}`
+        : "Requirement flagged";
+  const tone =
+    req.status === "flagged" ? "text-signal-oxblood" : "text-forest";
+  return <span className={`font-mono ${tone}`}>{label}</span>;
 }

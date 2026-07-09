@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 import type { Answer, Requirement } from "@/types/requirement";
 import { useRequirements } from "@/context/RequirementsContext";
 import { useAuth } from "@/context/AuthContext";
@@ -38,6 +39,8 @@ export function AnswerPanel({ requirement }: { requirement: Requirement }) {
     approveAnswer,
     flagAnswer,
     reopenAnswer,
+    snapshotAnswers,
+    restoreAnswers,
   } = useRequirements();
   const { user } = useAuth();
   const [verifyOpen, setVerifyOpen] = useState(false);
@@ -80,8 +83,19 @@ export function AnswerPanel({ requirement }: { requirement: Requirement }) {
                 <button
                   type="button"
                   onClick={() => {
+                    // Snapshot the exact prior answer BEFORE the edit, so Undo
+                    // restores it verbatim — including reverting to no draft when
+                    // this save is the first write (mirrors the matrix's undo).
+                    const snapshot = snapshotAnswers([requirement.id]);
+                    const hadDraft = answer !== null;
                     editAnswer(requirement.id, draft.trim());
                     endAnswerEdit(requirement.id);
+                    toast(hadDraft ? "Answer edited" : "Answer saved", {
+                      action: {
+                        label: "Undo",
+                        onClick: () => restoreAnswers(snapshot),
+                      },
+                    });
                   }}
                   className="bg-forest px-3.5 py-1.5 text-sm font-semibold text-paper transition-colors hover:bg-forest-hover"
                 >
