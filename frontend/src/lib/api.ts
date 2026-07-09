@@ -1,4 +1,9 @@
-import type { Requirement, Tender } from "@/types/requirement";
+import type {
+  AnswerDecision,
+  AnswerState,
+  Requirement,
+  Tender,
+} from "@/types/requirement";
 
 // Live backend base URL. Unset → the app runs entirely on mock data (demo-safe
 // default). Set NEXT_PUBLIC_API_BASE_URL (e.g. http://localhost:8000 locally, or
@@ -424,6 +429,36 @@ export async function patchRequirement(
   body: Partial<Pick<Requirement, "status" | "decision">>
 ): Promise<void> {
   const res = await fetch(`${BASE}/requirements/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...authHeaders() },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw await apiError(res, `Update failed (${res.status})`);
+}
+
+// Body for PATCH /requirements/{id}/answer — human answer content, all optional so
+// callers send only what changed. `decision` sets/replaces the verdict (actor is
+// stamped server-side, so it's omitted here); `clear_decision` reopens it.
+export interface AnswerContentUpdate {
+  text?: string;
+  state?: AnswerState;
+  confidence?: number;
+  open_questions?: {
+    id: string;
+    answer: string | null;
+    answered_at?: string | null;
+  }[];
+  decision?: Omit<AnswerDecision, "actor">;
+  clear_decision?: boolean;
+}
+
+// PATCH /requirements/{id}/answer — persist answer text, gap answers, and the
+// answer verdict server-side (the content that was localStorage-only before).
+export async function patchAnswer(
+  id: string,
+  body: AnswerContentUpdate
+): Promise<void> {
+  const res = await fetch(`${BASE}/requirements/${id}/answer`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json", ...authHeaders() },
     body: JSON.stringify(body),

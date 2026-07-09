@@ -20,6 +20,7 @@ import {
   draftAnswers as apiDraftAnswers,
   getTender,
   isApiEnabled,
+  patchAnswer,
   patchRequirement,
   tenderEventsUrl,
   type TenderEvent,
@@ -614,6 +615,8 @@ export function RequirementsProvider({
   // evidence refs, so it honestly reads as unbacked until backed. (No backend
   // endpoint yet — in-memory + localStorage.)
   function editAnswer(id: string, text: string) {
+    const current = requirements.find((req) => req.id === id);
+    const confidence = Math.max(current?.answer?.confidence ?? 0.5, 0.7);
     setRequirements((prev) =>
       prev.map((req) => {
         if (req.id !== id) return req;
@@ -635,6 +638,11 @@ export function RequirementsProvider({
         };
       })
     );
+    if (isApiEnabled()) {
+      patchAnswer(id, { text, state: "human_edited", confidence }).catch(() => {
+        toast.error(SAVE_FAILED);
+      });
+    }
   }
 
   // Record a human verdict on the drafted answer itself, stamped with the actor
@@ -644,6 +652,8 @@ export function RequirementsProvider({
   // yet, so this is in-memory only and rides the localStorage persist effect;
   // it never PATCHes. A no-op when there's no draft to decide on.
   function setAnswerDecision(id: string, decision: AnswerDecision | null) {
+    // Local display stamps the actor immediately; the server re-stamps it from the
+    // signed-in user on PATCH, so the wire body omits actor (can't be forged).
     const stamped =
       decision && decisionActor ? { ...decision, actor: decisionActor } : decision;
     setRequirements((prev) =>
@@ -652,6 +662,20 @@ export function RequirementsProvider({
         return { ...req, answer: { ...req.answer, decision: stamped } };
       })
     );
+    if (isApiEnabled()) {
+      const body = decision
+        ? {
+            decision: {
+              verdict: decision.verdict,
+              note: decision.note,
+              timestamp: decision.timestamp,
+            },
+          }
+        : { clear_decision: true };
+      patchAnswer(id, body).catch(() => {
+        toast.error(SAVE_FAILED);
+      });
+    }
   }
 
   function approveAnswer(id: string) {
@@ -695,6 +719,18 @@ export function RequirementsProvider({
           : req
       )
     );
+    if (isApiEnabled()) {
+      const body = {
+        decision: {
+          verdict: decision.verdict,
+          note: decision.note,
+          timestamp: decision.timestamp,
+        },
+      };
+      for (const id of ids) {
+        patchAnswer(id, body).catch(() => toast.error(SAVE_FAILED));
+      }
+    }
   }
 
   // Capture answer content for a set of ids BEFORE an edit or bulk approve, so
@@ -722,6 +758,31 @@ export function RequirementsProvider({
           : req;
       })
     );
+    // Put the prior answer content back on the server too, so Undo is coherent
+    // across devices (mirrors restoreDecisions). No answer → reset to empty +
+    // clear any verdict, the closest the endpoint has to "as if never drafted".
+    if (isApiEnabled()) {
+      for (const entry of snapshot) {
+        const ans = entry.answer;
+        const body = ans
+          ? {
+              text: ans.text,
+              state: ans.state,
+              confidence: ans.confidence,
+              ...(ans.decision
+                ? {
+                    decision: {
+                      verdict: ans.decision.verdict,
+                      note: ans.decision.note,
+                      timestamp: ans.decision.timestamp,
+                    },
+                  }
+                : { clear_decision: true }),
+            }
+          : { text: "", state: "empty" as const, clear_decision: true };
+        patchAnswer(entry.id, body).catch(() => toast.error(SAVE_FAILED));
+      }
+    }
   }
 
   // Human answers a gap question the tool flagged. (No backend endpoint yet — in-memory.)
@@ -730,6 +791,7 @@ export function RequirementsProvider({
     questionId: string,
     answerText: string
   ) {
+    const answeredAt = new Date().toISOString();
     setRequirements((prev) =>
       prev.map((req) => {
         if (req.id !== reqId || !req.open_questions) return req;
@@ -740,13 +802,20 @@ export function RequirementsProvider({
               ? {
                   ...q,
                   answer: answerText,
-                  answered_at: new Date().toISOString(),
+                  answered_at: answeredAt,
                 }
               : q
           ),
         };
       })
     );
+    if (isApiEnabled()) {
+      patchAnswer(reqId, {
+        open_questions: [
+          { id: questionId, answer: answerText, answered_at: answeredAt },
+        ],
+      }).catch(() => toast.error(SAVE_FAILED));
+    }
   }
 
   return (

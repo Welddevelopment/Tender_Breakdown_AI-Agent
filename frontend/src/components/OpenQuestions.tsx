@@ -3,6 +3,10 @@
 import { toast } from "sonner";
 import type { OpenQuestion, Requirement } from "@/types/requirement";
 import { useRequirements } from "@/context/RequirementsContext";
+import { isApiEnabled, patchAnswer } from "@/lib/api";
+
+const GAP_SAVE_FAILED =
+  "Couldn't save that to the server. It shows here, but may not have been kept. Check your connection, then redo it.";
 
 export function OpenQuestions({ requirement }: { requirement: Requirement }) {
   const questions = requirement.open_questions ?? [];
@@ -106,6 +110,30 @@ export function OpenQuestionItem({
     });
     // The answer now lives on the question — drop the in-progress draft.
     clearGapDraft(question.id);
+
+    // Persist server-side (best-effort): the gap answers, plus the merged answer
+    // text/state when this input closed the last gap. localStorage still holds it
+    // regardless; this is what makes it survive across devices / reach teammates.
+    if (isApiEnabled()) {
+      patchAnswer(requirementId, {
+        open_questions: nextQuestions.map((q) => ({
+          id: q.id,
+          answer: q.answer,
+          answered_at: q.answered_at,
+        })),
+        ...(requirement.answer
+          ? {
+              text: answerText,
+              state: allAnswered
+                ? ("human_edited" as const)
+                : requirement.answer.state,
+              confidence: allAnswered
+                ? Math.max(requirement.answer.confidence, 0.7)
+                : requirement.answer.confidence,
+            }
+          : {}),
+      }).catch(() => toast.error(GAP_SAVE_FAILED));
+    }
 
     // Confirmation rides the app's toaster (restyled sonner) rather than an
     // inline line, and reports honest per-requirement progress.
