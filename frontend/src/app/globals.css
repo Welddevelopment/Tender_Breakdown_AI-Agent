@@ -1970,8 +1970,47 @@ body {
   position: absolute;
   pointer-events: none;
 }
+/* The grass border: a full-bleed fern fringe rising behind the product
+   sheet's top edge, bridging the headline zone into the demo. The old side
+   panels clipped in rectangles (hard vertical + horizontal cuts); this band
+   spans the whole viewport, its alpha fern tips fade into the scrim above,
+   its base hides behind the sheet, and a soft bottom mask grounds the strips
+   left and right of the sheet — so the register reads as sitting in the
+   undergrowth rather than pasted over a photo. Static on purpose: parallax on
+   this layer is what exposed the old rectangles in Safari. */
 .forest-hero-plinth::before {
-  display: none;
+  display: block;
+  left: 50%;
+  top: -1rem;
+  z-index: 0;
+  width: 100vw;
+  height: clamp(10rem, 18vw, 15rem);
+  /* Position on the image's fringe zone (its alpha fern tips), not its solid
+     base, so the border's own silhouette does the top blend; the mask fades
+     both edges so neither the tips nor the base ever end in a straight cut. */
+  background: url("/landing/forest/fern-edge-overlay.webp") center 68% / cover
+    no-repeat;
+  filter: brightness(0.95) saturate(0.98);
+  opacity: 1;
+  transform: translateX(-50%);
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.72) 18%,
+    black 32%,
+    black 68%,
+    rgba(0, 0, 0, 0.45) 88%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.72) 18%,
+    black 32%,
+    black 68%,
+    rgba(0, 0, 0, 0.45) 88%,
+    transparent 100%
+  );
 }
 .forest-hero-plinth::after {
   left: 50%;
