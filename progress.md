@@ -195,3 +195,4 @@
 ## Day 12 — Thu 09 Jul 2026
 
 - **00:04** — **Stage 3 + Stage 4 frontend layers shipped (Jawad):** Stage 3 delivers in-place upload→matrix resolve, forest arrival animation, and `/graph` polish; Stage 4 adds self-hosted fonts (Fraunces/Newsreader/IBMPlexMono as `.woff2`), token-free document URLs, and lazy demo seed *(no third-party font fetches — app loads clean offline and in constrained pilot environments; full post-demo visual pipeline now in place)*
+- **09:04** — **Landing fern border fixed (Jawad):** hard-clipping vertical fern panels replaced with a full-bleed organic fern fringe between headline and product sheet — Safari rectangle artifacts gone, CTA row fully legible, static (no parallax), masked edges so nothing ends in a straight cut *(landing's forest transition now reads as natural undergrowth, not a cropped image — brand continuity complete)*
