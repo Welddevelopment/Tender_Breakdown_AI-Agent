@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { CapabilityDoc, Requirement } from "@/types/requirement";
 import {
   buildDocx,
@@ -10,6 +10,8 @@ import {
   triggerDownload,
   type ExportInput,
 } from "@/lib/export-response";
+import { deriveExportReadiness } from "@/lib/export-readiness";
+import { ExportReadinessSummary } from "./ExportReadinessSummary";
 
 // "Export response pack" — a forest button that opens a small dropdown of four
 // formats, each with an icon. PDF prints via the browser (the print stylesheet
@@ -37,6 +39,10 @@ export function ExportMenu({
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
+  const readiness = useMemo(
+    () => deriveExportReadiness(requirements),
+    [requirements]
+  );
 
   useEffect(() => {
     if (!open) return;
@@ -111,8 +117,10 @@ export function ExportMenu({
       {open && (
         <div
           role="menu"
-          className="absolute right-0 z-20 mt-1 w-56 overflow-hidden rounded-md border border-hairline bg-paper-raised py-1 shadow-[var(--depth-sheet)]"
+          className="absolute right-0 z-20 mt-1 w-72 overflow-hidden rounded-md border border-hairline bg-paper-raised py-1 shadow-[var(--depth-sheet)]"
         >
+          {/* Blockers first, before any format is picked. */}
+          <ExportReadinessSummary readiness={readiness} />
           {ITEMS.map((item) => (
             <button
               key={item.format}
