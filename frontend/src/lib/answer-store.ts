@@ -1,4 +1,4 @@
-import type { AnswerState, Requirement } from "@/types/requirement";
+import type { AnswerDecision, AnswerState, Requirement } from "@/types/requirement";
 
 // Local persistence for the /answers response workspace. There is no backend
 // endpoint for answer text yet (only PATCH /requirements/{id} for status +
@@ -18,6 +18,11 @@ export interface PersistedAnswer {
 
 export interface PersistedReq {
   answer?: PersistedAnswer; // present once the human writes/edits the draft
+  // The answer-scoped verdict (approve/flag). Stored on its OWN key, not under
+  // `answer`, because a human can approve a machine "auto" draft without editing
+  // its text — and auto text is intentionally not persisted (it comes from the
+  // seed/API). So the decision has to survive even when there is no PersistedAnswer.
+  answerDecision?: AnswerDecision;
   openQuestions?: Record<string, string>; // questionId -> answer text
 }
 
@@ -74,13 +79,20 @@ export function projectStore(reqs: Requirement[]): AnswerStore {
       };
     }
 
+    // The verdict persists regardless of state — approving an auto draft is a
+    // real human action even when the text stays machine-authored.
+    if (req.answer?.decision) {
+      entry.answerDecision = req.answer.decision;
+    }
+
     const answered: Record<string, string> = {};
     for (const q of req.open_questions ?? []) {
       if (q.answer !== null) answered[q.id] = q.answer;
     }
     if (Object.keys(answered).length > 0) entry.openQuestions = answered;
 
-    if (entry.answer || entry.openQuestions) store[req.id] = entry;
+    if (entry.answer || entry.answerDecision || entry.openQuestions)
+      store[req.id] = entry;
   }
   return store;
 }
@@ -118,6 +130,15 @@ export function mergeStoreIntoRequirements(
           state: patch.answer.state,
           confidence: patch.answer.confidence,
         },
+      };
+    }
+
+    // Restore the answer-scoped verdict onto whichever answer we now hold — the
+    // just-restored human draft, or the machine draft carried in from the seed.
+    if (patch.answerDecision && next.answer) {
+      next = {
+        ...next,
+        answer: { ...next.answer, decision: patch.answerDecision },
       };
     }
 

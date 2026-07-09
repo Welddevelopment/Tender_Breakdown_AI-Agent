@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import type {
   Actor,
+  AnswerDecision,
   AwardCriterion,
   CapabilityDoc,
   Requirement,
@@ -81,6 +82,12 @@ interface RequirementsContextValue {
   restoreDecisions: (snapshot: DecisionSnapshot[]) => void;
   reopen: (id: string) => void;
   editAnswer: (id: string, text: string) => void;
+  // Answer-scoped decisions — a verdict on the drafted answer, independent of the
+  // requirement's own status. In-memory + localStorage only (no backend endpoint
+  // for answer content yet), so unlike approve/flag these never PATCH.
+  approveAnswer: (id: string) => void;
+  flagAnswer: (id: string, note: string) => void;
+  reopenAnswer: (id: string) => void;
   answerOpenQuestion: (
     reqId: string,
     questionId: string,
@@ -594,6 +601,44 @@ export function RequirementsProvider({
     );
   }
 
+  // Record a human verdict on the drafted answer itself, stamped with the actor
+  // like a requirement decision but written onto answer.decision, NOT the
+  // requirement status — the two are independent (a requirement can be accepted
+  // while its answer still needs input). No backend endpoint for answer content
+  // yet, so this is in-memory only and rides the localStorage persist effect;
+  // it never PATCHes. A no-op when there's no draft to decide on.
+  function setAnswerDecision(id: string, decision: AnswerDecision | null) {
+    const stamped =
+      decision && decisionActor ? { ...decision, actor: decisionActor } : decision;
+    setRequirements((prev) =>
+      prev.map((req) => {
+        if (req.id !== id || !req.answer) return req;
+        return { ...req, answer: { ...req.answer, decision: stamped } };
+      })
+    );
+  }
+
+  function approveAnswer(id: string) {
+    setAnswerDecision(id, {
+      verdict: "approved",
+      note: "",
+      timestamp: new Date().toISOString(),
+    });
+  }
+
+  function flagAnswer(id: string, note: string) {
+    setAnswerDecision(id, {
+      verdict: "flagged",
+      note,
+      timestamp: new Date().toISOString(),
+    });
+  }
+
+  // Undo an answer verdict — back to undecided (Approve/Flag offered again).
+  function reopenAnswer(id: string) {
+    setAnswerDecision(id, null);
+  }
+
   // Human answers a gap question the tool flagged. (No backend endpoint yet — in-memory.)
   function answerOpenQuestion(
     reqId: string,
@@ -640,6 +685,9 @@ export function RequirementsProvider({
         restoreDecisions,
         reopen,
         editAnswer,
+        approveAnswer,
+        flagAnswer,
+        reopenAnswer,
         answerOpenQuestion,
         loadTender,
         draftAnswers,

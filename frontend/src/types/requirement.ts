@@ -25,11 +25,29 @@ export interface EvidenceRef {
   page: number;
 }
 
+// A human verdict on the drafted answer itself — is this response ready to
+// carry into the bid, or does it need rework? This is deliberately INDEPENDENT
+// of the requirement's own decision (RequirementDecision / status): a
+// requirement can be accepted while its answer still needs input, and vice
+// versa, and the two are shown side by side, not merged. No backend endpoint
+// yet — like answer text, it lives in memory + localStorage (answer-store.ts).
+export type AnswerVerdict = "approved" | "flagged";
+
+export interface AnswerDecision {
+  verdict: AnswerVerdict;
+  note: string;
+  timestamp: string;
+  actor?: Actor | null;
+}
+
 export interface Answer {
   text: string;
   state: AnswerState;
   evidence_refs: EvidenceRef[];
   confidence: number;
+  // Additive: the answer-scoped verdict, absent until a human approves/flags the
+  // draft. Independent of the requirement's status.
+  decision?: AnswerDecision | null;
 }
 
 export interface OpenQuestion {
