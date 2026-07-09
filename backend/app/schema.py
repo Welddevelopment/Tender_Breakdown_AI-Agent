@@ -62,11 +62,25 @@ class EvidenceRef(BaseModel):
     page: Optional[int] = None
 
 
+AnswerVerdict = Literal["approved", "flagged"]
+
+
+class AnswerDecision(BaseModel):
+    """A human verdict on the drafted answer itself — independent of the requirement's
+    own status/decision. Actor stamped server-side on PATCH, never trusted from the client."""
+    verdict: AnswerVerdict
+    note: str = ""
+    timestamp: str
+    actor: Optional[Actor] = None
+
+
 class Answer(BaseModel):
     text: str = ""
     state: AnswerState = "empty"
     evidence_refs: list[EvidenceRef] = Field(default_factory=list)
     confidence: float = 0.0
+    # Additive: the answer-scoped verdict, absent until a human approves/flags the draft.
+    decision: Optional[AnswerDecision] = None
 
 
 class OpenQuestion(BaseModel):
@@ -146,3 +160,26 @@ class DecisionUpdate(BaseModel):
     """PATCH body for /requirements/{id}."""
     status: Optional[RequirementStatus] = None
     decision: Optional[Decision] = None
+
+
+class GapAnswerUpdate(BaseModel):
+    """One gap answer inside an AnswerUpdate: the open-question id and the human's text
+    (null clears it). answered_at is client-supplied but optional; absent means 'now' is
+    kept from the existing value."""
+    id: str
+    answer: Optional[str] = None
+    answered_at: Optional[str] = None
+
+
+class AnswerUpdate(BaseModel):
+    """PATCH body for /requirements/{id}/answer — persist human-authored answer content
+    (the piece with no backend home until now: answer text, gap answers, answer verdict).
+    Every field is optional; only the provided ones are applied, so callers PATCH just what
+    changed. The requirement's own status/decision is untouched here — that stays on
+    PATCH /requirements/{id}."""
+    text: Optional[str] = None
+    state: Optional[AnswerState] = None
+    confidence: Optional[float] = None
+    open_questions: Optional[list[GapAnswerUpdate]] = None
+    decision: Optional[AnswerDecision] = None   # set/replace the verdict; actor stamped server-side
+    clear_decision: bool = False                # explicit reopen: verdict -> None (distinct from "unchanged")

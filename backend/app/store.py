@@ -15,7 +15,16 @@ import sqlite3
 from contextlib import contextmanager
 from pathlib import Path
 
-from .schema import CapabilityDoc, Criterion, DecisionUpdate, Requirement, SourceDoc, TenderResponse
+from .schema import (
+    Answer,
+    AnswerUpdate,
+    CapabilityDoc,
+    Criterion,
+    DecisionUpdate,
+    Requirement,
+    SourceDoc,
+    TenderResponse,
+)
 
 
 def _db_path() -> Path:
@@ -556,6 +565,53 @@ def update_requirement(req_id: str, update: DecisionUpdate) -> Requirement | Non
             req.status = update.status
         if update.decision is not None:
             req.decision = update.decision
+        c.execute(
+            "UPDATE requirements SET data = ? WHERE id = ?",
+            (req.model_dump_json(), req_id),
+        )
+    return req
+
+
+def update_answer(req_id: str, update: AnswerUpdate) -> Requirement | None:
+    """Persist human-authored answer content onto a requirement's JSON blob: answer text/
+    state/confidence, the answer verdict, and gap answers. Only the fields present on the
+    update are applied. The requirement's own status/decision and every machine field
+    (evidence_refs, source, category…) are left untouched — this owns answer content only."""
+    with _conn() as c:
+        row = c.execute(
+            "SELECT data FROM requirements WHERE id = ?", (req_id,)
+        ).fetchone()
+        if row is None:
+            return None
+        req = Requirement(**json.loads(row["data"]))
+
+        # Ensure there's an answer to write onto — a hand-written answer on a
+        # requirement autofill left blank creates one, mirroring the frontend.
+        answer = req.answer or Answer()
+        if update.text is not None:
+            answer.text = update.text
+            req.draft_answer = update.text  # keep the deprecated alias in sync
+        if update.state is not None:
+            answer.state = update.state
+        if update.confidence is not None:
+            answer.confidence = update.confidence
+        if update.decision is not None:
+            answer.decision = update.decision
+        elif update.clear_decision:
+            answer.decision = None
+        req.answer = answer
+
+        # Gap answers, matched by question id. Unknown ids are ignored — the client
+        # can answer existing questions, not invent new ones.
+        if update.open_questions is not None:
+            patch_by_id = {g.id: g for g in update.open_questions}
+            for q in req.open_questions:
+                g = patch_by_id.get(q.id)
+                if g is not None:
+                    q.answer = g.answer
+                    if g.answered_at is not None:
+                        q.answered_at = g.answered_at
+
         c.execute(
             "UPDATE requirements SET data = ? WHERE id = ?",
             (req.model_dump_json(), req_id),

@@ -39,6 +39,7 @@ from .ingest import ingest_pdf, PDFIngestError, SUPPORTED_EXTENSIONS
 from .pipeline import run_pipeline, run_pipeline_multi
 from .schema import (
     Actor,
+    AnswerUpdate,
     CommentCreate,
     DecisionUpdate,
     Requirement,
@@ -733,6 +734,38 @@ def update_requirement(req_id: str, update: DecisionUpdate,
             "req_id": req.id,
             "status": req.status,
             "decision": req.decision.model_dump() if req.decision else None,
+        })
+    return req
+
+
+@app.patch("/requirements/{req_id}/answer", response_model=Requirement)
+def update_requirement_answer(req_id: str, update: AnswerUpdate,
+                              user: dict = Depends(current_user)):
+    """Persist human-authored answer content — answer text, gap answers, and the answer
+    verdict — for one requirement, on a tender the user owns OR is shared into. This is the
+    piece that used to live only in the browser's localStorage; with it, a pilot user's
+    drafted answers survive across devices and are visible to collaborators.
+
+    The answer verdict's `actor` is stamped server-side from the signed-in user (never trusted
+    from the client), exactly like a requirement decision. The requirement's own status/decision
+    is NOT touched here — the two tracks stay independent (PATCH /requirements/{id} owns that)."""
+    if not store.can_access_requirement(req_id, user["id"]):
+        raise HTTPException(status_code=404, detail="Requirement not found.")
+    if update.decision is not None:
+        update.decision.actor = Actor(
+            id=user["id"], email=user["email"], name=user.get("name")
+        )
+    tender_id = store.get_requirement_tender_id(req_id)
+    req = store.update_answer(req_id, update)
+    if req is None:
+        raise HTTPException(status_code=404, detail="Requirement not found.")
+    # Live collaboration: teammates viewing this tender see the answer change immediately.
+    if tender_id is not None:
+        events.publish(tender_id, {
+            "type": "answer",
+            "req_id": req.id,
+            "answer": req.answer.model_dump() if req.answer else None,
+            "open_questions": [q.model_dump() for q in req.open_questions],
         })
     return req
 
