@@ -4,6 +4,20 @@
 
 ---
 
+### [G-048] @j · REQUEST · OPEN · 2026-07-09 · bidframe.org serving STALE build — reassign in your Vercel
+**bidframe.org shows the OLD (grass/woodland) hero; `bidframe.vercel.app` has the current build.** The
+domain + that Vercel project are on YOUR account (Bobby's Vercel can't see it), so only you can fix it.
+Confirmed from outside: DNS is correct (apex -> 216.198.79.1, www -> cname.vercel-dns.com, both Vercel) and
+it's NOT a cache -- the apex is pinned to an older *deployment* than the .vercel.app subdomain (different
+JS/CSS asset hashes + Etags; the .app build even has markup the apex lacks). Do these in order, stop when one applies:
+1. Vercel dashboard -> **Domains** (top nav) -> find `bidframe.org` -> is it under the SAME project that owns
+   `bidframe.vercel.app`? If not: remove it from the old project, then add `bidframe.org` + `www.bidframe.org`
+   to the correct project (verifies instantly, DNS already points at Vercel -- no registrar change).
+2. Else same project -> **Settings -> Domains** -> click `bidframe.org` -> set it to **Production** (not a pinned deployment).
+3. Else -> **Deployments** -> open the newest -> **... -> Promote to Production**.
+Verify (run til they match): `curl -sI https://bidframe.org | grep -i etag` == `curl -sI https://bidframe.vercel.app | grep -i etag`. Flip this RESOLVED + ping when done.
+Note: long-term Bobby will move `bidframe.org` onto his own Vercel (new shared email) so we stop hitting your 100/day Hobby deploy limit -- this is just the fast fix for the demo.
+
 ### [G-047] @all · INFO · OPEN · 2026-07-04 · YC-readiness system live on main
 **Our founder story + traction log is now infrastructure.** `yc-story.md` = living YC story (draft +
 per-founder receipts table + gaps checklist + append-only proof-point log). `updates/` = weekly founder
