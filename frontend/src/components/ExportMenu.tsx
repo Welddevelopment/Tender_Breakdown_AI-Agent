@@ -11,6 +11,7 @@ import {
   buildText,
   slugifyTitle,
   triggerDownload,
+  type ExportAudience,
   type ExportInput,
 } from "@/lib/export-response";
 import { exportMatrixCsv, exportMatrixXlsx } from "@/lib/export-matrix-xlsx";
@@ -84,11 +85,17 @@ export function ExportMenu({
   const { awardCriteria } = useRequirements();
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [audience, setAudience] = useState<ExportAudience>("internal");
   const rootRef = useRef<HTMLDivElement>(null);
   const readiness = useMemo(
     () => deriveExportReadiness(requirements),
     [requirements]
   );
+  // Client-ready is only offered when nothing blocks it; otherwise the response
+  // draft falls back to internal, so a blocked tender can never emit a
+  // client-ready pack (QA.md: export never implies readiness while blockers remain).
+  const effectiveAudience: ExportAudience =
+    readiness.clientReadyBlocked ? "internal" : audience;
 
   useEffect(() => {
     if (!open) return;
@@ -109,8 +116,14 @@ export function ExportMenu({
   }, [open]);
 
   async function run(artifact: Artifact, format: Format) {
-    const input: ExportInput = { title: tenderTitle, requirements, capabilityDocs };
+    const input: ExportInput = {
+      title: tenderTitle,
+      requirements,
+      capabilityDocs,
+      audience: effectiveAudience,
+    };
     const base = slugifyTitle(tenderTitle);
+    const suffix = effectiveAudience === "client" ? "-client" : "";
     setOpen(false);
 
     // Response draft.
@@ -123,18 +136,20 @@ export function ExportMenu({
       if (format === "md") {
         triggerDownload(
           new Blob([buildMarkdown(input)], { type: "text/markdown;charset=utf-8" }),
-          `${base}.md`
+          `${base}${suffix}.md`
         );
         return;
       }
       if (format === "txt") {
         triggerDownload(
           new Blob([buildText(input)], { type: "text/plain;charset=utf-8" }),
-          `${base}.txt`
+          `${base}${suffix}.txt`
         );
         return;
       }
-      await withBusy(async () => triggerDownload(await buildDocx(input), `${base}.docx`));
+      await withBusy(async () =>
+        triggerDownload(await buildDocx(input), `${base}${suffix}.docx`)
+      );
       return;
     }
 
@@ -208,6 +223,49 @@ export function ExportMenu({
                   {group.blurb}
                 </p>
               </div>
+
+              {/* The response draft alone carries the client-ready / internal
+                  choice: client-ready is approved answers only, clean; internal
+                  keeps the full detail. Client-ready is withheld while blocked. */}
+              {group.key === "response" && (
+                <div className="px-2 pb-2 pt-0.5">
+                  <div className="inline-flex overflow-hidden rounded-md border border-hairline">
+                    <button
+                      type="button"
+                      aria-pressed={effectiveAudience === "internal"}
+                      onClick={() => setAudience("internal")}
+                      className={`px-2.5 py-1 text-xs transition-colors ${
+                        effectiveAudience === "internal"
+                          ? "bg-forest text-paper"
+                          : "bg-paper text-ink-muted hover:text-ink"
+                      }`}
+                    >
+                      Internal
+                    </button>
+                    <button
+                      type="button"
+                      aria-pressed={effectiveAudience === "client"}
+                      disabled={readiness.clientReadyBlocked}
+                      onClick={() => setAudience("client")}
+                      className={`px-2.5 py-1 text-xs transition-colors [border-left:var(--rule-hair)] ${
+                        effectiveAudience === "client"
+                          ? "bg-forest text-paper"
+                          : "bg-paper text-ink-muted hover:text-ink"
+                      } disabled:cursor-not-allowed disabled:text-ink-muted/50 disabled:hover:text-ink-muted/50`}
+                    >
+                      Client-ready
+                    </button>
+                  </div>
+                  <p className="mt-1 text-xs leading-snug text-ink-muted">
+                    {readiness.clientReadyBlocked
+                      ? `Client-ready is held: ${readiness.clientReadyReason}`
+                      : effectiveAudience === "client"
+                        ? "Approved answers only, as clean prose."
+                        : "Full detail: source, verdict, evidence, and any gap."}
+                  </p>
+                </div>
+              )}
+
               <div className="flex flex-wrap gap-1 px-1">
                 {group.formats.map((item) => (
                   <button

@@ -18,10 +18,18 @@ import { sourceRefLabel } from "@/lib/source-doc";
 // decoration, keep unresolved gaps visible, and speak in the mono record voice —
 // source refs, verdicts, and audit lines read as the record, not as prose.
 
+// "client" trims the response draft to what's fit to send outside the team:
+// approved answers only, as clean prose — no internal source refs, verdict audit
+// lines, or gap notes. "internal" (default) keeps the full detail. Honesty holds
+// because the client-ready pack only ever contains approved answers, and the menu
+// won't offer it while a deal-breaker, flag, or unapproved gating answer is open.
+export type ExportAudience = "internal" | "client";
+
 export interface ExportInput {
   title: string;
   requirements: Requirement[];
   capabilityDocs: CapabilityDoc[];
+  audience?: ExportAudience;
 }
 
 function docNameLookup(docs: CapabilityDoc[]): (docId: string) => string {
@@ -94,7 +102,14 @@ interface Block {
 
 function toBlocks(input: ExportInput): Block[] {
   const docName = docNameLookup(input.capabilityDocs);
-  return input.requirements.map((req) => {
+  // A client-ready draft carries only the answers a human has approved.
+  const requirements =
+    input.audience === "client"
+      ? input.requirements.filter(
+          (req) => req.answer?.decision?.verdict === "approved"
+        )
+      : input.requirements;
+  return requirements.map((req) => {
     const answerText = (req.answer?.text ?? req.draft_answer ?? "").trim();
 
     const answered: { question: string; answer: string }[] = [];
@@ -121,13 +136,21 @@ function toBlocks(input: ExportInput): Block[] {
 }
 
 export function buildMarkdown(input: ExportInput): string {
+  const client = input.audience === "client";
   const blocks = toBlocks(input);
-  const out: string[] = [`# ${input.title}`, "", "Response pack — drafted answers with evidence.", ""];
+  const subtitle = client
+    ? "Bid response — approved answers."
+    : "Response pack — drafted answers with evidence.";
+  const out: string[] = [`# ${input.title}`, "", subtitle, ""];
   blocks.forEach((b, i) => {
     out.push(`## ${i + 1}. ${b.requirement}`);
-    out.push(`*Source: ${b.source}*`, "");
-    out.push("**Answer**", "");
+    if (!client) out.push(`*Source: ${b.source}*`);
+    out.push("", "**Answer**", "");
     out.push(b.answer ?? "_No draft yet._", "");
+    if (client) {
+      out.push("");
+      return;
+    }
     if (b.answerVerdict) out.push(`\`${b.answerVerdict}\``, "");
     if (b.evidence.length > 0) {
       for (const e of b.evidence) out.push(`> ${e}`);
@@ -143,13 +166,24 @@ export function buildMarkdown(input: ExportInput): string {
 }
 
 export function buildText(input: ExportInput): string {
+  const client = input.audience === "client";
   const blocks = toBlocks(input);
-  const out: string[] = [input.title, "=".repeat(input.title.length), "", "Response pack — drafted answers with evidence.", ""];
+  const subtitle = client
+    ? "Bid response — approved answers."
+    : "Response pack — drafted answers with evidence.";
+  const out: string[] = [
+    input.title,
+    "=".repeat(input.title.length),
+    "",
+    subtitle,
+    "",
+  ];
   blocks.forEach((b, i) => {
     out.push(`${i + 1}. ${b.requirement}`);
-    out.push(`   Source: ${b.source}`, "");
-    out.push("   Answer:");
+    if (!client) out.push(`   Source: ${b.source}`);
+    out.push("", "   Answer:");
     out.push(`   ${b.answer ?? "No draft yet."}`, "");
+    if (client) return;
     if (b.answerVerdict) out.push(`   ${b.answerVerdict}`, "");
     for (const e of b.evidence) out.push(`   - ${e}`);
     if (b.evidence.length > 0) out.push("");
@@ -165,24 +199,35 @@ export function buildText(input: ExportInput): string {
 export async function buildDocx(input: ExportInput): Promise<Blob> {
   // Dynamic import keeps the ~hundreds-of-KB docx lib out of the initial bundle.
   const { Document, Packer, Paragraph, HeadingLevel, TextRun } = await import("docx");
+  const client = input.audience === "client";
   const blocks = toBlocks(input);
 
   const children: InstanceType<typeof Paragraph>[] = [
     new Paragraph({ text: input.title, heading: HeadingLevel.TITLE }),
-    new Paragraph({ text: "Response pack — drafted answers with evidence." }),
+    new Paragraph({
+      text: client
+        ? "Bid response — approved answers."
+        : "Response pack — drafted answers with evidence.",
+    }),
   ];
 
   blocks.forEach((b, i) => {
     children.push(
       new Paragraph({ text: `${i + 1}. ${b.requirement}`, heading: HeadingLevel.HEADING_2 })
     );
-    children.push(
-      new Paragraph({ children: [new TextRun({ text: `Source: ${b.source}`, italics: true })] })
-    );
+    if (!client) {
+      children.push(
+        new Paragraph({ children: [new TextRun({ text: `Source: ${b.source}`, italics: true })] })
+      );
+    }
     children.push(
       new Paragraph({ children: [new TextRun({ text: "Answer", bold: true })] })
     );
     children.push(new Paragraph({ text: b.answer ?? "No draft yet." }));
+    if (client) {
+      children.push(new Paragraph({ text: "" }));
+      return;
+    }
     if (b.answerVerdict) {
       children.push(
         new Paragraph({
