@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getTenders, isApiEnabled, type TenderSummary } from "@/lib/api";
@@ -82,15 +82,30 @@ function DealBreakerBead({ count }: { count: number }) {
   );
 }
 
+// The small forest "CURRENT" tag marking the tender loaded in context —
+// quiet enough to not compete with the title, present enough to answer
+// "which one am I in?" at a glance.
+function CurrentTag() {
+  return (
+    <span className="shrink-0 rounded border border-forest/40 px-1 py-px font-mono text-[10px] uppercase tracking-[0.08em] text-forest">
+      Current
+    </span>
+  );
+}
+
 // One tender as a raised paper card. Only THIS card disables while it opens —
-// clicking one tender must never read as the whole page freezing.
+// clicking one tender must never read as the whole page freezing. `current`
+// marks the tender loaded in context: a forest left-edge plus a CURRENT tag,
+// pulled to the top of the list by the caller rather than styled here.
 function TenderRow({
   tender: t,
   opening,
+  current = false,
   onOpen,
 }: {
   tender: TenderSummary;
   opening: boolean;
+  current?: boolean;
   onOpen: () => void;
 }) {
   const uploaded = t.uploadedAt ? relativeUploadedAt(t.uploadedAt) : null;
@@ -105,13 +120,16 @@ function TenderRow({
         type="button"
         onClick={onOpen}
         disabled={opening}
-        className="group flex w-full items-center justify-between gap-4 rounded-lg border border-hairline bg-paper-raised surface-grain px-4 py-4 text-left shadow-[var(--depth-row)] transition-shadow duration-150 hover:shadow-[var(--depth-sheet)] focus:outline-none focus-visible:ring-2 focus-visible:ring-forest focus-visible:ring-offset-2 focus-visible:ring-offset-paper disabled:cursor-wait"
+        className={`group flex w-full items-center justify-between gap-4 rounded-lg border bg-paper-raised surface-grain px-4 py-4 text-left shadow-[var(--depth-row)] transition-shadow duration-150 hover:shadow-[var(--depth-sheet)] focus:outline-none focus-visible:ring-2 focus-visible:ring-forest focus-visible:ring-offset-2 focus-visible:ring-offset-paper disabled:cursor-wait ${
+          current ? "border-hairline border-l-2 border-l-forest" : "border-hairline"
+        }`}
       >
         <span className="min-w-0 flex-1">
           <span className="flex min-w-0 items-center gap-2">
             <span className="truncate font-serif text-base font-medium text-ink">
               {t.title}
             </span>
+            {current && <CurrentTag />}
             <IdChip id={t.tenderId} />
           </span>
           <span className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-ink-muted">
@@ -205,8 +223,20 @@ function SampleCard({
   );
 }
 
+// Quiet section label above a group of cards — font-mono/uppercase/tracking
+// like the page's "Your tenders" header, but a size down and hairline-only so
+// it reads as a subdivision, not a second header competing with it. Only
+// rendered when its group has something in it (callers gate this).
+function GroupHeading({ children }: { children: ReactNode }) {
+  return (
+    <p className="mb-2 mt-1 font-mono text-[11px] uppercase tracking-[0.16em] text-ink-muted first:mt-0">
+      {children}
+    </p>
+  );
+}
+
 export function TendersList() {
-  const { loadTender } = useRequirements();
+  const { loadTender, tenderId: currentTenderId } = useRequirements();
   const router = useRouter();
   const [tenders, setTenders] = useState<TenderSummary[] | null>(null);
   const [error, setError] = useState(false);
@@ -308,16 +338,49 @@ export function TendersList() {
     );
   }
 
+  // Split into "Current" (the tender loaded in context, pulled to the top)
+  // and the remainder. currentTenderId is null before any tender is loaded,
+  // or may point at a tender the register hasn't fetched yet — either way
+  // it just fails to match here and the Current group is empty, so every
+  // tender falls through to the plain list below with no group left orphaned.
+  const current = currentTenderId
+    ? tenders.find((t) => t.tenderId === currentTenderId)
+    : undefined;
+  const rest = current ? tenders.filter((t) => t.tenderId !== currentTenderId) : tenders;
+
   return (
-    <ul className="flex flex-col gap-3">
-      {tenders.map((t) => (
-        <TenderRow
-          key={t.tenderId}
-          tender={t}
-          opening={opening === t.tenderId}
-          onOpen={() => open(t.tenderId)}
-        />
-      ))}
-    </ul>
+    <div className="flex flex-col gap-5">
+      {current && (
+        <div>
+          <GroupHeading>Current</GroupHeading>
+          <ul className="flex flex-col gap-3">
+            <TenderRow
+              key={current.tenderId}
+              tender={current}
+              opening={opening === current.tenderId}
+              current
+              onOpen={() => open(current.tenderId)}
+            />
+          </ul>
+        </div>
+      )}
+      {rest.length > 0 && (
+        <div>
+          {/* Only worth a heading once there's a Current group to distinguish
+              it from — otherwise this is simply the whole list. */}
+          {current && <GroupHeading>Uploaded by me</GroupHeading>}
+          <ul className="flex flex-col gap-3">
+            {rest.map((t) => (
+              <TenderRow
+                key={t.tenderId}
+                tender={t}
+                opening={opening === t.tenderId}
+                onOpen={() => open(t.tenderId)}
+              />
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
   );
 }
