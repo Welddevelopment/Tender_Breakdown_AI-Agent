@@ -32,4 +32,5 @@ A / B / C touch disjoint files (`AnswerPanel.tsx`; `AnswerWorkspace.tsx`; `OpenQ
 
 ## Changelog
 
+- 2026-07-10 — **Stage 5 shipped (A/B/C).** Answer verdict stamp (A) — approved answers render the shared ApprovalStamp, flagged answers a matching oxblood FlaggedStamp; dead `answerAuditLine` removed. Answer-state swim-lanes (B) — unfiltered cards group into Deal-breakers → Needs input → No draft → Ready via `readinessOf()`, stable partition so the weakest-first sort survives. Two settle motions (C) — gap-answered `settle-once` on the answered transition, export-start `gather` beat on idle→busy, both one-shot + reduced-motion gated. Built in parallel by three Sonnet subagents on disjoint files, integrated + verified by the lead. Verified in a headless browser: all four lane headers render with counts (deal-breaker count oxblood-tinted), and approving an answer shows the "✓ APPROVED — Approved by you, 23:38." stamp with a single attribution. Build + lint green.
 - 2026-07-10 — plan drafted; Step-0 audit folded in (Stage 5 ~85% built). Real work: visual verdict stamp, answer-state swim-lanes, and two specified settle motions. No backend.
