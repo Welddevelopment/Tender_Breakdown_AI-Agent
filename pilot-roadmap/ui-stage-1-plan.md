@@ -80,3 +80,9 @@ settled  → one-shot settle (--ease-settle at --motion-standard) on save/approv
 ## Changelog
 
 - 2026-07-10 — plan drafted; Step-0 audit folded in. Token layer (colour, type, motion durations/easings, global reduced-motion collapse) is already built; Stage 1's real work is applying those tokens to controls — button press/loading, settled/saved feedback, consistent overlay timing, and `CommentThread` focus parity — plus a baseline + control-affordance inventory taken first. No backend; no Fable.
+- 2026-07-10 — **shipped D → A → B → C, one commit each on `main`.**
+  - **D** (`c88e807`) — control-affordance audit (`stage-1-control-audit.md`) + baseline screenshots; confirmed most action buttons had no focus ring or press.
+  - **A** (`e43f9c4`) — shared `.ui-btn` utility (2px forest focus-visible ring + press tap, motion-token-timed, reduced-motion-instant) applied to the primary action buttons (Draft/Export/bulk-approve/gap-save/comment/upload/answer-decision); `aria-busy` on loading buttons. Verified: focus ring computes to forest 2px on keyboard focus.
+  - **B** (`8407712`) — `.settle-once` + `.toast-settle` on the settle tempo; the save/undo toaster now settles in at the token timing, covering approve/flag/comment/share/gap (all toast-based) in one place.
+  - **C** (`635ef54`) — `.panel-enter` gives source-verify, share, and answer-evidence sheets one consistent `--motion-panel` open (verified visible + opacity 1 under reduced motion). **Deviation from plan:** `CommentThread` is an inline form, not a modal, so a focus *trap* was wrong; gave it the correct inline treatment instead (focus ring + Esc-to-clear + `aria-busy`).
+  - Build + lint green per commit. Stage 1's control-standardisation scope is complete; remaining button-by-button coverage (every matrix decision control) can extend `.ui-btn` incrementally in later UI stages.
