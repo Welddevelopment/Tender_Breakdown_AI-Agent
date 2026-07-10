@@ -372,7 +372,7 @@ function MatrixRow({
       }}
       className={`group grid w-full cursor-pointer ${
         ROW_GRID[selection ? "selectable" : "plain"]
-      } items-start gap-x-2 gap-y-1 px-2.5 ${ROW_PADDING[density]} text-left transition-[background-color,box-shadow] focus:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ink/40 sm:gap-x-3 ${shape} ${state}`}
+      } items-start gap-x-2 gap-y-1 px-2.5 ${ROW_PADDING[density]} text-left transition-[background-color,box-shadow] duration-[var(--motion-instant)] focus:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ink/40 sm:gap-x-3 ${shape} ${state}`}
     >
       {/* The register margin: the selection checkbox (when selection is live),
           a gating pennant, then the clause ref, right-aligned in mono. The

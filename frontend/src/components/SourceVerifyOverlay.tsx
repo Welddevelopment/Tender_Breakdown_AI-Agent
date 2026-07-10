@@ -42,8 +42,17 @@ export function SourceVerifyOverlay({
   const dialogRef = useRef<HTMLDivElement>(null);
   const [match, setMatch] = useState<MatchKind | null>(null);
 
+  // Focus in on open, and return focus to whatever launched the overlay (the
+  // source trigger) on close, so keyboard users land back on the requirement
+  // they came from instead of the top of the page. Empty deps: capture once at
+  // mount, restore once at unmount.
   useEffect(() => {
+    const previouslyFocused = document.activeElement as HTMLElement | null;
     dialogRef.current?.focus();
+    return () => previouslyFocused?.focus?.();
+  }, []);
+
+  useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") onClose();
     }
