@@ -372,6 +372,11 @@ export interface TenderSummary {
   dealBreakerCount?: number;
   decidedCount?: number;
   uploadedAt?: string; // ISO timestamp
+  // Collaboration signals (Stage 4 follow-ups): `shared` is true when the caller
+  // can see this tender but doesn't own it (someone shared it in); `memberCount`
+  // is the number of people with access (shared members + the owner).
+  shared?: boolean;
+  memberCount?: number;
 }
 
 // GET /tenders — a summary of every uploaded tender (id, title, requirement count,
@@ -397,6 +402,12 @@ export async function getTenders(): Promise<TenderSummary[]> {
     const uploaded = r.uploaded_at ?? r.created_at;
     if (typeof uploaded === "string" && uploaded.trim()) {
       summary.uploadedAt = uploaded;
+    }
+    if (typeof r.shared === "boolean") {
+      summary.shared = r.shared;
+    }
+    if (typeof r.member_count === "number" && r.member_count >= 0) {
+      summary.memberCount = r.member_count;
     }
     return summary;
   });

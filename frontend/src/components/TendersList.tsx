@@ -93,6 +93,15 @@ function CurrentTag() {
   );
 }
 
+// Marks a tender someone else owns and shared into the caller's library.
+function SharedTag() {
+  return (
+    <span className="shrink-0 rounded border border-accent/40 px-1 py-px font-mono text-[10px] uppercase tracking-[0.08em] text-accent">
+      Shared
+    </span>
+  );
+}
+
 // One tender as a raised paper card. Only THIS card disables while it opens —
 // clicking one tender must never read as the whole page freezing. `current`
 // marks the tender loaded in context: a forest left-edge plus a CURRENT tag,
@@ -101,11 +110,13 @@ function TenderRow({
   tender: t,
   opening,
   current = false,
+  shared = false,
   onOpen,
 }: {
   tender: TenderSummary;
   opening: boolean;
   current?: boolean;
+  shared?: boolean;
   onOpen: () => void;
 }) {
   const uploaded = t.uploadedAt ? relativeUploadedAt(t.uploadedAt) : null;
@@ -130,6 +141,7 @@ function TenderRow({
               {t.title}
             </span>
             {current && <CurrentTag />}
+            {shared && !current && <SharedTag />}
             <IdChip id={t.tenderId} />
           </span>
           <span className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-ink-muted">
@@ -138,6 +150,11 @@ function TenderRow({
             </span>
             {t.dealBreakerCount !== undefined && (
               <DealBreakerBead count={t.dealBreakerCount} />
+            )}
+            {t.memberCount !== undefined && t.memberCount > 1 && (
+              <span>
+                {t.memberCount} {t.memberCount === 1 ? "person" : "people"}
+              </span>
             )}
             {uploaded && <span>uploaded {uploaded}</span>}
           </span>
@@ -347,6 +364,17 @@ export function TendersList() {
     ? tenders.find((t) => t.tenderId === currentTenderId)
     : undefined;
   const rest = current ? tenders.filter((t) => t.tenderId !== currentTenderId) : tenders;
+  // Below the Current tender, split by ownership: ones I own vs ones someone
+  // shared into my library (`shared === true`, sent by the backend). When the
+  // backend hasn't sent the signal yet, `shared` is undefined and every tender
+  // falls into "mine" — so a pre-collaboration deployment just shows one list.
+  const mine = rest.filter((t) => !t.shared);
+  const sharedWithMe = rest.filter((t) => t.shared);
+  // A heading earns its place only when there's more than one group to tell
+  // apart — otherwise the single list stands on its own, unlabelled.
+  const groupCount =
+    (current ? 1 : 0) + (mine.length > 0 ? 1 : 0) + (sharedWithMe.length > 0 ? 1 : 0);
+  const labelGroups = groupCount > 1;
 
   return (
     <div className="flex flex-col gap-5">
@@ -359,22 +387,37 @@ export function TendersList() {
               tender={current}
               opening={opening === current.tenderId}
               current
+              shared={current.shared}
               onOpen={() => open(current.tenderId)}
             />
           </ul>
         </div>
       )}
-      {rest.length > 0 && (
+      {mine.length > 0 && (
         <div>
-          {/* Only worth a heading once there's a Current group to distinguish
-              it from — otherwise this is simply the whole list. */}
-          {current && <GroupHeading>Uploaded by me</GroupHeading>}
+          {labelGroups && <GroupHeading>Uploaded by me</GroupHeading>}
           <ul className="flex flex-col gap-3">
-            {rest.map((t) => (
+            {mine.map((t) => (
               <TenderRow
                 key={t.tenderId}
                 tender={t}
                 opening={opening === t.tenderId}
+                onOpen={() => open(t.tenderId)}
+              />
+            ))}
+          </ul>
+        </div>
+      )}
+      {sharedWithMe.length > 0 && (
+        <div>
+          <GroupHeading>Shared with me</GroupHeading>
+          <ul className="flex flex-col gap-3">
+            {sharedWithMe.map((t) => (
+              <TenderRow
+                key={t.tenderId}
+                tender={t}
+                opening={opening === t.tenderId}
+                shared
                 onOpen={() => open(t.tenderId)}
               />
             ))}

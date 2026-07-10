@@ -13,6 +13,7 @@ import json
 import os
 import sqlite3
 from contextlib import contextmanager
+from datetime import datetime, timezone
 from pathlib import Path
 
 from .schema import (
@@ -122,6 +123,11 @@ def init_db() -> None:
         # Existing rows get owner=NULL (unowned, invisible to users) — a clean auth start.
         if "owner" not in cols:
             c.execute("ALTER TABLE tenders ADD COLUMN owner TEXT")
+        # Additive migration: upload timestamp (Stage 4 — "uploaded date" on the
+        # library card + current-tender strip). Existing rows get NULL; the UI
+        # simply omits the date when it's absent, so this is backward-compatible.
+        if "created_at" not in cols:
+            c.execute("ALTER TABLE tenders ADD COLUMN created_at TEXT")
         # Additive migration: the tender pack's source documents (#4 multi-file).
         if "source_docs" not in cols:
             c.execute("ALTER TABLE tenders ADD COLUMN source_docs TEXT")
@@ -146,10 +152,17 @@ def _caps_json(resp: TenderResponse) -> str:
 def save_tender(resp: TenderResponse, filename: str | None = None,
                 owner: str | None = None) -> None:
     with _conn() as c:
+        # Preserve the original upload time across an INSERT OR REPLACE (e.g. a
+        # re-ingest of the same tender_id) — only stamp `now` on first save.
+        existing = c.execute(
+            "SELECT created_at FROM tenders WHERE id = ?", (resp.tender_id,)
+        ).fetchone()
+        created_at = (existing["created_at"] if existing and existing["created_at"]
+                      else datetime.now(timezone.utc).isoformat())
         c.execute(
             "INSERT OR REPLACE INTO tenders "
-            "(id, title, filename, capability_docs, owner, source_docs, award_criteria) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?)",
+            "(id, title, filename, capability_docs, owner, source_docs, award_criteria, created_at) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
             (
                 resp.tender_id,
                 resp.title,
@@ -158,6 +171,7 @@ def save_tender(resp: TenderResponse, filename: str | None = None,
                 owner,
                 json.dumps([sd.model_dump() for sd in resp.source_docs]),
                 json.dumps([ac.model_dump() for ac in resp.award_criteria]),
+                created_at,
             ),
         )
         c.execute("DELETE FROM requirements WHERE tender_id = ?", (resp.tender_id,))
@@ -216,8 +230,17 @@ def list_tenders(owner: str | None = None) -> list[dict]:
     (id, title, requirement count). With no `owner`, returns all tenders (trusted callers / eval
     only, never the API)."""
     with _conn() as c:
+        # Enriched summary (Stage 4 follow-ups): alongside id/title/req_count we
+        # surface deal_breaker_count (SUM of the is_gating flag inside each
+        # requirement's JSON blob), created_at (upload date), the owner (so the
+        # caller can tell "mine" from "shared with me"), and member_count (people
+        # with access = shared members + the owner). All additive; the frontend
+        # parses each defensively and renders complete without them.
         base = (
-            "SELECT t.id, t.title, COUNT(r.id) as req_count "
+            "SELECT t.id, t.title, t.owner, t.created_at, "
+            "COUNT(r.id) as req_count, "
+            "COALESCE(SUM(CASE WHEN json_extract(r.data, '$.is_gating') THEN 1 ELSE 0 END), 0) as db_count, "
+            "(SELECT COUNT(*) FROM tender_members m WHERE m.tender_id = t.id) as member_count "
             "FROM tenders t LEFT JOIN requirements r ON t.id = r.tender_id "
         )
         if owner is not None:
@@ -231,8 +254,24 @@ def list_tenders(owner: str | None = None) -> list[dict]:
             ).fetchall()
         else:
             rows = c.execute(base + "GROUP BY t.id ORDER BY t.id DESC").fetchall()
-    return [{"tender_id": row["id"], "title": row["title"], "requirement_count": row["req_count"]}
-            for row in rows]
+    summaries = []
+    for row in rows:
+        summary = {
+            "tender_id": row["id"],
+            "title": row["title"],
+            "requirement_count": row["req_count"],
+            "deal_breaker_count": int(row["db_count"] or 0),
+            # people with access: shared members + the owner (when the tender is owned)
+            "member_count": int(row["member_count"] or 0) + (1 if row["owner"] else 0),
+        }
+        if row["created_at"]:
+            summary["created_at"] = row["created_at"]
+        # "shared with me" = the caller can see it but isn't the owner. Only
+        # meaningful for an owner-scoped call (the API always passes one).
+        if owner is not None:
+            summary["shared"] = row["owner"] != owner
+        summaries.append(summary)
+    return summaries
 
 
 def get_tender_owner(tender_id: str) -> str | None:
