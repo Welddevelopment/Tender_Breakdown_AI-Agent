@@ -42,22 +42,27 @@ export function SourceVerifyOverlay({
   const dialogRef = useRef<HTMLDivElement>(null);
   const [match, setMatch] = useState<MatchKind | null>(null);
 
-  // Focus in on open, and return focus to whatever launched the overlay (the
-  // source trigger) on close, so keyboard users land back on the requirement
-  // they came from instead of the top of the page. Empty deps: capture once at
-  // mount, restore once at unmount.
+  // Focus the sheet on open. Focus RETURN on close is owned by the caller (it
+  // knows the trigger and restores it after unmount) — doing it here from an
+  // unmount cleanup is unreliable: the browser sends focus to <body> when the
+  // focused dialog is removed, after React's synchronous cleanup, overriding it.
   useEffect(() => {
-    const previouslyFocused = document.activeElement as HTMLElement | null;
     dialogRef.current?.focus();
-    return () => previouslyFocused?.focus?.();
-  }, []);
-
-  useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") onClose();
+      if (event.key !== "Escape") return;
+      // The overlay is the top layer: consume the Esc so it closes ONLY the
+      // overlay, not the split panel underneath. The panel's Esc handler skips a
+      // `defaultPrevented` event ("one Esc, one close, top layer first"), but it
+      // listens in the bubble phase and mounts first — so a bubble-phase
+      // preventDefault here would land too late. Capture-phase + stopPropagation
+      // makes this fire before the panel and keeps the event from reaching it,
+      // so the trigger button stays mounted for focus-return on close.
+      event.preventDefault();
+      event.stopPropagation();
+      onClose();
     }
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
+    document.addEventListener("keydown", onKeyDown, true);
+    return () => document.removeEventListener("keydown", onKeyDown, true);
   }, [onClose]);
 
   const ref = sourceRefLabel(requirement);

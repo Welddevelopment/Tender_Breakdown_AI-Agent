@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import type { Requirement } from "@/types/requirement";
 import { AnswerPanel } from "./AnswerPanel";
@@ -296,6 +296,25 @@ function RequirementZone({
   const unanswerable = requirement.is_gating && requirement.status === "pending";
   const { tenderId } = useRequirements();
   const [verifyOpen, setVerifyOpen] = useState(false);
+  // Remember which control opened the source overlay so we can hand focus back
+  // to it on close (keyboard users return to the requirement they came from).
+  // Captured from the active element at open time — the trigger button — and
+  // restored on the next frame so it lands after the browser's post-unmount
+  // focus reset to <body>.
+  const verifyTriggerRef = useRef<HTMLElement | null>(null);
+  function openVerifySource() {
+    verifyTriggerRef.current = document.activeElement as HTMLElement | null;
+    setVerifyOpen(true);
+  }
+  function closeVerifySource() {
+    const trigger = verifyTriggerRef.current;
+    setVerifyOpen(false);
+    // Restore focus after two frames so it lands once the browser has finished
+    // its post-unmount focus reset to <body>; a single frame can still race it.
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => trigger?.focus?.())
+    );
+  }
   // The source document to verify against: the live tender's PDF, or a static demo
   // copy. Null in the plain mock (no matching document) — the button hides then.
   const pdfUrl = requirementPdfUrl(tenderId, requirement);
@@ -334,7 +353,7 @@ function RequirementZone({
           {canVerifySource && (
             <button
               type="button"
-              onClick={() => setVerifyOpen(true)}
+              onClick={openVerifySource}
               className="inline-flex w-fit items-center gap-1 font-mono text-xs text-forest transition-colors hover:text-forest-hover hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-forest focus-visible:ring-offset-2 focus-visible:ring-offset-paper-raised"
             >
               <SourceActionIcon />
@@ -348,7 +367,7 @@ function RequirementZone({
         <ExplainabilityBlock
           requirement={requirement}
           canVerify={canVerifySource}
-          onVerify={() => setVerifyOpen(true)}
+          onVerify={openVerifySource}
         />
       )}
 
@@ -357,7 +376,7 @@ function RequirementZone({
           requirement={requirement}
           pdfUrl={pdfUrl}
           rawDocUrl={rawDocUrl}
-          onClose={() => setVerifyOpen(false)}
+          onClose={closeVerifySource}
         />
       )}
     </Zone>
