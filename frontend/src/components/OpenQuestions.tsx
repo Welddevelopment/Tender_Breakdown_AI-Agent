@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import type { OpenQuestion, Requirement } from "@/types/requirement";
 import { useRequirements } from "@/context/RequirementsContext";
@@ -67,6 +68,18 @@ export function OpenQuestionItem({
   const trimmed = value.trim();
   const dirty = trimmed.length > 0 && trimmed !== (question.answer ?? "");
   const requirement = requirements.find((req) => req.id === requirementId);
+
+  // The gap-answered settle: a one-shot "lands as answered" beat, fired only on
+  // the unanswered -> answered transition (never on mount already-answered, and
+  // never again on subsequent re-renders while it stays answered).
+  const wasAnswered = useRef(answered);
+  const [justAnswered, setJustAnswered] = useState(false);
+  useEffect(() => {
+    if (answered && !wasAnswered.current) {
+      setJustAnswered(true);
+    }
+    wasAnswered.current = answered;
+  }, [answered]);
 
   function saveAnswer() {
     if (!requirement) {
@@ -145,7 +158,11 @@ export function OpenQuestionItem({
   }
 
   return (
-    <li id={question.id} className="scroll-mt-24">
+    <li
+      id={question.id}
+      className={`scroll-mt-24 ${justAnswered ? "settle-once" : ""}`}
+      onAnimationEnd={() => setJustAnswered(false)}
+    >
       {/* The answered/unanswered distinction is carried by a quiet dot plus a
           word and whitespace, not a full coloured card. */}
       <div className="flex items-baseline gap-2">

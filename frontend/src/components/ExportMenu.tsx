@@ -17,6 +17,7 @@ import {
 import { exportMatrixCsv, exportMatrixXlsx } from "@/lib/export-matrix-xlsx";
 import { deriveExportReadiness } from "@/lib/export-readiness";
 import { ExportReadinessSummary } from "./ExportReadinessSummary";
+import styles from "./ExportMenu.module.css";
 
 // The one export surface (delete.md: one obvious "ready to export" area). It is
 // artifact-first — pick what you need (the bid response, the compliance matrix,
@@ -91,6 +92,18 @@ export function ExportMenu({
     () => deriveExportReadiness(requirements),
     [requirements]
   );
+
+  // The export-start "gather" beat: a one-shot settle on the trigger button,
+  // fired only on the idle -> busy transition (never on the busy -> idle
+  // return, and never again while busy stays true).
+  const wasBusy = useRef(busy);
+  const [gathering, setGathering] = useState(false);
+  useEffect(() => {
+    if (busy && !wasBusy.current) {
+      setGathering(true);
+    }
+    wasBusy.current = busy;
+  }, [busy]);
   // Client-ready is only offered when nothing blocks it; otherwise the response
   // draft falls back to internal, so a blocked tender can never emit a
   // client-ready pack (QA.md: export never implies readiness while blockers remain).
@@ -197,7 +210,10 @@ export function ExportMenu({
         disabled={busy}
         aria-busy={busy}
         onClick={() => setOpen((prev) => !prev)}
-        className="ui-btn inline-flex items-center gap-2 rounded-md bg-forest px-4 py-2 text-sm font-semibold text-paper hover:bg-forest-hover disabled:cursor-not-allowed disabled:opacity-60"
+        onAnimationEnd={() => setGathering(false)}
+        className={`ui-btn inline-flex items-center gap-2 rounded-md bg-forest px-4 py-2 text-sm font-semibold text-paper hover:bg-forest-hover disabled:cursor-not-allowed disabled:opacity-60 ${
+          gathering ? styles.gather : ""
+        }`}
       >
         {busy ? "Preparing…" : "Export"}
         <ChevronIcon />

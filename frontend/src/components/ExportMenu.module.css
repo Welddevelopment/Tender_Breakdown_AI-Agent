@@ -1,0 +1,24 @@
+/* Export-start "gather" beat (UI Stage 5, Workstream C): when an export begins,
+   the trigger button gets one brief inward gather — a "collecting the pages"
+   read — timed to --motion-process (360ms). One-shot only, fired on the
+   idle -> busy transition (see ExportMenu.tsx's useEffect on `busy`); it never
+   loops and never replays while busy stays true. Reduced motion drops the
+   media query entirely, so the button just shows its static "Preparing…"
+   state with no movement. */
+@media (prefers-reduced-motion: no-preference) {
+  .gather {
+    animation: gather var(--motion-process) var(--ease-settle) 1 both;
+  }
+}
+
+@keyframes gather {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(0.965);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
