@@ -149,6 +149,42 @@ body {
   transform: translateY(0.5px) scale(0.985);
 }
 
+/* Stage 1: the one-shot "settled" beat for a saved/approved/recorded moment.
+   Rises a step and settles once with the codebase's settle ease, never loops.
+   Gated on no-preference so reduced motion lands on the finished state. */
+@media (prefers-reduced-motion: no-preference) {
+  .settle-once {
+    animation: settle-once var(--motion-standard) var(--ease-settle) 1 both;
+  }
+}
+@keyframes settle-once {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The save/undo toaster's entry, token-timed to the settle tempo. Opacity only,
+   so it never fights sonner's own stacking transform; reduced motion shows the
+   toast immediately. Applied via the Toaster's toast classNames (layout.tsx). */
+@media (prefers-reduced-motion: no-preference) {
+  .toast-settle[data-sonner-toast] {
+    animation: toast-settle var(--motion-standard) var(--ease-settle) 1 both;
+  }
+}
+@keyframes toast-settle {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 /* The forest arrival ground (design-language: upload/processing is a
    forest-led moment). A canopy shadow falls from above onto a moss clearing;
    the paper record forms inside it — the two-layer handoff made visible.

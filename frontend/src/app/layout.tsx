@@ -85,7 +85,7 @@ export default function RootLayout({
             unstyled: true,
             classNames: {
               toast:
-                "surface-grain pointer-events-auto flex w-[356px] max-w-full items-center gap-3 rounded-lg border border-hairline bg-paper-raised px-4 py-3 shadow-[var(--depth-sheet)]",
+                "toast-settle surface-grain pointer-events-auto flex w-[356px] max-w-full items-center gap-3 rounded-lg border border-hairline bg-paper-raised px-4 py-3 shadow-[var(--depth-sheet)]",
               title: "font-mono text-xs leading-snug text-ink",
               description: "font-mono text-[11px] leading-snug text-ink-muted",
               actionButton:

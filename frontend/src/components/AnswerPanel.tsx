@@ -182,7 +182,7 @@ export function AnswerPanel({
               )}
             </div>
             {answer.state === "human_edited" && (
-              <p className="font-mono text-xs leading-relaxed text-forest">
+              <p className="settle-once font-mono text-xs leading-relaxed text-forest">
                 Human override recorded.
               </p>
             )}
