@@ -9,6 +9,7 @@ import {
 import { categoryStyle } from "@/lib/categoryStyle";
 import { useRequirements } from "@/context/RequirementsContext";
 import { SiteHeader } from "./SiteHeader";
+import { WorkspacePresence } from "./WorkspacePresence";
 
 // The app-page header: the shared fixed-height SiteHeader (logo, four-link
 // SectionNav, account control, the one 2px ink rule) with a title row beneath
@@ -96,26 +97,32 @@ export function DocumentHeader({
             </div>
           </div>
 
-          {/* Controls: the filter and sort in the header register, then the one
-              primary action, Next. */}
-          {triage && (
-            <div className="flex flex-wrap items-center gap-3">
-              <MatrixFilterControl triage={triage} />
-              {triage.sortBy && triage.onSortChange && (
-                <SortControl
-                  sortBy={triage.sortBy}
-                  onSortChange={triage.onSortChange}
-                />
-              )}
-              <button
-                type="button"
-                onClick={triage.onNext}
-                className="shrink-0 rounded-md bg-forest px-4 py-1.5 text-sm font-semibold text-paper shadow-[var(--depth-control)] transition-colors hover:bg-forest-hover"
-              >
-                {triage.nextLabel}
-              </button>
-            </div>
-          )}
+          {/* Right zone (UI-IMPROVEMENT-PLAN §1): the collaboration cluster —
+              who has access + the team's activity — then, on views with a
+              worklist, the header controls (filter, sort) and the one primary
+              action, Next. WorkspacePresence self-hides off the live app, so
+              this row is empty (and collapses) on the embeds. */}
+          <div className="flex flex-wrap items-center gap-3">
+            <WorkspacePresence />
+            {triage && (
+              <>
+                <MatrixFilterControl triage={triage} />
+                {triage.sortBy && triage.onSortChange && (
+                  <SortControl
+                    sortBy={triage.sortBy}
+                    onSortChange={triage.onSortChange}
+                  />
+                )}
+                <button
+                  type="button"
+                  onClick={triage.onNext}
+                  className="shrink-0 rounded-md bg-forest px-4 py-1.5 text-sm font-semibold text-paper shadow-[var(--depth-control)] transition-colors hover:bg-forest-hover"
+                >
+                  {triage.nextLabel}
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </>

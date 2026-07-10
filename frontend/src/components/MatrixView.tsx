@@ -45,8 +45,6 @@ import { DocumentHeader } from "./DocumentHeader";
 import { FocusMode } from "./FocusMode";
 import { GatingHero } from "./GatingHero";
 import { ControlPanel } from "./ControlPanel";
-import { ActivityFeed } from "./ActivityFeed";
-import { ShareControl } from "./ShareControl";
 import { NoTenderLoaded } from "./NoTenderLoaded";
 import { PdfSourceView } from "./PdfSourceView";
 import type { MatchKind } from "@/lib/text-match";
@@ -664,17 +662,6 @@ export function MatrixView({
           </div>
         </section>
       )}
-
-      {/* Collaboration: share access + the team's activity trail. Both self-hide on the
-          frozen/solo build (ShareControl needs a live backend; ActivityFeed needs decisions). */}
-      <div className="mx-auto w-full max-w-[1160px] px-6">
-        <div className="flex justify-end py-2 empty:hidden">
-          <ShareControl />
-        </div>
-        <div className="pb-4 empty:hidden">
-          <ActivityFeed />
-        </div>
-      </div>
 
       {stageReturnHref && (
         <div className="border-b border-hairline bg-paper">

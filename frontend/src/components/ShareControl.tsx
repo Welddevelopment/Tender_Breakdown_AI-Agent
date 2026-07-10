@@ -185,7 +185,7 @@ export function ShareControl() {
             </span>
           )}
         </span>
-        Share
+        Share tender
         {members.length > 1 && (
           <span className="font-mono text-xs text-ink-muted">{members.length}</span>
         )}
