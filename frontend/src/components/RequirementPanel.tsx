@@ -21,6 +21,7 @@ import {
   sourceRefLabel,
 } from "@/lib/source-doc";
 import { SourceVerifyOverlay } from "./SourceVerifyOverlay";
+import { SourceActionIcon } from "./SourceActionIcon";
 
 // The open-state panel internals (layout.md section 6). One sheet on a
 // paper-raised surface, read top to bottom, flat zones separated by hairlines:
@@ -334,8 +335,9 @@ function RequirementZone({
             <button
               type="button"
               onClick={() => setVerifyOpen(true)}
-              className="inline-flex w-fit items-center font-mono text-xs text-forest transition-colors hover:text-forest-hover hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-forest focus-visible:ring-offset-2 focus-visible:ring-offset-paper-raised"
+              className="inline-flex w-fit items-center gap-1 font-mono text-xs text-forest transition-colors hover:text-forest-hover hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-forest focus-visible:ring-offset-2 focus-visible:ring-offset-paper-raised"
             >
+              <SourceActionIcon />
               See it in the document
             </button>
           )}
@@ -405,8 +407,9 @@ function ExplainabilityBlock({
               <button
                 type="button"
                 onClick={onVerify}
-                className="ml-2 text-forest transition-colors hover:text-forest-hover hover:underline"
+                className="ml-2 inline-flex items-center gap-1 align-[-0.15em] text-forest transition-colors hover:text-forest-hover hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-forest"
               >
+                <SourceActionIcon />
                 See it in the document
               </button>
             )}

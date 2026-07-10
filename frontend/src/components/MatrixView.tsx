@@ -46,6 +46,7 @@ import { FocusMode } from "./FocusMode";
 import { GatingHero } from "./GatingHero";
 import { ControlPanel } from "./ControlPanel";
 import { NoTenderLoaded } from "./NoTenderLoaded";
+import { SourceActionIcon } from "./SourceActionIcon";
 import { PdfSourceView } from "./PdfSourceView";
 import type { MatchKind } from "@/lib/text-match";
 import { DocxSourceView } from "./DocxSourceView";
@@ -726,8 +727,9 @@ export function MatrixView({
                   <button
                     type="button"
                     onClick={() => setEvidenceOpen(true)}
-                    className="font-mono text-xs text-ink-muted transition-colors hover:text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-forest"
+                    className="inline-flex items-center gap-1 font-mono text-xs text-forest transition-colors hover:text-forest-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-forest"
                   >
+                    <SourceActionIcon />
                     Show source
                   </button>
                 )}
