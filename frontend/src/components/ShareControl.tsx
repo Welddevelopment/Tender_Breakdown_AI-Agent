@@ -164,7 +164,7 @@ export function ShareControl() {
         type="button"
         onClick={() => setOpen(true)}
         aria-expanded={open}
-        className="inline-flex items-center gap-2 rounded-md border border-hairline bg-paper-raised px-3 py-1.5 text-sm text-ink shadow-[var(--depth-control)] transition-colors hover:border-forest hover:text-forest focus:outline-none focus-visible:ring-2 focus-visible:ring-forest"
+        className="ui-btn inline-flex items-center gap-2 rounded-md border border-hairline bg-paper-raised px-3 py-1.5 text-sm text-ink shadow-[var(--depth-control)] hover:border-forest hover:text-forest"
       >
         <span className="flex -space-x-1" aria-hidden>
           {members.slice(0, 3).map((member) => {

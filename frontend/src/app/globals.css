@@ -149,6 +149,17 @@ body {
   transform: translateY(0.5px) scale(0.985);
 }
 
+/* Stage 2 (workspace header): the active section mark settles in by colour, not
+   a sliding rail (MOTION.md §"App Shell": the active rule moves in 120–180ms).
+   Token-timed and unlayered so it wins over Tailwind's transition-colors and
+   collapses to instant under the global 1ms override — a reduced-motion user
+   gets the active weight and underline with no fade. */
+.nav-settle {
+  transition-property: color, text-decoration-color;
+  transition-duration: var(--motion-standard);
+  transition-timing-function: var(--ease-standard);
+}
+
 /* Stage 1: the one-shot "settled" beat for a saved/approved/recorded moment.
    Rises a step and settles once with the codebase's settle ease, never loops.
    Gated on no-preference so reduced motion lands on the finished state. */

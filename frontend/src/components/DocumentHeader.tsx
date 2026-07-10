@@ -116,7 +116,7 @@ export function DocumentHeader({
                 <button
                   type="button"
                   onClick={triage.onNext}
-                  className="shrink-0 rounded-md bg-forest px-4 py-1.5 text-sm font-semibold text-paper shadow-[var(--depth-control)] transition-colors hover:bg-forest-hover"
+                  className="ui-btn shrink-0 rounded-md bg-forest px-4 py-1.5 text-sm font-semibold text-paper shadow-[var(--depth-control)] hover:bg-forest-hover"
                 >
                   {triage.nextLabel}
                 </button>

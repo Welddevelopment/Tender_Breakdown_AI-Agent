@@ -38,10 +38,17 @@ export function SectionNav() {
           <Link
             href={section.href}
             aria-current={isActive(section.href) ? "page" : undefined}
+            // Every link keeps the underline, transparent until active, so the
+            // active mark settles in via decoration-colour (transition-colors,
+            // ~150ms — MOTION.md §"App Shell": active rule moves in 120–180ms)
+            // rather than snapping. Deliberately not a sliding rail: a moving
+            // rule would turn the middot text switcher into the dashboard nav
+            // this component avoids. Weight still carries the state in greyscale;
+            // reduced motion collapses the transition to instant.
             className={
               isActive(section.href)
-                ? "font-medium text-ink underline decoration-forest decoration-2 underline-offset-4"
-                : "text-ink-muted transition-colors hover:text-ink"
+                ? "nav-settle font-medium text-ink underline decoration-forest decoration-2 underline-offset-4"
+                : "nav-settle text-ink-muted underline decoration-transparent decoration-2 underline-offset-4 hover:text-ink"
             }
           >
             {section.label}
