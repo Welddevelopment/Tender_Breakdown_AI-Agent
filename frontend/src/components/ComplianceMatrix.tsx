@@ -191,6 +191,8 @@ function StatusWord({ req }: { req: Requirement }) {
         ? "text-ink"
         : "text-ink-muted";
 
+  const who = actorLabel(req.decision?.actor, user?.id);
+
   return (
     <span className={`inline-flex items-center gap-1 text-xs ${tone}`}>
       {req.status === "accepted" && (
@@ -210,11 +212,33 @@ function StatusWord({ req }: { req: Requirement }) {
           />
         </svg>
       )}
+      {/* Flagged carries its own greyscale marker so it never reads as a bare
+          decided row: an oxblood flag (the one sanctioned alarm tone for a
+          raised concern — MOTION.md §Matrix) plus who raised it, mirroring the
+          approved tick + "Approved by". */}
+      {req.status === "flagged" && (
+        <svg
+          width="11"
+          height="11"
+          viewBox="0 0 14 14"
+          fill="none"
+          aria-hidden="true"
+          className="shrink-0 text-signal-oxblood"
+        >
+          <path
+            d="M3.6 1.4v11.2"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+          />
+          <path d="M3.6 2.4h6.8l-1.7 2.1 1.7 2.1H3.6z" fill="currentColor" />
+        </svg>
+      )}
       {req.status === "accepted"
-        ? `Approved by ${actorLabel(req.decision?.actor, user?.id)}`
+        ? `Approved by ${who}`
         : req.status === "edited"
-          ? `Edited by ${actorLabel(req.decision?.actor, user?.id)}`
-          : "Flagged"}
+          ? `Edited by ${who}`
+          : `Flagged by ${who}`}
     </span>
   );
 }
