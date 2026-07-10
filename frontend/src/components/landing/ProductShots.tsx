@@ -1,8 +1,14 @@
-// Three product shots for the landing page. They use static demo content, but
-// they should read like product states: a priority queue, a traceable source
-// view, and an answer approval workflow.
+// Three product shots for the landing page: a priority queue, a traceable source
+// view, and an answer approval workflow. The layouts are landing-specific staging
+// (the gallery frame, the split source view), but the STATE GRAMMAR is composed
+// from the real app components — the confidence stamp, the answer-state badge,
+// the category tag, and the approval stamp — so the page can never drift from the
+// product it is selling. They stay static/inert (no context, no interaction).
 
 import { ApprovalStamp } from "@/components/ApprovalStamp";
+import { AnswerStateBadge } from "@/components/AnswerStateBadge";
+import { CategoryTag } from "@/components/CategoryTag";
+import { ConfidenceIndicator } from "@/components/ConfidenceIndicator";
 
 export function ProductGalleryFrame({
   children,
@@ -73,12 +79,12 @@ export function DealBreakerCard() {
           <PriorityRow
             refLabel="4.2.2"
             label="Public liability insurance"
-            status="check"
+            confidence={0.62}
           />
           <PriorityRow
             refLabel="6.1"
             label="TUPE schedule acknowledged"
-            status="found"
+            confidence={0.9}
           />
         </div>
       </div>
@@ -86,28 +92,23 @@ export function DealBreakerCard() {
   );
 }
 
+// A normal (non-gating) requirement row under the deal-breaker. The confidence
+// mark is the real app component, so the four-tier grammar (and its greyscale-safe
+// dot) matches the matrix exactly.
 function PriorityRow({
   refLabel,
   label,
-  status,
+  confidence,
 }: {
   refLabel: string;
   label: string;
-  status: "check" | "found";
+  confidence: number;
 }) {
   return (
     <div className="grid min-w-0 grid-cols-[44px_minmax(0,1fr)_auto] items-center gap-2.5 px-3 py-3 text-sm sm:grid-cols-[58px_minmax(0,1fr)_auto] sm:gap-3 sm:px-4">
       <span className="font-mono text-[11px] text-ink-muted">{refLabel}</span>
       <span className="truncate text-ink-muted">{label}</span>
-      <span
-        className={
-          status === "check"
-            ? "font-mono text-[11px] text-signal-amber"
-            : "font-mono text-[11px] text-forest"
-        }
-      >
-        {status === "check" ? "check" : "found"}
-      </span>
+      <ConfidenceIndicator confidence={confidence} variant="dot" size="sm" />
     </div>
   );
 }
@@ -171,14 +172,18 @@ export function AnswerCard() {
         <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-muted">
           Answer workspace
         </span>
-        <span className="font-mono text-[11px] text-forest">ready to approve</span>
+        {/* The real answer-state badge — same component the /answers panel uses. */}
+        <AnswerStateBadge state="auto" />
       </div>
 
       <div className="p-4 sm:p-5">
         <div className="grid gap-2 rounded-md border border-hairline bg-paper/70 p-4">
-          <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-muted">
-            Requirement
-          </p>
+          <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+            <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-muted">
+              Requirement
+            </p>
+            <CategoryTag category="Quality" />
+          </div>
           <p className="text-base leading-snug text-ink sm:text-lg">
             The supplier must hold ISO 9001 certification.
           </p>
