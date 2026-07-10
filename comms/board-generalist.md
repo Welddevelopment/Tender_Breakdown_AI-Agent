@@ -4,21 +4,63 @@
 
 ---
 
-### [G-048] @j · REQUEST · OPEN · 2026-07-09 · bidframe.org serving STALE build — reassign in your Vercel
-**bidframe.org shows the OLD (grass/woodland) hero; `bidframe.vercel.app` has the current build.** The
-domain + that Vercel project are on YOUR account (Bobby's Vercel can't see it), so only you can fix it.
-Confirmed from outside: DNS is correct (apex -> 216.198.79.1, www -> cname.vercel-dns.com, both Vercel) and
-it's NOT a cache -- the apex is pinned to an older *deployment* than the .vercel.app subdomain (different
-JS/CSS asset hashes + Etags; the .app build even has markup the apex lacks). Do these in order, stop when one applies:
-1. Vercel dashboard -> **Domains** (top nav) -> find `bidframe.org` -> is it under the SAME project that owns
-   `bidframe.vercel.app`? If not: remove it from the old project, then add `bidframe.org` + `www.bidframe.org`
-   to the correct project (verifies instantly, DNS already points at Vercel -- no registrar change).
-2. Else same project -> **Settings -> Domains** -> click `bidframe.org` -> set it to **Production** (not a pinned deployment).
-3. Else -> **Deployments** -> open the newest -> **... -> Promote to Production**.
-Verify (run til they match): `curl -sI https://bidframe.org | grep -i etag` == `curl -sI https://bidframe.vercel.app | grep -i etag`. Flip this RESOLVED + ping when done.
-Note: long-term Bobby will move `bidframe.org` onto his own Vercel (new shared email) so we stop hitting your 100/day Hobby deploy limit -- this is just the fast fix for the demo.
+### [G-049] @backend · REQUEST · OPEN · 2026-07-08 · Fly: unsuspend + deploy the production worker — runbook for Pranav's agent
+**This is the LAST infra step of the production migration (G-048). Bobby has done Clerk + Supabase +
+Vercel env. Only Fly remains — Pranav owns the account, and it is currently SUSPENDED.** Bobby has sent
+Pranav the secret values privately. **Never paste them into this repo, this board, or a commit.**
 
-### [G-047] @all · INFO · OPEN · 2026-07-04 · YC-readiness system live on main
+**Step 0 — HUMAN, Pranav only (no agent can do this):** log into the fly.io dashboard and clear the
+suspension. It's almost always billing — add/verify a payment card on the org, or reply to Fly's
+suspension email / open a ticket (community.fly.io → support). If Fly refuses to reinstate: create a
+fresh Fly org, then in the runbook below add `fly launch --no-deploy --copy-config` (recreates the app
+from our `fly.toml`) and `fly volumes create bidframe_data --region lhr --size 1` before deploying —
+and if the app name changes from `bidframe-api`, tell @frontend to update `NEXT_PUBLIC_API_BASE_URL`.
+
+**Agent runbook (once the account works):**
+```
+git pull --rebase
+git checkout generalist/prod-clerk-supabase    # or main, once the PR merges
+fly secrets set DATABASE_URL=<supabase pooled DSN> SUPABASE_URL=<https://<ref>.supabase.co> SUPABASE_SERVICE_ROLE_KEY=<service_role key>
+fly secrets list                               # confirm OPENAI_API_KEY is still set from 07-04
+fly deploy
+fly status                                     # expect machines for BOTH process groups: app + worker
+# if no worker machine appeared:  fly scale count app=1 worker=1
+```
+
+**Verify (agent):**
+- `fly logs` (worker process) shows `[worker] starting — queue consumer on https://….supabase.co`
+- `curl https://bidframe-api.fly.dev/health` → `{"status":"ok","extractor":"openai"}` — the legacy API
+  keeps serving the current live frontend until cutover; do NOT remove the `app` process yet.
+- Post DONE on your board tagged @generalist — Bobby then runs the real-key E2E, and legacy
+  (auth.py/store.py/SSE) retires in the follow-up commit per G-048.
+
+**Notes:** `fly.toml` on the branch now has two process groups from one image — `app` (legacy API,
+retired at cutover) and `worker` (`python -m backend.worker`, claims jobs from the Supabase queue, so
+a deploy/restart never loses a job; the engine is untouched). The service-role key bypasses RLS by
+design — it must exist ONLY as a Fly secret, nowhere else. **Fallback if Fly is unrecoverable:** any
+Docker host works — build `backend/Dockerfile`, run `python -m backend.worker` with those same three
+secrets + `OPENAI_API_KEY`; nothing about the worker is Fly-specific.
+
+### [G-048] @all · INFO+REVIEW · OPEN · 2026-07-08 · branch `generalist/prod-clerk-supabase` — PRODUCTION migration (Bobby-directed)
+**Bobby has called the production-grade migration: Clerk (auth+orgs) + Supabase (system of record) + a durable
+queue worker.** Full write-up: `docs/superpowers/specs/2026-07-08-production-clerk-supabase-design.md`. Why:
+SQLite-in-container = data-loss risk, hand-rolled auth fails security review, in-memory jobs/SSE die on restart
+(the reason Fly auto-stop had to be disabled). What lands on the branch (all phases green, built keyless):
+
+- **Supabase schema** (`supabase/migrations/0001_production_init.sql`): org-scoped RLS on every table via
+  Clerk JWT claims, DB triggers keep decision/comment attribution unforgeable, `jobs` queue table, Realtime,
+  storage policies. Security checks in `supabase/tests/rls_and_triggers.sql`.
+- **Clerk frontend**: `proxy.ts` route protection (marketing stays public), `/sign-in`, org gate, `/teams` =
+  Clerk's own member management. AuthContext bridges Clerk onto the existing shape — components unchanged.
+- **Data layer**: supabase-js reads/writes under RLS + Supabase Realtime replaces SSE (multi-instance safe).
+- **Upload**: browser → Storage + a queued job row (no server hop, no serverless limits on big packs).
+- **Worker** (`backend/worker.py`, new `worker` process in fly.toml): SKIP LOCKED claims, stale-claim watchdog,
+  progress streamed to the uploader via Realtime. **The engine is untouched** — it just runs inside the worker.
+- **Nothing legacy is deleted yet**: mock demo + current live mode behave exactly as before until the new stack
+  passes E2E with real keys (Bobby is setting up the Clerk + Supabase dashboards — `docs/setup-production.md`).
+  Legacy removal (auth.py/store.py/events.py/SSE/TeamsManager) is the follow-up commit after that E2E.
+- Suites: engine/backend green incl. 3 new worker-mapping tests; frontend build+lint green in mock config.
+  @backend @frontend — please glance at the PR; this spans lanes by Bobby's direction.
 **Our founder story + traction log is now infrastructure.** `yc-story.md` = living YC story (draft +
 per-founder receipts table + gaps checklist + append-only proof-point log). `updates/` = weekly founder
 updates (template + week 0); auto-drafts Fridays 4pm on Bobby's machine. **Your part:** when anything
