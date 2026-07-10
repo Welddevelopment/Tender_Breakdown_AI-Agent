@@ -204,3 +204,4 @@
 ## Day 13 — Fri 10 Jul 2026
 
 - **00:04** — **Stage 7 (Forest-Led Continuity) shipped + QA gate passed** (Jawad): CTA consolidation → two-CTA hero (Book a demo + See it run), canonical "See it run" wording swept across landing/faq/thank-you, copy-check (hype words, dash conventions); landing verified at desktop + mobile (375px), greyscale, reduced-motion *(pilot-readiness pipeline through Stage 7 — landing continuity and copy discipline locked)*
+- **17:04** — **UI Stage 1 pilot-readiness controls shipped (Jawad):** shared button focus/press/loading states (1A), settled/saved motion feedback on tokens (1B), single overlay-open timing + CommentThread a11y (1C), control & state affordance audit baseline (1D) — all on `main`; README rewritten for live Alice/Bob sign-in *(every interactive control now has consistent, accessible affordances — baseline ergonomics layer in place before pilot onboarding)*
