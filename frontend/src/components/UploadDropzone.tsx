@@ -405,7 +405,7 @@ export function UploadDropzone({
             </>
           )}
         </p>
-        <div className="mt-5 flex items-center gap-4">
+        <div className="mt-5 flex flex-wrap items-center gap-3">
           {onResolve ? (
             <button
               type="button"
@@ -422,6 +422,22 @@ export function UploadDropzone({
               {isApiEnabled() ? "View extracted requirements" : "View sample matrix"}
             </Link>
           )}
+          {/* Secondary next steps: the matrix isn't the only place to go from
+              here — deal-breakers and answer drafting both live one click away.
+              Bordered rather than solid-forest so the eye still lands on the
+              primary resolve action first. */}
+          <Link
+            href="/review"
+            className="inline-flex items-center rounded-md border border-forest/30 bg-transparent px-4 py-2 text-sm font-semibold text-forest transition-colors hover:border-forest hover:bg-forest/5"
+          >
+            Review deal-breakers
+          </Link>
+          <Link
+            href="/answers"
+            className="inline-flex items-center rounded-md border border-forest/30 bg-transparent px-4 py-2 text-sm font-semibold text-forest transition-colors hover:border-forest hover:bg-forest/5"
+          >
+            Draft the bid
+          </Link>
           <button
             type="button"
             onClick={reset}
@@ -448,13 +464,23 @@ export function UploadDropzone({
           {errorMessage ??
             "The server did not respond. Check it is running, then try again."}
         </p>
-        <div className="mt-5">
+        <div className="mt-5 flex items-center gap-4">
           <button
             type="button"
             onClick={reset}
             className="inline-flex items-center rounded-md bg-forest px-4 py-2 text-sm font-semibold text-paper transition-colors hover:bg-forest-hover"
           >
             Try again
+          </button>
+          {/* A second, explicit recovery path alongside "Try again" — same
+              reset handler the success screen's "Upload another" calls, back
+              to a clean idle dropzone so a bad pack doesn't dead-end here. */}
+          <button
+            type="button"
+            onClick={reset}
+            className="text-sm text-ink-muted transition-colors hover:text-ink"
+          >
+            Upload a different file
           </button>
         </div>
       </div>
@@ -506,10 +532,10 @@ export function UploadDropzone({
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
-        className={`surface-grain group flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-8 py-14 shadow-[var(--depth-sheet)] transition-colors ${
+        className={`surface-grain group flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-8 py-14 outline-none transition-[color,background-color,border-color,box-shadow,transform] duration-[var(--motion-fast)] ${
           isDragging
-            ? "border-forest bg-forest/5"
-            : "border-hairline bg-paper-raised hover:border-forest hover:bg-paper"
+            ? "border-forest bg-forest/5 shadow-[var(--depth-sheet)]"
+            : "border-hairline bg-paper-raised shadow-[var(--depth-sheet)] hover:-translate-y-0.5 hover:border-forest hover:bg-paper hover:shadow-[var(--depth-sheet-pine)] focus-visible:-translate-y-0.5 focus-visible:border-forest focus-visible:bg-paper focus-visible:shadow-[var(--depth-sheet-pine)]"
         }`}
       >
         {/* A document being filed, not a generic upload arrow: a sheet with a
