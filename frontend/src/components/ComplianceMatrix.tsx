@@ -36,6 +36,7 @@ import {
   type ConfidenceTier,
 } from "./ConfidenceIndicator";
 import { CategoryTag } from "./CategoryTag";
+import { BlockerMarker, CommentCountMarker } from "./CollaborationMarkers";
 
 // Row density: comfortable is the resting register; compact tightens the row
 // gutters so a longer tender shows more at once. Only the vertical padding
@@ -483,7 +484,7 @@ function MatrixRow({
 
       {/* The status word, or for confident non-gating items a single quiet
           Approve revealed on hover or focus. One affordance only. */}
-      <div className="col-start-3 flex shrink-0 items-start justify-start pt-0 sm:col-start-auto sm:justify-end sm:pt-0.5">
+      <div className="col-start-3 flex shrink-0 flex-col items-start gap-1 pt-0 sm:col-start-auto sm:items-end sm:pt-0.5">
         {canApproveInline ? (
           <>
             <span className="group-hover:hidden group-focus-within:hidden">
@@ -502,6 +503,16 @@ function MatrixRow({
           </>
         ) : (
           <StatusWord req={req} />
+        )}
+        {/* Collaboration presence (UI Stage 6): the oxblood blocker bead
+            (louder — reads like the gating pennant's family) then the quiet
+            comment count, both server-stamped and null-when-zero, so a row
+            with no team discussion keeps this column exactly as it was. */}
+        {(req.open_blocker_count || req.comment_count) && (
+          <span className="flex flex-col items-start gap-0.5 sm:items-end">
+            <BlockerMarker count={req.open_blocker_count} className="text-[11px]" />
+            <CommentCountMarker count={req.comment_count} className="text-[11px]" />
+          </span>
         )}
       </div>
     </div>
