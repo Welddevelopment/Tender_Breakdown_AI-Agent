@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import { DEMO_TENDER_TITLE } from "@/data/demo-tender";
 import { AppMain } from "./AppMain";
+import { CurrentTenderStrip } from "./CurrentTenderStrip";
 import { DocumentHeader } from "./DocumentHeader";
 import { TendersList } from "./TendersList";
 import { UploadDropzone } from "./UploadDropzone";
@@ -72,6 +73,7 @@ export function UploadWorkspace() {
             library of every tender you have uploaded directly beneath it —
             both visible without scrolling. */}
         <div className="mx-auto max-w-2xl pt-6">
+          <CurrentTenderStrip />
           <UploadDropzone onResolve={beginResolve} />
         </div>
         <section
