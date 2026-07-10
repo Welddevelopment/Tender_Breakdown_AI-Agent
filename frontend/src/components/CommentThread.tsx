@@ -150,7 +150,7 @@ export function CommentThread({ reqId }: { reqId: string }) {
         <button
           type="submit"
           disabled={sending || !draft.trim()}
-          className="shrink-0 rounded-md bg-forest px-3 py-1.5 text-sm font-semibold text-paper transition-colors hover:bg-forest-hover disabled:opacity-50"
+          className="ui-btn shrink-0 rounded-md bg-forest px-3 py-1.5 text-sm font-semibold text-paper hover:bg-forest-hover disabled:opacity-50"
         >
           {sending ? "Posting…" : "Post"}
         </button>

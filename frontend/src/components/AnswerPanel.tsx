@@ -108,7 +108,7 @@ export function AnswerPanel({
                       },
                     });
                   }}
-                  className="bg-forest px-3.5 py-1.5 text-sm font-semibold text-paper transition-colors hover:bg-forest-hover"
+                  className="ui-btn bg-forest px-3.5 py-1.5 text-sm font-semibold text-paper hover:bg-forest-hover"
                 >
                   Save answer
                 </button>
@@ -294,7 +294,7 @@ function AnswerDecisionZone({
             <button
               type="button"
               onClick={onApprove}
-              className="bg-forest px-4 py-1.5 text-sm font-semibold text-paper transition-colors hover:bg-forest-hover"
+              className="ui-btn bg-forest px-4 py-1.5 text-sm font-semibold text-paper hover:bg-forest-hover"
             >
               Approve answer
             </button>

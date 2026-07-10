@@ -178,7 +178,7 @@ export function OpenQuestionItem({
           type="button"
           disabled={!dirty}
           onClick={saveAnswer}
-          className="shrink-0 rounded-md bg-forest px-3 py-1.5 text-sm font-medium text-paper transition-colors hover:bg-forest-hover disabled:cursor-not-allowed disabled:opacity-40"
+          className="ui-btn shrink-0 rounded-md bg-forest px-3 py-1.5 text-sm font-medium text-paper hover:bg-forest-hover disabled:cursor-not-allowed disabled:opacity-40"
         >
           {answered ? "Update" : "Save"}
         </button>

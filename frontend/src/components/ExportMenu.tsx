@@ -195,8 +195,9 @@ export function ExportMenu({
         aria-haspopup="menu"
         aria-expanded={open}
         disabled={busy}
+        aria-busy={busy}
         onClick={() => setOpen((prev) => !prev)}
-        className="inline-flex items-center gap-2 rounded-md bg-forest px-4 py-2 text-sm font-semibold text-paper transition-colors hover:bg-forest-hover disabled:cursor-not-allowed disabled:opacity-60"
+        className="ui-btn inline-flex items-center gap-2 rounded-md bg-forest px-4 py-2 text-sm font-semibold text-paper hover:bg-forest-hover disabled:cursor-not-allowed disabled:opacity-60"
       >
         {busy ? "Preparing…" : "Export"}
         <ChevronIcon />

@@ -126,6 +126,29 @@ body {
   }
 }
 
+/* Stage 1 (UI foundation): the shared control feel. One keyboard focus ring and
+   one small press tap for every action button, timed by the motion tokens — so
+   reduced motion makes both instant through the global 1ms override above.
+   Written unlayered so it wins over Tailwind's transition-colors and owns the
+   control's transition (transform + colour) at one fast tempo. Pair it with a
+   button's own colour/size classes; it never sets colour, only the feel. */
+.ui-btn {
+  transition-property: transform, color, background-color, border-color,
+    box-shadow, opacity;
+  transition-duration: var(--motion-fast);
+  transition-timing-function: var(--ease-standard);
+}
+.ui-btn:focus {
+  outline: none;
+}
+.ui-btn:focus-visible {
+  outline: 2px solid var(--color-forest);
+  outline-offset: 2px;
+}
+.ui-btn:active:not(:disabled) {
+  transform: translateY(0.5px) scale(0.985);
+}
+
 /* The forest arrival ground (design-language: upload/processing is a
    forest-led moment). A canopy shadow falls from above onto a moss clearing;
    the paper record forms inside it — the two-layer handoff made visible.

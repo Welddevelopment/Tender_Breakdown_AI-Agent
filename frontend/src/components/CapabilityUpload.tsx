@@ -51,7 +51,7 @@ export function CapabilityUpload() {
           type="button"
           onClick={() => inputRef.current?.click()}
           disabled={drafting || isSampleMode}
-          className="shrink-0 rounded-md border border-hairline px-3 py-1.5 text-sm font-medium text-ink transition-colors hover:bg-paper-raised disabled:cursor-not-allowed disabled:opacity-60"
+          className="ui-btn shrink-0 rounded-md border border-hairline px-3 py-1.5 text-sm font-medium text-ink hover:bg-paper-raised disabled:cursor-not-allowed disabled:opacity-60"
         >
           {drafting ? "Re-checking the evidence…" : "Add evidence docs"}
         </button>

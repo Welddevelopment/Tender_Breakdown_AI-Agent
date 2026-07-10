@@ -55,7 +55,8 @@ export function AutofillButton() {
           type="button"
           onClick={run}
           disabled={drafting}
-          className="inline-flex items-center gap-2 rounded-md bg-forest px-4 py-2 text-sm font-semibold text-paper transition-colors hover:bg-forest-hover disabled:cursor-not-allowed disabled:opacity-60"
+          aria-busy={drafting}
+          className="ui-btn inline-flex items-center gap-2 rounded-md bg-forest px-4 py-2 text-sm font-semibold text-paper hover:bg-forest-hover disabled:cursor-not-allowed disabled:opacity-60"
         >
           {drafting ? (
             <>

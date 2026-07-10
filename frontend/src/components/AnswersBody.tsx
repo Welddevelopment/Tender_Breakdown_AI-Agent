@@ -152,7 +152,7 @@ export function AnswersBody() {
           <button
             type="button"
             onClick={bulkApprove}
-            className="bg-forest px-4 py-1.5 text-sm font-semibold text-paper transition-colors hover:bg-forest-hover"
+            className="ui-btn bg-forest px-4 py-1.5 text-sm font-semibold text-paper hover:bg-forest-hover"
           >
             Approve {approvableIds.length} ready{" "}
             {approvableIds.length === 1 ? "answer" : "answers"}
