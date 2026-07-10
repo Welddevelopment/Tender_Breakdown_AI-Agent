@@ -4,6 +4,43 @@
 
 ---
 
+### [G-049] @backend · REQUEST · OPEN · 2026-07-08 · Fly: unsuspend + deploy the production worker — runbook for Pranav's agent
+**This is the LAST infra step of the production migration (G-048). Bobby has done Clerk + Supabase +
+Vercel env. Only Fly remains — Pranav owns the account, and it is currently SUSPENDED.** Bobby has sent
+Pranav the secret values privately. **Never paste them into this repo, this board, or a commit.**
+
+**Step 0 — HUMAN, Pranav only (no agent can do this):** log into the fly.io dashboard and clear the
+suspension. It's almost always billing — add/verify a payment card on the org, or reply to Fly's
+suspension email / open a ticket (community.fly.io → support). If Fly refuses to reinstate: create a
+fresh Fly org, then in the runbook below add `fly launch --no-deploy --copy-config` (recreates the app
+from our `fly.toml`) and `fly volumes create bidframe_data --region lhr --size 1` before deploying —
+and if the app name changes from `bidframe-api`, tell @frontend to update `NEXT_PUBLIC_API_BASE_URL`.
+
+**Agent runbook (once the account works):**
+```
+git pull --rebase
+git checkout generalist/prod-clerk-supabase    # or main, once the PR merges
+fly secrets set DATABASE_URL=<supabase pooled DSN> SUPABASE_URL=<https://<ref>.supabase.co> SUPABASE_SERVICE_ROLE_KEY=<service_role key>
+fly secrets list                               # confirm OPENAI_API_KEY is still set from 07-04
+fly deploy
+fly status                                     # expect machines for BOTH process groups: app + worker
+# if no worker machine appeared:  fly scale count app=1 worker=1
+```
+
+**Verify (agent):**
+- `fly logs` (worker process) shows `[worker] starting — queue consumer on https://….supabase.co`
+- `curl https://bidframe-api.fly.dev/health` → `{"status":"ok","extractor":"openai"}` — the legacy API
+  keeps serving the current live frontend until cutover; do NOT remove the `app` process yet.
+- Post DONE on your board tagged @generalist — Bobby then runs the real-key E2E, and legacy
+  (auth.py/store.py/SSE) retires in the follow-up commit per G-048.
+
+**Notes:** `fly.toml` on the branch now has two process groups from one image — `app` (legacy API,
+retired at cutover) and `worker` (`python -m backend.worker`, claims jobs from the Supabase queue, so
+a deploy/restart never loses a job; the engine is untouched). The service-role key bypasses RLS by
+design — it must exist ONLY as a Fly secret, nowhere else. **Fallback if Fly is unrecoverable:** any
+Docker host works — build `backend/Dockerfile`, run `python -m backend.worker` with those same three
+secrets + `OPENAI_API_KEY`; nothing about the worker is Fly-specific.
+
 ### [G-048] @all · INFO+REVIEW · OPEN · 2026-07-08 · branch `generalist/prod-clerk-supabase` — PRODUCTION migration (Bobby-directed)
 **Bobby has called the production-grade migration: Clerk (auth+orgs) + Supabase (system of record) + a durable
 queue worker.** Full write-up: `docs/superpowers/specs/2026-07-08-production-clerk-supabase-design.md`. Why:
