@@ -8,6 +8,7 @@ import { useAuth } from "@/context/AuthContext";
 import { actorLabel } from "@/lib/collaborators";
 import { AnswerStateBadge } from "./AnswerStateBadge";
 import { AnswerEvidenceOverlay } from "./AnswerEvidenceOverlay";
+import { ApprovalStamp } from "./ApprovalStamp";
 import styles from "./AnswerPanel.module.css";
 
 // The drafted-answer zone of the requirement panel (layout.md section 6). It
@@ -269,7 +270,6 @@ function AnswerDecisionZone({
   const [note, setNote] = useState("");
   const decision = answer.decision ?? null;
   const decided = decision !== null;
-  const audit = answerAuditLine(answer, currentUserId);
 
   function submitFlag() {
     onFlag(note.trim());
@@ -279,14 +279,25 @@ function AnswerDecisionZone({
 
   return (
     <div className="no-print mt-4 flex flex-col gap-3 [border-top:var(--rule-hair)] pt-3">
-      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-        <span className="text-sm text-ink-muted">
-          {answerStatusWord(answer, currentUserId)}
-        </span>
-        {audit && (
-          <span className="font-mono text-xs text-ink-muted">{audit}</span>
-        )}
-      </div>
+      {decision?.verdict === "approved" ? (
+        // The answer's own verdict earns the same stamp device as a matrix
+        // approval — one attribution line, carried by the stamp itself.
+        <ApprovalStamp
+          by={actorLabel(decision.actor, currentUserId)}
+          time={formatTime(decision.timestamp)}
+        />
+      ) : decision?.verdict === "flagged" ? (
+        <FlaggedStamp
+          by={actorLabel(decision.actor, currentUserId)}
+          time={formatTime(decision.timestamp)}
+        />
+      ) : (
+        <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+          <span className="text-sm text-ink-muted">
+            {answerStatusWord(answer, currentUserId)}
+          </span>
+        </div>
+      )}
 
       {mode === "idle" ? (
         <div className="flex flex-wrap items-center gap-2">
@@ -383,19 +394,39 @@ function answerStatusWord(
   return "Ready for your sign-off";
 }
 
-// The self-writing audit line for the answer verdict — factual, past tense,
-// naming who and when. Dry, no adjectives (copywriting.md).
-function answerAuditLine(
-  answer: Answer,
-  currentUserId?: string | null
-): string | null {
-  const decision = answer.decision ?? null;
-  if (!decision) return null;
-  const who = actorLabel(decision.actor, currentUserId);
-  const time = formatTime(decision.timestamp);
-  return decision.verdict === "approved"
-    ? `Answer approved by ${who}, ${time}.`
-    : `Answer flagged by ${who}, ${time}.`;
+// The flagged counterpart to ApprovalStamp (device 6, oxblood register): same
+// rotated bordered mark and mono audit line, but a quiet dash/pennant instead
+// of a check, and oxblood instead of forest. No alarm animation — one settle,
+// same as the approval stamp, so a verdict always lands the same way.
+function FlaggedStamp({ time, by }: { time: string; by: string }) {
+  return (
+    <span className="inline-flex items-center gap-3">
+      <span
+        className="stamp-settle inline-flex items-center gap-1.5 rounded-md border-2 border-signal-oxblood-frame px-2.5 py-1 text-signal-oxblood [transform:rotate(-3deg)]"
+        aria-hidden="true"
+      >
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+          <path
+            d="M4 2.5v11"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+          />
+          <path
+            d="M4 3.2h7.5l-2 2.15 2 2.15H4"
+            fill="currentColor"
+            stroke="none"
+          />
+        </svg>
+        <span className="font-mono text-[11px] font-medium uppercase tracking-wide">
+          Flagged
+        </span>
+      </span>
+      <span className="font-mono text-xs text-ink-muted">
+        Answer flagged by {by}, {time}.
+      </span>
+    </span>
+  );
 }
 
 function formatTime(timestamp: string): string {
