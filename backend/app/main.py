@@ -799,9 +799,27 @@ def post_comment(req_id: str, body: CommentCreate, user: dict = Depends(current_
         author_name=user.get("name") or user["email"],
         body=text,
         created_at=_now_iso(),
+        is_blocker=body.is_blocker,
     )
     if tender_id:
         events.publish(tender_id, {"type": "comment", "comment": comment})
+    return comment
+
+
+@app.post("/comments/{comment_id}/resolve")
+def resolve_comment(comment_id: str, user: dict = Depends(current_user)):
+    """Mark a blocker comment resolved so it stops blocking export. Anyone with access to
+    the tender can resolve (the record keeps who raised it and when it was cleared); 404 if
+    the comment is gone or the caller can't see its requirement. Broadcast live so every
+    teammate's blocker marker clears at once."""
+    req_id = store.get_comment_req_id(comment_id)
+    if req_id is None or not store.can_access_requirement(req_id, user["id"]):
+        raise HTTPException(status_code=404, detail="Comment not found.")
+    comment = store.resolve_comment(comment_id, _now_iso())
+    if comment is None:
+        raise HTTPException(status_code=404, detail="Comment not found.")
+    if comment.get("tender_id"):
+        events.publish(comment["tender_id"], {"type": "comment", "comment": comment})
     return comment
 
 

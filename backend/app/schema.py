@@ -45,8 +45,11 @@ class TenderTeamRequest(BaseModel):
 
 
 class CommentCreate(BaseModel):
-    """Body for POST /requirements/{id}/comments — a team note on one requirement."""
+    """Body for POST /requirements/{id}/comments — a team note on one requirement.
+    `is_blocker` marks the note as one that must be resolved before the requirement
+    can be treated as export-ready (Stage 6 blocker comments)."""
     body: str
+    is_blocker: bool = False
 
 
 class Decision(BaseModel):
@@ -123,6 +126,13 @@ class Requirement(BaseModel):
     # opening line but not the full span (show as an approximate location). None when there's
     # no rect. Lets the verification UI be honest instead of implying a perfect match.
     source_rect_match: Optional[str] = None
+    # Collaboration presence (Stage 6): how many team comments this requirement
+    # carries, and how many of those are UNRESOLVED blocker comments. Derived at
+    # read time from the comments table (not stored in the requirement blob), so
+    # the workspace can mark a row/card as discussed/blocked before the panel is
+    # opened. Default 0 — a tender with no comments is unaffected.
+    comment_count: int = 0
+    open_blocker_count: int = 0
 
 
 class CapabilityDoc(BaseModel):

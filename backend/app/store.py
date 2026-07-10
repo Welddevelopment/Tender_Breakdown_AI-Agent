@@ -138,6 +138,15 @@ def init_db() -> None:
         ucols = [row["name"] for row in c.execute("PRAGMA table_info(users)").fetchall()]
         if "name" not in ucols:
             c.execute("ALTER TABLE users ADD COLUMN name TEXT")
+        # Additive migration: blocker comments (Stage 6). `is_blocker` marks a comment
+        # that must be resolved before the requirement is export-ready; `resolved_at`
+        # is the ISO time it was cleared (NULL while still open). Existing comments get
+        # is_blocker=0 / resolved_at=NULL — ordinary conversational notes, unchanged.
+        ccols = [row["name"] for row in c.execute("PRAGMA table_info(comments)").fetchall()]
+        if "is_blocker" not in ccols:
+            c.execute("ALTER TABLE comments ADD COLUMN is_blocker INTEGER NOT NULL DEFAULT 0")
+        if "resolved_at" not in ccols:
+            c.execute("ALTER TABLE comments ADD COLUMN resolved_at TEXT")
         # Additive migration: a tender may belong to a team (persistent collaboration).
         # Nullable — existing per-user/shared tenders are unaffected; access via team is
         # granted on top of owner + tender_members (see can_access).
@@ -212,6 +221,16 @@ def get_tender(tender_id: str) -> TenderResponse | None:
             "SELECT data FROM requirements WHERE tender_id = ? ORDER BY seq", (tender_id,)
         ).fetchall()
     requirements = [Requirement(**json.loads(r["data"])) for r in rows]
+    # Stamp collaboration presence (Stage 6): total comments + unresolved blocker
+    # comments per requirement, derived here so the workspace can mark discussed /
+    # blocked rows without a second round-trip. Absent from the stored blob, so it
+    # always reflects the live comments table.
+    counts = comment_counts(tender_id)
+    for req in requirements:
+        tally = counts.get(req.id)
+        if tally:
+            req.comment_count = tally["total"]
+            req.open_blocker_count = tally["blockers"]
     caps_raw = trow["capability_docs"]
     capability_docs = [CapabilityDoc(**c) for c in json.loads(caps_raw)] if caps_raw else []
     src_raw = trow["source_docs"]
@@ -491,27 +510,72 @@ def set_tender_team(tender_id: str, team_id: str | None) -> None:
 # ---- Comments (per-requirement collaboration) --------------------------------
 
 def add_comment(comment_id: str, req_id: str, tender_id: str, author_id: str,
-                author_name: str | None, body: str, created_at: str) -> dict:
+                author_name: str | None, body: str, created_at: str,
+                is_blocker: bool = False) -> dict:
     """Insert a comment on a requirement and return it as a dict (for the SSE broadcast)."""
     with _conn() as c:
         c.execute(
-            "INSERT INTO comments (id, req_id, tender_id, author_id, author_name, body, created_at) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?)",
-            (comment_id, req_id, tender_id, author_id, author_name, body, created_at),
+            "INSERT INTO comments (id, req_id, tender_id, author_id, author_name, body, "
+            "created_at, is_blocker) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            (comment_id, req_id, tender_id, author_id, author_name, body, created_at,
+             1 if is_blocker else 0),
         )
     return {"id": comment_id, "req_id": req_id, "tender_id": tender_id, "author_id": author_id,
-            "author_name": author_name, "body": body, "created_at": created_at}
+            "author_name": author_name, "body": body, "created_at": created_at,
+            "is_blocker": is_blocker, "resolved_at": None}
 
 
 def list_comments(req_id: str) -> list[dict]:
     """All comments on a requirement, oldest first."""
     with _conn() as c:
         rows = c.execute(
-            "SELECT id, req_id, tender_id, author_id, author_name, body, created_at "
-            "FROM comments WHERE req_id = ? ORDER BY created_at",
+            "SELECT id, req_id, tender_id, author_id, author_name, body, created_at, "
+            "is_blocker, resolved_at FROM comments WHERE req_id = ? ORDER BY created_at",
             (req_id,),
         ).fetchall()
-    return [dict(r) for r in rows]
+    return [{**dict(r), "is_blocker": bool(r["is_blocker"])} for r in rows]
+
+
+def resolve_comment(comment_id: str, resolved_at: str) -> dict | None:
+    """Mark a blocker comment resolved (clears it as an export blocker). Returns the
+    updated comment dict, or None if the comment doesn't exist. Idempotent: resolving an
+    already-resolved comment just re-stamps the time."""
+    with _conn() as c:
+        cur = c.execute(
+            "UPDATE comments SET resolved_at = ? WHERE id = ?", (resolved_at, comment_id)
+        )
+        if cur.rowcount == 0:
+            return None
+        row = c.execute(
+            "SELECT id, req_id, tender_id, author_id, author_name, body, created_at, "
+            "is_blocker, resolved_at FROM comments WHERE id = ?",
+            (comment_id,),
+        ).fetchone()
+    return {**dict(row), "is_blocker": bool(row["is_blocker"])} if row else None
+
+
+def get_comment_req_id(comment_id: str) -> str | None:
+    """The requirement a comment belongs to (for access checks on resolve)."""
+    with _conn() as c:
+        row = c.execute(
+            "SELECT req_id FROM comments WHERE id = ?", (comment_id,)
+        ).fetchone()
+    return row["req_id"] if row is not None else None
+
+
+def comment_counts(tender_id: str) -> dict[str, dict]:
+    """Per-requirement comment tallies for a tender: total comments and the number of
+    UNRESOLVED blocker comments, keyed by req_id. Used to stamp comment_count /
+    open_blocker_count onto each requirement at read time."""
+    with _conn() as c:
+        rows = c.execute(
+            "SELECT req_id, COUNT(*) AS total, "
+            "SUM(CASE WHEN is_blocker = 1 AND resolved_at IS NULL THEN 1 ELSE 0 END) AS blockers "
+            "FROM comments WHERE tender_id = ? GROUP BY req_id",
+            (tender_id,),
+        ).fetchall()
+    return {r["req_id"]: {"total": int(r["total"]), "blockers": int(r["blockers"] or 0)}
+            for r in rows}
 
 
 def get_requirement_tender_id(req_id: str) -> str | None:

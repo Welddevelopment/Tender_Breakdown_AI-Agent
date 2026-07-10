@@ -614,6 +614,11 @@ export interface Comment {
   author_name: string | null;
   body: string;
   created_at: string;
+  // Blocker comments (Stage 6): a note that must be resolved before the requirement is
+  // export-ready. `resolved_at` is the ISO time it was cleared (null while still open).
+  // Both optional so a pre-Stage-6 backend / mock comment reads as an ordinary note.
+  is_blocker?: boolean;
+  resolved_at?: string | null;
 }
 
 // GET /requirements/{id}/comments — the team's notes on one requirement (oldest first).
@@ -626,13 +631,28 @@ export async function getComments(reqId: string): Promise<Comment[]> {
 }
 
 // POST /requirements/{id}/comments — add a note (author stamped server-side).
-export async function postComment(reqId: string, body: string): Promise<Comment> {
+// `isBlocker` marks it as one that must be resolved before the requirement is export-ready.
+export async function postComment(
+  reqId: string,
+  body: string,
+  isBlocker = false
+): Promise<Comment> {
   const res = await fetch(`${BASE}/requirements/${reqId}/comments`, {
     method: "POST",
     headers: { "Content-Type": "application/json", ...authHeaders() },
-    body: JSON.stringify({ body }),
+    body: JSON.stringify({ body, is_blocker: isBlocker }),
   });
   if (!res.ok) throw await apiError(res, `Couldn't post the comment (${res.status})`);
+  return (await res.json()) as Comment;
+}
+
+// POST /comments/{id}/resolve — clear a blocker comment so it stops blocking export.
+export async function resolveComment(commentId: string): Promise<Comment> {
+  const res = await fetch(`${BASE}/comments/${commentId}/resolve`, {
+    method: "POST",
+    headers: { ...authHeaders() },
+  });
+  if (!res.ok) throw await apiError(res, `Couldn't resolve the comment (${res.status})`);
   return (await res.json()) as Comment;
 }
 

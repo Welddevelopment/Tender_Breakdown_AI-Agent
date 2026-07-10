@@ -95,6 +95,11 @@ export interface Requirement {
   // confidently); "approx" = only a leading fragment matched, so the rect is the opening
   // line, not the full span (show as an approximate location). null when there's no rect.
   source_rect_match?: "exact" | "approx" | null;
+  // Collaboration presence (Stage 6): total team comments on this requirement and how
+  // many are UNRESOLVED blocker comments. Derived server-side at read time; absent
+  // (undefined) in the mock and on a pre-Stage-6 backend, so markers just don't show.
+  comment_count?: number;
+  open_blocker_count?: number;
 }
 
 // A published award criterion for the tender (e.g. Quality 40%). Additive:
