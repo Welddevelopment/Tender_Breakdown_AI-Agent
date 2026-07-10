@@ -6,6 +6,7 @@ import { sourceRefLabel } from "@/lib/source-doc";
 import { useAuth } from "@/context/AuthContext";
 import { actorLabel } from "@/lib/collaborators";
 import { AnswerPanel } from "./AnswerPanel";
+import { BlockerMarker, CommentCountMarker } from "./CollaborationMarkers";
 import { CategoryTag } from "./CategoryTag";
 import { ConfidenceIndicator } from "./ConfidenceIndicator";
 import { OpenQuestions } from "./OpenQuestions";
@@ -51,6 +52,11 @@ export function AnswerCard({ requirement: req }: { requirement: Requirement }) {
             source ref and the evidence refs share the one "traceable to
             source" colour. */}
         <span className="font-mono text-accent">{sourceRefLabel(req)}</span>
+        {/* Collaboration presence (UI Stage 6): a quiet signal that the team has
+            been talking about this item, without opening the panel to find out.
+            Null-at-zero — cards with no comments/blockers render unchanged. */}
+        <BlockerMarker count={req.open_blocker_count} />
+        <CommentCountMarker count={req.comment_count} />
         {/* Cross-surface coherence: the requirement's OWN decision, shown beside
             the answer state so a divergence reads honestly — "requirement
             approved · answer still needs input" is a real state, not a bug. Only

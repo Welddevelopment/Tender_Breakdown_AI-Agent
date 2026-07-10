@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { Requirement } from "@/types/requirement";
 import { AnswerPanel } from "./AnswerPanel";
 import { ApprovalStamp } from "./ApprovalStamp";
+import { BlockerMarker } from "./CollaborationMarkers";
 import { CommentThread } from "./CommentThread";
 import { ConfidenceIndicator } from "./ConfidenceIndicator";
 import { CategoryTag } from "./CategoryTag";
@@ -238,7 +239,7 @@ export function RequirementPanel({
         {/* Team discussion — live-product only (needs the backend to store + stream
             comments). Hidden on the mock/frozen-demo build, which has no accounts. */}
         {isApiEnabled() && (
-          <Zone title="Team comments">
+          <Zone title={<TeamCommentsTitle requirement={requirement} />}>
             <CommentThread key={`cmt-${requirement.id}`} reqId={requirement.id} />
           </Zone>
         )}
@@ -270,16 +271,39 @@ function Zone({
   title,
   children,
 }: {
-  title: string;
+  title: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
     <section className="[border-top:var(--rule-hair)] pt-4 first:border-t-0 first:pt-0">
-      <h3 className="mb-2 font-mono text-[12.5px] font-medium uppercase tracking-wide text-ink-muted">
+      <h3 className="mb-2 flex items-center gap-2 font-mono text-[12.5px] font-medium uppercase tracking-wide text-ink-muted">
         {title}
       </h3>
       {children}
     </section>
+  );
+}
+
+// The "Team comments" Zone's title, with a quiet count and (if any comment is
+// an unresolved blocker) the oxblood marker — so the panel shows there IS a
+// discussion, and whether it's blocking, before the user scrolls the thread.
+// Same markers as the answer card / matrix; undefined counts render nothing,
+// leaving the title as plain "Team comments".
+function TeamCommentsTitle({ requirement }: { requirement: Requirement }) {
+  const hasCount = (requirement.comment_count ?? 0) > 0;
+  return (
+    <>
+      Team comments
+      {hasCount && (
+        <span className="normal-case tracking-normal text-ink-muted">
+          · {requirement.comment_count}
+        </span>
+      )}
+      <BlockerMarker
+        count={requirement.open_blocker_count}
+        className="normal-case tracking-normal"
+      />
+    </>
   );
 }
 
