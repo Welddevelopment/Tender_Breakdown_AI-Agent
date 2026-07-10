@@ -14,6 +14,7 @@ import { hasDraft, isBacked, isOpenDealBreaker, unansweredCount } from "@/lib/an
 
 export type ExportBlockerKind =
   | "deal-breaker" // gating requirement not safely resolved
+  | "blocker-comment" // a teammate raised an unresolved blocker comment
   | "gap" // unanswered open question(s)
   | "flagged" // an answer a human flagged for rework
   | "unapproved" // a draft with no approval verdict yet
@@ -33,8 +34,9 @@ export interface ExportReadiness {
   approved: number; // answers a human has approved
   blockers: ExportBlocker[]; // only non-empty categories, most severe first
   // "Client-ready" = safe to send outside the team. Blocked while any deal-breaker
-  // is open, any answer is flagged, or any deal-breaker answer is unapproved.
-  // Internal export is always allowed and shows everything honestly.
+  // is open, any teammate blocker comment is unresolved, any answer is flagged,
+  // or any deal-breaker answer is unapproved. Internal export is always allowed
+  // and shows everything honestly.
   clientReadyBlocked: boolean;
   clientReadyReason: string | null;
 }
@@ -44,6 +46,9 @@ function isApproved(req: Requirement): boolean {
 }
 function isFlagged(req: Requirement): boolean {
   return req.answer?.decision?.verdict === "flagged";
+}
+function hasOpenBlockerComment(req: Requirement): boolean {
+  return (req.open_blocker_count ?? 0) > 0;
 }
 
 // The blocker predicates, in severity order. A requirement can land in more than
@@ -61,6 +66,13 @@ const CATEGORIES: {
     label: (n) => `${n} deal-breaker${n === 1 ? "" : "s"} still open`,
     prompt:
       "These can disqualify the bid. Resolve them before you send a client-ready pack.",
+  },
+  {
+    kind: "blocker-comment",
+    match: hasOpenBlockerComment,
+    label: (n) => `${n} blocker comment${n === 1 ? "" : "s"} still open`,
+    prompt:
+      "A teammate flagged these as blocked. Resolve the comment before you send a client-ready pack.",
   },
   {
     kind: "gap",
@@ -113,9 +125,11 @@ export function deriveExportReadiness(
   }
 
   // A client-ready pack is one you could put in front of the buyer: no open
-  // deal-breaker, nothing a reviewer flagged, and every deal-breaker answered
-  // and approved. Anything short of that is honestly internal-only.
+  // deal-breaker, no unresolved team blocker comment, nothing a reviewer
+  // flagged, and every deal-breaker answered and approved. Anything short of
+  // that is honestly internal-only.
   const openDealBreakers = requirements.filter(isOpenDealBreaker).length;
+  const openBlockerComments = requirements.filter(hasOpenBlockerComment).length;
   const flagged = requirements.filter(isFlagged).length;
   const gatingUnapproved = requirements.filter(
     (r) => r.is_gating && !isApproved(r)
@@ -124,6 +138,8 @@ export function deriveExportReadiness(
   let clientReadyReason: string | null = null;
   if (openDealBreakers > 0) {
     clientReadyReason = `${openDealBreakers} deal-breaker${openDealBreakers === 1 ? " is" : "s are"} still open.`;
+  } else if (openBlockerComments > 0) {
+    clientReadyReason = `${openBlockerComments} blocker comment${openBlockerComments === 1 ? " is" : "s are"} still open.`;
   } else if (gatingUnapproved > 0) {
     clientReadyReason = `${gatingUnapproved} deal-breaker answer${gatingUnapproved === 1 ? " is" : "s are"} not approved yet.`;
   } else if (flagged > 0) {

@@ -9,6 +9,7 @@ import type { ExportBlockerKind, ExportReadiness } from "@/lib/export-readiness"
 
 const BLOCKER_TONE: Record<ExportBlockerKind, "oxblood" | "amber"> = {
   "deal-breaker": "oxblood",
+  "blocker-comment": "oxblood",
   flagged: "oxblood",
   gap: "amber",
   unapproved: "amber",
