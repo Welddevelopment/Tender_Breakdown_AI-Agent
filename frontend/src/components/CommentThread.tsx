@@ -143,13 +143,22 @@ export function CommentThread({ reqId }: { reqId: string }) {
             setDraft(e.target.value);
             setError(null);
           }}
+          onKeyDown={(e) => {
+            // Esc on the inline form clears the draft and lets go of focus.
+            if (e.key === "Escape" && draft) {
+              e.preventDefault();
+              setDraft("");
+              (e.target as HTMLInputElement).blur();
+            }
+          }}
           placeholder="Add a comment for your team"
           aria-label="Add a comment"
-          className="min-w-0 flex-1 rounded-md border border-hairline bg-paper px-3 py-1.5 text-sm text-ink outline-none focus:border-forest"
+          className="min-w-0 flex-1 rounded-md border border-hairline bg-paper px-3 py-1.5 text-sm text-ink outline-none focus:border-forest focus-visible:ring-1 focus-visible:ring-forest"
         />
         <button
           type="submit"
           disabled={sending || !draft.trim()}
+          aria-busy={sending}
           className="ui-btn shrink-0 rounded-md bg-forest px-3 py-1.5 text-sm font-semibold text-paper hover:bg-forest-hover disabled:opacity-50"
         >
           {sending ? "Posting…" : "Post"}

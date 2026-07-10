@@ -83,7 +83,7 @@ export function SourceVerifyOverlay({
         aria-modal="true"
         aria-label="Source in the tender"
         tabIndex={-1}
-        className="relative flex h-[min(90vh,900px)] w-[min(96vw,1100px)] flex-col divide-y-2 divide-ink overflow-hidden rounded-xl bg-paper-raised shadow-[var(--depth-sheet)] outline-none min-[1100px]:flex-row min-[1100px]:divide-x-2 min-[1100px]:divide-y-0"
+        className="panel-enter relative flex h-[min(90vh,900px)] w-[min(96vw,1100px)] flex-col divide-y-2 divide-ink overflow-hidden rounded-xl bg-paper-raised shadow-[var(--depth-sheet)] outline-none min-[1100px]:flex-row min-[1100px]:divide-x-2 min-[1100px]:divide-y-0"
       >
         {/* Claim side */}
         <div className="flex min-h-0 flex-col overflow-y-auto p-5 sm:p-6 min-[1100px]:w-[380px] min-[1100px]:shrink-0">

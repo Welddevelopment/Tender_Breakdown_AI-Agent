@@ -203,7 +203,7 @@ export function ShareControl() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="share-tender-title"
-            className="surface-grain w-full max-w-md rounded-md border border-ink/25 bg-paper-raised p-5 shadow-[var(--depth-sheet)]"
+            className="panel-enter surface-grain w-full max-w-md rounded-md border border-ink/25 bg-paper-raised p-5 shadow-[var(--depth-sheet)]"
           >
             <div className="mb-4 flex items-start justify-between gap-4 border-b border-hairline pb-3">
               <div>
