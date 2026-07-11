@@ -12,6 +12,7 @@ export type StageKey =
   | "honesty"
   | "answer"
   | "approval"
+  | "collaboration"
   | "graph";
 
 export type Step = {
@@ -64,6 +65,13 @@ export const STEPS: Step[] = [
     heading: "You approve every line",
     body: "You approve, edit, or flag each one. Nothing goes into the bid that you did not sign off yourself.",
     stage: "approval",
+  },
+  {
+    id: "collaboration",
+    kicker: "Together",
+    heading: "Your team, in the margin",
+    body: "Anyone can comment on a requirement without leaving it. Mark a comment as a blocker and the bid holds there until someone resolves it.",
+    stage: "collaboration",
   },
   {
     id: "map",

@@ -44,6 +44,12 @@ export const SAMPLE: Requirement[] = [
       confidence: 0.93,
     },
     open_questions: [],
+    // Collaboration counts (Stage 6) for the /demo collaboration beat: two team
+    // comments, one of them an unresolved blocker — the same requirement the
+    // answer/approval beats already centre on, so the thread reads as a
+    // continuation of one decision rather than a new example.
+    comment_count: 2,
+    open_blocker_count: 1,
   },
   {
     id: "s-auto-disqual",

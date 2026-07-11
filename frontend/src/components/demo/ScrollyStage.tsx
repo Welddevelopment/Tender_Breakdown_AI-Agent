@@ -4,6 +4,10 @@ import { ApprovalStamp } from "@/components/ApprovalStamp";
 import { GatingHero } from "@/components/GatingHero";
 import { CategoryTag } from "@/components/CategoryTag";
 import { GraphView } from "@/components/GraphView";
+import {
+  CommentCountMarker,
+  BlockerMarker,
+} from "@/components/CollaborationMarkers";
 import { FernFrond } from "@/components/landing/art/FernFrond";
 import { PineBranch } from "@/components/landing/art/PineBranch";
 import { motion, useTransform, type MotionValue } from "motion/react";
@@ -87,9 +91,9 @@ function WallDocument({
                   {" "}
                   <span
                     data-wall-catch
-                    className={`rounded-[2px] px-0.5 [box-decoration-break:clone] transition-colors duration-500 ${
+                    className={`rounded-[2px] px-0.5 [box-decoration-break:clone] transition-colors duration-[var(--motion-feature)] ${
                       lit
-                        ? "bg-signal-oxblood/15 text-signal-oxblood delay-500"
+                        ? "bg-signal-oxblood/15 text-signal-oxblood delay-[var(--motion-feature)]"
                         : "bg-transparent text-ink/70 delay-0"
                     }`}
                   >
@@ -215,7 +219,7 @@ function Row({
   beadDelayMs,
   scrubStyle,
 }: RowProps) {
-  const className = `flex flex-col gap-1.5 border-b border-l-2 border-b-hairline py-2.5 pl-3 transition-[opacity,transform,border-color,background-color] duration-500 ${EASE} last:border-b-0 ${
+  const className = `flex flex-col gap-1.5 border-b border-l-2 border-b-hairline py-2.5 pl-3 transition-[opacity,transform,border-color,background-color] duration-[var(--motion-feature)] ${EASE} last:border-b-0 ${
     flare && isGating
       ? "border-l-signal-oxblood bg-signal-oxblood/10"
       : "border-l-transparent bg-transparent"
@@ -226,7 +230,7 @@ function Row({
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
         <CategoryTag category={category} />
         <span
-          className={`inline-flex origin-left transition-[opacity,transform] duration-500 ${EASE} ${
+          className={`inline-flex origin-left transition-[opacity,transform] duration-[var(--motion-feature)] ${EASE} ${
             beadShown ? "scale-100 opacity-100" : "scale-75 opacity-0"
           }`}
           style={{ transitionDelay: `${beadDelayMs}ms` }}
@@ -455,9 +459,45 @@ function SourcePagePanel() {
   );
 }
 
+/* ------------------------------------------------------------ collab ---- */
+
+// Beat 7 (new) — the same insurance-gate requirement the answer/approval
+// beats already centre on, now shown with the real collaboration markers
+// (CollaborationMarkers.tsx, Stage 6) in its meta cluster, plus a static
+// oxblood note that a blocker holds the bid until it's resolved. Record voice,
+// no alarm animation — the marker components themselves are already static by
+// design, so this beat composes cleanly with zero motion under reduced-motion.
+function CollaborationCard() {
+  const req = SAMPLE_ANSWERED;
+  return (
+    <div className="surface-grain w-full max-w-[34rem] rounded-lg border border-hairline bg-paper-raised p-6 shadow-[var(--depth-row)]">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+        <CategoryTag category={req.category} />
+        <span className="font-mono text-xs text-ink-muted">
+          {clauseRef(req.source_page, req.source_clause)}
+        </span>
+      </div>
+      <p className="mt-2 leading-snug text-ink">{req.text}</p>
+      <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-hairline pt-3">
+        <BlockerMarker count={req.open_blocker_count} />
+        <CommentCountMarker count={req.comment_count} />
+      </div>
+      <div className="mt-4 rounded-md border-l-2 border-l-signal-oxblood bg-signal-oxblood/10 p-3">
+        <p className="font-mono text-[11px] uppercase tracking-wide text-signal-oxblood">
+          Held
+        </p>
+        <p className="mt-1 text-sm leading-relaxed text-ink">
+          An open blocker keeps this requirement out of the export until
+          someone resolves it — so nothing ships with an unanswered objection.
+        </p>
+      </div>
+    </div>
+  );
+}
+
 /* --------------------------------------------------------------- graph ---- */
 
-// Beat 7 — a lightweight relationship map. Requirement register-cards on the
+// Beat 8 — a lightweight relationship map. Requirement register-cards on the
 // left wire to the award criteria that score them; the gating cards and their
 // wiring stay lit oxblood, and a dashed forest line marks a dependency. The
 // solid wires carry pathLength={1} inside an .art-lines group, so the shared
@@ -518,7 +558,11 @@ function GraphVisual({ drawn }: { drawn: boolean }) {
         {/* dependency between two requirements (dashed forest, fades in last) */}
         <path
           d="M40 52 C 20 68, 20 76, 40 92"
-          className={`transition-opacity duration-500 ${
+          className={`transition-opacity duration-[var(--motion-feature)] ${
+            // 450ms is bespoke — it sits between --motion-process (360ms, 25%
+            // off) and --motion-feature (520ms, 13.5% off), outside the ~12%
+            // swap threshold, so it stays a literal rather than picking a
+            // token that would shift the wire's landing beat.
             drawn ? "opacity-100 delay-[450ms]" : "opacity-0 delay-0"
           }`}
           fill="none"
@@ -764,7 +808,7 @@ function DealBreakerLayer({
     phase === "before"
       ? "[&_li]:opacity-0 [&_li]:translate-y-2"
       : phase === "in"
-        ? "[&_li]:opacity-100 [&_li]:translate-y-0 [&_li]:transition-[opacity,transform] [&_li]:duration-500 [&_li:nth-of-type(1)]:delay-[550ms] [&_li:nth-of-type(2)]:delay-[700ms]"
+        ? "[&_li]:opacity-100 [&_li]:translate-y-0 [&_li]:transition-[opacity,transform] [&_li]:duration-[var(--motion-feature)] [&_li:nth-of-type(1)]:delay-[var(--motion-feature)] [&_li:nth-of-type(2)]:delay-[var(--motion-hero)]"
         : "[&_li]:opacity-100 [&_li]:translate-y-0";
   return (
     <motion.div
@@ -809,13 +853,26 @@ function AnswerLayer({
   );
 }
 
-// Step 6. `drawn` is stateless (step >= 6): scrolling past flips the [data-draw]
+// Step 6 (new) — a single beat, same shape as DealBreakerLayer: ramps in a
+// beat early, holds, fades out into step 7 (the graph). Static end-state is
+// CollaborationCard, which is just markup — nothing here depends on motion.
+function CollaborationLayer({ beat }: { beat: MotionValue<number> }) {
+  const opacity = useTransform(beat, [5.55, 6, 6.85, 7.2], [0, 1, 1, 0]);
+  const y = useTransform(beat, [5.55, 6, 7.2], [44, 0, -34]);
+  return (
+    <motion.div className={`${LAYER_BASE} z-20`} style={{ opacity, y }}>
+      <CollaborationCard />
+    </motion.div>
+  );
+}
+
+// Step 7. `drawn` is stateless (step >= 7): scrolling past flips the [data-draw]
 // wrapper hidden→shown and the wires draw; scrolling back re-arms it (the
 // un-draw is masked by the layer fading out). The attribute itself is always
 // rendered — removing it once shown would snap the strokes.
 function GraphLayer({ beat }: { beat: MotionValue<number> }) {
-  const opacity = useTransform(beat, [5.55, 6, 6.55, 6.85], [0, 1, 1, 0]);
-  const y = useTransform(beat, [5.55, 6, 6.85], [34, 0, -24]);
+  const opacity = useTransform(beat, [6.55, 7, 7.55, 7.85], [0, 1, 1, 0]);
+  const y = useTransform(beat, [6.55, 7, 7.85], [34, 0, -24]);
   return (
     <motion.div className={`${LAYER_BASE} z-20`} style={{ opacity, y }}>
       <div className="w-full max-w-[34rem]">
@@ -835,11 +892,11 @@ function GraphLayer({ beat }: { beat: MotionValue<number> }) {
 }
 
 function FinaleLayer({ beat }: { beat: MotionValue<number> }) {
-  const opacity = useTransform(beat, [6.45, 6.85, STEPS.length], [0, 1, 1]);
-  const washOpacity = useTransform(beat, [6.35, STEPS.length], [0, 1]);
-  const stampScale = useTransform(beat, [6.55, STEPS.length], [1.6, 1]);
-  const stampRotate = useTransform(beat, [6.55, STEPS.length], [-8, -3]);
-  const stampY = useTransform(beat, [6.55, STEPS.length], [44, 0]);
+  const opacity = useTransform(beat, [7.45, 7.85, STEPS.length], [0, 1, 1]);
+  const washOpacity = useTransform(beat, [7.35, STEPS.length], [0, 1]);
+  const stampScale = useTransform(beat, [7.55, STEPS.length], [1.6, 1]);
+  const stampRotate = useTransform(beat, [7.55, STEPS.length], [-8, -3]);
+  const stampY = useTransform(beat, [7.55, STEPS.length], [44, 0]);
 
   return (
     <motion.div
@@ -907,6 +964,8 @@ export function BeatVisual({
       return <AnswerCard withStamp={false} />;
     case "approval":
       return <AnswerCard withStamp />;
+    case "collaboration":
+      return <CollaborationCard />;
     case "graph":
       return animate ? <MobileGraphVisual /> : <GraphVisual drawn />;
     default:
@@ -953,6 +1012,7 @@ export function ScrollyStage({
       <LiftProxy beat={beat} />
       <DealBreakerLayer step={step} beat={beat} />
       <AnswerLayer step={step} beat={beat} />
+      <CollaborationLayer beat={beat} />
       <GraphLayer beat={beat} />
       <FinaleLayer beat={beat} />
       <StageForestFrame beat={beat} />
