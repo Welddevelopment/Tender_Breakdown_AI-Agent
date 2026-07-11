@@ -22,7 +22,8 @@ import { BookDemoButton } from "@/components/landing/BookDemoButton";
 // stage is illustrative (aria-hidden); the narrative copy is the a11y source
 // of truth in every mode.
 
-const EASE = "ease-[cubic-bezier(0.22,1,0.36,1)]";
+// Matches --ease-settle exactly; tokenised so the class speaks the shared vocabulary.
+const EASE = "ease-[var(--ease-settle)]";
 const FINALE_STEP = STEPS.length;
 const STORY_BEATS = STEPS.length + 1;
 type ScrollyMode = "static" | "mobile" | "scrub";
@@ -33,12 +34,12 @@ type ScrollyMode = "static" | "mobile" | "scrub";
 function StepCopy({ step, active }: { step: Step; active: boolean }) {
   return (
     <div
-      className={`max-w-[40ch] transition-opacity duration-500 ${EASE} ${
+      className={`max-w-[40ch] transition-opacity duration-[var(--motion-feature)] ${EASE} ${
         active ? "opacity-100" : "opacity-40"
       }`}
     >
       <p
-        className={`font-mono text-xs uppercase tracking-wide transition-colors duration-500 ${
+        className={`font-mono text-xs uppercase tracking-wide transition-colors duration-[var(--motion-feature)] ${
           active ? "text-forest" : "text-ink-muted"
         }`}
       >

@@ -44,6 +44,9 @@ export function DemoTitleCard() {
   });
   // Same light damping as the scrolly's beat, so the title card and the film
   // below it share one camera feel.
+  // Spring-tuned, not token-mapped: this shapes a continuous physical
+  // response (stiffness/damping/mass), not a fixed duration, so it
+  // intentionally sits outside the --motion-* ladder — leave as-is.
   const progress = useSpring(rawProgress, {
     stiffness: 160,
     damping: 27,
@@ -111,6 +114,9 @@ export function DemoTitleCard() {
             <p
               key={line}
               className="hero-enter font-mono text-2xl uppercase tracking-[0.18em] text-paper sm:text-4xl"
+              // Per-line stagger delay, not a duration (the animation itself is
+              // .hero-enter's var(--motion-hero)) — ~--motion-process tier
+              // (360ms, ~12.5% off), bespoke, left as-is.
               style={{ animationDelay: `${i * 320}ms` }}
             >
               {line}

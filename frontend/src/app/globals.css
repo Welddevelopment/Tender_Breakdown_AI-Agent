@@ -406,17 +406,20 @@ body {
    so SSR, no-JS, and reduced motion always show the composed sheet. */
 @media (prefers-reduced-motion: no-preference) {
   .hero-sheet {
+    /* bespoke landing beat — no token within tolerance (1.05s vs 700ms hero tier is a 33% shift) */
     animation: hero-sheet-file 1.05s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
   }
   .hero-sheet[data-scan="run"] .hero-pop-item {
-    animation: hero-row-pop 0.4s cubic-bezier(0.34, 1.4, 0.64, 1)
+    animation: hero-row-pop var(--motion-process) cubic-bezier(0.34, 1.4, 0.64, 1)
       var(--pop-delay, 0ms) both;
   }
   .hero-sheet[data-scan="run"] .hero-pop-item span[role="img"] {
+    /* bespoke landing beat — no token within tolerance (0.3s sits ~20% from both 240ms and 360ms) */
     animation: hero-dot-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)
       calc(var(--pop-delay, 0ms) + 220ms) both;
   }
   .hero-sheet[data-scan="run"] [data-scan-gate] {
+    /* bespoke landing beat — no token within tolerance (deal-breaker settle keeps its own 0.55s weight) */
     animation: hero-gate-settle 0.55s cubic-bezier(0.34, 1.56, 0.64, 1)
       var(--gate-delay, 1100ms) both;
   }
@@ -511,21 +514,21 @@ body {
    entrance on load, and the approval-stamp settle. Both reduced-motion safe. */
 @media (prefers-reduced-motion: no-preference) {
   .hero-enter {
-    animation: hero-enter 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: hero-enter var(--motion-hero) cubic-bezier(0.22, 1, 0.36, 1) both;
   }
   .hero-enter-2 {
-    animation: hero-enter 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.09s both;
+    animation: hero-enter var(--motion-hero) cubic-bezier(0.22, 1, 0.36, 1) 0.09s both;
   }
   .hero-enter-3 {
-    animation: hero-enter 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.18s both;
+    animation: hero-enter var(--motion-hero) cubic-bezier(0.22, 1, 0.36, 1) 0.18s both;
   }
   .stamp-settle {
-    animation: stamp-settle 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    animation: stamp-settle var(--motion-feature) cubic-bezier(0.34, 1.56, 0.64, 1) both;
   }
   /* The headline's own stamp: "deal-breaker" lands last in the hero stagger,
      with the same springy settle the product's approval stamp uses. */
   .hero-dealbreaker {
-    animation: hero-word-stamp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.78s both;
+    animation: hero-word-stamp var(--motion-feature) cubic-bezier(0.34, 1.56, 0.64, 1) 0.78s both;
   }
 
   /* === /demo scrolly film beats. All one-shots on class/mount change, so the
@@ -537,33 +540,38 @@ body {
      in a bigger settle and types the mono audit line on with a clip-path wipe
      (steps() over clip-path, not width, so nothing reflows). */
   .wall-scan {
+    /* bespoke landing beat — no token within tolerance (0.9s sits ~22% from the 700ms hero tier) */
     animation: wall-scan 0.9s cubic-bezier(0.4, 0, 0.2, 1) both;
   }
   .wall-crosshair {
-    animation: wall-crosshair 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.45s both;
+    animation: wall-crosshair var(--motion-hero) cubic-bezier(0.22, 1, 0.36, 1) 0.45s both;
   }
   .wall-readout {
-    animation: wall-readout 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.62s both;
+    animation: wall-readout var(--motion-feature) cubic-bezier(0.22, 1, 0.36, 1) 0.62s both;
   }
   .extraction-thread path {
+    /* bespoke landing beat — no token within tolerance (0.95s sits ~26% from the 700ms hero tier) */
     animation: extraction-thread 0.95s cubic-bezier(0.4, 0, 0.2, 1) both;
   }
   .stamp-emphasis .stamp-settle {
-    animation: stamp-settle-lg 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    animation: stamp-settle-lg var(--motion-feature) cubic-bezier(0.34, 1.56, 0.64, 1) both;
   }
   .stamp-emphasis .font-mono.text-ink-muted {
+    /* bespoke landing beat — steps() typewriter timing, no token within tolerance */
     animation: audit-type 0.9s steps(22, end) 0.45s both;
   }
   .demo-stage-frame[data-slam="true"] {
+    /* bespoke landing beat — no token within tolerance (0.28s sits ~14% from the 240ms panel tier) */
     animation: stage-jolt 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) both;
   }
   .demo-stage-frame[data-slam="true"] .finale-stamp {
-    animation: finale-stamp-flash 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: finale-stamp-flash var(--motion-feature) cubic-bezier(0.22, 1, 0.36, 1) both;
   }
   .mobile-dealbreaker-pop {
-    animation: mobile-dealbreaker-pop 0.78s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: mobile-dealbreaker-pop var(--motion-hero) cubic-bezier(0.22, 1, 0.36, 1) both;
   }
   .gating-flare-once {
+    /* bespoke landing beat — no token within tolerance (1.25s has no nearby tier) */
     animation: gating-flare-once 1.25s cubic-bezier(0.22, 1, 0.36, 1) 0.22s both;
   }
   .lantern-pulse::after {
@@ -573,6 +581,7 @@ body {
     border: 1px solid rgba(47, 93, 99, 0.42);
     border-radius: 999px;
     pointer-events: none;
+    /* bespoke landing beat — no token within tolerance (1.8s has no nearby tier) */
     animation: lantern-pulse 1.8s cubic-bezier(0.22, 1, 0.36, 1) 0.85s 2 both;
   }
 }

@@ -27,9 +27,12 @@ import { GatingHero } from "@/components/GatingHero";
 
 const noop = () => {};
 
-const POP_START_MS = 120;
-const POP_STEP_MS = 60;
-const GATE_LAG_MS = 320;
+// JS setTimeout assembly sequence — kept as raw ms (not var(--motion-*), which
+// getComputedStyle round-tripping would over-engineer for a one-shot timer).
+// Documented against the token tiers they sit in/near so the intent reads:
+const POP_START_MS = 120; // == --motion-fast (120ms) exactly
+const POP_STEP_MS = 60; // per-row stagger increment, not a duration — no tier (sub --motion-fast)
+const GATE_LAG_MS = 320; // ~--motion-process tier (360ms, ~12.5% off) — bespoke, left as-is
 
 export function HeroResolve() {
   const { requirements } = useRequirements();
@@ -73,6 +76,7 @@ export function HeroResolve() {
 
     // First run starts just before the sheet-file entrance makes the card
     // visible, so no composed rows flash before the hidden state lands.
+    // ~--motion-standard tier (180ms, ~10% off) — bespoke, left as-is.
     const timer = window.setTimeout(run, 200);
 
     let wasOut = false;

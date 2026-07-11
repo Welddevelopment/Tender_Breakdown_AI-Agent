@@ -82,6 +82,9 @@ export function useScrollTimeline(
   // frame-perfect stutter. Near-critically damped: it settles fast and any
   // small overshoot is absorbed by the clamped useTransform ranges downstream.
   // Discrete consumers (the rounded step, one-shot re-arms) keep the raw beat.
+  // Spring-tuned, not token-mapped: stiffness/damping/mass shape a continuous
+  // physical response, not a fixed duration, so the --motion-* ladder doesn't
+  // apply here — leave these constants as hand-tuned, not "fixed" to a token.
   const smoothBeat = useSpring(beat, {
     stiffness: 160,
     damping: 27,
