@@ -351,6 +351,19 @@ export function UploadDropzone({
     // their totals straight off the job.
     const found = job?.requirementCount;
     const dealBreakers = job?.dealBreakerCount;
+    // The oxblood ", N flagged as deal-breaker(s)" tail, identical in both the
+    // demo and live success sentences — one fragment so the two branches can't
+    // drift apart. Null (renders nothing) unless there's at least one.
+    const dealBreakerTail =
+      dealBreakers != null && dealBreakers > 0 ? (
+        <>
+          {", "}
+          <span className="font-medium text-signal-oxblood">
+            {dealBreakers}
+          </span>{" "}
+          flagged as deal-breaker{dealBreakers === 1 ? "" : "s"}
+        </>
+      ) : null;
     // The filed card sits on the forest arrival ground: the record formed
     // inside the guidance layer (the two-layer handoff, design-language). On
     // the demo path there is no auto-resolve — the presenter opens the matrix
@@ -366,15 +379,7 @@ export function UploadDropzone({
             <>
               <span className="font-medium text-ink">{found}</span> requirement
               {found === 1 ? "" : "s"} filed into the matrix
-              {dealBreakers != null && dealBreakers > 0 ? (
-                <>
-                  {", "}
-                  <span className="font-medium text-signal-oxblood">
-                    {dealBreakers}
-                  </span>{" "}
-                  flagged as deal-breaker{dealBreakers === 1 ? "" : "s"}
-                </>
-              ) : null}
+              {dealBreakerTail}
               . Ready to review.
             </>
           ) : found != null ? (
@@ -387,15 +392,7 @@ export function UploadDropzone({
               <span className="font-medium text-ink">
                 {packDoneLabel(stagedFiles)}
               </span>
-              {dealBreakers != null && dealBreakers > 0 ? (
-                <>
-                  {", "}
-                  <span className="font-medium text-signal-oxblood">
-                    {dealBreakers}
-                  </span>{" "}
-                  flagged as deal-breaker{dealBreakers === 1 ? "" : "s"}
-                </>
-              ) : null}
+              {dealBreakerTail}
               .
             </>
           ) : (
