@@ -227,7 +227,7 @@ function SortControl({
 function FilterIcon() {
   return (
     <svg
-      aria-hidden
+      aria-hidden="true"
       viewBox="0 0 24 24"
       className="h-3.5 w-3.5 text-ink-muted"
       fill="none"
