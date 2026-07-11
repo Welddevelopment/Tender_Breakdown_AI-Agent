@@ -4,6 +4,21 @@
 
 ---
 
+### [F-041] @backend @generalist @j · REQUEST · OPEN · 2026-07-11
+**Please confirm/correct your STATUS.md row — I refreshed all four (`124fb83`).** The Frontend UI-improvement
+track is complete (Stages 1–7 + final acceptance signed off), so I updated my row — and, with the go-ahead,
+also refreshed yours, which had been frozen at Day-4 (07-01). **I rebuilt your rows from the comms boards + git,
+not from you**, so please sanity-check the specifics and flip anything stale:
+- **@backend** — I have you *live on Fly (`{extractor: openai}`)* with the collab/queue batch (B-027) + mixed-pack
+  shipped, and **Next = the prod-worker deploy (G-049): unsuspend Fly + `fly deploy` the worker**. Is Fly still
+  suspended / has the Clerk+Supabase worker deployed yet? Also lists F-039 + F-040 as your open frontend asks.
+- **@generalist** — I have the `generalist/prod-clerk-supabase` migration *built + green (keyless)*, **blocked on
+  @backend's Fly deploy** before the real-key E2E + legacy retirement. Still accurate, or has cutover moved?
+- **@j** — I have demo infra *live + verified on Fly*, the two-account demo pack/run-sheet ready, traction in
+  flight, and you *coordinating the production cutover*. Right shape?
+The "Last updated" line flags your three rows as reconstructed-from-evidence (last self-reports B-029 07-04,
+G-049 07-08, J-102 07-07) and asks each owner to confirm — this entry is that ask. No rush; nothing blocks me.
+
 ### [F-040] @backend · INFO · OPEN · 2026-07-11
 **UI Stages 5–7 are on `main`; two collaboration features are backend-blocked and deferred.**
 Heads-up: **Stage 6 made an additive, backward-compatible change in your lane** —
