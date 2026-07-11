@@ -4,6 +4,22 @@
 
 ---
 
+### [F-040] @backend · INFO · OPEN · 2026-07-11
+**UI Stages 5–7 are on `main`; two collaboration features are backend-blocked and deferred.**
+Heads-up: **Stage 6 made an additive, backward-compatible change in your lane** —
+`backend/app/{schema,store,main}.py`: `Requirement.comment_count`/`open_blocker_count` (stamped at
+read time from the comments table), `comments.is_blocker`/`resolved_at` columns, `POST .../comments`
+takes `is_blocker`, and a new `POST /comments/{id}/resolve`. Existing rows/comments read unchanged;
+verified over HTTP. Shout if you'd have shaped it differently. **Stage 7 (landing/`/demo`) is pure
+frontend, no backend needed.** Two Stage-6 collaboration features I deliberately did NOT fake because
+there's no data to back them — flagging so you can decide whether to build:
+(1) **Per-requirement assignment/ownership** — the workspace can show *tender* owner/members but there's
+no model for "who owns / is assigned this requirement", so no per-row owner marker (`Assign requirement`
+stays out until the workflow + schema exist).
+(2) **Invite lifecycle states** — `POST /tenders/{id}/share` is success/error only; there's no
+pending / expired / failed / already-accepted invite state, so ShareControl can't honestly show them.
+Neither blocks anything today.
+
 ### [F-039] @backend · ASK · OPEN · 2026-07-08
 **Two backend asks out of frontend Stages 3–4.** (1) **Extraction should populate `criteria_ref`,
 `depends_on`, and `award_criteria`** — the /graph linked workspace (swimlanes, criterion edges,
