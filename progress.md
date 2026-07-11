@@ -205,6 +205,7 @@
 
 - **00:04** — **UI Stages 5+6 pilot-readiness shipped (Jawad):** answer verdict stamp + answer-state swim-lanes + gap-settled motions (5A–5C); comment/blocker marker foundation, matrix-row + answer-card blocker markers, raise/resolve comment thread, unresolved blocker gates client-ready export (6A–6D) *(the upload→review→answer→export loop now has a full quality-gate layer — pilot users can't accidentally hand a client an incomplete bid)*
 - **11:04** — **UI pilot-readiness track complete: Stage 7 shipped (Jawad):** Stage 7A wires team-collaboration teaching into `/demo`; Stage 7B sweeps motion-token vocabulary through landing + demo; F-040 flags two backend-deferred collab features (per-req assignment, invite lifecycle states) — neither blocks pilot *(all 7 post-demo UI ergonomics stages now shipped; pilot onboarding lands on a fully polished product)*
+- **12:04** — **UI final-acceptance QA signed off (Jawad):** 16/16 cross-route loads pass (8 routes × normal + reduced-motion), zero console errors, no raw-confidence number leaks in screen-reader labels; residual items (per-req assignment, invite lifecycle) are backend-deferred per F-040, pre-GA a11y pass recommended *(the pilot UI is formally QA-cleared on `main` — all Stages 1–7 accepted)*
 
 ## Day 13 — Fri 10 Jul 2026
 
