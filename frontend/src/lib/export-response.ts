@@ -127,7 +127,8 @@ function toBlocks(input: ExportInput): Block[] {
       answer: answerText.length > 0 ? answerText : null,
       answerVerdict: answerVerdictLine(req),
       evidence: (req.answer?.evidence_refs ?? []).map(
-        (ref) => `Backed by ${docName(ref.doc_id)}, p.${ref.page}: “${ref.excerpt}”`
+        (ref) =>
+          `Backed by ${docName(ref.doc_id)}${ref.page != null ? `, p.${ref.page}` : ""}: “${ref.excerpt}”`
       ),
       answered,
       outstanding,

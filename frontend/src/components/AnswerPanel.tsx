@@ -447,7 +447,7 @@ function EvidenceRefItem({
   defaultOpen = false,
 }: {
   doc: string;
-  page: number;
+  page: number | null;
   excerpt: string;
   defaultOpen?: boolean;
 }) {
@@ -461,7 +461,8 @@ function EvidenceRefItem({
         onClick={() => setOpen((prev) => !prev)}
         className="text-left text-accent transition-colors hover:text-ink"
       >
-        Backed by your {doc}, p.{page}
+        Backed by your {doc}
+        {page != null ? `, p.${page}` : ""}
       </button>
       {/* Collapsed on screen until opened, but always shown in print so the
           exported PDF carries the verbatim citation. */}

@@ -258,7 +258,16 @@ def _run_extract_job(job_id: str, docs, tender_id: str, title: str, filename: st
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "extractor": get_extractor().name}
+    # Engine flags make the silent-fallback risk visible: if engine/ isn't on the
+    # deploy's path, reconcile/autofill degrade to placeholders with no other signal.
+    return {
+        "status": "ok",
+        "extractor": get_extractor().name,
+        "engine_loaded": pipeline._HAVE_ENGINE,
+        "safety_net_loaded": pipeline._HAVE_SAFETY_NET,
+        "gating_filter_loaded": pipeline._HAVE_GATING_FILTER,
+        "answer_loaded": pipeline._HAVE_ANSWER and _HAVE_ANSWER_API,
+    }
 
 
 # ---- Auth (invite-only; accounts created via `python -m app.admin`) ----------

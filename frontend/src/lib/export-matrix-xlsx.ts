@@ -71,7 +71,7 @@ function answerVerdictWord(req: Requirement): string {
 function evidenceLabel(req: Requirement): string {
   return (
     req.answer?.evidence_refs
-      ?.map((ref) => `${ref.doc_id} p.${ref.page}: ${ref.excerpt}`)
+      ?.map((ref) => `${ref.doc_id}${ref.page != null ? ` p.${ref.page}` : ""}: ${ref.excerpt}`)
       .join(" | ") ?? ""
   );
 }

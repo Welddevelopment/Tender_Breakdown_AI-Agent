@@ -40,6 +40,9 @@ def _db_path() -> Path:
 def _conn():
     conn = sqlite3.connect(_db_path())
     conn.row_factory = sqlite3.Row
+    # Concurrent writers exist (background extraction thread + request threadpool);
+    # without a busy timeout SQLite fails a contended write immediately.
+    conn.execute("PRAGMA busy_timeout=5000")
     try:
         yield conn
         conn.commit()
@@ -49,6 +52,8 @@ def _conn():
 
 def init_db() -> None:
     with _conn() as c:
+        # WAL lets readers proceed during a write; persists in the db file.
+        c.execute("PRAGMA journal_mode=WAL")
         c.executescript(
             """
             CREATE TABLE IF NOT EXISTS tenders (

@@ -95,7 +95,14 @@ def verify_password(password: str, stored: str) -> bool:
 # ---- Tokens ------------------------------------------------------------------
 
 def _secret() -> str:
-    return os.environ.get("AUTH_SECRET", _DEV_SECRET)
+    secret = os.environ.get("AUTH_SECRET")
+    if secret:
+        return secret
+    # Hosted platforms set these; an unset AUTH_SECRET there means every JWT is
+    # forgeable with a public string. Fail loudly instead of silently degrading.
+    if os.environ.get("RENDER") or os.environ.get("FLY_APP_NAME"):
+        raise RuntimeError("AUTH_SECRET is not set on a production deployment — refusing to sign tokens with the dev secret.")
+    return _DEV_SECRET
 
 
 def create_token(user_id: str) -> str:

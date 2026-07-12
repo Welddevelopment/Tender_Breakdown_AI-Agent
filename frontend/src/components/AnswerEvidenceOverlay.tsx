@@ -115,7 +115,8 @@ export function AnswerEvidenceOverlay({
               {refs.map((ref, index) => (
                 <li key={`${ref.doc_id}-${index}`}>
                   <p className="font-mono text-xs text-accent">
-                    Backed by your {docName(ref.doc_id)}, p.{ref.page}
+                    Backed by your {docName(ref.doc_id)}
+                    {ref.page != null ? `, p.${ref.page}` : ""}
                   </p>
                   <p className="mt-2 max-w-[64ch] rounded bg-paper-recessed p-2.5 font-mono text-xs leading-relaxed text-accent shadow-[var(--depth-pressed)]">
                     &ldquo;{ref.excerpt}&rdquo;

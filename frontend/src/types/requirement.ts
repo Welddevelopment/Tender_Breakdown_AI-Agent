@@ -22,7 +22,7 @@ export type AnswerState = "auto" | "needs_input" | "human_edited" | "empty";
 export interface EvidenceRef {
   doc_id: string;
   excerpt: string;
-  page: number;
+  page: number | null; // backend allows null when the answerer can't locate a page
 }
 
 // A human verdict on the drafted answer itself — is this response ready to
