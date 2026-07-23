@@ -1,0 +1,67 @@
+name: ci
+
+# Run the backend/engine tests and the frontend build + lint on every push to main
+# and every pull request. This is the safety net the repo was missing: nothing else
+# runs the test suite or the build automatically.
+#
+# Informational by default — a red check here does NOT block a merge until the repo
+# turns on branch protection that requires these jobs (Settings -> Branches -> add a
+# rule for `main` requiring "backend + engine tests" and "frontend build + lint").
+# Add that rule after the demo crunch so a flaky failure can't wedge the team mid-push.
+#
+# No secrets needed: the tests run the key-free heuristic path (the same way 289 tests
+# pass locally without an OpenAI key), and the frontend builds in mock mode.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: backend + engine tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements.txt -r engine/requirements.txt
+          pip install httpx
+
+      - name: Run tests
+        run: python -m pytest engine/tests/ -q
+
+  frontend:
+    name: frontend build + lint
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
